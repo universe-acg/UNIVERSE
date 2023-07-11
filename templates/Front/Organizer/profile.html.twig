@@ -13,15 +13,15 @@
 
                     {% if is_granted('ROLE_ORGANIZER') %}
                         {% if app.user.organizer == organizer %}
-                            {% include "Global/message.html.twig" with { type: 'info', icon: 'fas fa-info-circle', message: ('<a href="'~ path('dashboard_organizer_profile') ~'">' ~ 'Click here' ~ '</a> ' ~ 'to edit your profile') } %}
+                            {% include "Global/message.html.twig" with { type: 'info', icon: 'fas fa-info-circle', message: ('<a href="'~ path('dashboard_organizer_profile') ~'">' ~ 'Click here'|trans ~ '</a> ' ~ 'to edit your profile'|trans) } %}
                         {% endif %}
                     {% endif %}
 
                     <div class="shadow rounded overflow-hidden">
 
                         {% if organizer.coverName %}
-                            <div class="organizer-profile-cover parallax-window" data-parallax="scroll"
-                                 data-image-src="{{ asset(organizer.getCoverPath) }}"></div>{% endif %}
+                        <div class="organizer-profile-cover parallax-window" data-parallax="scroll"
+                             data-image-src="{{ asset(organizer.getCoverPath) }}"></div>{% endif %}
 
                         <div class="row">
                             <div class="col-12 col-lg-4">
@@ -128,13 +128,13 @@
                                         <li class="list-inline-item mr-3">
                                             <h5 class="font-weight-bold mb-0 d-block">{{ publishedeventscount }}</h5>
                                             <small class="text-muted"> <i
-                                                        class="fas fa-calendar-alt fa-fw mr-1"></i>{{ "Events" }}
+                                                        class="fas fa-calendar-alt fa-fw mr-1"></i>{{ "Events"|trans }}
                                             </small>
                                         </li>
                                         <li class="list-inline-item">
                                             <h5 class="font-weight-bold mb-0 d-block">{{ organizer.followedby|length }}</h5>
                                             <small class="text-muted"> <i
-                                                        class="fas fa-folder-plus mr-1"></i>{{ "Followers" }}
+                                                        class="fas fa-folder-plus mr-1"></i>{{ "Followers"|trans }}
                                             </small>
                                         </li>
                                         <li class="list-inline-item ml-3">
@@ -143,18 +143,18 @@
                                                     {% if organizer.isFollowedBy(app.user) %}
                                                         <button class="organizer-unfollow btn btn-outline-primary btn-sm btn-block"
                                                                 data-target="{{ path('dashboard_attendee_following_remove', { slug : organizer.slug }) }}">
-                                                            <i class="fas fa-folder-minus"></i> {{ "Unfollow" }}
+                                                            <i class="fas fa-folder-minus"></i> {{ "Unfollow"|trans }}
                                                         </button>
                                                     {% else %}
                                                         <button class="organizer-follow btn btn-outline-primary btn-sm btn-block"
                                                                 data-target="{{ path('dashboard_attendee_following_add', { slug : organizer.slug }) }}">
-                                                            <i class="fas fa-folder-plus"></i> {{ "Follow" }}
+                                                            <i class="fas fa-folder-plus"></i> {{ "Follow"|trans }}
                                                         </button>
                                                     {% endif %}
                                                 {% else %}
                                                     <a href="{{ path('fos_user_security_login')~'?_target_path='~app.request.getPathInfo }}"
                                                        class="btn btn-outline-primary btn-sm btn-block"><i
-                                                                class="fas fa-folder-plus"></i> {{ "Follow" }}</a>
+                                                                class="fas fa-folder-plus"></i> {{ "Follow"|trans }}</a>
                                                 {% endif %}
                                             {% endif %}
                                         </li>
@@ -169,13 +169,13 @@
                                             <a class="nav-link active" data-toggle="pill"
                                                href="#organizer-onsale-events" role="tab"
                                                aria-controls="organizer-onsale-events"
-                                               aria-selected="true">{{ "Events on sale" }}
+                                               aria-selected="true">{{ "active events"|trans }}
                                                 ({{ onsaleeventscount }})</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" data-toggle="pill" href="#organizer-past-events"
                                                role="tab" aria-controls="organizer-past-events"
-                                               aria-selected="false">{{ "Past events" }} ({{ pasteventscount }}
+                                               aria-selected="false">{{ "Past events"|trans }} ({{ pasteventscount }}
                                                 )</a>
                                         </li>
                                     </ul>
@@ -183,16 +183,16 @@
                                         <div class="tab-pane fade show active" id="organizer-onsale-events"
                                              role="tabpanel" aria-labelledby="organizer-onsale-events-tab">
                                             {% if onsaleeventscount > 0 %}
-                                            {% for event in services.getEvents({elapsed: false, organizer: organizer.slug, limit: 10}).getQuery().getResult() %}
-                                                {% include "Global/event-card.html.twig" with {event: event} %}
-                                            {% endfor %}
-                                            {#                                            {% else %} #}
-                                            {#                                                {% include "Global/message.html.twig" with { type: "info", message: ('No events on sale for now') } %} #}
-                                            {#                                            {% endif %} #}
+                                                {% for event in services.getEvents({elapsed: false, organizer: organizer.slug, limit: 10}).getQuery().getResult() %}
+                                                    {% include "Global/event-card.html.twig" with {event: event} %}
+                                                {% endfor %}
+                                            {% else %}
+                                                {% include "Global/message.html.twig" with { type: "info", message: ('No active events for now'|trans) } %}
+                                            {% endif %}
                                             {% if onsaleeventscount > 10 %}
                                                 <a href="{{ path('events', { organizer: organizer.slug }) }}"
                                                    class="btn btn-outline-primary mx-auto"><i
-                                                            class="fas fa-ticket-alt"></i> {{ "See all events on sale" }}
+                                                            class="fas fa-ticket-alt"></i> {{ "See all active events"|trans }}
                                                 </a>
                                             {% endif %}
                                         </div>
@@ -203,7 +203,7 @@
                                                     {% include "Global/event-card.html.twig" with {event: event} %}
                                                 {% endfor %}
                                             {% else %}
-                                                {% include "Global/message.html.twig" with { type: "info", message: ('No past events found') } %}
+                                                {% include "Global/message.html.twig" with { type: "info", message: ('No past events found'|trans) } %}
                                             {% endif %}
                                         </div>
                                     </div>
@@ -218,7 +218,7 @@
                                         {% endfor %}
 
                                         <div class="py-4 px-4">
-                                            <h4 class="mb-2"><i class="fas fa-compass mr-1"></i> {{ "Venues" }}
+                                            <h4 class="mb-2"><i class="fas fa-compass mr-1"></i> {{ "Venues"|trans }}
                                             </h4>
                                             <div id="venues-map" data-pin-path="{{ asset('assets/img/icons/pin.png') }}"
                                                  data-venues="{{ venues|json_encode() }}" class="vh-90"></div>
@@ -228,7 +228,7 @@
 
                                 {% if organizer.youtubeurl %}
                                     <div class="py-4 px-4">
-                                        <h4 class="mb-2"><i class="fab fa-youtube-square mr-1"></i> {{ "Video" }}
+                                        <h4 class="mb-2"><i class="fab fa-youtube-square mr-1"></i> {{ "Video"|trans }}
                                         </h4>
                                         <iframe width="100%" height="400"
                                                 src="https://www.youtube.com/embed/{{ organizer.youtubeurl|split('=')[1] }}"
@@ -240,7 +240,7 @@
 
                                 {% if organizer.showfollowers and organizer.followedby|length %}
                                     <div class="py-4 px-4">
-                                        <h4 class="mb-2"><i class="fas fa-user-plus mr-1"></i> {{ "Followers" }}
+                                        <h4 class="mb-2"><i class="fas fa-user-plus mr-1"></i> {{ "Followers"|trans }}
                                         </h4>
                                         <div class="card border-0 card-body overflow-auto text-nowrap">
                                             <div class="avatar-list py-4">
@@ -257,7 +257,7 @@
                                 {% if organizer.showreviews and reviewscount %}
                                     <div class="row mt-5 px-4">
                                         <div class="col-12">
-                                            <h4 class="mb-2"><i class="fas fa-star mr-1"></i> {{ "Reviews" }}</h4>
+                                            <h4 class="mb-2"><i class="fas fa-star mr-1"></i> {{ "Reviews"|trans }}</h4>
                                         </div>
                                         {% for review in services.getReviews({"organizer": organizer.slug, "limit": 8}).getQuery().getResult() %}
                                             <div class="col-12 col-lg-6 py-4">

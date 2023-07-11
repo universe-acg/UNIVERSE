@@ -232,7 +232,8 @@
                 <header class="section-headin mb-5">
                     <h4 class="title-section text-center text-muted text-uppercase">{{ 'Featured categories' | trans }}</h4>
                 </header>
-                <div class="row-sm">
+                <div class="row-sm"
+                     style="display: flex; justify-content: center; align-content: center; align-items: center; margin: auto">
                     {% for category in services.getCategories({ "featured": true, "limit": services.getSetting('homepage_categories_number') }).getQuery().getResult() %}
                         <div class="col-md-3 col-sm-3">
                             {% include "Global/category-card.html.twig" %}

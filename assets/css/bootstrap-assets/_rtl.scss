@@ -1,3 +1,7 @@
+/*!
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
+
 .rtl,
 [dir="rtl"] {
   text-align: right;
@@ -193,7 +197,7 @@
     padding-left: inherit;
   }
 
-  .pagination{
+  .pagination {
     .page-item {
       &:first-child {
         .page-link {

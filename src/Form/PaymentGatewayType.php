@@ -1,6 +1,9 @@
 <?php
-    
-    namespace App\Form;
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
+
+namespace App\Form;
     
     use A2lix\TranslationFormBundle\Form\Type\TranslationsType;
     use App\Entity\PaymentGateway;
@@ -13,7 +16,6 @@
     use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\OptionsResolver\OptionsResolver;
     use Symfony\Component\Validator\Constraints\Length;
-    use Symfony\Component\Validator\Constraints\NotBlank;
     use Vich\UploaderBundle\Form\Type\VichImageType;
     
     class PaymentGatewayType extends AbstractType
@@ -26,7 +28,7 @@
                     'purify_html' => true,
                     'required' => true,
                     'constraints' => array(
-                        new NotBlank(),
+                        // new NotBlank(),
                         new Length([
                             'min' => 2,
                             'max' => 30])
@@ -52,8 +54,7 @@
                         //'Stripe.js' => 'stripe_js',
                         'Stripe Checkout (credit cards)' => 'stripe_checkout'
                     ],
-                    'constraints' => array(
-                        new NotBlank(),
+                    'constraints' => array(// new NotBlank(),
                     ),
                     'help' => "For 'Cash / Check / Bank Transfer / Other', the order will remain on the 'Awaiting' status until the organizer or the administrator approves it"
                 ])
@@ -67,11 +68,11 @@
                             'attr' => ['class' => 'wysiwyg'],
                             'locale_options' => [
                                 'en' => ['label' => 'Instructions'],
-                                'fr' => ['label' => 'Instructions'],
-                                'es' => ['label' => 'Instrucciones'],
-                                'ar' => ['label' => 'تعليمات'],
-                                'pt' => ['label' => 'Instruções'],
-                                'de' => ['label' => 'Anweisungen'],
+//                            'fr' => ['label' => 'Instructions'],
+//                            'es' => ['label' => 'Instrucciones'],
+//                            'ar' => ['label' => 'تعليمات'],
+//                            'pt' => ['label' => 'Instruções'],
+//                            'de' => ['label' => 'Anweisungen'],
                             ]
                         ],
                     ],
@@ -98,7 +99,7 @@
                     'label' => 'Order of appearance',
                     'required' => true,
                     'constraints' => array(
-                        new NotBlank(),
+                        // new NotBlank(),
                         new Length([
                             'min' => 1,
                             'max' => 30])),

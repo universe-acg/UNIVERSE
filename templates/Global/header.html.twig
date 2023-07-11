@@ -93,7 +93,7 @@
                             <div class="dropdown-menu dropdown-menu-left dropdown-menu-arrow header-user-dropdown-menu">
                                 <a class="dropdown-item" href="{{ path('dashboard_index') }}">
                                     {% if is_granted("ROLE_POINTOFSALE") %}
-                                        <i class="fas fa-ticket-alt fa-fw"></i> {{ 'Events on sale' }}
+                                        <i class="fas fa-ticket-alt fa-fw"></i> {{ 'active events' }}
                                     {% elseif is_granted("ROLE_SCANNER") %}
                                         <i class="fas fa-calendar-alt fa-fw"></i> {{ 'Events list' }}
                                     {% else %}
@@ -175,8 +175,8 @@
                                            class="dropdown-item"><i
                                                     class="{{ category.icon }} fa-fw"></i> {{ category.name }}</a>
                                     {% endfor %}
-                                    <a href="{{ path('categories') }}" class="dropdown-item"><i
-                                                class="fas fa-folder-open fa-fw"></i> {{ "All categories" }}</a>
+                                    {#                                    <a href="{{ path('categories') }}" class="dropdown-item"><i #}
+                                    {#                                                class="fas fa-folder-open fa-fw"></i> {{ "All categories" }}</a> #}
                                 </div>
                             </li>
                         {% else %}

@@ -1,6 +1,9 @@
 <?php
-    
-    namespace App\Form;
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
+
+namespace App\Form;
     
     use App\Entity\Category;
     use App\Entity\Organizer;
@@ -80,31 +83,31 @@
 //                        return $this->services->getCountries(array());
 //                    }
 //                ])
-                ->add('website', TextType::class, [
-                    'purify_html' => true,
-                    'required' => false,
-                    'label' => 'Website'
-                ])
+//            ->add('website', TextType::class, [
+//                'purify_html' => true,
+//                'required' => false,
+//                'label' => 'Website'
+//            ])
                 ->add('email', TextType::class, [
                     'purify_html' => true,
                     'required' => false,
                     'label' => 'Email'
                 ])
-                ->add('phone', TextType::class, [
-                    'purify_html' => true,
-                    'required' => false,
-                    'label' => 'Phone'
-                ])
-                ->add('facebook', TextType::class, [
-                    'purify_html' => true,
-                    'required' => false,
-                    'label' => 'Facebook'
-                ])
-                ->add('twitter', TextType::class, [
-                    'purify_html' => true,
-                    'required' => false,
-                    'label' => 'Twitter'
-                ])
+//            ->add('phone', TextType::class, [
+//                'purify_html' => true,
+//                'required' => false,
+//                'label' => 'Phone'
+//            ])
+//            ->add('facebook', TextType::class, [
+//                'purify_html' => true,
+//                'required' => false,
+//                'label' => 'Facebook'
+//            ])
+//            ->add('twitter', TextType::class, [
+//                'purify_html' => true,
+//                'required' => false,
+//                'label' => 'Twitter'
+//            ])
                 ->add('instagram', TextType::class, [
                     'purify_html' => true,
                     'required' => false,
@@ -115,17 +118,17 @@
 //                    'required' => false,
 //                    'label' => 'Google Plus'
 //                ])
-                ->add('linkedin', TextType::class, [
-                    'purify_html' => true,
-                    'required' => false,
-                    'label' => 'LinkedIn'
-                ])
-                ->add('youtubeurl', TextType::class, [
-                    'purify_html' => true,
-                    'required' => false,
-                    'label' => 'Youtube video url',
-                    'help' => 'If you have an Youtube video that represents your activities as an event organizer, add it in the standard format: https://www.youtube.com/watch?v=FzG4uDgje3M'
-                ])
+//            ->add('linkedin', TextType::class, [
+//                'purify_html' => true,
+//                'required' => false,
+//                'label' => 'LinkedIn'
+//            ])
+//            ->add('youtubeurl', TextType::class, [
+//                'purify_html' => true,
+//                'required' => false,
+//                'label' => 'Youtube video url',
+//                'help' => 'If you have an Youtube video that represents your activities as an event organizer, add it in the standard format: https://www.youtube.com/watch?v=FzG4uDgje3M'
+//            ])
 //                ->add('showvenuesmap', ChoiceType::class, [
 //                    'required' => true,
 //                    'multiple' => false,
@@ -144,15 +147,15 @@
                     'label_attr' => ['class' => 'radio-custom radio-inline'],
                     'help' => 'Show the number and list of people that follow you'
                 ])
-                ->add('showreviews', ChoiceType::class, [
-                    'required' => true,
-                    'multiple' => false,
-                    'expanded' => true,
-                    'label' => 'Show reviews',
-                    'choices' => ['Show' => true, 'Hide' => false],
-                    'label_attr' => ['class' => 'radio-custom radio-inline'],
-                    'help' => 'Show the reviews that you received for your events'
-                ])
+//                ->add('showreviews', ChoiceType::class, [
+//                    'required' => true,
+//                    'multiple' => false,
+//                    'expanded' => true,
+//                    'label' => 'Show reviews',
+//                    'choices' => ['Show' => true, 'Hide' => false],
+//                    'label_attr' => ['class' => 'radio-custom radio-inline'],
+//                    'help' => 'Show the reviews that you received for your events'
+//                ])
                 ->add('save', SubmitType::class, [
                     'label' => 'Save',
                     'attr' => ['class' => 'btn btn-primary btn-block'],

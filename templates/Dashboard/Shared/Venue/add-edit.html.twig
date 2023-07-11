@@ -6,7 +6,7 @@
 
 {% if venue.id %}{% set pagetitle = 'Update the venue' | trans %}{% endif %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 
@@ -31,40 +31,40 @@
                             {{ form_row(form.translations) }}
                             {{ form_row(form.type) }}
                             {{ form_row(form.amenities) }}
-                            {{ form_row(form.seatedguests) }}
-                            {{ form_row(form.standingguests) }}
-                            {{ form_row(form.neighborhoods) }}
-                            {{ form_row(form.pricing) }}
-                            {{ form_row(form.availibility) }}
-                            {{ form_row(form.foodbeverage) }}
-                            {{ form_row(form.quoteform) }}
-                            {{ form_row(form.contactemail) }}
+                            {#                            {{ form_row(form.seatedguests) }} #}
+                            {#                            {{ form_row(form.standingguests) }} #}
+                            {#                            {{ form_row(form.neighborhoods) }} #}
+                            {#                            {{ form_row(form.pricing) }} #}
+                            {#                            {{ form_row(form.availibility) }} #}
+                            {#                            {{ form_row(form.foodbeverage) }} #}
+                            {#                            {{ form_row(form.quoteform) }} #}
+                            {#                            {{ form_row(form.contactemail) }} #}
 
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    {{ form_row(form.street) }}
-                                    {{ form_row(form.street2) }}
-                                    {{ form_row(form.city) }}
-                                    {{ form_row(form.postalcode) }}
-                                    {{ form_row(form.state) }}
-                                    {{ form_row(form.country) }}
-                                    {{ form_row(form.showmap) }}
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="sticky-top sticky-sidebar pt-0">
-                                        <iframe width="100%" height="300" class="venue-map" src="{{ services.getCurrentRequestProtocol() }}://maps.google.com/maps?q=university%20of%20san%20francisco&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {{ form_row(form.images) }}
-                            {{ form_row(form.save) }}
-                            {{ form_end(form) }}
-                            
+                            {#                            <div class="row"> #}
+                            {#                                <div class="col-lg-6"> #}
+                            {#                                    {{ form_row(form.street) }} #}
+                            {#                                    {{ form_row(form.street2) }} #}
+                            {#                                    {{ form_row(form.city) }} #}
+                            {#                                    {{ form_row(form.postalcode) }} #}
+                            {#                                    {{ form_row(form.state) }} #}
+                            {#                                    {{ form_row(form.country) }} #}
+                            {#                                    {{ form_row(form.showmap) }} #}
+                            {#                                </div> #}
+                            {#                                <div class="col-lg-6"> #}
+                            {#                                    <div class="sticky-top sticky-sidebar pt-0"> #}
+                            {#                                        <iframe width="100%" height="300" class="venue-map" src="{{ services.getCurrentRequestProtocol() }}://maps.google.com/maps?q=university%20of%20san%20francisco&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe> #}
+                            {#                                    </div> #}
+                            {#                                </div> #}
                         </div>
+
+                        {#                        {{ form_row(form.images) }} #}
+                        {{ form_row(form.save) }}
+                        {{ form_end(form) }}
+
                     </div>
                 </div>
             </div>
+        </div>
 
         </div>
     </section>
@@ -74,13 +74,15 @@
 {% block javascripts %}
 
     {% if google_maps_api_key != "" %}
-        <script type="text/javascript" src="{{ services.getCurrentRequestProtocol() }}://maps.google.com/maps/api/js?sensor=false&key={{google_maps_api_key}}"></script>
+        <script type="text/javascript"
+                src="{{ services.getCurrentRequestProtocol() }}://maps.google.com/maps/api/js?sensor=false&key={{ google_maps_api_key }}"></script>
     {% endif %}
     <script>
 
         $(document).ready(function () {
-            
+
             $('.venue-map').hide();
+
             function getVenueAddress() {
                 var address = '';
                 if ($('#venue_translations_en_name').val())
@@ -113,27 +115,27 @@
                 }
             });
 
-        {% if venue.id %}
-                $('#venue_country').trigger('blur');
-        {% endif %}
+            {% if venue.id %}
+            $('#venue_country').trigger('blur');
+            {% endif %}
 
-        {% if google_maps_api_key != "" %}
-                $('#venue_save').click(function (e) {
-                    if (getVenueAddress() != "") {
-                        e.preventDefault();
-                        var geocoder = new google.maps.Geocoder();
-                        geocoder.geocode({'address': getVenueAddress()}, function (results, status) {
-                            if (status == google.maps.GeocoderStatus.OK) {
-                                $('#venue_lat').val(results[0].geometry.location.lat());
-                                $('#venue_lng').val(results[0].geometry.location.lng());
-                            }
-                            $('form[name="venue"]').submit();
-                        });
-                    }
-                });
-        {% endif %}
-
+            {% if google_maps_api_key != "" %}
+            $('#venue_save').click(function (e) {
+                // if (getVenueAddress() != "") {
+                //     e.preventDefault();
+                //     var geocoder = new google.maps.Geocoder();
+                //     geocoder.geocode({'address': getVenueAddress()}, function (results, status) {
+                //         if (status == google.maps.GeocoderStatus.OK) {
+                //             $('#venue_lat').val(results[0].geometry.location.lat());
+                //             $('#venue_lng').val(results[0].geometry.location.lng());
+                //         }
+                //         $('form[name="venue"]').submit();
+                //     });
+                // }
             });
+            {% endif %}
+
+        });
 
     </script>
 

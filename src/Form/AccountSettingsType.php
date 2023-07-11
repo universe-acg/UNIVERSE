@@ -1,6 +1,9 @@
 <?php
-    
-    namespace App\Form;
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
+
+namespace App\Form;
     
     use App\Entity\Country;
     use App\Entity\User;
@@ -15,7 +18,6 @@
     use Symfony\Component\OptionsResolver\OptionsResolver;
     use Symfony\Component\Validator\Constraints as Assert;
     use Symfony\Component\Validator\Constraints\Length;
-    use Symfony\Component\Validator\Constraints\NotBlank;
     use Vich\UploaderBundle\Form\Type\VichImageType;
     
     class AccountSettingsType extends AbstractType
@@ -37,7 +39,7 @@
                     'label' => 'Email',
                     'constraints' => array(
                         new Assert\Email(),
-                        new NotBlank(),
+                        // new NotBlank(),
                         new Length([
                             'min' => 2,
                             'max' => 30])
@@ -49,7 +51,7 @@
                     'required' => true,
                     'label' => 'Username',
                     'constraints' => array(
-                        new NotBlank(),
+                        // new NotBlank(),
                         new Length([
                             'min' => 2,
                             'max' => 30])

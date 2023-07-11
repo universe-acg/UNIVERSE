@@ -1,3 +1,7 @@
+/*!
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
+
 .form-control {
   height: calc(2.75rem + 2px);
   padding: .625rem .75rem;
@@ -54,6 +58,6 @@ textarea {
   background-color: $input-disabled-bg !important;
 }
 
-.form-group:has(input:disabled) {
-  display: none !important;
-}
+//.form-group:has(input:disabled) {
+//  display: none !important;
+//}

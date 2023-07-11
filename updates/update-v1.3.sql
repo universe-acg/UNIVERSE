@@ -925,8 +925,8 @@ INSERT INTO `universe_country_translation` (`translatable_id`, `name`, `slug`, `
 (249, 'Mosambik', 'mosambik', 'de');
 
 INSERT INTO `universe_homepage_hero_setting_translation` (`translatable_id`, `title`, `paragraph`, `locale`) VALUES
-(1, 'Eventic', 'Gestão de eventos online e venda de ingressos', 'pt'),
-(1, 'Eventic', 'Online-Eventmanagement und Ticketverkauf', 'de');
+(1, 'Universe', 'Gestão de eventos online e venda de ingressos', 'pt'),
+(1, 'Universe', 'Online-Eventmanagement und Ticketverkauf', 'de');
 
 INSERT INTO `universe_help_center_category_translation` (`translatable_id`, `name`, `slug`, `locale`) VALUES
 (1, 'Participante', 'participante', 'pt'),

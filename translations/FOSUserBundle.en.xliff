@@ -45,8 +45,8 @@
       <trans-unit id="7e6b12a7deb5f7315f025b8c49121130cd7798ad" resname="form.email">
         <source>form.email</source>
         <target>Email</target>
-        <jms:reference-file line="58">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\bundles\FOSUserBundle\Registration\register-attendee.html.twig\</jms:reference-file>
-        <jms:reference-file line="58">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\bundles\FOSUserBundle\Registration\register-organizer.html.twig\</jms:reference-file>
+        <jms:reference-file line="58">\..\..\..\..\..\C:/wamp64/www/Universe/templates\bundles\FOSUserBundle\Registration\register-attendee.html.twig\</jms:reference-file>
+        <jms:reference-file line="58">\..\..\..\..\..\C:/wamp64/www/Universe/templates\bundles\FOSUserBundle\Registration\register-organizer.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="09f2c646a76d41b0af987f6fcf2407e95e6d65e4" resname="form.group_name">
         <source>form.group_name</source>
@@ -63,20 +63,20 @@
       <trans-unit id="6d384fb8ef3ca9318f0f9d983868842a211770f8" resname="form.password">
         <source>form.password</source>
         <target>Password</target>
-        <jms:reference-file line="65">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\bundles\FOSUserBundle\Registration\register-attendee.html.twig\</jms:reference-file>
-        <jms:reference-file line="65">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\bundles\FOSUserBundle\Registration\register-organizer.html.twig\</jms:reference-file>
+        <jms:reference-file line="65">\..\..\..\..\..\C:/wamp64/www/Universe/templates\bundles\FOSUserBundle\Registration\register-attendee.html.twig\</jms:reference-file>
+        <jms:reference-file line="65">\..\..\..\..\..\C:/wamp64/www/Universe/templates\bundles\FOSUserBundle\Registration\register-organizer.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="30de94712c8550862006ed6a664870c398c9482d" resname="form.password_confirmation">
         <source>form.password_confirmation</source>
         <target>Repeat password</target>
-        <jms:reference-file line="72">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\bundles\FOSUserBundle\Registration\register-attendee.html.twig\</jms:reference-file>
-        <jms:reference-file line="72">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\bundles\FOSUserBundle\Registration\register-organizer.html.twig\</jms:reference-file>
+        <jms:reference-file line="72">\..\..\..\..\..\C:/wamp64/www/Universe/templates\bundles\FOSUserBundle\Registration\register-attendee.html.twig\</jms:reference-file>
+        <jms:reference-file line="72">\..\..\..\..\..\C:/wamp64/www/Universe/templates\bundles\FOSUserBundle\Registration\register-organizer.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="dff086700fdd62e031af5de308be31fcada4d7c7" resname="form.username">
         <source>form.username</source>
         <target>Username</target>
-        <jms:reference-file line="51">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\bundles\FOSUserBundle\Registration\register-attendee.html.twig\</jms:reference-file>
-        <jms:reference-file line="51">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\bundles\FOSUserBundle\Registration\register-organizer.html.twig\</jms:reference-file>
+        <jms:reference-file line="51">\..\..\..\..\..\C:/wamp64/www/Universe/templates\bundles\FOSUserBundle\Registration\register-attendee.html.twig\</jms:reference-file>
+        <jms:reference-file line="51">\..\..\..\..\..\C:/wamp64/www/Universe/templates\bundles\FOSUserBundle\Registration\register-organizer.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="4e0b1d3f135337a4f6615d13711fed97e3d92080" resname="group.edit.submit">
         <source>group.edit.submit</source>

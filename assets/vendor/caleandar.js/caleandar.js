@@ -1,8 +1,3 @@
-/*
- Author: Jack Ducasse;
- Version: 0.1.0;
- (◠‿◠✿)
- */
 var Calendar = function (model, options, date) {
     // Default Values
     this.Options = {
@@ -194,6 +189,7 @@ function createCalendar(calendar, element, adjuster) {
         }
         mainSection.appendChild(labels);
     }
+
     function AddDays() {
         // Create Number Element
         function DayNumber(n) {
@@ -202,6 +198,7 @@ function createCalendar(calendar, element, adjuster) {
             number.innerHTML += n;
             return number;
         }
+
         var days = document.createElement('ul');
         days.className += "cld-days";
         // Previous Month's Days
@@ -308,6 +305,7 @@ function createCalendar(calendar, element, adjuster) {
         }
         mainSection.appendChild(days);
     }
+
     if (calendar.Options.Color) {
         mainSection.innerHTML += '<style>.cld-main{color:' + calendar.Options.Color + ';}</style>';
     }

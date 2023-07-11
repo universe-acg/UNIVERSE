@@ -2,7 +2,7 @@
 
 {% set pagetitle = 'Layout settings' | trans %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 
@@ -24,97 +24,118 @@
                             {{ form_row(form.app_secret) }}
                             {{ form_row(form.maintenance_mode) }}
                             {{ form_row(form.maintenance_mode_custom_message) }}
-                            {{ form_row(form.date_format) }}
-                            {{ form_row(form.date_format_simple) }}
-                            {{ form_row(form.date_format_date_only) }}
-                            {{ form_row(form.date_timezone) }}
-                            {{ form_row(form.default_locale) }}
-                            {{ form_row(form.app_locales) }}
+                            {#                            {{ form_row(form.date_format) }} #}
+                            {#                            {{ form_row(form.date_format_simple) }} #}
+                            {#                            {{ form_row(form.date_format_date_only) }} #}
+                            {#                            {{ form_row(form.date_timezone) }} #}
+                            {#                            {{ form_row(form.default_locale) }} #}
+                            {#                            {{ form_row(form.app_locales) }} #}
                             {{ form_row(form.website_name) }}
                             {{ form_row(form.website_slug) }}
                             {{ form_row(form.website_url) }}
                             {{ form_row(form.website_root_url) }}
 
-                            <ul class="nav nav-pills mb-3">
-                                <li class="nav-item">
-                                    <a class="nav-link active" data-toggle="tab" href="#website_description_en">Website description</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#website_description_fr">Description du site</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#website_description_es">Descripción del lugar</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#website_description_ar">وصف الموقع</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#website_description_de">Webseitenbeschreibung</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#website_description_pt">Descrição do site</a>
-                                </li>
-                            </ul>
+                            {#                            <ul class="nav nav-pills mb-3"> #}
+                            {#                                <li class="nav-item"> #}
+                            <a class="nav-link " data-toggle="tab" href="#website_description_en">Website
+                                description</a>
+                            {#                                </li> #}
+                            {#                                <li class="nav-item"> #}
+                            {#                                    <a class="nav-link" data-toggle="tab" href="#website_description_fr">Description du #}
+                            {#                                        site</a> #}
+                            {#                                </li> #}
+                            {#                                <li class="nav-item"> #}
+                            {#                                    <a class="nav-link" data-toggle="tab" href="#website_description_es">Descripción del #}
+                            {#                                        lugar</a> #}
+                            {#                                </li> #}
+                            {#                                <li class="nav-item"> #}
+                            {#                                    <a class="nav-link" data-toggle="tab" href="#website_description_ar">وصف الموقع</a> #}
+                            {#                                </li> #}
+                            {#                                <li class="nav-item"> #}
+                            {#                                    <a class="nav-link" data-toggle="tab" href="#website_description_de">Webseitenbeschreibung</a> #}
+                            {#                                </li> #}
+                            {#                                <li class="nav-item"> #}
+                            {#                                    <a class="nav-link" data-toggle="tab" href="#website_description_pt">Descrição do #}
+                            {#                                        site</a> #}
+                            {#                                </li> #}
+                            {#                            </ul> #}
                             <div class="tab-content">
-                                <div class="tab-pane {{ services.getSetting("app_layout") }} active" id="website_description_en">
+                                <div class="tab-pane {{ services.getSetting("app_layout") }} active"
+                                     id="website_description_en">
                                     {{ form_row(form.website_description_en) }}
                                 </div>
-                                <div class="tab-pane {{ services.getSetting("app_layout") }} fade" id="website_description_fr">
-                                    {{ form_row(form.website_description_fr) }}
-                                </div>
-                                <div class="tab-pane {{ services.getSetting("app_layout") }} fade" id="website_description_es">
-                                    {{ form_row(form.website_description_es) }}
-                                </div>
-                                <div class="tab-pane {{ services.getSetting("app_layout") }} fade" id="website_description_ar">
-                                    {{ form_row(form.website_description_ar) }}
-                                </div>
-                                <div class="tab-pane {{ services.getSetting("app_layout") }} fade" id="website_description_de">
-                                    {{ form_row(form.website_description_de) }}
-                                </div>
-                                <div class="tab-pane {{ services.getSetting("app_layout") }} fade" id="website_description_pt">
-                                    {{ form_row(form.website_description_pt) }}
-                                </div>
+                                {#                                <div class="tab-pane {{ services.getSetting("app_layout") }} fade" #}
+                                {#                                     id="website_description_fr"> #}
+                                {#                                    {{ form_row(form.website_description_fr) }} #}
+                                {#                                </div> #}
+                                {#                                <div class="tab-pane {{ services.getSetting("app_layout") }} fade" #}
+                                {#                                     id="website_description_es"> #}
+                                {#                                    {{ form_row(form.website_description_es) }} #}
+                                {#                                </div> #}
+                                {#                                <div class="tab-pane {{ services.getSetting("app_layout") }} fade" #}
+                                {#                                     id="website_description_ar"> #}
+                                {#                                    {{ form_row(form.website_description_ar) }} #}
+                                {#                                </div> #}
+                                {#                                <div class="tab-pane {{ services.getSetting("app_layout") }} fade" #}
+                                {#                                     id="website_description_de"> #}
+                                {#                                    {{ form_row(form.website_description_de) }} #}
+                                {#                                </div> #}
+                                {#                                <div class="tab-pane {{ services.getSetting("app_layout") }} fade" #}
+                                {#                                     id="website_description_pt"> #}
+                                {#                                    {{ form_row(form.website_description_pt) }} #}
+                                {#                                </div> #}
                             </div>
 
-                            <ul class="nav nav-pills mb-3">
-                                <li class="nav-item">
-                                    <a class="nav-link active" data-toggle="tab" href="#website_keywords_en">Website keywords</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#website_keywords_fr">Mots clés du site</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#website_keywords_es">Palabras clave del sitio</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#website_keywords_ar">الكلمات الرئيسية للموقع</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#website_keywords_de">Website-Schlüsselwörter</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#website_keywords_pt">Palavras-chave do site</a>
-                                </li>
-                            </ul>
+                            {#                            <ul class="nav nav-pills mb-3"> #}
+                            {#                                <li class="nav-item"> #}
+                            <a class="nav-link " data-toggle="tab" href="#website_keywords_en">Website
+                                keywords</a>
+                            {#                                </li> #}
+                            {#                                <li class="nav-item"> #}
+                            {#                                    <a class="nav-link" data-toggle="tab" href="#website_keywords_fr">Mots clés du #}
+                            {#                                        site</a> #}
+                            {#                                </li> #}
+                            {#                                <li class="nav-item"> #}
+                            {#                                    <a class="nav-link" data-toggle="tab" href="#website_keywords_es">Palabras clave del #}
+                            {#                                        sitio</a> #}
+                            {#                                </li> #}
+                            {#                                <li class="nav-item"> #}
+                            {#                                    <a class="nav-link" data-toggle="tab" href="#website_keywords_ar">الكلمات الرئيسية #}
+                            {#                                        للموقع</a> #}
+                            {#                                </li> #}
+                            {#                                <li class="nav-item"> #}
+                            {#                                    <a class="nav-link" data-toggle="tab" href="#website_keywords_de">Website-Schlüsselwörter</a> #}
+                            {#                                </li> #}
+                            {#                                <li class="nav-item"> #}
+                            {#                                    <a class="nav-link" data-toggle="tab" href="#website_keywords_pt">Palavras-chave do #}
+                            {#                                        site</a> #}
+                            {#                                </li> #}
+                            {#                            </ul> #}
                             <div class="tab-content">
-                                <div class="tab-pane {{ services.getSetting("app_layout") }} active" id="website_keywords_en">
+                                <div class="tab-pane {{ services.getSetting("app_layout") }} active"
+                                     id="website_keywords_en">
                                     {{ form_row(form.website_keywords_en) }}
                                 </div>
-                                <div class="tab-pane {{ services.getSetting("app_layout") }} fade" id="website_keywords_fr">
-                                    {{ form_row(form.website_keywords_fr) }}
-                                </div>
-                                <div class="tab-pane {{ services.getSetting("app_layout") }} fade" id="website_keywords_es">
-                                    {{ form_row(form.website_keywords_es) }}
-                                </div>
-                                <div class="tab-pane {{ services.getSetting("app_layout") }} fade" id="website_keywords_ar">
-                                    {{ form_row(form.website_keywords_ar) }}
-                                </div>
-                                <div class="tab-pane {{ services.getSetting("app_layout") }} fade" id="website_keywords_de">
-                                    {{ form_row(form.website_keywords_de) }}
-                                </div>
-                                <div class="tab-pane {{ services.getSetting("app_layout") }} fade" id="website_keywords_pt">
-                                    {{ form_row(form.website_keywords_pt) }}
-                                </div>
+                                {#                                <div class="tab-pane {{ services.getSetting("app_layout") }} fade" #}
+                                {#                                     id="website_keywords_fr"> #}
+                                {#                                    {{ form_row(form.website_keywords_fr) }} #}
+                                {#                                </div> #}
+                                {#                                <div class="tab-pane {{ services.getSetting("app_layout") }} fade" #}
+                                {#                                     id="website_keywords_es"> #}
+                                {#                                    {{ form_row(form.website_keywords_es) }} #}
+                                {#                                </div> #}
+                                {#                                <div class="tab-pane {{ services.getSetting("app_layout") }} fade" #}
+                                {#                                     id="website_keywords_ar"> #}
+                                {#                                    {{ form_row(form.website_keywords_ar) }} #}
+                                {#                                </div> #}
+                                {#                                <div class="tab-pane {{ services.getSetting("app_layout") }} fade" #}
+                                {#                                     id="website_keywords_de"> #}
+                                {#                                    {{ form_row(form.website_keywords_de) }} #}
+                                {#                                </div> #}
+                                {#                                <div class="tab-pane {{ services.getSetting("app_layout") }} fade" #}
+                                {#                                     id="website_keywords_pt"> #}
+                                {#                                    {{ form_row(form.website_keywords_pt) }} #}
+                                {#                                </div> #}
                             </div>
 
                             {{ form_row(form.contact_phone) }}
@@ -163,6 +184,10 @@
             $('input[name="app_layout_settings[app_theme]"]').change(function () {
                 if ($(this).is(':checked')) {
                     switch ($(this).val()) {
+                        case 'universe':
+                            $('#app_layout_settings_primary_color').val('#007EAB');
+                            $('#appThemeColorPreview').css('background-color', '#007EAB');
+                            break;
                         case 'orange':
                             $('#app_layout_settings_primary_color').val('#f67611');
                             $('#appThemeColorPreview').css('background-color', '#f67611');
@@ -200,6 +225,9 @@
                             $('#appThemeColorPreview').css('background-color', '#1a1a1d');
                             break;
                         default:
+                            $('#app_layout_settings_primary_color').val('#007EAB');
+                            $('#appThemeColorPreview').css('background-color', '#007EAB');
+                            break;
                     }
                 }
             });

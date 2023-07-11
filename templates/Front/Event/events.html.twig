@@ -65,7 +65,7 @@
             <div class="box shadow-none bg-gray mb-4">
                 <div class="row">
                     <div class="col-sm-12 col-lg-6 text-center text-lg-left mb-3 mb-lg-0">
-                        <span class="center-lg-y text-muted">{{ "%resultsCount% event(s) found"({'%resultsCount%': events.getTotalItemCount}) }}</span>
+                        <span class="center-lg-y text-muted">{{ "%resultsCount% event(s) found"  |trans ({'%resultsCount%': events.getTotalItemCount}) }}</span>
                     </div>
                     {% if events.getTotalItemCount > 0 %}
                         <div class="col-sm-12 col-lg-6 text-center text-lg-right">
@@ -153,7 +153,7 @@
                                 {#                                                            <label class="custom-control-label" for="filter-local-only">{{ "Local events only" }}</label> #}
                                 {#                                                        </div> #}
                                 {#                                                    </div> #}
-                                {#                                                    <p id="user-country" class="text-muted">{{ "Events in %countryname%"({"%countryname%" : userLocation['country'].name}) }} <span class="flag flag-{{userLocation['country'].code|lower}} ml-2"></span></p> #}
+                                {#                                                    <p id="user-country" class="text-muted">{{ "Events in %countryname%" . ({"%countryname%" : userLocation['country'].name}) }} <span class="flag flag-{{userLocation['country'].code|lower}} ml-2"></span></p> #}
                                 {#                                                    {% endif %} #}
                                 {#                                                <div id="filter-country-container" class="mt-4"> #}
                                 {#                                                    <label for="country">{{ "Country" }}</label> #}

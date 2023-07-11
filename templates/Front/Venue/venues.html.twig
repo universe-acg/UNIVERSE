@@ -2,7 +2,7 @@
 
 {% set pagetitle = 'Venues' %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 
@@ -15,12 +15,13 @@
             <div class="box shadow-none bg-gray mb-4">
                 <div class="row">
                     <div class="col-sm-12 col-lg-3 text-center text-lg-left mb-3 mb-lg-0">
-                        <span class="center-lg-y text-muted">{{ "%resultsCount% result(s) found"({'%resultsCount%': venues.getTotalItemCount}) }}</span>
+                        <span class="center-lg-y text-muted">{{ "%resultsCount% result(s) found" |trans ({'%resultsCount%': venues.getTotalItemCount}) }}</span>
                     </div>
 
                     <div class="col-sm-12 col-lg-6 offset-lg-3 text-center text-lg-right">
                         <label for="sortable-select" class="display-inline">{{ "Sort by" }}
-                            <select id="sortable-select" class="form-control display-inline-block bg-white select2 ml-3" data-placeholder="{{ "Select an option" }}" style="width: 50%;">
+                            <select id="sortable-select" class="form-control display-inline-block bg-white select2 ml-3"
+                                    data-placeholder="{{ "Select an option" }}" style="width: 50%;">
                                 {{ knp_pagination_sortable(venues, "Creation date" ~ ' (' ~ "desc" ~ ')', "v.createdAt", {"direction": "desc", "criteria": "v.createdAt"}) }}
                                 {{ knp_pagination_sortable(venues, "Creation date" ~ ' (' ~ "asc" ~ ')', "v.createdAt", {"direction": "asc", "criteria": "v.createdAt"}) }}
                             </select>
@@ -43,7 +44,9 @@
                                 </header>
                                 <div class="filter-content collapse show" id="filter-keyword">
                                     <div class="card-body">
-                                        <input id="keyword" name="keyword" type="text" class="form-control" value="{{ app.request.get('keyword') }}" placeholder="{{ "Venue name..." }}">
+                                        <input id="keyword" name="keyword" type="text" class="form-control"
+                                               value="{{ app.request.get('keyword') }}"
+                                               placeholder="{{ "Venue name..." }}">
                                     </div>
                                 </div>
                             </article>
@@ -57,7 +60,8 @@
                                 <div class="filter-content collapse show" id="filter-country">
                                     <div class="card-body">
 
-                                        <select id="filter-country-select" class="form-control select2" name="country" data-sort-options="1">
+                                        <select id="filter-country-select" class="form-control select2" name="country"
+                                                data-sort-options="1">
                                             <option value="">&nbsp;</option>
                                             {% for country in services.getCountries({}).getQuery().getResult() %}
                                                 <option value="{{ country.slug }}">{{ country.name }}</option>
@@ -80,8 +84,11 @@
                                         {% for venuetype in services.getVenuesTypes({ 'hasvenues': true, 'limit': 5, 'sort': 'venuescount', 'order': 'DESC' }).getQuery().getResult() %}
                                             <div class="form-check">
                                                 <div class="float-left custom-control custom-checkbox form-check-input">
-                                                    <input type="checkbox" class="custom-control-input" id="venue-type-{{ loop.index }}" name="venuetypes[]" value="{{ venuetype.slug }}">
-                                                    <label class="custom-control-label" for="venue-type-{{ loop.index }}">{{ venuetype.name }}</label>
+                                                    <input type="checkbox" class="custom-control-input"
+                                                           id="venue-type-{{ loop.index }}" name="venuetypes[]"
+                                                           value="{{ venuetype.slug }}">
+                                                    <label class="custom-control-label"
+                                                           for="venue-type-{{ loop.index }}">{{ venuetype.name }}</label>
                                                 </div>
                                                 <span class="float-right form-check-label">
                                                     <span class="badge badge-light round">{{ venuetype.venues|length }}</span>
@@ -102,15 +109,23 @@
                                 </header>
                                 <div class="filter-content collapse show" id="filter-seated-guests">
                                     <div class="card-body">
-                                        <div class="range-slider mb-3" data-min="1" data-max="10000" data-start-left="{{ app.request.get('minseatedguests') ?? "1" }}" data-start-right="{{ app.request.get('maxseatedguests') ?? "9999" }}"></div>
+                                        <div class="range-slider mb-3" data-min="1" data-max="10000"
+                                             data-start-left="{{ app.request.get('minseatedguests') ?? "1" }}"
+                                             data-start-right="{{ app.request.get('maxseatedguests') ?? "9999" }}"></div>
                                         <div class="row ranger-slider-inputs">
                                             <div class="col-12 col-sm-6">
-                                                <label for="minseatedguests">{{"Min" }}</label>
-                                                <input id="minseatedguests" name="minseatedguests" type="text" class="form-control range-slider-min-input" value="{{ app.request.get('minseatedguests') }}" placeholder="{{ "Min" }}">
+                                                <label for="minseatedguests">{{ "Min" }}</label>
+                                                <input id="minseatedguests" name="minseatedguests" type="text"
+                                                       class="form-control range-slider-min-input"
+                                                       value="{{ app.request.get('minseatedguests') }}"
+                                                       placeholder="{{ "Min" }}">
                                             </div>
                                             <div class="col-12 col-sm-6">
-                                                <label for="maxseatedguests">{{"Max" }}</label>
-                                                <input id="maxseatedguests" name="maxseatedguests" type="text" class="form-control range-slider-max-input" value="{{ app.request.get('maxseatedguests') }}" placeholder="{{ "Max" }}">
+                                                <label for="maxseatedguests">{{ "Max" }}</label>
+                                                <input id="maxseatedguests" name="maxseatedguests" type="text"
+                                                       class="form-control range-slider-max-input"
+                                                       value="{{ app.request.get('maxseatedguests') }}"
+                                                       placeholder="{{ "Max" }}">
                                             </div>
                                         </div>
                                     </div>
@@ -125,21 +140,29 @@
                                 </header>
                                 <div class="filter-content collapse show" id="filter-standing-guests">
                                     <div class="card-body">
-                                        <div class="range-slider mb-3" data-min="1" data-max="10000" data-start-left="{{ app.request.get('minstandingguests') ?? "1" }}" data-start-right="{{ app.request.get('maxstandingguests') ?? "9999" }}"></div>
+                                        <div class="range-slider mb-3" data-min="1" data-max="10000"
+                                             data-start-left="{{ app.request.get('minstandingguests') ?? "1" }}"
+                                             data-start-right="{{ app.request.get('maxstandingguests') ?? "9999" }}"></div>
                                         <div class="row ranger-slider-inputs">
                                             <div class="col-12 col-sm-6">
-                                                <label for="minstandingguests">{{"Min" }}</label>
-                                                <input id="minstandingguests" name="minstandingguests" type="text" class="form-control range-slider-min-input" value="{{ app.request.get('minstandingguests') }}" placeholder="{{ "Min" }}">
+                                                <label for="minstandingguests">{{ "Min" }}</label>
+                                                <input id="minstandingguests" name="minstandingguests" type="text"
+                                                       class="form-control range-slider-min-input"
+                                                       value="{{ app.request.get('minstandingguests') }}"
+                                                       placeholder="{{ "Min" }}">
                                             </div>
                                             <div class="col-12 col-sm-6">
-                                                <label for="maxstandingguests">{{"Max" }}</label>
-                                                <input id="maxstandingguests" name="maxstandingguests" type="text" class="form-control range-slider-max-input" value="{{ app.request.get('maxstandingguests') }}" placeholder="{{ "Max" }}">
+                                                <label for="maxstandingguests">{{ "Max" }}</label>
+                                                <input id="maxstandingguests" name="maxstandingguests" type="text"
+                                                       class="form-control range-slider-max-input"
+                                                       value="{{ app.request.get('maxstandingguests') }}"
+                                                       placeholder="{{ "Max" }}">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </article>
-                            {#<article class="card-group-item">
+                            {# <article class="card-group-item">
                                 <header class="card-header">
                                     <a href="#" data-toggle="collapse" data-target="#collapse33">
                                         <i class="icon-action fa fa-chevron-down"></i>
@@ -167,11 +190,12 @@
                                         </div>
                                     </div>
                                 </div>
-                            </article>#}
+                            </article> #}
 
                             <article class="card-group-item">
                                 <div class="card-body">
-                                    <button class="btn btn-block btn-outline-primary"><i class="fas fa-search"></i> {{ "Search" }}</button>
+                                    <button class="btn btn-block btn-outline-primary"><i
+                                                class="fas fa-search"></i> {{ "Search" }}</button>
                                 </div>
                             </article>
                         </form>
@@ -209,8 +233,7 @@
 
             if (getURLParameter('country')) {
                 $('#filter-country-select option').each(function () {
-                    if ($(this).val() == getURLParameter('country'))
-                    {
+                    if ($(this).val() == getURLParameter('country')) {
                         $(this).prop('selected', true).trigger('change');
                     }
                 });

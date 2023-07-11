@@ -6,7 +6,7 @@
       <paths name="newuniverse">
         <serverdata>
           <mappings>
-            <mapping deploy="/home/centos/newuniverse" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/var/www/vhosts/universeacg.xyz/httpdocs" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

@@ -1,11 +1,10 @@
 {% extends "Global/layout.html.twig" %}
-
 {% trans_default_domain 'FOSUserBundle' %}
-
-{% set pagetitle = 'registration.confirmed'({'%username%': user.username}) %}
-
-{% block title %}{{pagetitle}}{% endblock %}
-
+{% set pagetitle = 'registration.confirmed' %}
+{% set username = user.username %}
+{% block title %}
+    {{ pagetitle }}
+{% endblock %}
 {% block content %}
 
     <section class="section-content padding-y bg-white">
@@ -15,15 +14,19 @@
                     <div class="card box">
                         <div class="card-body">
                             <p class="text-center"><i class="far fa-check-circle fa-8x text-success"></i></p>
-                            <h3 class="text-center">{{ 'registration.confirmed'({'%username%': user.username}) }}</h3>
+                            <h3 class="text-center">{{ 'registration.confirmed'|trans({'%username%': user.username}) }}</h3>
                             {% if targetUrl %}
-                                <p class="text-center"><a href="{{ targetUrl }}"><i class="fas fa-long-arrow-alt-left"></i> {{ 'registration.back' }}</a></p>
+                                <p class="text-center"><a href="{{ targetUrl }}"><i
+                                                class="fas fa-long-arrow-alt-left"></i> {{ 'registration.back' }}</a>
+                                </p>
                             {% endif %}
 
                             <p class="text-center mt-5">
-                                <a href="{{ path('dashboard_index') }}" class="btn btn-primary mb-3"><i class="fas fa-tachometer-alt fa-fw"></i> {{ "Dashboard"({}, 'messages') }}</a>
+                                <a href="{{ path('dashboard_index') }}" class="btn btn-primary mb-3"><i
+                                            class="fas fa-tachometer-alt fa-fw"></i> {{ "Dashboard" }}</a>
                                 {% if is_granted('ROLE_ATTENDEE') %}
-                                    <a href="{{ path('events') }}" class="btn btn-outline-primary mb-3"><i class="fas fa-calendar-alt fa-fw"></i> {{ "Browse events"({}, 'messages') }}</a>
+                                    <a href="{{ path('events') }}" class="btn btn-outline-primary mb-3"><i
+                                                class="fas fa-calendar-alt fa-fw"></i> {{ "Browse events" }}</a>
                                 {% endif %}
                             </p>
                         </div>

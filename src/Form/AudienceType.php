@@ -1,31 +1,33 @@
 <?php
-
-namespace App\Form;
-
-use App\Entity\Audience;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use A2lix\TranslationFormBundle\Form\Type\TranslationsType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Vich\UploaderBundle\Form\Type\VichImageType;
-
-class AudienceType extends AbstractType {
-
-    public function buildForm(FormBuilderInterface $builder, array $options) {
-        $builder
+    
+    namespace App\Form;
+    
+    use A2lix\TranslationFormBundle\Form\Type\TranslationsType;
+    use App\Entity\Audience;
+    use Symfony\Component\Form\AbstractType;
+    use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+    use Symfony\Component\Form\FormBuilderInterface;
+    use Symfony\Component\OptionsResolver\OptionsResolver;
+    use Vich\UploaderBundle\Form\Type\VichImageType;
+    
+    class AudienceType extends AbstractType
+    {
+        
+        public function buildForm(FormBuilderInterface $builder, array $options)
+        {
+            $builder
                 ->add('translations', TranslationsType::class, [
-                    'label' => 'Translation',
+                    // 'label' => 'Translation',
                     'fields' => [
                         'name' => [
                             'purify_html' => true,
                             'locale_options' => [
                                 'en' => ['label' => 'Name'],
-                                'fr' => ['label' => 'Nom'],
-                                'es' => ['label' => 'Nombre'],
-                                'ar' => ['label' => 'اسم'],
-                                'pt' => ['label' => 'Nome'],
-                                'de' => ['label' => 'Name'],
+//                            'fr' => ['label' => 'Nom'],
+//                            'es' => ['label' => 'Nombre'],
+//                            'ar' => ['label' => 'اسم'],
+//                            'pt' => ['label' => 'Nome'],
+//                            'de' => ['label' => 'Name'],
                             ]
                         ]
                     ],
@@ -44,14 +46,14 @@ class AudienceType extends AbstractType {
                 ->add('save', SubmitType::class, [
                     'label' => 'Save',
                     'attr' => ['class' => 'btn btn-primary'],
-        ]);
-        ;
+                ]);
+        }
+        
+        public function configureOptions(OptionsResolver $resolver)
+        {
+            $resolver->setDefaults([
+                'data_class' => Audience::class,
+            ]);
+        }
+        
     }
-
-    public function configureOptions(OptionsResolver $resolver) {
-        $resolver->setDefaults([
-            'data_class' => Audience::class,
-        ]);
-    }
-
-}

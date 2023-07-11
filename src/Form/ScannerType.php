@@ -1,22 +1,24 @@
 <?php
-
-namespace App\Form;
-
-use App\Entity\Scanner;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
-
-class ScannerType extends AbstractType {
-
-    public function buildForm(FormBuilderInterface $builder, array $options) {
-        $builder
+    
+    namespace App\Form;
+    
+    use App\Entity\Scanner;
+    use Symfony\Component\Form\AbstractType;
+    use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+    use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+    use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+    use Symfony\Component\Form\Extension\Core\Type\TextType;
+    use Symfony\Component\Form\FormBuilderInterface;
+    use Symfony\Component\OptionsResolver\OptionsResolver;
+    use Symfony\Component\Validator\Constraints\Length;
+    use Symfony\Component\Validator\Constraints\NotBlank;
+    
+    class ScannerType extends AbstractType
+    {
+        
+        public function buildForm(FormBuilderInterface $builder, array $options)
+        {
+            $builder
                 ->add('name', TextType::class, [
                     'purify_html' => true,
                     'required' => true,
@@ -33,7 +35,7 @@ class ScannerType extends AbstractType {
                             'min' => 2,
                             'max' => 15,
                             'groups' => ['create', 'update']
-                                ])
+                        ])
                     ),
                 ])
                 ->add('password', RepeatedType::class, array(
@@ -43,27 +45,26 @@ class ScannerType extends AbstractType {
                     'invalid_message' => 'The password fields must match.',
                     'options' => array('purify_html' => true),
                     'first_options' => array('required' => true, 'label' => 'Password', 'constraints' => array(
-                            new NotBlank(['groups' => ['create']]),
-                            new Length([
-                                'min' => 6,
-                                'max' => 30,
-                                'groups' => ['create', 'update']
-                                    ])
-                        ),),
+                        new NotBlank(['groups' => ['create']]),
+                        new Length([
+                            'min' => 6,
+                            'max' => 30,
+                            'groups' => ['create', 'update']
+                        ])
+                    ),),
                     'second_options' => array('required' => true, 'label' => 'Repeat password'),
                 ))
                 ->add('save', SubmitType::class, [
                     'label' => 'Save',
                     'attr' => ['class' => 'btn btn-primary'],
-                ])
-        ;
+                ]);
+        }
+        
+        public function configureOptions(OptionsResolver $resolver)
+        {
+            $resolver->setDefaults([
+                'data_class' => Scanner::class,
+                'validation_groups' => ['create', 'update']
+            ]);
+        }
     }
-
-    public function configureOptions(OptionsResolver $resolver) {
-        $resolver->setDefaults([
-            'data_class' => Scanner::class,
-            'validation_groups' => ['create', 'update']
-        ]);
-    }
-
-}

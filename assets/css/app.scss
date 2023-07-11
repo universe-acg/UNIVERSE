@@ -1,3 +1,7 @@
+/*!
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
+
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400|Montserrat:500,600&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap");
 
@@ -5,9 +9,9 @@ h1, h2, h3, h4, h5, h6, label, .col-form-label {
   font-family: 'Montserrat', 'Cairo', cursive, sans-serif;
 }
 
-.form-group:has(input:disabled) {
-  display: none !important;
-}
+//.form-group:has(input:disabled) {
+//  display: none !important;
+//}
 
 .itembox .icon-wrap {
   display: flex;
@@ -16,6 +20,10 @@ h1, h2, h3, h4, h5, h6, label, .col-form-label {
   margin: auto auto 6px;
 }
 
-.a2lix_translationsLocales {
-  display: none !important;
+//.a2lix_translationsLocales {
+//  display: none !important;
+//}
+
+.display-inline {
+  float: right !important;
 }

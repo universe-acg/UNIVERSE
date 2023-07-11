@@ -1,19 +1,23 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Security;
 
+use App\Service\AppServices as Services;
+use Gedmo\Sluggable\Util as Sluggable;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider as BaseClass;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Gedmo\Sluggable\Util as Sluggable;
-use App\Service\AppServices as Services;
 
-class FOSUBUserProvider extends BaseClass {
-
+class FOSUBUserProvider extends BaseClass
+{
     /**
      * {@inheritDoc}
      */
-    public function connect(UserInterface $user, UserResponseInterface $response) {
+    public function connect(UserInterface $user, UserResponseInterface $response): void
+    {
         $property = $this->getProperty($response);
         $username = $response->getUsername();
         //on connect - get the access token and the user ID
@@ -33,7 +37,8 @@ class FOSUBUserProvider extends BaseClass {
         $this->userManager->updateUser($user);
     }
 
-    public function loadUserByOAuthUserResponse(UserResponseInterface $response) {
+    public function loadUserByOAuthUserResponse(UserResponseInterface $response): \AppBundle\Entity\User|UserInterface|\FOS\UserBundle\Model\UserInterface
+    {
         $username = $response->getUsername();
         $email = $response->getEmail();
         $firstname = $response->getFirstName();
@@ -50,9 +55,8 @@ class FOSUBUserProvider extends BaseClass {
         $getter_id = $getter . 'Id';
         $getter_token = $getter . 'AccessToken';
 
-//when the user is registering
+        // when the user is registering
         if (null === $user) {
-
             // create new user here
             $user = $this->userManager->createUser();
             $user->$setter_id($username);
@@ -71,17 +75,17 @@ class FOSUBUserProvider extends BaseClass {
             $user->addRole("ROLE_ATTENDEE");
             $this->userManager->updateUser($user);
             return $user;
-        } else {
-            $user->setEmail($email);
-            $user->setFirstname($firstname);
-            $user->setLastname($lastname);
-            $user->setUsername(Sluggable\Urlizer::urlize($user->getFullName(), '-'));
-            $user->setUsernameCanonical(Sluggable\Urlizer::urlize($user->getFullName(), '-'));
-            if ($response->getProfilePicture() != null) {
-                $user->setFacebookProfilePicture($response->getProfilePicture());
-            }
-            $this->userManager->updateUser($user);
         }
+
+        $user->setEmail($email);
+        $user->setFirstname($firstname);
+        $user->setLastname($lastname);
+        $user->setUsername(Sluggable\Urlizer::urlize($user->getFullName(), '-'));
+        $user->setUsernameCanonical(Sluggable\Urlizer::urlize($user->getFullName(), '-'));
+        if ($response->getProfilePicture() != null) {
+            $user->setFacebookProfilePicture($response->getProfilePicture());
+        }
+        $this->userManager->updateUser($user);
 
         //if user exists
         if ($user->$getter_id() == "") {
@@ -93,5 +97,4 @@ class FOSUBUserProvider extends BaseClass {
 
         return $user;
     }
-
 }

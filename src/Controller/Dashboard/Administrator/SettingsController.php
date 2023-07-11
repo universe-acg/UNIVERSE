@@ -1,4 +1,7 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Controller\Dashboard\Administrator;
 
@@ -20,8 +23,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig_Environment;
 
@@ -43,8 +44,7 @@ class SettingsController extends Controller
                 'choice_label' => 'ccy',
                 'label' => 'Currency',
                 'attr' => ['class' => 'select2'],
-                'constraints' => array(
-                    new NotBlank()
+                'constraints' => array(// new NotBlank()
                 ),
             ])
             ->add('position', ChoiceType::class, [
@@ -154,8 +154,7 @@ class SettingsController extends Controller
             ->add('checkout_timeleft', TextType::class, [
                 'required' => false,
                 'label' => 'Timeleft',
-                'constraints' => array(
-                    new NotBlank()
+                'constraints' => array(// new NotBlank()
                 ),
                 'attr' => ['class' => 'touchspin-integer', 'data-min' => 100, 'data-max' => 3600],
                 'help' => 'Number of seconds before the reserved tickets are released if the order is still Awaiting'
@@ -811,8 +810,7 @@ class SettingsController extends Controller
             ->add('mail_server_host', TextType::class, [
                 'required' => false,
                 'label' => 'Host',
-                'constraints' => array(
-                    new NotBlank()
+                'constraints' => array(// new NotBlank()
                 ),
             ])
             ->add('mail_server_port', TextType::class, [
@@ -847,8 +845,7 @@ class SettingsController extends Controller
                 'purify_html' => true,
                 'required' => false,
                 'label' => 'No reply email address',
-                'constraints' => array(
-                    new NotBlank()
+                'constraints' => array(// new NotBlank()
                 ),
                 'help' => 'This email address will be used as the sender of all the emails sent by the platform, in almost all cases, it is the same as the username above'
             ])
@@ -856,8 +853,7 @@ class SettingsController extends Controller
                 'purify_html' => true,
                 'required' => false,
                 'label' => 'Contact email',
-                'constraints' => array(
-                    new NotBlank()
+                'constraints' => array(// new NotBlank()
                 ),
                 'help' => 'This email address will receive the contact form messages'
             ])
@@ -884,7 +880,8 @@ class SettingsController extends Controller
 
                 $dsnUrl = $settings['mail_server_transport'] . "://";
                 if (strlen($settings['mail_server_username'])) {
-                    $dsnUrl .= rawurlencode($settings['mail_server_username']);
+//                        $dsnUrl .= rawurlencode($settings['mail_server_username']);
+                    $dsnUrl .= $settings['mail_server_username'];
                 }
                 if (strlen($settings['mail_server_password'])) {
                     $dsnUrl .= ":" . rawurlencode($settings['mail_server_password']);
@@ -943,7 +940,7 @@ class SettingsController extends Controller
             if ($result == 0) {
                 $this->addFlash('danger', $translator->trans("The email could not be sent"));
             } else {
-                $this->addFlash('success', $translator->trans("The test email has been sent, please check the inbox of") . " " . $request->request->get('email'));
+                $this->addFlash('success', $translator->trans("The test email has been sent, please check the inbox") . " " . $request->request->get('email'));
             }
         } catch (Exception $e) {
             $this->addFlash('danger', $translator->trans("The email could not be sent"));

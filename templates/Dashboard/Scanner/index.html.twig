@@ -20,7 +20,7 @@
                     <div class="box shadow-none bg-gray mb-4">
                         <div class="row">
                             <div class="col-12 pt-2 pb-2">
-                                <span class="center-lg-y text-muted">{{ "%resultsCount% event(s)"({'%resultsCount%': events.getTotalItemCount}) }}</span>
+                                <span class="center-lg-y text-muted">{{ "%resultsCount% event(s)" |trans ({'%resultsCount%': events.getTotalItemCount}) }}</span>
                             </div>
                         </div>
                     </div>

@@ -4,9 +4,10 @@
 
 {% if page.id %}{% set pagetitle = 'Update the lapagenguage' | trans %}{% endif %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
+
 
     {% set navigation = [{ "dashboard_index": ('Dashboard' | trans),  "dashboard_administrator_page": ('Manage pages' | trans), "current":(pagetitle) }] %}
     {% include "Global/navigation.html.twig" with navigation %}
@@ -27,7 +28,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
 

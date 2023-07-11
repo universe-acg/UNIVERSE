@@ -1,10 +1,11 @@
 <?php
-    
-    namespace App\Entity;
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
+
+namespace App\Entity;
     
     use DateTime;
-    use Doctrine\Common\Collections\ArrayCollection;
-    use Doctrine\Common\Collections\Collection;
     use Doctrine\ORM\Mapping as ORM;
     use Gedmo\Mapping\Annotation as Gedmo;
     use Knp\DoctrineBehaviors\Model as ORMBehaviors;
@@ -38,7 +39,7 @@
          * @Gedmo\Timestampable(on="update")
          * @ORM\Column(type="datetime", nullable=true)
          */
-        private $updatedAt;
+        private DateTime $updatedAt;
         
         public function getId()
         {
@@ -50,12 +51,12 @@
             return PropertyAccess::createPropertyAccessor()->getValue($this->translate(), $method);
         }
         
-        public function getUpdatedAt()
+        public function getUpdatedAt(): DateTime
         {
             return $this->updatedAt;
         }
         
-        public function setUpdatedAt($updatedAt)
+        public function setUpdatedAt($updatedAt): static
         {
             $this->updatedAt = $updatedAt;
             

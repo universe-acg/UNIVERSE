@@ -2,17 +2,19 @@
 
 {% set pagetitle = 'Maintenance mode' %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block stylesheets %}
 
     <style>
         footer .footer-top, footer .footer-bottom > div:first-of-type, header.section-header, .header-search-wrapper, .header-actions-wrapper {
-            display :none;
+            display: none;
         }
+
         .header-logo-wrapper {
             margin: 0 auto;
         }
+
         .section-content {
             min-height: 85vh;
         }
@@ -32,7 +34,7 @@
                                 {% if customMessage %}
                                     <h6>{{ customMessage }}</h6>
                                 {% else %}
-                                    <p class="h3">{{ "%websiteName% is undergoing a scheduled maintenance."({"%websiteName%": services.getSetting('website_name')}) }}</p>
+                                    <p class="h3">{{ "%websiteName% is undergoing a scheduled maintenance." . ({"%websiteName%": services.getSetting('website_name')}) }}</p>
                                     <p></p>
                                     <p class="h3">{{ "We will be back shortly." }}</p>
                                 {% endif %}

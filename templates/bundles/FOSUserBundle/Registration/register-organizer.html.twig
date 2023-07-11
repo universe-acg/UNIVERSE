@@ -3,9 +3,9 @@
 
 {% trans_default_domain 'FOSUserBundle' %}
 
-{% set pagetitle = 'Take your events to the next level'({}, 'messages') %}
+{% set pagetitle = 'Take your events to the next level' | trans ({}, 'messages') %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 
@@ -16,7 +16,7 @@
                     <h1 class="card-title text-center">{{ pagetitle }}</h1>
                 </div>
                 <div class="col-xl-5 offset-xl-1 d-none d-xl-block">
-                    <img src="{{ asset('assets/img/illustrations/register-organizer.png') }}" class="img-fluid" />
+                    <img src="{{ asset('assets/img/illustrations/register-organizer.png') }}" class="img-fluid"/>
                 </div>
                 <div class="col-xl-4 col-12">
                     {{ form_start(form, {'method': 'post', 'attr': {'novalidate': 'novalidate'}}) }}
@@ -80,20 +80,23 @@
                     {% endif %}
                     <div class="mb-3 text-sm text-center">
                         {% if services.getSetting('show_terms_of_service_page') == "yes" %}
-                            <span class="text-muted">{{ "By clicking the Sign Up button, I agree to"({}, 'messages') }}</span>
+                            <span class="text-muted">{{ "By clicking the Sign Up button, I agree to" | trans ({}, 'messages') }}</span>
                             <a href="{{ path('page', { slug : services.getSetting('terms_of_service_page_slug') }) }}">{{ "Terms of service" }}</a>
                         {% endif %}
                         {% if services.getSetting('show_privacy_policy_page') == "yes" %}
-                            <span class="text-muted">{{ "and"({}, 'messages') }}</span>
+                            <span class="text-muted">{{ "and" | trans ({}, 'messages') }}</span>
                             <a href="{{ path('page', { slug : services.getSetting('privacy_policy_page_slug') }) }}">{{ "Privacy policy" }}</a>
                         {% endif %}
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary btn-block">{{ "Create Account"({}, 'messages') }}</button>
+                        <button type="submit"
+                                class="btn btn-primary btn-block">{{ "Create Account" | trans ({}, 'messages') }}</button>
                     </div>
-                    <p class="text-center">{{ "Already have an account?"({}, 'messages') }} <a href="{{ path('fos_user_security_login') }}">{{ "Sign in"({}, 'messages') }}</a></p>
-                        {{ form_widget(form._token) }}
-                        {{ form_end(form, {'render_rest': false}) }}
+                    <p class="text-center">{{ "Already have an account?" | trans ({}, 'messages') }} <a
+                                href="{{ path('fos_user_security_login') }}">{{ "Sign in" |trans ({}, 'messages') }}</a>
+                    </p>
+                    {{ form_widget(form._token) }}
+                    {{ form_end(form, {'render_rest': false}) }}
                 </div>
             </div>
         </div>

@@ -1,4 +1,11 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
+
+    /*
+     * AUTHOR: ALEXANDROS KOURTIS
+     */
     
     namespace App\Controller\Installer;
     
@@ -6,6 +13,7 @@
     use ErrorException;
     use mysqli;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    use Symfony\Component\HttpFoundation\RedirectResponse;
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\HttpKernel\KernelInterface;
@@ -95,7 +103,7 @@
         /**
          * @Route("/install.php/save-conviguration", name="save_conviguration")
          */
-        public function saveConviguration(Request $request, AppServices $services, KernelInterface $kernel)
+        public function saveConviguration(Request $request, AppServices $services, KernelInterface $kernel): RedirectResponse
         {
             
             $host = $request->query->get('host');
@@ -106,7 +114,7 @@
             $databaseConfigLine = 'mysql://username:password@host/name';
             $databaseConfigLine = str_replace("host", rawurlencode($host), $databaseConfigLine);
             $databaseConfigLine = str_replace("username", rawurlencode($username), $databaseConfigLine);
-            if (strlen($password) > 0) {
+            if ($password != '') {
                 $databaseConfigLine = str_replace("password", rawurlencode($password), $databaseConfigLine);
             } else {
                 $databaseConfigLine = str_replace(":password", "", $databaseConfigLine);
@@ -128,7 +136,9 @@
             $sql = file_get_contents($sqlFilePath);
             $mysqli = new mysqli($host, $username, $password, $name);
             $mysqli->multi_query($sql);
-            while (mysqli_more_results($mysqli) && mysqli_next_result($mysqli)) ;
+//            while (mysqli_more_results($mysqli) && mysqli_next_result($mysqli)) {
+//                ;
+//            }
         }
         
         /**

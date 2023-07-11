@@ -1,16 +1,11 @@
 <?php
-
 /*
- * This file is part of the FOSUserBundle package.
- *
- * (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * AUTHOR: ALEXANDROS KOURTIS
  */
 
 namespace App\Controller\bundles\FOSUserBundle;
 
+use App\Service\AppServices;
 use FOS\UserBundle\Event\FilterUserResponseEvent;
 use FOS\UserBundle\Event\FormEvent;
 use FOS\UserBundle\Event\GetResponseUserEvent;
@@ -27,15 +22,9 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use App\Service\AppServices;
 
-/**
- * Controller managing the registration.
- *
- * @author Thibault Duplessis <thibault.duplessis@gmail.com>
- * @author Christophe Coevoet <stof@notk.org>
- */
-class RegistrationController extends Controller {
+class RegistrationController extends Controller
+{
 
     private $eventDispatcher;
     private $formFactory;
@@ -43,7 +32,8 @@ class RegistrationController extends Controller {
     private $tokenStorage;
     private $services;
 
-    public function __construct(EventDispatcherInterface $eventDispatcher, FactoryInterface $formFactory, UserManagerInterface $userManager, TokenStorageInterface $tokenStorage, AppServices $services) {
+    public function __construct(EventDispatcherInterface $eventDispatcher, FactoryInterface $formFactory, UserManagerInterface $userManager, TokenStorageInterface $tokenStorage, AppServices $services)
+    {
         $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
         $this->userManager = $userManager;
@@ -56,7 +46,8 @@ class RegistrationController extends Controller {
      *
      * @return Response
      */
-    public function registerAttendeeAction(Request $request) {
+    public function registerAttendeeAction(Request $request)
+    {
 
         if ($this->isGranted("IS_AUTHENTICATED_REMEMBERED")) {
             return $this->redirectToRoute("dashboard_index");
@@ -104,16 +95,17 @@ class RegistrationController extends Controller {
         }
 
         return $this->render('@FOSUser/Registration/register-attendee.html.twig', array(
-                    'form' => $form->createView(),
+            'form' => $form->createView(),
         ));
     }
 
     /**
      * @param Request $request
      *
-     * @return Response
+     * @return RedirectResponse|Response
      */
-    public function registerOrganizerAction(Request $request) {
+    public function registerOrganizerAction(Request $request): RedirectResponse|Response
+    {
 
         if ($this->isGranted("IS_AUTHENTICATED_REMEMBERED")) {
             return $this->redirectToRoute("dashboard_index");
@@ -140,7 +132,7 @@ class RegistrationController extends Controller {
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 $event = new FormEvent($form, $request);
-                $this->eventDispatcher->dispatch(FOSUserEvents::REGISTRATION_SUCCESS, $event);
+//                $this->eventDispatcher->dispatch(FOSUserEvents::REGISTRATION_SUCCESS, $event);
                 $user->addRole('ROLE_ORGANIZER');
                 $user->getOrganizer()->setUser($user);
                 $this->userManager->updateUser($user);
@@ -164,14 +156,15 @@ class RegistrationController extends Controller {
         }
 
         return $this->render('@FOSUser/Registration/register-organizer.html.twig', array(
-                    'form' => $form->createView(),
+            'form' => $form->createView(),
         ));
     }
 
     /**
      * Tell the user to check their email provider.
      */
-    public function checkEmailAction(Request $request) {
+    public function checkEmailAction(Request $request): RedirectResponse|Response
+    {
         $email = $request->getSession()->get('fos_user_send_confirmation_email/email');
 
         if (empty($email)) {
@@ -186,7 +179,7 @@ class RegistrationController extends Controller {
         }
 
         return $this->render('@FOSUser/Registration/check_email.html.twig', array(
-                    'user' => $user,
+            'user' => $user,
         ));
     }
 
@@ -194,11 +187,12 @@ class RegistrationController extends Controller {
      * Receive the confirmation token from user email provider, login the user.
      *
      * @param Request $request
-     * @param string  $token
+     * @param string $token
      *
      * @return Response
      */
-    public function confirmAction(Request $request, $token) {
+    public function confirmAction(Request $request, $token)
+    {
         $userManager = $this->userManager;
 
         $user = $userManager->findUserByConfirmationToken($token);
@@ -228,22 +222,24 @@ class RegistrationController extends Controller {
     /**
      * Tell the user his account is now confirmed.
      */
-    public function confirmedAction(Request $request) {
+    public function confirmedAction(Request $request)
+    {
         $user = $this->getUser();
         if (!is_object($user) || !$user instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');
         }
 
         return $this->render('@FOSUser/Registration/confirmed.html.twig', array(
-                    'user' => $user,
-                    'targetUrl' => $this->getTargetUrlFromSession($request->getSession()),
+            'user' => $user,
+            'targetUrl' => $this->getTargetUrlFromSession($request->getSession()),
         ));
     }
 
     /**
      * @return string|null
      */
-    private function getTargetUrlFromSession(SessionInterface $session) {
+    private function getTargetUrlFromSession(SessionInterface $session)
+    {
         $key = sprintf('_security.%s.target_path', $this->tokenStorage->getToken()->getProviderKey());
 
         if ($session->has($key)) {

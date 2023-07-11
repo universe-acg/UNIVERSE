@@ -10,7 +10,7 @@
         [
           "variable",
           "\/",
-          "en|zh|es|fr|ar|",
+          "en",
           "_locale"
         ]
       ],
@@ -18,7 +18,7 @@
         "_locale": []
       },
       "requirements": {
-        "_locale": "en|zh|es|fr|ar|"
+        "_locale": "en"
       },
       "hosttokens": [],
       "methods": [],
@@ -33,7 +33,7 @@
         [
           "variable",
           "\/",
-          "en|zh|es|fr|ar|",
+          "en",
           "_locale"
         ]
       ],
@@ -41,7 +41,7 @@
         "_locale": []
       },
       "requirements": {
-        "_locale": "en|zh|es|fr|ar|"
+        "_locale": "en"
       },
       "hosttokens": [],
       "methods": [],

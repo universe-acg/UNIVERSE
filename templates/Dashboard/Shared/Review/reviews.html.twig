@@ -8,7 +8,7 @@
     {% set pagetitle = 'Manage reviews' | trans %}
 {% endif %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 
@@ -27,11 +27,13 @@
                         <div class="box shadow-none bg-gray mb-4">
                             <div class="row">
                                 <div class="col-sm-12 col-lg-5 text-center text-lg-left mb-3 mb-lg-0">
-                                    <span class="center-lg-y text-muted">{{ "%resultsCount% reviews(s) found"({'%resultsCount%': reviews.getTotalItemCount}) }}</span>
+                                    <span class="center-lg-y text-muted">{{ "%resultsCount% reviews(s) found" |trans ({'%resultsCount%': reviews.getTotalItemCount}) }}</span>
                                 </div>
                                 <div class="col-sm-12 col-lg-5 text-center text-lg-right">
                                     <label for="sortable-select" class="display-inline">{{ "Sort by" }}
-                                        <select id="sortable-select" class="form-control display-inline-block bg-white select2 ml-3" data-placeholder="{{ "Select an option" }}" style="width: 50%;">
+                                        <select id="sortable-select"
+                                                class="form-control display-inline-block bg-white select2 ml-3"
+                                                data-placeholder="{{ "Select an option" }}" style="width: 50%;">
                                             {{ knp_pagination_sortable(reviews, "Rating" ~ ' (' ~ "desc" ~ ')', "r.rating", {"direction": "desc", "criteria": "r.rating"}) }}
                                             {{ knp_pagination_sortable(reviews, "Rating" ~ ' (' ~ "asc" ~ ')', "r.rating", {"direction": "asc", "criteria": "r.rating"}) }}
                                             {{ knp_pagination_sortable(reviews, "Review date" ~ ' (' ~ "desc" ~ ')', "r.createdAt", {"direction": "desc", "criteria": "r.createdAt"}) }}
@@ -40,63 +42,93 @@
                                     </label>
                                 </div>
                                 <div class="col-sm-12 col-lg-2 text-center text-lg-right">
-                                    <a href="#search-filters" class="btn btn-primary has-tooltip" data-toggle="collapse" title="{{ "Toggle display the search filters" }}" aria-expanded="false" aria-controls="search-filters"><i class="fab fa-searchengin fa-lg"></i></a>
+                                    <a href="#search-filters" class="btn btn-primary has-tooltip" data-toggle="collapse"
+                                       title="{{ "Toggle display the search filters" }}" aria-expanded="false"
+                                       aria-controls="search-filters"><i class="fab fa-searchengin fa-lg"></i></a>
                                 </div>
-                                <div id="search-filters" class="col-sm-12 col-lg-12 text-center mb-3 mb-lg-0 collapse show">
+                                <div id="search-filters"
+                                     class="col-sm-12 col-lg-12 text-center mb-3 mb-lg-0 collapse show">
                                     <hr>
                                     <form>
                                         <div class="row">
                                             <div class="col-12 col-sm-4 text-left mb-4">
                                                 <label for="keyword">{{ "Keyword" }}</label>
-                                                <input id="keyword" name="keyword" type="text" class="form-control bg-white" value="{{ app.request.get('keyword') }}" placeholder="{{ "Search in reviews" }}" style="width: auto;">
+                                                <input id="keyword" name="keyword" type="text"
+                                                       class="form-control bg-white"
+                                                       value="{{ app.request.get('keyword') }}"
+                                                       placeholder="{{ "Search in reviews" }}" style="width: auto;">
                                             </div>
                                             <div class="col-12 col-sm-4 text-left mb-4">
                                                 <label for="event">{{ "Event" }}</label>
-                                                <input type="text" class="mr-sm-2 mb-2 mb-sm-0 autocomplete bg-white" id="event" name="event" data-url-list="{{ is_granted('ROLE_ADMINISTRATOR') ? path('get_events', { published: "all", elapsed: "all" }) : path('get_events', { organizer: app.user.organizer.slug, published: "all", elapsed: "all" }) }}" data-minimum-input-length="0">
+                                                <input type="text" class="mr-sm-2 mb-2 mb-sm-0 autocomplete bg-white"
+                                                       id="event" name="event"
+                                                       data-url-list="{{ is_granted('ROLE_ADMINISTRATOR') ? path('get_events', { published: "all", elapsed: "all" }) : path('get_events', { organizer: app.user.organizer.slug, published: "all", elapsed: "all" }) }}"
+                                                       data-minimum-input-length="0">
                                             </div>
                                             <div class="col-12 col-sm-4 text-left mb-4">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input id="visible-filter-all" type="radio" name="visible" value="all" class="custom-control-input">
-                                                    <label for="visible-filter-all" class="custom-control-label">{{ "All" }}</label>
+                                                    <input id="visible-filter-all" type="radio" name="visible"
+                                                           value="all" class="custom-control-input">
+                                                    <label for="visible-filter-all"
+                                                           class="custom-control-label">{{ "All" }}</label>
                                                 </div>
                                                 <div class="custom-control custom-checkbox">
-                                                    <input id="visible-filter-yes" type="radio" name="visible" value="1" class="custom-control-input">
-                                                    <label for="visible-filter-yes" class="custom-control-label">{{ "Visible only" }}</label>
+                                                    <input id="visible-filter-yes" type="radio" name="visible" value="1"
+                                                           class="custom-control-input">
+                                                    <label for="visible-filter-yes"
+                                                           class="custom-control-label">{{ "Visible only" }}</label>
                                                 </div>
                                                 <div class="custom-control custom-checkbox">
-                                                    <input id="visible-filter-no" type="radio" name="visible" value="0" class="custom-control-input">
-                                                    <label for="visible-filter-no" class="custom-control-label">{{ "Hidden only" }}</label>
+                                                    <input id="visible-filter-no" type="radio" name="visible" value="0"
+                                                           class="custom-control-input">
+                                                    <label for="visible-filter-no"
+                                                           class="custom-control-label">{{ "Hidden only" }}</label>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-4 text-left mb-4">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input id="rating-filter-all" type="radio" name="rating" value="all" class="custom-control-input">
-                                                    <label for="rating-filter-all" class="custom-control-label">{{ "All" }}</label>
+                                                    <input id="rating-filter-all" type="radio" name="rating" value="all"
+                                                           class="custom-control-input">
+                                                    <label for="rating-filter-all"
+                                                           class="custom-control-label">{{ "All" }}</label>
                                                 </div>
                                                 <div class="custom-control custom-checkbox">
-                                                    <input id="rating-filter-5" type="radio" name="rating" value="5" class="custom-control-input">
-                                                    <label for="rating-filter-5" class="custom-control-label">{{ "5 stars" }}</label>
+                                                    <input id="rating-filter-5" type="radio" name="rating" value="5"
+                                                           class="custom-control-input">
+                                                    <label for="rating-filter-5"
+                                                           class="custom-control-label">{{ "5 stars" }}</label>
                                                 </div>
                                                 <div class="custom-control custom-checkbox">
-                                                    <input id="rating-filter-4" type="radio" name="rating" value="4" class="custom-control-input">
-                                                    <label for="rating-filter-4" class="custom-control-label">{{ "4 stars" }}</label>
+                                                    <input id="rating-filter-4" type="radio" name="rating" value="4"
+                                                           class="custom-control-input">
+                                                    <label for="rating-filter-4"
+                                                           class="custom-control-label">{{ "4 stars" }}</label>
                                                 </div>
                                                 <div class="custom-control custom-checkbox">
-                                                    <input id="rating-filter-3" type="radio" name="rating" value="3" class="custom-control-input">
-                                                    <label for="rating-filter-3" class="custom-control-label">{{ "3 stars" }}</label>
+                                                    <input id="rating-filter-3" type="radio" name="rating" value="3"
+                                                           class="custom-control-input">
+                                                    <label for="rating-filter-3"
+                                                           class="custom-control-label">{{ "3 stars" }}</label>
                                                 </div>
                                                 <div class="custom-control custom-checkbox">
-                                                    <input id="rating-filter-2" type="radio" name="rating" value="2" class="custom-control-input">
-                                                    <label for="rating-filter-2" class="custom-control-label">{{ "2 stars" }}</label>
+                                                    <input id="rating-filter-2" type="radio" name="rating" value="2"
+                                                           class="custom-control-input">
+                                                    <label for="rating-filter-2"
+                                                           class="custom-control-label">{{ "2 stars" }}</label>
                                                 </div>
                                                 <div class="custom-control custom-checkbox">
-                                                    <input id="rating-filter-1" type="radio" name="rating" value="1" class="custom-control-input">
-                                                    <label for="rating-filter-1" class="custom-control-label">{{ "1 star" }}</label>
+                                                    <input id="rating-filter-1" type="radio" name="rating" value="1"
+                                                           class="custom-control-input">
+                                                    <label for="rating-filter-1"
+                                                           class="custom-control-label">{{ "1 star" }}</label>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-4 text-left mb-4">
-                                                <button type="submit" class="btn btn-primary" data-toggle="tooltip" title="{{ "Search" }}"><i class="fas fa-search"></i></button>
-                                                <button type="reset" class="btn btn-primary" data-toggle="tooltip" title="{{ "Reset" }}"><i class="fas fa-search-minus"></i></button>
+                                                <button type="submit" class="btn btn-primary" data-toggle="tooltip"
+                                                        title="{{ "Search" }}"><i class="fas fa-search"></i></button>
+                                                <button type="reset" class="btn btn-primary" data-toggle="tooltip"
+                                                        title="{{ "Reset" }}"><i class="fas fa-search-minus"></i>
+                                                </button>
                                             </div>
                                         </div>
                                     </form>
@@ -115,26 +147,46 @@
                                             {% if is_granted('ROLE_ADMINISTRATOR') %}
                                                 <div>
                                                     {% if review.visible %}
-                                                        <span class="badge badge-success mr-4"><i class="fas fa-eye fa-fw"></i> {{ "Visible" }}</span>
+                                                        <span class="badge badge-success mr-4"><i
+                                                                    class="fas fa-eye fa-fw"></i> {{ "Visible" }}</span>
                                                     {% else %}
-                                                        <span class="badge badge-danger mr-4"><i class="fas fa-eye-slash fa-fw"></i> {{ "Hidden" }}</span>
+                                                        <span class="badge badge-danger mr-4"><i
+                                                                    class="fas fa-eye-slash fa-fw"></i> {{ "Hidden" }}</span>
                                                     {% endif %}
                                                     {% if review.deletedAt %}
-                                                        <span class="badge badge-danger mr-4"><i class="fas fa-times fa-fw"></i> {{ "Deleted" }}</span>
+                                                        <span class="badge badge-danger mr-4"><i
+                                                                    class="fas fa-times fa-fw"></i> {{ "Deleted" }}</span>
                                                     {% endif %}
                                                     <div class="item-action dropdown float-right">
-                                                        <a href="javascript:void(0)" data-toggle="dropdown" data-boundary="window" class="icon"><i class="fas fa-ellipsis-v"></i> {{ "Actions" }}</a>
+                                                        <a href="javascript:void(0)" data-toggle="dropdown"
+                                                           data-boundary="window" class="icon"><i
+                                                                    class="fas fa-ellipsis-v"></i> {{ "Actions" }}</a>
                                                         <div class="dropdown-menu dropdown-menu-right">
                                                             {% if review.visible %}
-                                                                <a href="{{ path('dashboard_administrator_review_hide', { slug : review.slug }) }}" class="dropdown-item"><i class="dropdown-icon fas fa-eye-slash fa-fw text-muted"></i> {{ "Hide" }}</a>
+                                                                <a href="{{ path('dashboard_administrator_review_hide', { slug : review.slug }) }}"
+                                                                   class="dropdown-item"><i
+                                                                            class="dropdown-icon fas fa-eye-slash fa-fw text-muted"></i> {{ "Hide" }}
+                                                                </a>
                                                             {% else %}
-                                                                <a href="{{ path('dashboard_administrator_review_show', { slug : review.slug }) }}" class="dropdown-item"><i class="dropdown-icon fas fa-eye fa-fw text-muted"></i> {{ "Show" }} </a>
+                                                                <a href="{{ path('dashboard_administrator_review_show', { slug : review.slug }) }}"
+                                                                   class="dropdown-item"><i
+                                                                            class="dropdown-icon fas fa-eye fa-fw text-muted"></i> {{ "Show" }}
+                                                                </a>
                                                             {% endif %}
                                                             {% if review.deletedAt %}
-                                                                <a href="{{ path('dashboard_administrator_review_restore', { slug : review.slug }) }}" class="dropdown-item"><i class="dropdown-icon fas fa-trash-restore fa-fw text-muted"></i> {{ "Restore" }}</a>
-                                                                <span data-target="{{ path('dashboard_administrator_review_delete_permanently', { slug : review.slug }) }}" class="dropdown-item requires-confirmation" data-confirmation-text="{{ "You are about to delete the review PERMANENTLY" }}"><i class="dropdown-icon fas fa-trash fa-fw text-muted"></i> {{ "Delete permanently" }}</span>
+                                                                <a href="{{ path('dashboard_administrator_review_restore', { slug : review.slug }) }}"
+                                                                   class="dropdown-item"><i
+                                                                            class="dropdown-icon fas fa-trash-restore fa-fw text-muted"></i> {{ "Restore" }}
+                                                                </a>
+                                                                <span data-target="{{ path('dashboard_administrator_review_delete_permanently', { slug : review.slug }) }}"
+                                                                      class="dropdown-item requires-confirmation"
+                                                                      data-confirmation-text="{{ "You are about to delete the review PERMANENTLY" }}"><i
+                                                                            class="dropdown-icon fas fa-trash fa-fw text-muted"></i> {{ "Delete permanently" }}</span>
                                                             {% else %}
-                                                                <a href="{{ path('dashboard_administrator_review_delete', { slug : review.slug }) }}" class="dropdown-item"><i class="dropdown-icon fas fa-times fa-fw text-muted"></i> {{ "Delete" }} </a>
+                                                                <a href="{{ path('dashboard_administrator_review_delete', { slug : review.slug }) }}"
+                                                                   class="dropdown-item"><i
+                                                                            class="dropdown-icon fas fa-times fa-fw text-muted"></i> {{ "Delete" }}
+                                                                </a>
                                                             {% endif %}
                                                         </div>
                                                     </div>

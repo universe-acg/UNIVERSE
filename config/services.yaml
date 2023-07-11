@@ -13,7 +13,7 @@ parameters:
   date_timezone: '%env(DATE_TIMEZONE)%'
   locale: '%env(DEFAULT_LOCALE)%'
   locales: '%env(APP_LOCALES)%'
-  available_locales: en|fr|es|ar|de|pt|
+  available_locales: en
   website_name: '%env(WEBSITE_NAME)%'
   no_reply_email: '%env(NO_REPLY_EMAIL)%'
   website_root_url: '%env(WEBSITE_ROOT_URL)%'
@@ -30,7 +30,7 @@ services:
     autowire: true      # Automatically injects dependencies in your services.
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
     public: false       # Allows optimizing the container by removing unused services; this also means
-      # fetching services directly from the container via $container->get() won't work.
+    # fetching services directly from the container via $container->get() won't work.
     # The best practice is to be explicit about your dependencies anyway.
   # makes classes in src/ available to be used as services
   # this creates a service per class whose id is the fully-qualified class name

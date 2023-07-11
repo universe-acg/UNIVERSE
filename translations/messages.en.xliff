@@ -75,7 +75,7 @@
       <trans-unit id="468a40be0fea655b66fd18ff8713e72846ca106b" resname="%resultsCount% results found">
         <source>%resultsCount% results found</source>
         <target state="new">%resultsCount% results found</target>
-        <jms:reference-file line="23">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Admin\Category\index.html.twig\</jms:reference-file>
+        <jms:reference-file line="23">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Admin\Category\index.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="7672a6d2399c9fb1642307174b6db2f6db4be5cb" resname="%resultsCount% reviews(s) found">
         <source>%resultsCount% reviews(s) found</source>
@@ -221,7 +221,7 @@
       <trans-unit id="9d208dbc026ce49f6e8a4bf99ed7d329996885aa" resname="A payout can only be requested after at least one online successful sale">
         <source>A payout can only be requested after at least one online successful sale</source>
         <target state="new">A payout can only be requested after at least one online successful sale</target>
-        <jms:reference-file line="53">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Shared\PayoutRequestController.php\</jms:reference-file>
+        <jms:reference-file line="53">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Shared\PayoutRequestController.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="73853929304207723dc83fc65aa39d2eeada2e18" resname="A payout is already requested for this event date">
         <source>A payout is already requested for this event date</source>
@@ -472,12 +472,12 @@
       <trans-unit id="be11899a9db837e3e5f02b5e3eab180b8587cd6d" resname="After editing a translation in the javascript domain, go to the Console page and execute the following command to update the related files: bazinga:js-translation:dump assets/js --format=js --merge-domains">
         <source>After editing a translation in the javascript domain, go to the Console page and execute the following command to update the related files: bazinga:js-translation:dump assets/js --format=js --merge-domains</source>
         <target state="new">After editing a translation in the javascript domain, go to the Console page and execute the following command to update the related files: bazinga:js-translation:dump assets/js --format=js --merge-domains</target>
-        <jms:reference-file line="21">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Administrator\Translation\index.html.twig\</jms:reference-file>
+        <jms:reference-file line="21">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Administrator\Translation\index.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="8efbc7175dc28c03568344883317b34fec56a2b3" resname="After editing a translation in the javascript domain, make sure to execute the following command to update the related files: php bin/console bazinga:js-translation:dump assets/js --format=js --merge-domains">
         <source>After editing a translation in the javascript domain, make sure to execute the following command to update the related files: php bin/console bazinga:js-translation:dump assets/js --format=js --merge-domains</source>
         <target state="new">After editing a translation in the javascript domain, make sure to execute the following command to update the related files: php bin/console bazinga:js-translation:dump assets/js --format=js --merge-domains</target>
-        <jms:reference-file line="21">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Administrator\Translation\index.html.twig\</jms:reference-file>
+        <jms:reference-file line="21">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Administrator\Translation\index.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="584d66e97954c83103f55dc2b44e643d31c81388" resname="After editing a translation message, go to the Console page and execute the following command: cache:clear --env=prod in order to apply the changes in the production environment">
         <source>After editing a translation message, go to the Console page and execute the following command: cache:clear --env=prod in order to apply the changes in the production environment</source>
@@ -1068,7 +1068,7 @@
       <trans-unit id="db5efeba28a23cc7733c376cd813696656a8cafc" resname="Choose a new image to replace the old one">
         <source>Choose a new image to replace the old one</source>
         <target state="new">Choose a new image to replace the old one</target>
-        <jms:reference-file line="8">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Translation\formhelp.html.twig\</jms:reference-file>
+        <jms:reference-file line="8">\..\..\..\..\..\C:/wamp64/www/Universe/src\Translation\formhelp.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="1d37db1e460af89abdae685bdffc146482385d97" resname="Choose a payment gateway">
         <source>Choose a payment gateway</source>
@@ -1138,12 +1138,12 @@
       <trans-unit id="754164850f38c1ecdaf6b8ed894cb192bc36c5f4" resname="Configuration">
         <source>Configuration</source>
         <target state="new">Configuration</target>
-        <jms:reference-file line="84">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\PaymentGatewayType.php\</jms:reference-file>
+        <jms:reference-file line="84">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\PaymentGatewayType.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="04a212215ef9fbf686d280802eb81ee7a6e681cd" resname="Confirm">
         <source>Confirm</source>
         <target state="new">Confirm</target>
-        <jms:reference-file line="13">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Translation\javascript.html.twig\</jms:reference-file>
+        <jms:reference-file line="13">\..\..\..\..\..\C:/wamp64/www/Universe/src\Translation\javascript.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="c652ec9d2a3965928b4e5eb4772d074473bd8c0c" resname="Confirm account">
         <source>Confirm account</source>
@@ -1164,12 +1164,12 @@
       <trans-unit id="9f088da791b4bb00d143cdf08f1cd2a3bbd41498" resname="Confirmation required">
         <source>Confirmation required</source>
         <target state="new">Confirmation required</target>
-        <jms:reference-file line="12">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Translation\javascript.html.twig\</jms:reference-file>
+        <jms:reference-file line="12">\..\..\..\..\..\C:/wamp64/www/Universe/src\Translation\javascript.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="9f3341d3710b74c1bace9f7d9d287f157faea4f4" resname="Console">
         <source>Console</source>
         <target state="new">Console</target>
-        <jms:reference-file line="3">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Administrator\Console\index.html.twig\</jms:reference-file>
+        <jms:reference-file line="3">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Administrator\Console\index.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="b37456c4530be810dc040f50da72eda09addfb0a" resname="Contact">
         <source>Contact</source>
@@ -1323,7 +1323,7 @@
       <trans-unit id="3f4f547d73646d774e8f690b36333e8c9572894b" resname="Create an account">
         <source>Create an account</source>
         <target state="new">Create an account</target>
-        <jms:reference-file line="18">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Global\footer.html.twig\</jms:reference-file>
+        <jms:reference-file line="18">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Global\footer.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="b8d8b9a919706adf04012ceb4de659811efac2f7" resname="Create event">
         <source>Create event</source>
@@ -2020,7 +2020,7 @@
       <trans-unit id="d830f4246090d5a2c2647ce5f622aa9e62dd472b" resname="Etiquetas">
         <source>Etiquetas</source>
         <target state="new">Etiquetas</target>
-        <jms:reference-file line="72">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\BlogPostType.php\</jms:reference-file>
+        <jms:reference-file line="72">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\BlogPostType.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="ad8919ace091b14011c6439cfd5e1707b58f5abd" resname="Event">
         <source>Event</source>
@@ -2076,7 +2076,7 @@
       <trans-unit id="0fcde52e120f13aa9399115e7db1a62c368050a9" resname="Event date status">
         <source>Event date status</source>
         <target state="new">Event date status</target>
-        <jms:reference-file line="37">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\EventDateType.php\</jms:reference-file>
+        <jms:reference-file line="37">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\EventDateType.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="01b6ce6bded3d0a7ccd8b98d4fd8ea443a8fac8b" resname="Event dates">
         <source>Event dates</source>
@@ -2116,7 +2116,7 @@
       <trans-unit id="2d9505278d7397b0d581280b420d090ef4a5f3dd" resname="Event ticket status">
         <source>Event ticket status</source>
         <target state="new">Event ticket status</target>
-        <jms:reference-file line="23">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\EventTicketType.php\</jms:reference-file>
+        <jms:reference-file line="23">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\EventTicketType.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="344f7cb7e475891277a7e4f1b90a8028cea5383d" resname="Event tickets">
         <source>Event tickets</source>
@@ -2189,9 +2189,9 @@
         <target state="new">Events list page settings</target>
         <jms:reference-file line="3">\..\..\..\..\..\C:/wamp64/www/scd_eve/templates\Dashboard\Administrator\Settings\events-list-page.html.twig\</jms:reference-file>
       </trans-unit>
-      <trans-unit id="753b4ec81e7baf750a2149db28dc1a96a95a5ea1" resname="Events on sale">
-        <source>Events on sale</source>
-        <target state="new">Events on sale</target>
+      <trans-unit id="753b4ec81e7baf750a2149db28dc1a96a95a5ea1" resname="active events">
+        <source>active events</source>
+        <target state="new">active events</target>
         <jms:reference-file line="3">\..\..\..\..\..\C:/wamp64/www/scd_eve/templates\Dashboard\PointOfSale\index.html.twig\</jms:reference-file>
         <jms:reference-file line="8">\..\..\..\..\..\C:/wamp64/www/scd_eve/templates\Dashboard\sidebar-links.html.twig\</jms:reference-file>
         <jms:reference-file line="135">\..\..\..\..\..\C:/wamp64/www/scd_eve/templates\Front\Organizer\profile.html.twig\</jms:reference-file>
@@ -2238,12 +2238,12 @@
       <trans-unit id="b965ae66fcc42dd628d9bdf69b2b3719c5cb2d26" resname="Explore">
         <source>Explore</source>
         <target state="new">Explore</target>
-        <jms:reference-file line="148">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Global\header.html.twig\</jms:reference-file>
+        <jms:reference-file line="148">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Global\header.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="926da0da82e528fbe8314b5553217e4a9eadae52" resname="Explore events">
         <source>Explore events</source>
         <target state="new">Explore events</target>
-        <jms:reference-file line="180">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Front\Main\homepage.html.twig\</jms:reference-file>
+        <jms:reference-file line="180">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Front\Main\homepage.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="9aafc7502c6d97c5fdce822888419da8a0a08ba6" resname="Export attendees list to a PDF file">
         <source>Export attendees list to a PDF file</source>
@@ -2368,9 +2368,9 @@
       <trans-unit id="bba99a30be9681d0cafbfd9701c52d768db27841" resname="Fees &amp; Taxes">
         <source><![CDATA[Fees & Taxes]]></source>
         <target state="new"><![CDATA[Fees & Taxes]]></target>
-        <jms:reference-file line="76">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Attendee\Cart\cart.html.twig\</jms:reference-file>
-        <jms:reference-file line="187">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Attendee\Order\checkout.html.twig\</jms:reference-file>
-        <jms:reference-file line="118">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\PointOfSale\Order\checkout.html.twig\</jms:reference-file>
+        <jms:reference-file line="76">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Attendee\Cart\cart.html.twig\</jms:reference-file>
+        <jms:reference-file line="187">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Attendee\Order\checkout.html.twig\</jms:reference-file>
+        <jms:reference-file line="118">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\PointOfSale\Order\checkout.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="b6ea992aab4668311bb94778e056dd0285f27621" resname="First Name">
         <source>First Name</source>
@@ -2443,9 +2443,9 @@
         <target state="new">Forbidden</target>
         <jms:reference-file line="1">\..\..\..\..\..\C:/wamp64/www/scd_eve/templates\bundles\TwigBundle\Exception\error403.html.twig\</jms:reference-file>
       </trans-unit>
-      <trans-unit id="043e1782683fbcb5375763042f12bcb5c34d466b" resname="Forgot your password ?">
-        <source>Forgot your password ?</source>
-        <target state="new">Forgot your password ?</target>
+      <trans-unit id="043e1782683fbcb5375763042f12bcb5c34d466b" resname="Forgot your password?">
+        <source>Forgot your password?</source>
+        <target state="new">Forgot your password?</target>
         <jms:reference-file line="70">\..\..\..\..\..\C:/wamp64/www/scd_eve/templates\bundles\FOSUserBundle\Security\login.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="75f527181b574f84568f33f67adc3b267a6fef9c" resname="Free">
@@ -2607,7 +2607,7 @@
       <trans-unit id="cb9f4e8c48fd537bf52315256d9946cd8ed4b70e" resname="Google analytics code">
         <source>Google analytics code</source>
         <target state="new">Google analytics code</target>
-        <jms:reference-file line="510">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\AppLayoutSettingsType.php\</jms:reference-file>
+        <jms:reference-file line="510">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\AppLayoutSettingsType.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="8490b489ff48adc09b6e4c8a2801880624afa929" resname="Google plus">
         <source>Google plus</source>
@@ -2758,7 +2758,7 @@
       <trans-unit id="70f8bb9a8a5393ef080507a89e4b98d139000d65" resname="Home">
         <source>Home</source>
         <target state="new">Home</target>
-        <jms:reference-file line="142">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Global\header.html.twig\</jms:reference-file>
+        <jms:reference-file line="142">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Global\header.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="ac066591edb7d47406e88eed7ba536040a82daf4" resname="Homepage">
         <source>Homepage</source>
@@ -2769,14 +2769,14 @@
       <trans-unit id="8d0af557a708dae47a7078ed0c5f19a55a1a46ab" resname="Homepage content settings">
         <source>Homepage content settings</source>
         <target state="new">Homepage content settings</target>
-        <jms:reference-file line="3">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Administrator\Settings\homepage-content.html.twig\</jms:reference-file>
-        <jms:reference-file line="31">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\sidebar.html.twig\</jms:reference-file>
+        <jms:reference-file line="3">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Administrator\Settings\homepage-content.html.twig\</jms:reference-file>
+        <jms:reference-file line="31">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\sidebar.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="90ab6f50329870b6a121967f272f3abd4d96b418" resname="Homepage hero settings">
         <source>Homepage hero settings</source>
         <target state="new">Homepage hero settings</target>
-        <jms:reference-file line="3">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Administrator\Settings\homepage-hero.html.twig\</jms:reference-file>
-        <jms:reference-file line="28">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\sidebar.html.twig\</jms:reference-file>
+        <jms:reference-file line="3">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Administrator\Settings\homepage-hero.html.twig\</jms:reference-file>
+        <jms:reference-file line="28">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\sidebar.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="cf951347efc0405aa6246ccf0e0cc27683f006ec" resname="Homepage settings">
         <source>Homepage settings</source>
@@ -2796,7 +2796,7 @@
       <trans-unit id="1dd6a17cb4033f4f74df1bb6912b8a28a8074084" resname="How it works">
         <source>How it works</source>
         <target state="new">How it works</target>
-        <jms:reference-file line="160">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Global\header.html.twig\</jms:reference-file>
+        <jms:reference-file line="160">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Global\header.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="716f63b96e0c263222949a3b8a00cdb4f46d3183" resname="Icon">
         <source>Icon</source>
@@ -2894,7 +2894,7 @@
       <trans-unit id="6db9d02fed8a18231667eaf3b636c81d2c0e7f8e" resname="Insert at least 3 characters">
         <source>Insert at least 3 characters</source>
         <target state="new">Insert at least 3 characters</target>
-        <jms:reference-file line="17">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Translation\javascript.html.twig\</jms:reference-file>
+        <jms:reference-file line="17">\..\..\..\..\..\C:/wamp64/www/Universe/src\Translation\javascript.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="5721bbef40b22bbdb2e6a062b096d9b48735c2ff" resname="Instagram">
         <source>Instagram</source>
@@ -2956,7 +2956,7 @@
       <trans-unit id="a972faadead0b763347620bc16e7931f8fad1420" resname="It wasn't possible to retrieve information about the provided IP">
         <source>It wasn't possible to retrieve information about the provided IP</source>
         <target state="new">It wasn't possible to retrieve information about the provided IP</target>
-        <jms:reference-file line="100">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Service\AppServices.php\</jms:reference-file>
+        <jms:reference-file line="100">\..\..\..\..\..\C:/wamp64/www/Universe/src\Service\AppServices.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="a3926e039fd753c472f6e172496fda0574369261" resname="Keyword">
         <source>Keyword</source>
@@ -3116,12 +3116,12 @@
       <trans-unit id="dfe60ca92e8c3f1e3611add8c83e8c92a5aeb6f6" resname="Load more">
         <source>Load more</source>
         <target state="new">Load more</target>
-        <jms:reference-file line="30">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Translation\javascript.html.twig\</jms:reference-file>
+        <jms:reference-file line="30">\..\..\..\..\..\C:/wamp64/www/Universe/src\Translation\javascript.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="b04ba49f848624bb97ab094a2631d2ad74913498" resname="Loading...">
         <source>Loading...</source>
         <target state="new">Loading...</target>
-        <jms:reference-file line="31">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Translation\javascript.html.twig\</jms:reference-file>
+        <jms:reference-file line="31">\..\..\..\..\..\C:/wamp64/www/Universe/src\Translation\javascript.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="919776a26ea46fe9b40eff466260376250454918" resname="Local events only">
         <source>Local events only</source>
@@ -3234,7 +3234,7 @@
       <trans-unit id="08b5cac42dc3401ce3ea94106c617e2fa9a0ce40" resname="Make sure to enter a valid email address">
         <source>Make sure to enter a valid email address</source>
         <target state="new">Make sure to enter a valid email address</target>
-        <jms:reference-file line="20">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Translation\javascript.html.twig\</jms:reference-file>
+        <jms:reference-file line="20">\..\..\..\..\..\C:/wamp64/www/Universe/src\Translation\javascript.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="18f0fdeec5ba62ef313ec9557220c2ee8928a423" resname="Make sure to select organizers who have added a cover photo">
         <source>Make sure to select organizers who have added a cover photo</source>
@@ -3255,7 +3255,7 @@
       <trans-unit id="1663a5b525cbb7f1396ce44b2477fa1e76891196" resname="Manage articles">
         <source>Manage articles</source>
         <target state="new">Manage articles</target>
-        <jms:reference-file line="156">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\sidebar.html.twig\</jms:reference-file>
+        <jms:reference-file line="156">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\sidebar.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="90e9d8cc195370b2a07d0c399d6755bc10ea8077" resname="Manage attendees">
         <source>Manage attendees</source>
@@ -3271,7 +3271,7 @@
       <trans-unit id="f95060effe992a1f74c7e4652df3ad9fd0f89d8e" resname="Manage blog">
         <source>Manage blog</source>
         <target state="new">Manage blog</target>
-        <jms:reference-file line="128">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\sidebar.html.twig\</jms:reference-file>
+        <jms:reference-file line="128">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\sidebar.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="5aa9c7bed3a3fbca3c8417028749ac5f8969cd5d" resname="Manage blog post categories">
         <source>Manage blog post categories</source>
@@ -3321,7 +3321,7 @@
       <trans-unit id="d75f9d6ffc836d386d10010702ab919c17522a12" resname="Manage help center">
         <source>Manage help center</source>
         <target state="new">Manage help center</target>
-        <jms:reference-file line="151">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\sidebar.html.twig\</jms:reference-file>
+        <jms:reference-file line="151">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\sidebar.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="ee2d1d62dd40b4ece93fbd97b7fbd69c658c041d" resname="Manage help center articles">
         <source>Manage help center articles</source>
@@ -3362,7 +3362,7 @@
       <trans-unit id="7364ba722cfe8b2e44544b4a1479d1cf7270c35d" resname="Manage posts">
         <source>Manage posts</source>
         <target state="new">Manage posts</target>
-        <jms:reference-file line="138">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\sidebar.html.twig\</jms:reference-file>
+        <jms:reference-file line="138">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\sidebar.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="1b13729ef39a4e47f6ff14d7a6a707fe3e3654e8" resname="Manage reviews">
         <source>Manage reviews</source>
@@ -3385,7 +3385,7 @@
       <trans-unit id="61c5de428cd3bfcda9a1d9a155699b4209e44696" resname="Manage venues amenities">
         <source>Manage venues amenities</source>
         <target state="new">Manage venues amenities</target>
-        <jms:reference-file line="104">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\sidebar.html.twig\</jms:reference-file>
+        <jms:reference-file line="104">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\sidebar.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="df2079b0503287791fc403b22256d0edc56d8ce0" resname="Manage venues types">
         <source>Manage venues types</source>
@@ -3396,7 +3396,7 @@
       <trans-unit id="35b0123d358d1e3f9c982f2d3e09e9d4bdfeea1c" resname="Manage website translation">
         <source>Manage website translation</source>
         <target state="new">Manage website translation</target>
-        <jms:reference-file line="110">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\sidebar.html.twig\</jms:reference-file>
+        <jms:reference-file line="110">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\sidebar.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="1ae2d5d7659d2719421dace19c8ad72b4b7e1919" resname="Mark as featured">
         <source>Mark as featured</source>
@@ -3460,7 +3460,7 @@
       <trans-unit id="f993d8150721fb7f498a446603fca33e82ccff9c" resname="Message from the attendee:">
         <source>Message from the attendee:</source>
         <target state="new">Message from the attendee:</target>
-        <jms:reference-file line="296">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Shared\Order\orders.html.twig\</jms:reference-file>
+        <jms:reference-file line="296">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Shared\Order\orders.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="7705e40e5b66f573dffa29b701c2deabd635d7ef" resname="Method Not Supported">
         <source>Method Not Supported</source>
@@ -3498,7 +3498,7 @@
       <trans-unit id="b51b2b0d62c7e20b8d8a956fed9a940fed0677d6" resname="My Account">
         <source>My Account</source>
         <target state="new">My Account</target>
-        <jms:reference-file line="16">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Global\footer.html.twig\</jms:reference-file>
+        <jms:reference-file line="16">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Global\footer.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="58c335d2d6af236aa0c7743dbf98ca1da85f4394" resname="My cart">
         <source>My cart</source>
@@ -3636,8 +3636,8 @@
       <trans-unit id="dee7f462bdc2cf2c15c79dcf81c6de79235053c2" resname="Native comments">
         <source>Native comments</source>
         <target state="new">Native comments</target>
-        <jms:reference-file line="617">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Administrator\SettingsController.php\</jms:reference-file>
-        <jms:reference-file line="678">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Administrator\SettingsController.php\</jms:reference-file>
+        <jms:reference-file line="617">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Administrator\SettingsController.php\</jms:reference-file>
+        <jms:reference-file line="678">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Administrator\SettingsController.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="3cbd99ae13b146ebc20d87ac48c005c9865eb57b" resname="Neighborhoods">
         <source>Neighborhoods</source>
@@ -3803,15 +3803,15 @@
         <jms:reference-file line="120">\..\..\..\..\..\C:/wamp64/www/scd_eve/templates\Dashboard\Shared\Event\index.html.twig\</jms:reference-file>
         <jms:reference-file line="358">\..\..\..\..\..\C:/wamp64/www/scd_eve/templates\Front\Event\events.html.twig\</jms:reference-file>
       </trans-unit>
-      <trans-unit id="c38271107427cdf2907fff61096c071cd59b411a" resname="No events on sale">
-        <source>No events on sale</source>
-        <target state="new">No events on sale</target>
+      <trans-unit id="c38271107427cdf2907fff61096c071cd59b411a" resname="No active events">
+        <source>No active events</source>
+        <target state="new">No active events</target>
         <jms:reference-file line="43">\..\..\..\..\..\C:/wamp64/www/scd_eve/src\Controller\Api\EventController.php\</jms:reference-file>
         <jms:reference-file line="17">\..\..\..\..\..\C:/wamp64/www/scd_eve/src\Translation\manual.html.twig\</jms:reference-file>
       </trans-unit>
-      <trans-unit id="741f043f62b419137e0b6e1545c7550d3f73734f" resname="No events on sale for now">
-        <source>No events on sale for now</source>
-        <target state="new">No events on sale for now</target>
+      <trans-unit id="741f043f62b419137e0b6e1545c7550d3f73734f" resname="No active events for now">
+        <source>No active events for now</source>
+        <target state="new">No active events for now</target>
         <jms:reference-file line="148">\..\..\..\..\..\C:/wamp64/www/scd_eve/templates\Front\Organizer\profile.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="dc547064c9fd6bead30a5d9e12423035062235fb" resname="No languages found">
@@ -3877,7 +3877,7 @@
       <trans-unit id="658e79f9dc7fca34dc164cbb79e1c0be3cdebf23" resname="No results found">
         <source>No results found</source>
         <target state="new">No results found</target>
-        <jms:reference-file line="15">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Translation\javascript.html.twig\</jms:reference-file>
+        <jms:reference-file line="15">\..\..\..\..\..\C:/wamp64/www/Universe/src\Translation\javascript.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="e2bc562b4349d311398c24c47923529dd4ff0c57" resname="No review found">
         <source>No review found</source>
@@ -3907,7 +3907,7 @@
       <trans-unit id="a269afc99c533b273d99b045d477bc7d7e9d65d2" resname="No tickets found">
         <source>No tickets found</source>
         <target state="new">No tickets found</target>
-        <jms:reference-file line="201">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Shared\Order\orders.html.twig\</jms:reference-file>
+        <jms:reference-file line="201">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Shared\Order\orders.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="f7fef678244d55f06b14101af30c952b1d9a51e8" resname="No tickets selected to add to cart">
         <source>No tickets selected to add to cart</source>
@@ -4147,7 +4147,7 @@
       <trans-unit id="fec62242a94eca2b4f9e947d9d76b885c578bff3" resname="Order = ">
         <source>Order = </source>
         <target state="new">Order = </target>
-        <jms:reference-file line="108">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Administrator\Category\index.html.twig\</jms:reference-file>
+        <jms:reference-file line="108">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Administrator\Category\index.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="439e231109dc2e2b73428ab2ded05e498cfb03fd" resname="Order Date">
         <source>Order Date</source>
@@ -4382,12 +4382,12 @@
       <trans-unit id="23d692f07a3fb646a8e54fcd2dc724f4ea2ed2c6" resname="Parent">
         <source>Parent</source>
         <target state="new">Parent</target>
-        <jms:reference-file line="31">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\HelpCenterCategoryType.php\</jms:reference-file>
+        <jms:reference-file line="31">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\HelpCenterCategoryType.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="8544176c9bd1a9a5533b05cd076e718588780299" resname="Parent category">
         <source>Parent category</source>
         <target state="new">Parent category</target>
-        <jms:reference-file line="23">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\CategoryType.php\</jms:reference-file>
+        <jms:reference-file line="23">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\CategoryType.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="1c4bc2b2492a7a0605f47d6a4939e78fb2e97987" resname="Parágrafo">
         <source>Parágrafo</source>
@@ -4415,7 +4415,7 @@
       <trans-unit id="5d6817b028d142040f8c9915faf33a3c8c8dae09" resname="Past tickets">
         <source>Past tickets</source>
         <target state="new">Past tickets</target>
-        <jms:reference-file line="179">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Shared\Order\orders.html.twig\</jms:reference-file>
+        <jms:reference-file line="179">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Shared\Order\orders.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="748c323563fa6fbdd11c83ad179d271f720fa73a" resname="Pay now">
         <source>Pay now</source>
@@ -4608,7 +4608,7 @@
       <trans-unit id="47baf6ccae51fe309e2d9b7199025b78dabdb0af" resname="Please choose a 200x50 image to ensure compatibility with the website design">
         <source>Please choose a 200x50 image to ensure compatibility with the website design</source>
         <target state="new">Please choose a 200x50 image to ensure compatibility with the website design</target>
-        <jms:reference-file line="44">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Translation\formhelp.html.twig\</jms:reference-file>
+        <jms:reference-file line="44">\..\..\..\..\..\C:/wamp64/www/Universe/src\Translation\formhelp.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="e9481317eb0ebd3f25bef6dc961f8b510f040a4f" resname="Please click on the following link to check the status of your request">
         <source>Please click on the following link to check the status of your request</source>
@@ -4628,7 +4628,7 @@
       <trans-unit id="f31391000ac93c237358c6c129479dec8d1e9b5e" resname="Please enter the subject carefully in order get the help you need">
         <source>Please enter the subject carefully in order get the help you need</source>
         <target state="new">Please enter the subject carefully in order get the help you need</target>
-        <jms:reference-file line="122">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Front\Page\contact.html.twig\</jms:reference-file>
+        <jms:reference-file line="122">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Front\Page\contact.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="de376ec747a246d1b9ecd47e1de20a7c186a982e" resname="Please enter your payout method details">
         <source>Please enter your payout method details</source>
@@ -4648,12 +4648,12 @@
       <trans-unit id="755779b82e0089c3fcdd40b33668d078eaf80205" resname="Please select the tickets quantity for this order">
         <source>Please select the tickets quantity for this order</source>
         <target state="new">Please select the tickets quantity for this order</target>
-        <jms:reference-file line="32">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Translation\javascript.html.twig\</jms:reference-file>
+        <jms:reference-file line="32">\..\..\..\..\..\C:/wamp64/www/Universe/src\Translation\javascript.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="4f961d990e7baddfa5f7b5b56eb917d124352974" resname="Please select the tickets quantity you want to buy">
         <source>Please select the tickets quantity you want to buy</source>
         <target state="new">Please select the tickets quantity you want to buy</target>
-        <jms:reference-file line="21">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Translation\javascript.html.twig\</jms:reference-file>
+        <jms:reference-file line="21">\..\..\..\..\..\C:/wamp64/www/Universe/src\Translation\javascript.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="1125a98a02368f0d6031591781ddfc7dc6c77b2e" resname="Please set a payout method before submitting a payout request">
         <source>Please set a payout method before submitting a payout request</source>
@@ -4663,7 +4663,7 @@
       <trans-unit id="612706c771b7770deee3567f66f4eced9cc9471b" resname="Please wait a few seconds if the translation interface freezes at page load">
         <source>Please wait a few seconds if the translation interface freezes at page load</source>
         <target state="new">Please wait a few seconds if the translation interface freezes at page load</target>
-        <jms:reference-file line="19">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Administrator\Translation\index.html.twig\</jms:reference-file>
+        <jms:reference-file line="19">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Administrator\Translation\index.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="52263b2499aa7ee659588878dd68b7cf1245c564" resname="Please wait a few seconds if the translation interface freezes at page load, or edit the files in translations/ folder at root of the project directly in your favorite text editor">
         <source>Please wait a few seconds if the translation interface freezes at page load, or edit the files in translations/ folder at root of the project directly in your favorite text editor</source>
@@ -4751,7 +4751,7 @@
       <trans-unit id="51c8acd2f0c90e5d8e3c171c20de63e4badcf73a" resname="Pricing and fees">
         <source>Pricing and fees</source>
         <target state="new">Pricing and fees</target>
-        <jms:reference-file line="22">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Global\footer.html.twig\</jms:reference-file>
+        <jms:reference-file line="22">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Global\footer.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="cba3b579219afecdd0e4ee8fbeb3a1de1c3b2490" resname="Primary color code">
         <source>Primary color code</source>
@@ -4871,7 +4871,7 @@
       <trans-unit id="ad086cf55b834c375e209972840f1342401d8c41" resname="Read more">
         <source>Read more</source>
         <target state="new">Read more</target>
-        <jms:reference-file line="19">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Translation\javascript.html.twig\</jms:reference-file>
+        <jms:reference-file line="19">\..\..\..\..\..\C:/wamp64/www/Universe/src\Translation\javascript.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="cc9ce549cfeee1ae5e4ba0e072a7699b3f3d4c34" resname="Read time in minutes">
         <source>Read time in minutes</source>
@@ -4904,17 +4904,17 @@
       <trans-unit id="e17c8ad0dc2e27a4891eaffa27b70043da743510" resname="Refund">
         <source>Refund</source>
         <target state="new">Refund</target>
-        <jms:reference-file line="52">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Shared\Order\details.html.twig\</jms:reference-file>
+        <jms:reference-file line="52">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Shared\Order\details.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="9a41b1f478426e0804b0cd2b10687b49583945d2" resname="Refund requested">
         <source>Refund requested</source>
         <target state="new">Refund requested</target>
-        <jms:reference-file line="296">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Shared\Order\orders.html.twig\</jms:reference-file>
+        <jms:reference-file line="296">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Shared\Order\orders.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="d6fbc7a82d1c9314c45a539bb4028c75af26f0ee" resname="Refunded">
         <source>Refunded</source>
         <target state="new">Refunded</target>
-        <jms:reference-file line="25">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Translation\manual.html.twig\</jms:reference-file>
+        <jms:reference-file line="25">\..\..\..\..\..\C:/wamp64/www/Universe/src\Translation\manual.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="d672995a14650d0e018026b64f297663d8c71c8d" resname="Register">
         <source>Register</source>
@@ -5048,7 +5048,7 @@
       <trans-unit id="19d018e43b7ab4e16b84e6bc6c34561b0def633a" resname="Return to cart">
         <source>Return to cart</source>
         <target state="new">Return to cart</target>
-        <jms:reference-file line="22">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Translation\javascript.html.twig\</jms:reference-file>
+        <jms:reference-file line="22">\..\..\..\..\..\C:/wamp64/www/Universe/src\Translation\javascript.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="f3ca3374403a5fdc9cfa92c89497eff02e113d55" resname="Review date">
         <source>Review date</source>
@@ -5348,7 +5348,7 @@
       <trans-unit id="b4a77d9044e9aa495ae2f5a0aa255272c7ed896b" resname="Searching ...">
         <source>Searching ...</source>
         <target state="new">Searching ...</target>
-        <jms:reference-file line="16">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Translation\javascript.html.twig\</jms:reference-file>
+        <jms:reference-file line="16">\..\..\..\..\..\C:/wamp64/www/Universe/src\Translation\javascript.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="20a12d433212ed3889a2fc1e0d6f2db9b0440866" resname="Seated">
         <source>Seated</source>
@@ -5384,11 +5384,11 @@
       <trans-unit id="ed2af2b2b5b7b5a7a9c1ec582c69eecc073096b9" resname="See all categories">
         <source>See all categories</source>
         <target state="new">See all categories</target>
-        <jms:reference-file line="220">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Front\Main\homepage.html.twig\</jms:reference-file>
+        <jms:reference-file line="220">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Front\Main\homepage.html.twig\</jms:reference-file>
       </trans-unit>
-      <trans-unit id="36c77ab2a6e79bee5ec9e9e009d4149863ce719d" resname="See all events on sale">
-        <source>See all events on sale</source>
-        <target state="new">See all events on sale</target>
+      <trans-unit id="36c77ab2a6e79bee5ec9e9e009d4149863ce719d" resname="See all active events">
+        <source>See all active events</source>
+        <target state="new">See all active events</target>
         <jms:reference-file line="151">\..\..\..\..\..\C:/wamp64/www/scd_eve/templates\Front\Organizer\profile.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="1618f01711a696b44454cb8adc7685e5f6233962" resname="See more articles">
@@ -5399,7 +5399,7 @@
       <trans-unit id="8e5805f5db867461935cac8baee37378f94ceb84" resname="See more events">
         <source>See more events</source>
         <target state="new">See more events</target>
-        <jms:reference-file line="191">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Front\Main\homepage.html.twig\</jms:reference-file>
+        <jms:reference-file line="191">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Front\Main\homepage.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="a82394ee53388f7d4041983ae636fd2b4d1ed26d" resname="Select a payout method">
         <source>Select a payout method</source>
@@ -5482,7 +5482,7 @@
       <trans-unit id="5a6140aeda13569d6025eaa570be6680b435d6c6" resname="Sell tickets online">
         <source>Sell tickets online</source>
         <target state="new">Sell tickets online</target>
-        <jms:reference-file line="19">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Global\footer.html.twig\</jms:reference-file>
+        <jms:reference-file line="19">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Global\footer.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="9bc2575c3930437e80555f78757b783c842e8e66" resname="Send">
         <source>Send</source>
@@ -5530,7 +5530,7 @@
       <trans-unit id="12bce4f48451c8f23167c504e79ddbd49e635bfe" resname="Set the parent category to add a subcategory">
         <source>Set the parent category to add a subcategory</source>
         <target state="new">Set the parent category to add a subcategory</target>
-        <jms:reference-file line="7">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Translation\formhelp.html.twig\</jms:reference-file>
+        <jms:reference-file line="7">\..\..\..\..\..\C:/wamp64/www/Universe/src\Translation\formhelp.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="93c6afb3c93757ec7c408730a982f24872f102f2" resname="Set your %payoutMethodName% payout method">
         <source>Set your %payoutMethodName% payout method</source>
@@ -5748,7 +5748,7 @@
       <trans-unit id="555bf1d6766121611c53d4f3087863911c0fddc5" resname="Sign in via Twitter">
         <source>Sign in via Twitter</source>
         <target state="new">Sign in via Twitter</target>
-        <jms:reference-file line="23">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\bundles\FOSUserBundle\Security\login.html.twig\</jms:reference-file>
+        <jms:reference-file line="23">\..\..\..\..\..\C:/wamp64/www/Universe/templates\bundles\FOSUserBundle\Security\login.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="dc1649a16c1496db3e4073be6a73faf5121aeae7" resname="Sign out">
         <source>Sign out</source>
@@ -5776,7 +5776,7 @@
       <trans-unit id="4e48f897fd1823b4f1687dd4df80c0b35d95e967" resname="Sign up via Twitter">
         <source>Sign up via Twitter</source>
         <target state="new">Sign up via Twitter</target>
-        <jms:reference-file line="23">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\bundles\FOSUserBundle\Registration\register-attendee.html.twig\</jms:reference-file>
+        <jms:reference-file line="23">\..\..\..\..\..\C:/wamp64/www/Universe/templates\bundles\FOSUserBundle\Registration\register-attendee.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="6db4dd3679f9007958d7195653a407d6095ed39d" resname="Site key">
         <source>Site key</source>
@@ -5890,7 +5890,7 @@
       <trans-unit id="986158aba060311473592899d1bb8150a61eb6b0" resname="Static pages settings">
         <source>Static pages settings</source>
         <target state="new">Static pages settings</target>
-        <jms:reference-file line="3">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Administrator\Settings\layout.html.twig\</jms:reference-file>
+        <jms:reference-file line="3">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Administrator\Settings\layout.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="2086b21f8f49274138c38d476bee317a84a8aecc" resname="Statistics">
         <source>Statistics</source>
@@ -5933,7 +5933,7 @@
       <trans-unit id="41460ebaa0e8a69697c767d114aef63eeb9b1dde" resname="Stick">
         <source>Stick</source>
         <target state="new">Stick</target>
-        <jms:reference-file line="10">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Translation\javascript.html.twig\</jms:reference-file>
+        <jms:reference-file line="10">\..\..\..\..\..\C:/wamp64/www/Universe/src\Translation\javascript.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="2f3643f19732c151dcaeb7f8cb55a32740edd54d" resname="Still in cart">
         <source>Still in cart</source>
@@ -6054,7 +6054,7 @@
       <trans-unit id="ff0182ff2babe526616c35a056382da239294556" resname="TSL">
         <source>TSL</source>
         <target state="new">TSL</target>
-        <jms:reference-file line="804">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Administrator\SettingsController.php\</jms:reference-file>
+        <jms:reference-file line="804">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Administrator\SettingsController.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="848eed0fbd5429f556b2982dec3ea87136e33e44" resname="Tags">
         <source>Tags</source>
@@ -6441,9 +6441,9 @@
       <trans-unit id="51ed0f2c094ca326579da6cd2531212764bd41cc" resname="The category was not found">
         <source>The category was not found</source>
         <target state="new">The category was not found</target>
-        <jms:reference-file line="102">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Admin\CategoryController.php\</jms:reference-file>
-        <jms:reference-file line="40">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Admin\CategoryController.php\</jms:reference-file>
-        <jms:reference-file line="76">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Admin\CategoryController.php\</jms:reference-file>
+        <jms:reference-file line="102">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Admin\CategoryController.php\</jms:reference-file>
+        <jms:reference-file line="40">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Admin\CategoryController.php\</jms:reference-file>
+        <jms:reference-file line="76">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Admin\CategoryController.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="48813351d3853df74e980338ba80bc42a491e4cc" resname="The confirmation email has been resent to">
         <source>The confirmation email has been resent to</source>
@@ -6527,7 +6527,7 @@
       <trans-unit id="b09448c767edc9d43b2bd21b88aae2e92c22b77b" resname="The email address is not valid">
         <source>The email address is not valid</source>
         <target state="new">The email address is not valid</target>
-        <jms:reference-file line="27">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Translation\javascript.html.twig\</jms:reference-file>
+        <jms:reference-file line="27">\..\..\..\..\..\C:/wamp64/www/Universe/src\Translation\javascript.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="c89245ab8f3a9be212065bd3b0e5c434a92c6eba" resname="The email could not be sent">
         <source>The email could not be sent</source>
@@ -6674,7 +6674,7 @@
       <trans-unit id="eeae9bdbc173b1f12175bb6eba5e13c2b9f1fc2e" resname="The homepage settings can not be loaded">
         <source>The homepage settings can not be loaded</source>
         <target state="new">The homepage settings can not be loaded</target>
-        <jms:reference-file line="237">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Administrator\SettingsController.php\</jms:reference-file>
+        <jms:reference-file line="237">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Administrator\SettingsController.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="fa8bcd43b3d312c5eac0d9777dda4ffad9c0d407" resname="The homepage settings could not be loaded">
         <source>The homepage settings could not be loaded</source>
@@ -6922,7 +6922,7 @@
       <trans-unit id="7374ab1263428ac38605a18c8695916a93cf5d2d" resname="The payout request has been soft deleted, restore it before viewing the details">
         <source>The payout request has been soft deleted, restore it before viewing the details</source>
         <target state="new">The payout request has been soft deleted, restore it before viewing the details</target>
-        <jms:reference-file line="457">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Shared\PayoutRequestController.php\</jms:reference-file>
+        <jms:reference-file line="457">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Shared\PayoutRequestController.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="c14936460ad37cdf11ab205c1eaa7a9a23097e2d" resname="The payout request has been succesfully restored">
         <source>The payout request has been succesfully restored</source>
@@ -6980,27 +6980,27 @@
       <trans-unit id="8241b1a9da8ea72e5bda880487c2f93e551bcc53" resname="The refund could not been processed at this moment">
         <source>The refund could not been processed at this moment</source>
         <target state="new">The refund could not been processed at this moment</target>
-        <jms:reference-file line="676">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
+        <jms:reference-file line="676">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="66f3229fc855169b14f3f804721567c4677e2786" resname="The refund has already been reclined">
         <source>The refund has already been reclined</source>
         <target state="new">The refund has already been reclined</target>
-        <jms:reference-file line="656">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
+        <jms:reference-file line="656">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="a8c3f583a977c2ea8a4362ba9dc3cffa32aafcbe" resname="The refund has been declined">
         <source>The refund has been declined</source>
         <target state="new">The refund has been declined</target>
-        <jms:reference-file line="709">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
+        <jms:reference-file line="709">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="a88d1cb27fcb5d69753b958b1ffbe651e51c8e19" resname="The refund has been successfully processed">
         <source>The refund has been successfully processed</source>
         <target state="new">The refund has been successfully processed</target>
-        <jms:reference-file line="674">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
+        <jms:reference-file line="674">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="e4e3e0b98f061669415b1d820c3e62b44c6f5e27" resname="The refund request has already been processed or no refund has been requested">
         <source>The refund request has already been processed or no refund has been requested</source>
         <target state="new">The refund request has already been processed or no refund has been requested</target>
-        <jms:reference-file line="695">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
+        <jms:reference-file line="695">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="af218faf8aa0c0099ef215d826b36353b7791181" resname="The request method is known by the server but is not supported by the target resource">
         <source>The request method is known by the server but is not supported by the target resource</source>
@@ -7141,7 +7141,7 @@
       <trans-unit id="e8ea25fa504baf7b39f1f6f9c4ff0e8fb44faae2" resname="The tickets have been released">
         <source>The tickets have been released</source>
         <target state="new">The tickets have been released</target>
-        <jms:reference-file line="24">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Translation\javascript.html.twig\</jms:reference-file>
+        <jms:reference-file line="24">\..\..\..\..\..\C:/wamp64/www/Universe/src\Translation\javascript.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="3697e1009190e9a24d47061e55e07920c8b6bcb1" resname="The user can not be found">
         <source>The user can not be found</source>
@@ -7332,7 +7332,7 @@
       <trans-unit id="28c1318ca5877e688eda732856b3cb9d31993336" resname="This fee will be added to the ticket sale price (leave this field blank to disable additional ticket fees)">
         <source>This fee will be added to the ticket sale price (leave this field blank to disable additional ticket fees)</source>
         <target state="new">This fee will be added to the ticket sale price (leave this field blank to disable additional ticket fees)</target>
-        <jms:reference-file line="36">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Translation\formhelp.html.twig\</jms:reference-file>
+        <jms:reference-file line="36">\..\..\..\..\..\C:/wamp64/www/Universe/src\Translation\formhelp.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="75df47bf6244cf405c025feaa427d646242985e4" resname="This fee will be added to the ticket sale price which are bought from a point of sale, put 0 to disable additional fees for tickets which are bought from a point of sale, does not apply for free tickets, will be applied to future orders">
         <source>This fee will be added to the ticket sale price which are bought from a point of sale, put 0 to disable additional fees for tickets which are bought from a point of sale, does not apply for free tickets, will be applied to future orders</source>
@@ -7342,7 +7342,7 @@
       <trans-unit id="d88aeed01662a6ad83dfe86b5e19c90fc620ba13" resname="This fee will be added to the ticket sale price which are bought online, put 0 to disable additional fees for ticket which are bought online, does not apply for free tickets, will be applied to future orders">
         <source>This fee will be added to the ticket sale price which are bought online, put 0 to disable additional fees for ticket which are bought online, does not apply for free tickets, will be applied to future orders</source>
         <target state="new">This fee will be added to the ticket sale price which are bought online, put 0 to disable additional fees for ticket which are bought online, does not apply for free tickets, will be applied to future orders</target>
-        <jms:reference-file line="36">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Translation\formhelp.html.twig\</jms:reference-file>
+        <jms:reference-file line="36">\..\..\..\..\..\C:/wamp64/www/Universe/src\Translation\formhelp.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="587569e3480653658edc325fb9892432527e4bcf" resname="This fee will be added to the ticket sale price which are bought online, put 0 to disable additional fees for tickets which are bought online, does not apply for free tickets, will be applied to future orders">
         <source>This fee will be added to the ticket sale price which are bought online, put 0 to disable additional fees for tickets which are bought online, does not apply for free tickets, will be applied to future orders</source>
@@ -7369,20 +7369,20 @@
       <trans-unit id="489db37415ade9fa940b45ccd96197dcf411a107" resname="This order has already been refunded">
         <source>This order has already been refunded</source>
         <target state="new">This order has already been refunded</target>
-        <jms:reference-file line="651">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
+        <jms:reference-file line="651">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="e26d655cd93134523dc17c7dd198da091a0d4923" resname="This order is not eligible for refund because it contains tickets from different organizers">
         <source>This order is not eligible for refund because it contains tickets from different organizers</source>
         <target state="new">This order is not eligible for refund because it contains tickets from different organizers</target>
-        <jms:reference-file line="592">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
-        <jms:reference-file line="641">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
+        <jms:reference-file line="592">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
+        <jms:reference-file line="641">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="d03792f068c1668569022d2112e78348cbf13cfd" resname="This order is not eligible for refund because it is not paid">
         <source>This order is not eligible for refund because it is not paid</source>
         <target state="new">This order is not eligible for refund because it is not paid</target>
-        <jms:reference-file line="597">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
-        <jms:reference-file line="646">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
-        <jms:reference-file line="700">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
+        <jms:reference-file line="597">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
+        <jms:reference-file line="646">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
+        <jms:reference-file line="700">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="e1debb86c62293acefd12bfa240b98947c6dabf4" resname="This payout method is currently disabled">
         <source>This payout method is currently disabled</source>
@@ -7434,7 +7434,7 @@
       <trans-unit id="e246a8dc78dc75c9bc7f60f332a61dcd8ca121e4" resname="Ticket fee">
         <source>Ticket fee</source>
         <target state="new">Ticket fee</target>
-        <jms:reference-file line="55">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Administrator\SettingsController.php\</jms:reference-file>
+        <jms:reference-file line="55">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Administrator\SettingsController.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="790800ec08ee43ff55da58947b7635f083548b85" resname="Ticket fee (Online)">
         <source>Ticket fee (Online)</source>
@@ -7475,8 +7475,8 @@
       <trans-unit id="93c14ee54e7ecd9e40449f7f50845b1a65183ff6" resname="Ticket style">
         <source>Ticket style</source>
         <target state="new">Ticket style</target>
-        <jms:reference-file line="261">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Shared\Event\details.html.twig\</jms:reference-file>
-        <jms:reference-file line="271">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Shared\Event\details.html.twig\</jms:reference-file>
+        <jms:reference-file line="261">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Shared\Event\details.html.twig\</jms:reference-file>
+        <jms:reference-file line="271">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Shared\Event\details.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="74abc784fb4763ea0836cd636d1fbbd2a33608fd" resname="Ticket type">
         <source>Ticket type</source>
@@ -7559,7 +7559,7 @@
       <trans-unit id="a06072ceccf8d5e91e17c71a20f820651cc4296d" resname="Time's up">
         <source>Time's up</source>
         <target state="new">Time's up</target>
-        <jms:reference-file line="23">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Translation\javascript.html.twig\</jms:reference-file>
+        <jms:reference-file line="23">\..\..\..\..\..\C:/wamp64/www/Universe/src\Translation\javascript.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="b58f33232483b518f20b2d130911d1e1db354bd1" resname="Timeleft">
         <source>Timeleft</source>
@@ -7746,7 +7746,7 @@
       <trans-unit id="e04011826439379fcc95c09305a9b02bf4c43a16" resname="Unstick">
         <source>Unstick</source>
         <target state="new">Unstick</target>
-        <jms:reference-file line="11">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Translation\javascript.html.twig\</jms:reference-file>
+        <jms:reference-file line="11">\..\..\..\..\..\C:/wamp64/www/Universe/src\Translation\javascript.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="fcc8ed72fe09ff3410dd80ba0befff5020cc5bd9" resname="Until date">
         <source>Until date</source>
@@ -7764,7 +7764,7 @@
       <trans-unit id="e6721a05e625f934664adfb0f5ef3abb70446bdb" resname="Upcoming tickets">
         <source>Upcoming tickets</source>
         <target state="new">Upcoming tickets</target>
-        <jms:reference-file line="176">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Shared\Order\orders.html.twig\</jms:reference-file>
+        <jms:reference-file line="176">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Shared\Order\orders.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="a7c3eda250d12396bfe6552ee11fad43fe7b2fae" resname="Update cart">
         <source>Update cart</source>
@@ -7877,7 +7877,7 @@
       <trans-unit id="c91d4eac5fad7be3ea7b633ed91b5a2350e5aab9" resname="Useful Links">
         <source>Useful Links</source>
         <target state="new">Useful Links</target>
-        <jms:reference-file line="6">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Global\footer.html.twig\</jms:reference-file>
+        <jms:reference-file line="6">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Global\footer.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="1d81eda8fda851e723a88a21fd4afea6913c6881" resname="User information">
         <source>User information</source>
@@ -8063,7 +8063,7 @@
       <trans-unit id="ac952b4e9459d19ac59f87cfe812c8a17a17384b" resname="We recommend a 48x48 image">
         <source>We recommend a 48x48 image</source>
         <target state="new">We recommend a 48x48 image</target>
-        <jms:reference-file line="45">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Translation\formhelp.html.twig\</jms:reference-file>
+        <jms:reference-file line="45">\..\..\..\..\..\C:/wamp64/www/Universe/src\Translation\formhelp.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="e51e21fdf27b508ae7b50013ed922106833bcd32" resname="We recommend a 48x48 image size">
         <source>We recommend a 48x48 image size</source>
@@ -8084,7 +8084,7 @@
       <trans-unit id="b91d520413331df7c63e7a5303fe2108f22ffa34" resname="Website description">
         <source>Website description</source>
         <target state="new">Website description</target>
-        <jms:reference-file line="65">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\AppLayoutSettingsType.php\</jms:reference-file>
+        <jms:reference-file line="65">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\AppLayoutSettingsType.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="97a81662ae83c7b1fa80e750db39a09574d217af" resname="Website name">
         <source>Website name</source>
@@ -8141,12 +8141,12 @@
       <trans-unit id="fa63f7075b712b4619fcc9c3cb8f27c88e386314" resname="With sales only">
         <source>With sales only</source>
         <target state="new">With sales only</target>
-        <jms:reference-file line="92">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Shared\Event\index.html.twig\</jms:reference-file>
+        <jms:reference-file line="92">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Shared\Event\index.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="d075097707321a9d13aa593a43e5829dc89a9541" resname="Without sales only">
         <source>Without sales only</source>
         <target state="new">Without sales only</target>
-        <jms:reference-file line="96">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Shared\Event\index.html.twig\</jms:reference-file>
+        <jms:reference-file line="96">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Shared\Event\index.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="879e32326c5217968ac8e3a14e4a8a5214957264" resname="Year">
         <source>Year</source>
@@ -8402,17 +8402,17 @@
       <trans-unit id="4631c45ab0dd64c5abd4c6647835c75f250dfd2d" resname="You have already requested a refund for this order">
         <source>You have already requested a refund for this order</source>
         <target state="new">You have already requested a refund for this order</target>
-        <jms:reference-file line="603">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
+        <jms:reference-file line="603">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="8b84f91392fab7e4f3d3b621138fb325b0a01938" resname="You have already requested a refund for this order and it was approved">
         <source>You have already requested a refund for this order and it was approved</source>
         <target state="new">You have already requested a refund for this order and it was approved</target>
-        <jms:reference-file line="607">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
+        <jms:reference-file line="607">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="d2c3d6af55c9aa1b0c72ad424390990fd594cc69" resname="You have already requested a refund for this order and it was declined">
         <source>You have already requested a refund for this order and it was declined</source>
         <target state="new">You have already requested a refund for this order and it was declined</target>
-        <jms:reference-file line="611">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
+        <jms:reference-file line="611">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="a13b016290765d8979f45fd225b85a58673048eb" resname="You have received a new quote request for the venue">
         <source>You have received a new quote request for the venue</source>
@@ -8558,7 +8558,7 @@
       <trans-unit id="a297b3c11baf94932955aca9996122f008a0e4ff" resname="Your refund request has been successfully submitted to the organizer">
         <source>Your refund request has been successfully submitted to the organizer</source>
         <target state="new">Your refund request has been successfully submitted to the organizer</target>
-        <jms:reference-file line="623">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
+        <jms:reference-file line="623">\..\..\..\..\..\C:/wamp64/www/Universe/src\Controller\Dashboard\Shared\OrderController.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="2c8aa84f8a00daca107a3973e33340f251b48794" resname="Your registration has been successfully processed">
         <source>Your registration has been successfully processed</source>
@@ -8659,23 +8659,23 @@
       <trans-unit id="27e90dfa57c358acfaf470860f6f72c9282ce995" resname="at">
         <source>at</source>
         <target state="new">at</target>
-        <jms:reference-file line="97">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Administrator\HelpCenter\Article\index.html.twig</jms:reference-file>
-        <jms:reference-file line="141">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Administrator\User\index.html.twig\</jms:reference-file>
-        <jms:reference-file line="10">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Attendee\Cart\add-to-cart-modal.html.twig\</jms:reference-file>
-        <jms:reference-file line="95">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Organizer\PointOfSale\index.html.twig\</jms:reference-file>
-        <jms:reference-file line="98">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Organizer\PointOfSale\index.html.twig\</jms:reference-file>
-        <jms:reference-file line="95">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Organizer\Scanner\index.html.twig\</jms:reference-file>
-        <jms:reference-file line="98">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Organizer\Scanner\index.html.twig\</jms:reference-file>
-        <jms:reference-file line="278">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Shared\Event\details.html.twig\</jms:reference-file>
-        <jms:reference-file line="284">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Shared\Event\details.html.twig\</jms:reference-file>
-        <jms:reference-file line="31">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Shared\Event\details.html.twig\</jms:reference-file>
-        <jms:reference-file line="36">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Shared\Event\details.html.twig\</jms:reference-file>
-        <jms:reference-file line="42">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Shared\Event\details.html.twig\</jms:reference-file>
-        <jms:reference-file line="38">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Front\Event\events.html.twig\</jms:reference-file>
-        <jms:reference-file line="42">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Front\Event\events.html.twig\</jms:reference-file>
-        <jms:reference-file line="25">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Front\Main\homepage.html.twig\</jms:reference-file>
-        <jms:reference-file line="46">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Global\header.html.twig\</jms:reference-file>
-        <jms:reference-file line="29">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\bundles\FOSCommentBundle\Thread\comment_content.html.twig\</jms:reference-file>
+        <jms:reference-file line="97">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Administrator\HelpCenter\Article\index.html.twig</jms:reference-file>
+        <jms:reference-file line="141">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Administrator\User\index.html.twig\</jms:reference-file>
+        <jms:reference-file line="10">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Attendee\Cart\add-to-cart-modal.html.twig\</jms:reference-file>
+        <jms:reference-file line="95">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Organizer\PointOfSale\index.html.twig\</jms:reference-file>
+        <jms:reference-file line="98">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Organizer\PointOfSale\index.html.twig\</jms:reference-file>
+        <jms:reference-file line="95">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Organizer\Scanner\index.html.twig\</jms:reference-file>
+        <jms:reference-file line="98">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Organizer\Scanner\index.html.twig\</jms:reference-file>
+        <jms:reference-file line="278">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Shared\Event\details.html.twig\</jms:reference-file>
+        <jms:reference-file line="284">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Shared\Event\details.html.twig\</jms:reference-file>
+        <jms:reference-file line="31">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Shared\Event\details.html.twig\</jms:reference-file>
+        <jms:reference-file line="36">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Shared\Event\details.html.twig\</jms:reference-file>
+        <jms:reference-file line="42">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Shared\Event\details.html.twig\</jms:reference-file>
+        <jms:reference-file line="38">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Front\Event\events.html.twig\</jms:reference-file>
+        <jms:reference-file line="42">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Front\Event\events.html.twig\</jms:reference-file>
+        <jms:reference-file line="25">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Front\Main\homepage.html.twig\</jms:reference-file>
+        <jms:reference-file line="46">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Global\header.html.twig\</jms:reference-file>
+        <jms:reference-file line="29">\..\..\..\..\..\C:/wamp64/www/Universe/templates\bundles\FOSCommentBundle\Thread\comment_content.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="7eec7d7f71c7af29104d31547e685919de3f9d44" resname="checked In">
         <source>checked In</source>
@@ -8864,8 +8864,8 @@
       <trans-unit id="3c6de1b7dd91465d437ef415f94f36afc1fbc8a8" resname="title">
         <source>title</source>
         <target state="new">title</target>
-        <jms:reference-file line="3">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\dashboard-blank.html.twig\</jms:reference-file>
-        <jms:reference-file line="3">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Front\front-blank.html.twig\</jms:reference-file>
+        <jms:reference-file line="3">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\dashboard-blank.html.twig\</jms:reference-file>
+        <jms:reference-file line="3">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Front\front-blank.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="5f5a36a69124ab9b58bcc397e14e7455adb1e59b" resname="to edit your profile">
         <source>to edit your profile</source>
@@ -8990,52 +8990,52 @@
       <trans-unit id="621219ff9885aee839aa0d4c43abb42b548445a0" resname="关键字">
         <source>关键字</source>
         <target state="new">关键字</target>
-        <jms:reference-file line="70">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\HelpCenterArticleType.php\</jms:reference-file>
+        <jms:reference-file line="70">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\HelpCenterArticleType.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="163aec9194a17383a22445f6651c80f86dcce879" resname="内容">
         <source>内容</source>
         <target state="new">内容</target>
-        <jms:reference-file line="58">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\HelpCenterArticleType.php\</jms:reference-file>
-        <jms:reference-file line="37">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\PageType.php\</jms:reference-file>
+        <jms:reference-file line="58">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\HelpCenterArticleType.php\</jms:reference-file>
+        <jms:reference-file line="37">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\PageType.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="1be7ae4fc2571d6fe52d4a109018a6d5873c1b4f" resname="名称">
         <source>名称</source>
         <target state="new">名称</target>
-        <jms:reference-file line="24">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\AmenityType.php\</jms:reference-file>
-        <jms:reference-file line="24">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\AudienceType.php\</jms:reference-file>
-        <jms:reference-file line="23">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\BlogPostCategoryType.php\</jms:reference-file>
-        <jms:reference-file line="46">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\BlogPostType.php\</jms:reference-file>
-        <jms:reference-file line="26">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\CategoryType.php\</jms:reference-file>
-        <jms:reference-file line="24">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\CountryType.php\</jms:reference-file>
-        <jms:reference-file line="55">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\EventType.php\</jms:reference-file>
-        <jms:reference-file line="44">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\HelpCenterCategoryType.php\</jms:reference-file>
-        <jms:reference-file line="24">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\LanguageType.php\</jms:reference-file>
-        <jms:reference-file line="40">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\VenueType.php\</jms:reference-file>
-        <jms:reference-file line="24">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\VenueTypeType.php\</jms:reference-file>
+        <jms:reference-file line="24">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\AmenityType.php\</jms:reference-file>
+        <jms:reference-file line="24">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\AudienceType.php\</jms:reference-file>
+        <jms:reference-file line="23">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\BlogPostCategoryType.php\</jms:reference-file>
+        <jms:reference-file line="46">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\BlogPostType.php\</jms:reference-file>
+        <jms:reference-file line="26">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\CategoryType.php\</jms:reference-file>
+        <jms:reference-file line="24">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\CountryType.php\</jms:reference-file>
+        <jms:reference-file line="55">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\EventType.php\</jms:reference-file>
+        <jms:reference-file line="44">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\HelpCenterCategoryType.php\</jms:reference-file>
+        <jms:reference-file line="24">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\LanguageType.php\</jms:reference-file>
+        <jms:reference-file line="40">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\VenueType.php\</jms:reference-file>
+        <jms:reference-file line="24">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\VenueTypeType.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="412f54dc38e642eda535746e715503df35ad768f" resname="描述">
         <source>描述</source>
         <target state="new">描述</target>
-        <jms:reference-file line="58">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\BlogPostType.php\</jms:reference-file>
-        <jms:reference-file line="68">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\EventType.php\</jms:reference-file>
-        <jms:reference-file line="52">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\VenueType.php\</jms:reference-file>
+        <jms:reference-file line="58">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\BlogPostType.php\</jms:reference-file>
+        <jms:reference-file line="68">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\EventType.php\</jms:reference-file>
+        <jms:reference-file line="52">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\VenueType.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="ae0a7afecee1e83d27e322e287cb9bf351ea0018" resname="标签">
         <source>标签</source>
         <target state="new">标签</target>
-        <jms:reference-file line="71">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\BlogPostType.php\</jms:reference-file>
+        <jms:reference-file line="71">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\BlogPostType.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="748d7dc7e3212d62e207d204624705af70ea635c" resname="标题">
         <source>标题</source>
         <target state="new">标题</target>
-        <jms:reference-file line="46">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\HelpCenterArticleType.php\</jms:reference-file>
-        <jms:reference-file line="86">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\HomepageHeroSettingsType.php\</jms:reference-file>
-        <jms:reference-file line="25">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\PageType.php\</jms:reference-file>
+        <jms:reference-file line="46">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\HelpCenterArticleType.php\</jms:reference-file>
+        <jms:reference-file line="86">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\HomepageHeroSettingsType.php\</jms:reference-file>
+        <jms:reference-file line="25">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\PageType.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="c865b5b0bc0060f070640f79ae7f96b45ab31808" resname="段">
         <source>段</source>
         <target state="new">段</target>
-        <jms:reference-file line="96">\..\..\..\..\..\C:/wamp64/www/Eventic/src\Form\HomepageHeroSettingsType.php\</jms:reference-file>
+        <jms:reference-file line="96">\..\..\..\..\..\C:/wamp64/www/Universe/src\Form\HomepageHeroSettingsType.php\</jms:reference-file>
       </trans-unit>
     </body>
   </file>

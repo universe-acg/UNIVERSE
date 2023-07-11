@@ -1,3 +1,7 @@
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
+
 // css & scss
 
 require('../css/app.scss');
@@ -697,7 +701,7 @@ $(document).ready(function () {
                 allow_duplicate: false,
                 allow_up: true,
                 allow_down: true,
-                add: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-add-button"><i class="fas fa-plus-square"></i> ' + Translator.trans('Add a new event date', {}, 'javascript') + '</a>',
+                // add: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-add-button"><i class="fas fa-plus-square"></i> ' + Translator.trans('Add a new event date', {}, 'javascript') + '</a>',
                 remove: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-remove-button"><i class="fas fa-minus-square"></i> ' + Translator.trans('Remove this event date', {}, 'javascript') + '</a>',
                 duplicate: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-duplicate-button"><i class="fas fa-clone"></i> ' + Translator.trans('Duplicate this event date', {}, 'javascript') + '</a>',
                 up: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-up-button"><i class="fas fa-caret-square-up"></i> ' + Translator.trans('Move up', {}, 'javascript') + '</a>',
@@ -1373,36 +1377,36 @@ $(document).ready(function () {
 
     // Juqery Cookie Bar
     if (typeof $("body").data('cookie-bar-page-link') !== 'undefined') {
-        $.cookieBar('addTranslation', 'fr', {
-            message: 'Nous utilisons des cookies pour fournir nos services. En utilisant ce site Web, vous acceptez cela.',
-            acceptText: 'D\'accord',
-            infoText: 'Plus d\'information'
-        });
-        $.cookieBar('addTranslation', 'es', {
-            message: 'Usamos cookies para brindar nuestros servicios. Al utilizar este sitio web, acepta esto.',
-            acceptText: 'Bueno',
-            infoText: 'Más información'
-        });
-        $.cookieBar('addTranslation', 'ar', {
-            message: 'نحن نستخدم ملفات تعريف الارتباط لتقديم خدماتنا. باستخدام هذا الموقع ، فإنك توافق على ذلك.',
-            acceptText: 'حسنا',
-            infoText: 'المزيد من المعلومات'
-        });
-        $.cookieBar('addTranslation', 'de', {
-            message: 'Wir verwenden Cookies, um unsere Dienste bereitzustellen. Durch die Nutzung dieser Website stimmen Sie dem zu.',
-            acceptText: 'OK',
-            infoText: 'Mehr Informationen'
-        });
-        $.cookieBar('addTranslation', 'pt', {
-            message: 'Usamos cookies para fornecer nossos serviços. Ao usar este site, você concorda com isso.',
-            acceptText: 'OK',
-            infoText: 'Mais Informações'
-        });
-        $.cookieBar({
-            style: 'bottom',
-            infoLink: $("body").data('cookie-bar-page-link'),
-            language: $("html").attr("lang")
-        });
+        // $.cookieBar('addTranslation', 'fr', {
+        //     message: 'Nous utilisons des cookies pour fournir nos services. En utilisant ce site Web, vous acceptez cela.',
+        //     acceptText: 'D\'accord',
+        //     infoText: 'Plus d\'information'
+        // });
+        // $.cookieBar('addTranslation', 'es', {
+        //     message: 'Usamos cookies para brindar nuestros servicios. Al utilizar este sitio web, acepta esto.',
+        //     acceptText: 'Bueno',
+        //     infoText: 'Más información'
+        // });
+        // $.cookieBar('addTranslation', 'ar', {
+        //     message: 'نحن نستخدم ملفات تعريف الارتباط لتقديم خدماتنا. باستخدام هذا الموقع ، فإنك توافق على ذلك.',
+        //     acceptText: 'حسنا',
+        //     infoText: 'المزيد من المعلومات'
+        // });
+        // $.cookieBar('addTranslation', 'de', {
+        //     message: 'Wir verwenden Cookies, um unsere Dienste bereitzustellen. Durch die Nutzung dieser Website stimmen Sie dem zu.',
+        //     acceptText: 'OK',
+        //     infoText: 'Mehr Informationen'
+        // });
+        // $.cookieBar('addTranslation', 'pt', {
+        //     message: 'Usamos cookies para fornecer nossos serviços. Ao usar este site, você concorda com isso.',
+        //     acceptText: 'OK',
+        //     infoText: 'Mais Informações'
+        // });
+        // $.cookieBar({
+        //     style: 'bottom',
+        //     infoLink: $("body").data('cookie-bar-page-link'),
+        //     language: $("html").attr("lang")
+        // });
     }
 
     // Disables payment related settings modifications on demo mode

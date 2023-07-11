@@ -67,62 +67,62 @@
                                 </div>
                             {% endif %}
 
-                            <header class="section-heading mb-3 mt-5">
-                                <h4 class="title-section float-left"><i
-                                            class="fas fa-cart-arrow-down"></i> {{ "Attendees summary" }}</h4>
-                                <a href="{{ path('dashboard_organizer_orders') }}" class="float-right"><i
-                                            class="fas fa-users"></i> {{ "Manage attendees" }}</a>
-                                <div class="clearfix"></div>
-                            </header>
-                            <div class="row mb-3 pl-2 pr-2">
-                                <div class="col-md-3 col-sm-6 col-12 p-1">
-                                    <div class="bg-primary rounded p-4 text-center text-white position-relative counter-box">
-                                        <i class="fas fa-cart-arrow-down"></i>
-                                        <h4>{{ services.getOrders({"organizer": app.user.organizer.slug, "count": true, "status": "all"}).getQuery().getSingleScalarResult() }}</h4>
-                                        <h5 class="mb-0">{{ "Orders placed" }}</h5>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-12 p-1">
-                                    <div class="bg-primary rounded p-4 text-center text-white position-relative counter-box">
-                                        <i class="fas fa-cart-arrow-down"></i>
-                                        <h4>{{ services.getOrders({"organizer": app.user.organizer.slug, "count": true, "status": 1}).getQuery().getSingleScalarResult() }}</h4>
-                                        <h5 class="mb-0">{{ "Completed" }}</h5>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-12 p-1">
-                                    <div class="bg-primary rounded p-4 text-center text-white position-relative counter-box">
-                                        <i class="fas fa-cart-arrow-down"></i>
-                                        <h4>{{ services.getOrders({"organizer": app.user.organizer.slug, "count": true, "status": 0}).getQuery().getSingleScalarResult() }}</h4>
-                                        <h5 class="mb-0">{{ "Awaiting" }}</h5>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-12 p-1">
-                                    <div class="bg-primary rounded p-4 text-center text-white position-relative counter-box">
-                                        <i class="fas fa-ticket-alt"></i>
-                                        {% set ticketsSold = services.getOrders({"organizer": app.user.organizer.slug, "sumOrderElements": true, "status": 1}).getQuery().getSingleScalarResult() %}
-                                        <h4>{{ ticketsSold ? ticketsSold : 0 }}</h4>
-                                        <h5 class="mb-0">{{ "Tickets offered" }}</h5>
-                                    </div>
-                                </div>
-                            </div>
+                            {#                            <header class="section-heading mb-3 mt-5"> #}
+                            {#                                <h4 class="title-section float-left"><i #}
+                            {#                                            class="fas fa-cart-arrow-down"></i> {{ "Attendees summary" }}</h4> #}
+                            {#                                <a href="{{ path('dashboard_organizer_orders') }}" class="float-right"><i #}
+                            {#                                            class="fas fa-users"></i> {{ "Manage attendees" }}</a> #}
+                            {#                                <div class="clearfix"></div> #}
+                            {#                            </header> #}
+                            {#                            <div class="row mb-3 pl-2 pr-2"> #}
+                            {#                                <div class="col-md-3 col-sm-6 col-12 p-1"> #}
+                            {#                                    <div class="bg-primary rounded p-4 text-center text-white position-relative counter-box"> #}
+                            {#                                        <i class="fas fa-cart-arrow-down"></i> #}
+                            {#                                        <h4>{{ services.getOrders({"organizer": app.user.organizer.slug, "count": true, "status": "all"}).getQuery().getSingleScalarResult() }}</h4> #}
+                            {#                                        <h5 class="mb-0">{{ "Orders placed" }}</h5> #}
+                            {#                                    </div> #}
+                            {#                                </div> #}
+                            {#                                <div class="col-md-3 col-sm-6 col-12 p-1"> #}
+                            {#                                    <div class="bg-primary rounded p-4 text-center text-white position-relative counter-box"> #}
+                            {#                                        <i class="fas fa-cart-arrow-down"></i> #}
+                            {#                                        <h4>{{ services.getOrders({"organizer": app.user.organizer.slug, "count": true, "status": 1}).getQuery().getSingleScalarResult() }}</h4> #}
+                            {#                                        <h5 class="mb-0">{{ "Completed" }}</h5> #}
+                            {#                                    </div> #}
+                            {#                                </div> #}
+                            {#                                <div class="col-md-3 col-sm-6 col-12 p-1"> #}
+                            {#                                    <div class="bg-primary rounded p-4 text-center text-white position-relative counter-box"> #}
+                            {#                                        <i class="fas fa-cart-arrow-down"></i> #}
+                            {#                                        <h4>{{ services.getOrders({"organizer": app.user.organizer.slug, "count": true, "status": 0}).getQuery().getSingleScalarResult() }}</h4> #}
+                            {#                                        <h5 class="mb-0">{{ "Awaiting" }}</h5> #}
+                            {#                                    </div> #}
+                            {#                                </div> #}
+                            {#                                <div class="col-md-3 col-sm-6 col-12 p-1"> #}
+                            {#                                    <div class="bg-primary rounded p-4 text-center text-white position-relative counter-box"> #}
+                            {#                                        <i class="fas fa-ticket-alt"></i> #}
+                            {#                                        {% set ticketsSold = services.getOrders({"organizer": app.user.organizer.slug, "sumOrderElements": true, "status": 1}).getQuery().getSingleScalarResult() %} #}
+                            {#                                        <h4>{{ ticketsSold ? ticketsSold : 0 }}</h4> #}
+                            {#                                        <h5 class="mb-0">{{ "Tickets offered" }}</h5> #}
+                            {#                                    </div> #}
+                            {#                                </div> #}
+                            {#                            </div> #}
 
-                            <div class="row mb-5">
-                                <div class="col-12">
-                                    <div id="ticketsSalesByDateLineChart">
-                                    </div>
-                                </div>
-                            </div>
+                            {#                            <div class="row mb-5"> #}
+                            {#                                <div class="col-12"> #}
+                            {#                                    <div id="ticketsSalesByDateLineChart"> #}
+                            {#                                    </div> #}
+                            {#                                </div> #}
+                            {#                            </div> #}
 
-                            {% set orders = services.getOrders({"organizer": app.user.organizer.slug, "status": "all", "limit": 3}).getQuery().getResult() %}
-                            {% if orders|length > 0 %}
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="card">
-                                            {% include "Dashboard/Shared/Order/manage-orders-table.html.twig" with {events: events} %}
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endif %}
+                            {#                            {% set orders = services.getOrders({"organizer": app.user.organizer.slug, "status": "all", "limit": 3}).getQuery().getResult() %} #}
+                            {#                            {% if orders|length > 0 %} #}
+                            {#                                <div class="row"> #}
+                            {#                                    <div class="col-12"> #}
+                            {#                                        <div class="card"> #}
+                            {#                                            {% include "Dashboard/Shared/Order/manage-orders-table.html.twig" with {events: events} %} #}
+                            {#                                        </div> #}
+                            {#                                    </div> #}
+                            {#                                </div> #}
+                            {#                            {% endif %} #}
 
                         </div>
                     </div>

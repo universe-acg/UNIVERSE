@@ -320,7 +320,7 @@
       <trans-unit id="b0341dff003570a0c716bda6a4cc9506e1a7bd14" resname="javascript string translation">
         <source>javascript string translation</source>
         <target>javascript string translation</target>
-        <jms:reference-file line="8">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\messages.html.twig\</jms:reference-file>
+        <jms:reference-file line="8">\..\..\..\..\..\C:/wamp64/www/Universe/templates\messages.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="b6c935d4f3c7b220fa038613a1f9c1b56b255a86" resname="min">
         <source>min</source>

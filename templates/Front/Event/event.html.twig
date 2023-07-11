@@ -384,7 +384,7 @@
                                             {% if reviewscount > 8 %}
                                                 <a href="{{ path('event_reviews') }}"
                                                    class="btn btn-outline-primary mx-auto"><i
-                                                            class="far fa-star-half-full"></i> {{ "See all %reviewscount% reviews"({'%reviewscount%': reviewscount}) }}
+                                                            class="far fa-star-half-full"></i> {{ "See all %reviewscount% reviews"|trans({'%reviewscount%': reviewscount}) }}
                                                 </a>
                                             {% endif %}
                                         </div>
@@ -610,25 +610,25 @@
                                                     <div class="table-responsive">
                                                         <table class="table table-hover table-condensed">
                                                             <tbody>
-                                                                {% for ticket in eventDate.tickets %}
-                                                                    {% if ticket.active %}
-                                                                        <tr class="bg-gray">
-                                                                            <td class="border-top-white"
-                                                                                style="width: 75%;">
-                                                                                {{ ticket.name }}
-                                                                            </td>
-                                                                            <td class="border-top-white text-right">
-                                                                                {% if not ticket.isOnSale %}
-                                                                                    <span class="badge badge-{{ ticket.stringifyStatusClass }}">{{ ticket.stringifyStatus }}</span>
-                                                                                {% else %}
-                                                                                    {{ ticket.free ? "Free" : ((services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '') ~ ticket.getSalePrice() ~ (services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '')) }}
-                                                                                    {% if ticket.promotionalprice and not ticket.free %}
-                                                                                        <del class="price-old">{{ (services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '') ~ ticket.getPrice() ~ (services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '') }}</del>
-                                                                                    {% endif %}
+                                                            {% for ticket in eventDate.tickets %}
+                                                                {% if ticket.active %}
+                                                                    <tr class="bg-gray">
+                                                                        <td class="border-top-white"
+                                                                            style="width: 75%;">
+                                                                            {{ ticket.name }}
+                                                                        </td>
+                                                                        <td class="border-top-white text-right">
+                                                                            {% if not ticket.isOnSale %}
+                                                                                <span class="badge badge-{{ ticket.stringifyStatusClass }}">{{ ticket.stringifyStatus }}</span>
+                                                                            {% else %}
+                                                                                {{ ticket.free ? "Free" : ((services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '') ~ ticket.getSalePrice() ~ (services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '')) }}
+                                                                                {% if ticket.promotionalprice and not ticket.free %}
+                                                                                    <del class="price-old">{{ (services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '') ~ ticket.getPrice() ~ (services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '') }}</del>
                                                                                 {% endif %}
-                                                                        </tr>
-                                                                    {% endif %}
-                                                                {% endfor %}
+                                                                            {% endif %}
+                                                                    </tr>
+                                                                {% endif %}
+                                                            {% endfor %}
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -779,11 +779,11 @@
                                     </dl>
                                 {% endif %}
                             {% endif %}
-                            {% if services.getSetting("newsletter_enabled") == "yes" and services.getSetting("mailchimp_api_key") and services.getSetting("mailchimp_list_id") %}
-                                <div class="mt-5">
-                                    {% include "Global/newsletter-box.html.twig" %}
-                                </div>
-                            {% endif %}
+                            {#                            {% if services.getSetting("newsletter_enabled") == "yes" and services.getSetting("mailchimp_api_key") and services.getSetting("mailchimp_list_id") %} #}
+                            {#                                <div class="mt-5"> #}
+                            {#                                    {% include "Global/newsletter-box.html.twig" %} #}
+                            {#                                </div> #}
+                            {#                            {% endif %} #}
                         </div>
                     </div>
                 </div>
@@ -793,7 +793,7 @@
             {% if othereventsbythisorganizer|length > 0 %}
                 <div class="row">
                     <div class="col-12">
-                        <h3 class="mt-5 mb-4 text-center">{{ "Other events by %organizername%"({'%organizername%' : event.organizer.name}) }}</h3>
+                        <h3 class="mt-5 mb-4 text-center">{{ "Other events by %organizername%"|trans({'%organizername%' : event.organizer.name}) }}</h3>
                         <div class="owl-init owl-carousel" data-margin="15" data-items="4" data-dots="false"
                              data-nav="true" data-autoplay="true" data-loop="false">
                             {% for event in othereventsbythisorganizer %}

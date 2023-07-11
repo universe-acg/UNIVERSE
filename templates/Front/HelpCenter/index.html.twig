@@ -34,7 +34,7 @@
                     {% set searchresults = services.getHelpCenterArticles({"keyword":app.request.get('keyword')}).getQuery().getResult() %}
                     <div class="col-12 mb-3">
                         <article class="box h-100 padding-y-lg">
-                            <strong>{{ "%resultsCount% result(s) found"({'%resultsCount%': searchresults|length}) ~ " " ~ "for" ~ ' "' ~ app.request.get('keyword') ~ '"' }}</strong>
+                            <strong>{{ "%resultsCount% result(s) found" |trans ({'%resultsCount%': searchresults|length}) ~ " " ~ "for" ~ ' "' ~ app.request.get('keyword') ~ '"' }}</strong>
                             {% if searchresults|length %}
                                 <hr>
                                 {% for article in searchresults %}

@@ -1,27 +1,30 @@
 <?php
-
-namespace App\Form;
-
-use App\Entity\MenuElement;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use A2lix\TranslationFormBundle\Form\Type\TranslationsType;
-use App\Service\AppServices;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-
-class MenuElementType extends AbstractType {
-
-    private $services;
-
-    public function __construct(AppServices $services) {
-        $this->services = $services;
-    }
-
-    public function buildForm(FormBuilderInterface $builder, array $options) {
-        $builder
+    
+    namespace App\Form;
+    
+    use A2lix\TranslationFormBundle\Form\Type\TranslationsType;
+    use App\Entity\MenuElement;
+    use App\Service\AppServices;
+    use Symfony\Component\Form\AbstractType;
+    use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+    use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+    use Symfony\Component\Form\Extension\Core\Type\TextType;
+    use Symfony\Component\Form\FormBuilderInterface;
+    use Symfony\Component\OptionsResolver\OptionsResolver;
+    
+    class MenuElementType extends AbstractType
+    {
+        
+        private $services;
+        
+        public function __construct(AppServices $services)
+        {
+            $this->services = $services;
+        }
+        
+        public function buildForm(FormBuilderInterface $builder, array $options)
+        {
+            $builder
                 ->add('icon', TextType::class, [
                     'purify_html' => true,
                     'required' => false,
@@ -29,17 +32,17 @@ class MenuElementType extends AbstractType {
                     'attr' => ['class' => 'icon-picker', 'autocomplete' => 'disabled']
                 ])
                 ->add('translations', TranslationsType::class, [
-                    'label' => 'Translation',
+                    // 'label' => 'Translation',
                     'fields' => [
                         'label' => [
                             'purify_html' => true,
                             'locale_options' => [
                                 'en' => ['label' => 'Link text'],
-                                'fr' => ['label' => 'Texte du lien'],
-                                'es' => ['label' => 'Texto del enlace'],
-                                'ar' => ['label' => 'نص الرابط'],
-                                'pt' => ['label' => 'Texto do link'],
-                                'de' => ['label' => 'Link Text'],
+//                            'fr' => ['label' => 'Texte du lien'],
+//                            'es' => ['label' => 'Texto del enlace'],
+//                            'ar' => ['label' => 'نص الرابط'],
+//                            'pt' => ['label' => 'Texto do link'],
+//                            'de' => ['label' => 'Link Text'],
                             ]
                         ]
                     ],
@@ -59,13 +62,14 @@ class MenuElementType extends AbstractType {
                 ->add('position', HiddenType::class, [
                     'attr' => [
                         'class' => 'menuelement-position',
-        ]]);
+                    ]]);
+        }
+        
+        public function configureOptions(OptionsResolver $resolver)
+        {
+            $resolver->setDefaults([
+                'data_class' => MenuElement::class,
+            ]);
+        }
+        
     }
-
-    public function configureOptions(OptionsResolver $resolver) {
-        $resolver->setDefaults([
-            'data_class' => MenuElement::class,
-        ]);
-    }
-
-}

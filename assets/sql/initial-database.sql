@@ -4532,6 +4532,10 @@ INSERT INTO `universe_menu_translation` (`id`, `translatable_id`, `name`, `heade
 (15, 3, 'Menú de la sección del segundo pie de página', 'Mi cuenta', 'menu-de-la-seccion-del-segundo-pie-de-pagina', 'es'),
 (16, 4, 'Menú de la sección del tercer pie de página', 'Categorías de eventos', 'menu-de-la-seccion-del-tercer-pie-de-pagina', 'es');
 
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
+
 --
 -- Table structure for table `universe_menu_element`
 --
@@ -4644,7 +4648,7 @@ INSERT INTO `universe_menu_element_translation` (`id`, `translatable_id`, `label
 (46, 16, 'My tickets', 'my-tickets-1', 'en'),
 (47, 16, 'Mes billets', 'mes-billets-1', 'fr'),
 (48, 16, 'تذاكري', 'تذاكري-1', 'ar'),
-(49, 17, 'Forgot your password ?', 'forgot-your-password', 'en'),
+(49, 17, 'Forgot your password?', 'forgot-your-password', 'en'),
 (50, 17, 'Mot de passe oublié ?', 'mot-de-passe-oublie', 'fr'),
 (51, 17, 'نسيت رقمك السري ؟', 'نسيت-رقمك-السري-؟', 'ar'),
 (52, 18, 'Pricing and fees', 'pricing-and-fees', 'en'),

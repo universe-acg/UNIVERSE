@@ -6,7 +6,7 @@
         <a href="{{ path('dashboard_index') }}"
            class="nav-link {% if routename == "dashboard_administrator_index" or routename == "dashboard_organizer_index" or routename == "dashboard_pointofsale_index" or routename == "dashboard_scanner_index" %}active{% endif %}">
             {% if is_granted("ROLE_POINTOFSALE") %}
-                <i class="fas fa-ticket-alt fa-fw"></i> {{ 'Events on sale' }}
+                <i class="fas fa-ticket-alt fa-fw"></i> {{ 'active events' }}
             {% elseif is_granted("ROLE_SCANNER") %}
                 <i class="fas fa-calendar-alt fa-fw"></i> {{ 'Events list' }}
             {% elseif is_granted("ROLE_ADMINISTRATOR") %}
@@ -41,14 +41,14 @@
                 <a class="nav-link {% if routename == "dashboard_administrator_settings_homepage" %}active{% endif %}"
                    href="{{ path('dashboard_administrator_settings_homepage') }}">{{ "Homepage" }}</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link {% if routename == "dashboard_administrator_settings_payment" or routename == "dashboard_administrator_settings_payment_gateways_add" or routename == "dashboard_administrator_settings_payment_gateways_edit" or routename == "dashboard_administrator_currency" or routename == "dashboard_administrator_currency_add" or routename == "dashboard_administrator_currency_edit" %}active{% endif %}"
-                   href="{{ path('dashboard_administrator_settings_payment') }}">{{ "Payments and Fees" }}</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {% if routename == "dashboard_administrator_settings_checkout" %}active{% endif %}"
-                   href="{{ path('dashboard_administrator_settings_checkout') }}">{{ "Checkout" }}</a>
-            </li>
+            {#            <li class="nav-item"> #}
+            {#                <a class="nav-link {% if routename == "dashboard_administrator_settings_payment" or routename == "dashboard_administrator_settings_payment_gateways_add" or routename == "dashboard_administrator_settings_payment_gateways_edit" or routename == "dashboard_administrator_currency" or routename == "dashboard_administrator_currency_add" or routename == "dashboard_administrator_currency_edit" %}active{% endif %}" #}
+            {#                   href="{{ path('dashboard_administrator_settings_payment') }}">{{ "Payments and Fees" }}</a> #}
+            {#            </li> #}
+            {#            <li class="nav-item"> #}
+            {#                <a class="nav-link {% if routename == "dashboard_administrator_settings_checkout" %}active{% endif %}" #}
+            {#                   href="{{ path('dashboard_administrator_settings_checkout') }}">{{ "Checkout" }}</a> #}
+            {#            </li> #}
             <li class="nav-item">
                 <a class="nav-link {% if routename == "dashboard_administrator_settings_mail_server" %}active{% endif %}"
                    href="{{ path('dashboard_administrator_settings_mail_server') }}">{{ "Mail server" }}</a>

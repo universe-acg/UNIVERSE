@@ -2,23 +2,25 @@
 
 namespace App\Controller\Dashboard\Shared;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Knp\Component\Pager\PaginatorInterface;
-use App\Service\AppServices;
 use App\Entity\Venue;
 use App\Form\VenueType;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use App\Service\AppServices;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class VenueController extends Controller {
+class VenueController extends Controller
+{
 
     /**
      * @Route("/administrator/manage-venues", name="dashboard_administrator_venue", methods="GET")
      * @Route("/organizer/my-venues", name="dashboard_organizer_venue", methods="GET")
      */
-    public function index(Request $request, PaginatorInterface $paginator, AppServices $services, AuthorizationCheckerInterface $authChecker) {
+    public function index(Request $request, PaginatorInterface $paginator, AppServices $services, AuthorizationCheckerInterface $authChecker)
+    {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
         $directory = ($request->query->get('directory')) == "" ? "all" : $request->query->get('directory');
 
@@ -30,7 +32,7 @@ class VenueController extends Controller {
         $venues = $paginator->paginate($services->getVenues(array('organizer' => $organizer, 'keyword' => $keyword, 'directory' => $directory, 'hidden' => 'all', "organizerEnabled" => "all")), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
 
         return $this->render('Dashboard/Shared/Venue/index.html.twig', [
-                    'venues' => $venues,
+            'venues' => $venues,
         ]);
     }
 
@@ -40,7 +42,8 @@ class VenueController extends Controller {
      * @Route("/organizer/my-venues/add", name="dashboard_organizer_venue_add", methods="GET|POST")
      * @Route("/organizer/my-venues/{slug}/edit", name="dashboard_organizer_venue_edit", methods="GET|POST")
      */
-    public function addedit(Request $request, AppServices $services, TranslatorInterface $translator, $slug = null, AuthorizationCheckerInterface $authChecker) {
+    public function addedit(Request $request, AppServices $services, TranslatorInterface $translator, $slug = null, AuthorizationCheckerInterface $authChecker)
+    {
         $em = $this->getDoctrine()->getManager();
 
         $organizer = "all";
@@ -62,37 +65,37 @@ class VenueController extends Controller {
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                if ($authChecker->isGranted('ROLE_ORGANIZER')) {
-                    $venue->setOrganizer($this->getUser()->getOrganizer());
-                }
-                foreach ($venue->getImages() as $image) {
-                    $image->setVenue($venue);
-                }
-                $em->persist($venue);
-                $em->flush();
-                if (!$slug) {
-                    $this->addFlash('success', $translator->trans('The venue has been successfully created'));
-                    if ($this->isGranted("ROLE_ADMINISTRATOR")) {
-                        return $this->redirectToRoute("dashboard_administrator_venue");
-                    } else {
-                        return $this->redirectToRoute("dashboard_organizer_venue");
-                    }
+//            if ($form->isValid()) {
+            if ($authChecker->isGranted('ROLE_ORGANIZER')) {
+                $venue->setOrganizer($this->getUser()->getOrganizer());
+            }
+            foreach ($venue->getImages() as $image) {
+                $image->setVenue($venue);
+            }
+            $em->persist($venue);
+            $em->flush();
+            if (!$slug) {
+                $this->addFlash('success', $translator->trans('The venue has been successfully created'));
+                if ($this->isGranted("ROLE_ADMINISTRATOR")) {
+                    return $this->redirectToRoute("dashboard_administrator_venue");
                 } else {
-                    $this->addFlash('success', $translator->trans('The venue has been successfully updated'));
-                    if ($this->isGranted("ROLE_ADMINISTRATOR")) {
-                        return $this->redirectToRoute("dashboard_administrator_venue");
-                    } else {
-                        return $this->redirectToRoute("dashboard_organizer_venue");
-                    }
+                    return $this->redirectToRoute("dashboard_organizer_venue");
                 }
             } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+                $this->addFlash('success', $translator->trans('The venue has been successfully updated'));
+                if ($this->isGranted("ROLE_ADMINISTRATOR")) {
+                    return $this->redirectToRoute("dashboard_administrator_venue");
+                } else {
+                    return $this->redirectToRoute("dashboard_organizer_venue");
+                }
             }
+//            } else {
+//                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+//            }
         }
         return $this->render('Dashboard/Shared/Venue/add-edit.html.twig', array(
-                    "venue" => $venue,
-                    "form" => $form->createView(),
+            "venue" => $venue,
+            "form" => $form->createView(),
         ));
     }
 
@@ -102,7 +105,8 @@ class VenueController extends Controller {
      * @Route("/organizer/my-venues/{slug}/disable", name="dashboard_organizer_venue_disable", methods="GET")
      * @Route("/organizer/my-venues/{slug}/delete", name="dashboard_organizer_venue_delete", methods="GET")
      */
-    public function delete(AppServices $services, TranslatorInterface $translator, $slug, AuthorizationCheckerInterface $authChecker) {
+    public function delete(AppServices $services, TranslatorInterface $translator, $slug, AuthorizationCheckerInterface $authChecker)
+    {
 
         $organizer = "all";
         if ($authChecker->isGranted('ROLE_ORGANIZER')) {
@@ -136,7 +140,8 @@ class VenueController extends Controller {
     /**
      * @Route("/administrator/manage-venues/{slug}/restore", name="dashboard_administrator_venue_restore", methods="GET")
      */
-    public function restore($slug, Request $request, TranslatorInterface $translator, AppServices $services) {
+    public function restore($slug, Request $request, TranslatorInterface $translator, AppServices $services)
+    {
 
         $venue = $services->getVenues(array('organizer' => "all", 'hidden' => 'all', 'slug' => $slug, "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();
         if (!$venue) {
@@ -158,7 +163,8 @@ class VenueController extends Controller {
      * @Route("/organizer/my-venues/{slug}/show", name="dashboard_organizer_venue_show", methods="GET")
      * @Route("/organizer/my-venues/{slug}/hide", name="dashboard_organizer_venue_hide", methods="GET")
      */
-    public function showhide(AppServices $services, TranslatorInterface $translator, $slug, AuthorizationCheckerInterface $authChecker) {
+    public function showhide(AppServices $services, TranslatorInterface $translator, $slug, AuthorizationCheckerInterface $authChecker)
+    {
 
         $organizer = "all";
         if ($authChecker->isGranted('ROLE_ORGANIZER')) {
@@ -189,7 +195,8 @@ class VenueController extends Controller {
      * @Route("/administrator/manage-venues/{slug}/listondirectory", name="dashboard_administrator_venue_listondirectory", methods="GET")
      * @Route("/administrator/manage-venues/{slug}/hidefromdirectory", name="dashboard_administrator_venue_hidefromdirectory", methods="GET")
      */
-    public function publicvenuesdirectory(AppServices $services, TranslatorInterface $translator, $slug) {
+    public function publicvenuesdirectory(AppServices $services, TranslatorInterface $translator, $slug)
+    {
 
         $venue = $services->getVenues(array('hidden' => 'all', 'slug' => $slug, "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();
         if (!$venue) {

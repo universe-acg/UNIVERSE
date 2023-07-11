@@ -2124,8 +2124,8 @@
         <target state="needs-translation">Definições de página de lista de eventos</target>
         <jms:reference-file line="3">\..\..\..\..\..\C:/wamp64/www/scd_eve/templates\Dashboard\Administrator\Settings\events-list-page.html.twig\</jms:reference-file>
       </trans-unit>
-      <trans-unit id="753b4ec81e7baf750a2149db28dc1a96a95a5ea1" resname="Events on sale">
-        <source>Events on sale</source>
+      <trans-unit id="753b4ec81e7baf750a2149db28dc1a96a95a5ea1" resname="active events">
+        <source>active events</source>
         <target state="needs-translation">Eventos à venda</target>
         <jms:reference-file line="3">\..\..\..\..\..\C:/wamp64/www/scd_eve/templates\Dashboard\PointOfSale\index.html.twig\</jms:reference-file>
         <jms:reference-file line="8">\..\..\..\..\..\C:/wamp64/www/scd_eve/templates\Dashboard\sidebar-links.html.twig\</jms:reference-file>
@@ -2361,8 +2361,8 @@
         <target state="needs-translation">Proibido</target>
         <jms:reference-file line="1">\..\..\..\..\..\C:/wamp64/www/scd_eve/templates\bundles\TwigBundle\Exception\error403.html.twig\</jms:reference-file>
       </trans-unit>
-      <trans-unit id="043e1782683fbcb5375763042f12bcb5c34d466b" resname="Forgot your password ?">
-        <source>Forgot your password ?</source>
+      <trans-unit id="043e1782683fbcb5375763042f12bcb5c34d466b" resname="Forgot your password?">
+        <source>Forgot your password?</source>
         <target state="needs-translation">Esqueceu a sua senha?</target>
         <jms:reference-file line="70">\..\..\..\..\..\C:/wamp64/www/scd_eve/templates\bundles\FOSUserBundle\Security\login.html.twig\</jms:reference-file>
       </trans-unit>
@@ -3623,14 +3623,14 @@
         <jms:reference-file line="120">\..\..\..\..\..\C:/wamp64/www/scd_eve/templates\Dashboard\Shared\Event\index.html.twig\</jms:reference-file>
         <jms:reference-file line="358">\..\..\..\..\..\C:/wamp64/www/scd_eve/templates\Front\Event\events.html.twig\</jms:reference-file>
       </trans-unit>
-      <trans-unit id="c38271107427cdf2907fff61096c071cd59b411a" resname="No events on sale">
-        <source>No events on sale</source>
+      <trans-unit id="c38271107427cdf2907fff61096c071cd59b411a" resname="No active events">
+        <source>No active events</source>
         <target state="needs-translation">Não há eventos à venda</target>
         <jms:reference-file line="43">\..\..\..\..\..\C:/wamp64/www/scd_eve/src\Controller\Api\EventController.php\</jms:reference-file>
         <jms:reference-file line="17">\..\..\..\..\..\C:/wamp64/www/scd_eve/src\Translation\manual.html.twig\</jms:reference-file>
       </trans-unit>
-      <trans-unit id="741f043f62b419137e0b6e1545c7550d3f73734f" resname="No events on sale for now">
-        <source>No events on sale for now</source>
+      <trans-unit id="741f043f62b419137e0b6e1545c7550d3f73734f" resname="No active events for now">
+        <source>No active events for now</source>
         <target state="needs-translation">Nenhum evento à venda por enquanto</target>
         <jms:reference-file line="148">\..\..\..\..\..\C:/wamp64/www/scd_eve/templates\Front\Organizer\profile.html.twig\</jms:reference-file>
       </trans-unit>
@@ -3957,7 +3957,7 @@
       <trans-unit id="fec62242a94eca2b4f9e947d9d76b885c578bff3" resname="Order = ">
         <source>Order =</source>
         <target state="needs-translation">Ordem =</target>
-        <jms:reference-file line="108">\..\..\..\..\..\C:/wamp64/www/Eventic/templates\Dashboard\Administrator\Category\index.html.twig\</jms:reference-file>
+        <jms:reference-file line="108">\..\..\..\..\..\C:/wamp64/www/Universe/templates\Dashboard\Administrator\Category\index.html.twig\</jms:reference-file>
       </trans-unit>
       <trans-unit id="439e231109dc2e2b73428ab2ded05e498cfb03fd" resname="Order Date">
         <source>Order Date</source>
@@ -5116,8 +5116,8 @@
         <target state="needs-translation">Ver todas as avaliações %reviewscount%</target>
         <jms:reference-file line="325">\..\..\..\..\..\C:/wamp64/www/scd_eve/templates\Front\Event\event.html.twig\</jms:reference-file>
       </trans-unit>
-      <trans-unit id="36c77ab2a6e79bee5ec9e9e009d4149863ce719d" resname="See all events on sale">
-        <source>See all events on sale</source>
+      <trans-unit id="36c77ab2a6e79bee5ec9e9e009d4149863ce719d" resname="See all active events">
+        <source>See all active events</source>
         <target state="needs-translation">Ver todos os eventos à venda</target>
         <jms:reference-file line="151">\..\..\..\..\..\C:/wamp64/www/scd_eve/templates\Front\Organizer\profile.html.twig\</jms:reference-file>
       </trans-unit>
@@ -5749,7 +5749,7 @@
       <trans-unit id="ff0182ff2babe526616c35a056382da239294556" resname="TSL">
         <source>TSL</source>
         <target state="needs-translation">TSL</target>
-        <jms:reference-file line="804">\..\..\..\..\..\C:/wamp64/www/EventicTestNewLocale/src\Controller\Dashboard\Administrator\SettingsController.php\</jms:reference-file>
+        <jms:reference-file line="804">\..\..\..\..\..\C:/wamp64/www/UniverseTestNewLocale/src\Controller\Dashboard\Administrator\SettingsController.php\</jms:reference-file>
       </trans-unit>
       <trans-unit id="848eed0fbd5429f556b2982dec3ea87136e33e44" resname="Tags">
         <source>Tags</source>

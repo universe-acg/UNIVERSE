@@ -1,0 +1,7 @@
+/*!
+    * Steps v1.0.3
+    * https://github.com/oguzhanoya/jquery-steps
+    *
+    * Copyright (c) 2020 oguzhanoya
+    * Released under the MIT license
+    */

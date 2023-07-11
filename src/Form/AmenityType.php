@@ -17,7 +17,7 @@ class AmenityType extends AbstractType
     {
         $builder
             ->add('translations', TranslationsType::class, [
-                'label' => 'Translation',
+                // 'label' => 'Translation',
                 'fields' => [
                     'name' => [
                         'purify_html' => true,

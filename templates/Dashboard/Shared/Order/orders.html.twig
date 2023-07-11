@@ -1,7 +1,7 @@
 {% extends "Global/layout.html.twig" %}
 
 {% if is_granted("ROLE_ADMINISTRATOR") %}
-    {% set pagetitle = 'Manage orders' %}
+    {% set pagetitle = 'Manage event participation' %}
 {% elseif is_granted("ROLE_ORGANIZER") %}
     {% set pagetitle = 'Attendees' %}
 {% elseif is_granted("ROLE_ATTENDEE") %}
@@ -30,7 +30,7 @@
                         <div class="box shadow-none bg-gray mb-4">
                             <div class="row">
                                 <div class="col-sm-12 col-lg-3 text-center text-lg-left mb-3 mb-lg-0">
-                                    <span class="center-lg-y text-muted">{{ "%resultsCount% result(s) found"({'%resultsCount%': orders.getTotalItemCount}) }}</span>
+                                    <span class="center-lg-y text-muted">{{ "%resultsCount% result(s) found" |trans ({'%resultsCount%': orders.getTotalItemCount}) }}</span>
                                 </div>
                                 <div class="col-sm-12 col-lg-5 text-center text-lg-right">
                                     <label for="sortable-select" class="display-inline">{{ "Sort by" }}
