@@ -1,8 +1,12 @@
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
+
 define([
   'jquery',
   './utils'
 ], function ($, Utils) {
-  function Results ($element, options, dataAdapter) {
+  function Results($element, options, dataAdapter) {
     this.$element = $element;
     this.data = dataAdapter;
     this.options = options;
@@ -58,33 +62,33 @@ define([
     this.$results.find('.select2-results__message').remove();
   };
 
-  Results.prototype.append = function (data) {
-    this.hideLoading();
-
-    var $options = [];
-
-    if (data.results == null || data.results.length === 0) {
-      if (this.$results.children().length === 0) {
-        this.trigger('results:message', {
-          message: 'noResults'
-        });
-      }
-
-      return;
-    }
-
-    data.results = this.sort(data.results);
-
-    for (var d = 0; d < data.results.length; d++) {
-      var item = data.results[d];
-
-      var $option = this.option(item);
-
-      $options.push($option);
-    }
-
-    this.$results.append($options);
-  };
+  // Results.prototype.append = function (data) {
+  //   this.hideLoading();
+  //
+  //   var $options = [];
+  //
+  //   if (data.results == null || data.results.length === 0) {
+  //     if (this.$results.children().length === 0) {
+  //       this.trigger('results:message', {
+  //         message: 'noResults'
+  //       });
+  //     }
+  //
+  //     return;
+  //   }
+  //
+  //   data.results = this.sort(data.results);
+  //
+  //   for (var d = 0; d < data.results.length; d++) {
+  //     var item = data.results[d];
+  //
+  //     var $option = this.option(item);
+  //
+  //     $options.push($option);
+  //   }
+  //
+  //   this.$results.append($options);
+  // };
 
   Results.prototype.position = function ($results, $dropdown) {
     var $resultsContainer = $dropdown.find('.select2-results');
@@ -136,7 +140,7 @@ define([
         var id = '' + item.id;
 
         if ((item.element != null && item.element.selected) ||
-            (item.element == null && $.inArray(id, selectedIds) > -1)) {
+          (item.element == null && $.inArray(id, selectedIds) > -1)) {
           $option.attr('aria-selected', 'true');
         } else {
           $option.attr('aria-selected', 'false');
@@ -180,7 +184,7 @@ define([
       window.Element.prototype.webkitMatchesSelector;
 
     if ((data.element != null && matches.call(data.element, ':disabled')) ||
-        (data.element == null && data.disabled)) {
+      (data.element == null && data.disabled)) {
       delete attrs['aria-selected'];
       attrs['aria-disabled'] = 'true';
     }
@@ -443,46 +447,46 @@ define([
 
     this.$results.on('mouseup', '.select2-results__option[aria-selected]',
       function (evt) {
-      var $this = $(this);
+        var $this = $(this);
 
-      var data = Utils.GetData(this, 'data');
+        var data = Utils.GetData(this, 'data');
 
-      if ($this.attr('aria-selected') === 'true') {
-        if (self.options.get('multiple')) {
-          self.trigger('unselect', {
-            originalEvent: evt,
-            data: data
-          });
-        } else {
-          self.trigger('close', {});
+        if ($this.attr('aria-selected') === 'true') {
+          if (self.options.get('multiple')) {
+            self.trigger('unselect', {
+              originalEvent: evt,
+              data: data
+            });
+          } else {
+            self.trigger('close', {});
+          }
+
+          return;
         }
 
-        return;
-      }
-
-      self.trigger('select', {
-        originalEvent: evt,
-        data: data
+        self.trigger('select', {
+          originalEvent: evt,
+          data: data
+        });
       });
-    });
 
     this.$results.on('mouseenter', '.select2-results__option[aria-selected]',
       function (evt) {
-      var data = Utils.GetData(this, 'data');
+        var data = Utils.GetData(this, 'data');
 
-      self.getHighlightedResults()
+        self.getHighlightedResults()
           .removeClass('select2-results__option--highlighted');
 
-      self.trigger('results:focus', {
-        data: data,
-        element: $(this)
+        self.trigger('results:focus', {
+          data: data,
+          element: $(this)
+        });
       });
-    });
   };
 
   Results.prototype.getHighlightedResults = function () {
     var $highlighted = this.$results
-    .find('.select2-results__option--highlighted');
+      .find('.select2-results__option--highlighted');
 
     return $highlighted;
   };

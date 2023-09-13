@@ -1,22 +1,29 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Controller\Dashboard\Organizer;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Knp\Component\Pager\PaginatorInterface;
-use App\Service\AppServices;
 use App\Entity\PointOfSale;
 use App\Form\PointOfSaleType;
+use App\Service\AppServices;
+use Exception;
+use Knp\Component\Pager\PaginatorInterface;
+use Psr\Cache\InvalidArgumentException;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class PointOfSaleController extends Controller {
+class PointOfSaleController extends Controller
+{
 
     /**
      * @Route("/my-points-of-sale", name="pointofsale", methods="GET")
      */
-    public function index(Request $request, PaginatorInterface $paginator, AppServices $services) {
+    public function index(Request $request, PaginatorInterface $paginator, AppServices $services)
+    {
 
         $username = ($request->query->get('username')) == "" ? "all" : $request->query->get('username');
         $enabled = ($request->query->get('enabled')) == "" ? "all" : $request->query->get('enabled');
@@ -24,15 +31,18 @@ class PointOfSaleController extends Controller {
         $pointofsales = $paginator->paginate($services->getUsers(array("role" => "pointofsale", "createdbyorganizerslug" => $this->getUser()->getOrganizer()->getSlug(), "username" => $username, "enabled" => $enabled))->getQuery(), $request->query->getInt('page', 1), 10);
 
         return $this->render('Dashboard/Organizer/PointOfSale/index.html.twig', [
-                    'pointofsales' => $pointofsales,
+            'pointofsales' => $pointofsales,
         ]);
     }
 
     /**
      * @Route("/my-points-of-sale/add", name="pointofsale_add", methods="GET|POST")
      * @Route("/my-points-of-sale/{slug}/edit", name="pointofsale_edit", methods="GET|POST")
+     * @throws Exception
+     * @throws InvalidArgumentException
      */
-    public function addedit(Request $request, AppServices $services, TranslatorInterface $translator, $slug = null) {
+    public function addedit(Request $request, AppServices $services, TranslatorInterface $translator, $slug = null)
+    {
         $em = $this->getDoctrine()->getManager();
 
         if (!$slug) {
@@ -96,14 +106,14 @@ class PointOfSaleController extends Controller {
                 $em->persist($pointofsale);
                 $em->flush();
                 return $this->redirectToRoute('dashboard_organizer_pointofsale');
-            } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
             }
+
+            $this->addFlash('error', $translator->trans('The form contains invalid data'));
         }
 
         return $this->render('Dashboard/Organizer/PointOfSale/add-edit.html.twig', array(
-                    "pointofsale" => $pointofsale,
-                    "form" => $form->createView(),
+            "pointofsale" => $pointofsale,
+            "form" => $form->createView(),
         ));
     }
 
@@ -111,7 +121,8 @@ class PointOfSaleController extends Controller {
      * @Route("/my-points-of-sale/{slug}/delete-permanently", name="pointofsale_delete_permanently", methods="GET")
      * @Route("/my-points-of-sale/{slug}/delete", name="pointofsale_delete", methods="GET")
      */
-    public function delete(AppServices $services, TranslatorInterface $translator, $slug) {
+    public function delete(AppServices $services, TranslatorInterface $translator, $slug)
+    {
 
         $pointofsale = $services->getUsers(array("role" => "pointofsale", "createdbyorganizerslug" => $this->getUser()->getOrganizer()->getSlug(), "enabled" => "all", "slug" => $slug))->getQuery()->getOneOrNullResult();
         if (!$pointofsale) {
@@ -133,7 +144,8 @@ class PointOfSaleController extends Controller {
      * @Route("/my-points-of-sale/{slug}/enable", name="pointofsale_enable", methods="GET")
      * @Route("/my-points-of-sale/{slug}/disable", name="pointofsale_disable", methods="GET")
      */
-    public function enabledisable(AppServices $services, TranslatorInterface $translator, $slug) {
+    public function enabledisable(AppServices $services, TranslatorInterface $translator, $slug)
+    {
 
         $pointofsale = $services->getUsers(array("role" => "pointofsale", "createdbyorganizerslug" => $this->getUser()->getOrganizer()->getSlug(), "enabled" => "all", "slug" => $slug))->getQuery()->getOneOrNullResult();
         if (!$pointofsale) {

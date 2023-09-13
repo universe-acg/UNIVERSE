@@ -1,10 +1,10 @@
 {% extends "Global/layout.html.twig" %}
 
-{% set pagetitle = 'Add a new country' | trans %}
+{% set pagetitle = 'Add a new country' %}
 
-{% if country.id %}{% set pagetitle = 'Update the country' | trans %}{% endif %}
+{% if country.id %}{% set pagetitle = 'Update the country' %}{% endif %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 

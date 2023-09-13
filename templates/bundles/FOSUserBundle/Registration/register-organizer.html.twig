@@ -3,7 +3,7 @@
 
 {% trans_default_domain 'FOSUserBundle' %}
 
-{% set pagetitle = 'Take your events to the next level' | trans ({}, 'messages') %}
+{% set pagetitle = 'Take your events to the next level' | trans({}, 'messages') %}
 
 {% block title %}{{ pagetitle }}{% endblock %}
 
@@ -30,6 +30,15 @@
                         {{ form_widget(form.organizer.name) }}
                         {{ form_errors(form.organizer.name) }}
                     </div>
+
+                    <div class="form-group input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text border-0"> <i class="fas fa-users"></i> </span>
+                        </div>
+                        {{ form_widget(form.organizer.category) }}
+                        {{ form_errors(form.organizer.category) }}
+                    </div>
+
                     <div class="form-group input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text border-0"> <i class="fas fa-user"></i> </span>
@@ -80,20 +89,20 @@
                     {% endif %}
                     <div class="mb-3 text-sm text-center">
                         {% if services.getSetting('show_terms_of_service_page') == "yes" %}
-                            <span class="text-muted">{{ "By clicking the Sign Up button, I agree to" | trans ({}, 'messages') }}</span>
-                            <a href="{{ path('page', { slug : services.getSetting('terms_of_service_page_slug') }) }}">{{ "Terms of service" }}</a>
+                            <span class="text-muted">{{ "By clicking the Sign Up button, I agree to" | trans({}, 'messages') }}</span>
+                            <a href="{{ path('page', { slug : services.getSetting('terms_of_service_page_slug') }) }}">{{ "Terms of service" | trans({}, 'messages') }}</a>
                         {% endif %}
                         {% if services.getSetting('show_privacy_policy_page') == "yes" %}
-                            <span class="text-muted">{{ "and" | trans ({}, 'messages') }}</span>
-                            <a href="{{ path('page', { slug : services.getSetting('privacy_policy_page_slug') }) }}">{{ "Privacy policy" }}</a>
+                            <span class="text-muted">{{ "and" | trans({}, 'messages') }}</span>
+                            <a href="{{ path('page', { slug : services.getSetting('privacy_policy_page_slug') }) }}">{{ "Privacy policy" | trans({}, 'messages') }}</a>
                         {% endif %}
                     </div>
                     <div class="form-group">
                         <button type="submit"
-                                class="btn btn-primary btn-block">{{ "Create Account" | trans ({}, 'messages') }}</button>
+                                class="btn btn-primary btn-block">{{ "Create Account" | trans({}, 'messages') }}</button>
                     </div>
-                    <p class="text-center">{{ "Already have an account?" | trans ({}, 'messages') }} <a
-                                href="{{ path('fos_user_security_login') }}">{{ "Sign in" |trans ({}, 'messages') }}</a>
+                    <p class="text-center">{{ "Already have an account?" | trans({}, 'messages') }} <a
+                                href="{{ path('fos_user_security_login') }}">{{ "Sign in" | trans({}, 'messages') }}</a>
                     </p>
                     {{ form_widget(form._token) }}
                     {{ form_end(form, {'render_rest': false}) }}

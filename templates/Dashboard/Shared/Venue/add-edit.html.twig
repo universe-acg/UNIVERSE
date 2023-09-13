@@ -2,9 +2,9 @@
 
 {% form_theme form 'Global/jquery.collection.html.twig' %}
 
-{% set pagetitle = 'Add a new venue' | trans %}
+{% set pagetitle = 'Add a new venue' %}
 
-{% if venue.id %}{% set pagetitle = 'Update the venue' | trans %}{% endif %}
+{% if venue.id %}{% set pagetitle = 'Update the venue' %}{% endif %}
 
 {% block title %}{{ pagetitle }}{% endblock %}
 

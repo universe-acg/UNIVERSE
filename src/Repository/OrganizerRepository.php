@@ -1,4 +1,7 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Repository;
 
@@ -12,38 +15,44 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Organizer[]    findAll()
  * @method Organizer[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class OrganizerRepository extends ServiceEntityRepository {
+class OrganizerRepository extends ServiceEntityRepository
+{
 
-    public function __construct(ManagerRegistry $registry) {
+    public function __construct(ManagerRegistry $registry)
+    {
         parent::__construct($registry, Organizer::class);
     }
 
-    // /**
-    //  * @return Organizer[] Returns an array of Organizer objects
-    //  */
-    /*
-      public function findByExampleField($value)
-      {
-      return $this->createQueryBuilder('o')
-      ->andWhere('o.exampleField = :val')
-      ->setParameter('val', $value)
-      ->orderBy('o.id', 'ASC')
-      ->setMaxResults(10)
-      ->getQuery()
-      ->getResult()
-      ;
-      }
+    /**
+     * @return Organizer[] Returns an array of Organizer objects
      */
+    public function findByExampleField($value)
+    {
+        return $this->createQueryBuilder('o')
+            ->andWhere('o.exampleField = :val')
+            ->setParameter('val', $value)
+            ->orderBy('o.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
 
-    /*
-      public function findOneBySomeField($value): ?Organizer
-      {
-      return $this->createQueryBuilder('o')
-      ->andWhere('o.exampleField = :val')
-      ->setParameter('val', $value)
-      ->getQuery()
-      ->getOneOrNullResult()
-      ;
-      }
-     */
+    public function findOneBySomeField($value): ?Organizer
+    {
+        return $this->createQueryBuilder('o')
+            ->andWhere('o.exampleField = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findCategoryById($organizerId)
+    {
+        return $this->createQueryBuilder('o')
+            ->select('o.category')
+            ->where('o.id = :id')
+            ->setParameter('id', $organizerId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

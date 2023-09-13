@@ -1,4 +1,7 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Repository;
 
@@ -6,13 +9,16 @@ use App\Entity\EventDate;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class EventDateRepository extends ServiceEntityRepository {
+class EventDateRepository extends ServiceEntityRepository
+{
 
-    public function __construct(ManagerRegistry $registry) {
+    public function __construct(ManagerRegistry $registry)
+    {
         parent::__construct($registry, EventDate::class);
     }
 
-    public function getEventDates($reference, $organizer, $event, $limit, $count) {
+    public function getEventDates($reference, $organizer, $event, $limit, $count)
+    {
         $qb = $this->createQueryBuilder("e");
         if ($count) {
             $qb->select("COUNT(e)");
@@ -40,4 +46,12 @@ class EventDateRepository extends ServiceEntityRepository {
         return $qb;
     }
 
+    public function findByReference($reference)
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.reference = :reference')
+            ->setParameter('reference', $reference)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

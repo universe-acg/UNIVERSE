@@ -1,10 +1,10 @@
 {% extends "Global/layout.html.twig" %}
 
-{% set pagetitle = 'Add a new help center article' | trans %}
+{% set pagetitle = 'Add a new help center article' %}
 
-{% if article.id %}{% set pagetitle = 'Update the help center article' | trans %}{% endif %}
+{% if article.id %}{% set pagetitle = 'Update the help center article' %}{% endif %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 

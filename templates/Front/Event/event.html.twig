@@ -5,22 +5,22 @@
 {% block title %}{{ pagetitle }}{% endblock %}
 
 {% block meta_dynamic_seo %}
-    <meta name="description" content="{{ event.description|raw|nl2br|striptags|slice(0, 200)|raw }}..."/>
-    {% if event.tags %}
-        <meta name="keywords"
-              content="{{ event.name }}, {{ event.category.name }}, {% for tag in event.tags|split(',') %}{{ tag }}{{ not loop.last ? ', ' : '' }}{% endfor %}"/>
-    {% else %}
-        <meta name="keywords" content="{{ services.getSetting("website_keywords_" ~ app.request.get('_locale')) }}"/>
-    {% endif %}
-    <meta property="og:title" content="{{ event.name }}"/>
-    <meta property="og:image"
-          content="{{ app.request.getSchemeAndHttpHost() }}{{ event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder }}"/>
-    <meta property="og:description" content="{{ event.description|raw|nl2br|striptags|slice(0, 200)|raw }}..."/>
-    <meta name="twitter:title" content="{{ event.name }}"/>
-    <meta name="twitter:image"
-          content="{{ app.request.getSchemeAndHttpHost() }}{{ event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder }}"/>
-    <meta name="twitter:image:alt" content="{{ event.name }}"/>
-    <meta name="twitter:description" content="{{ event.description|raw|nl2br|striptags|slice(0, 200)|raw }}..."/>
+    {#    <meta name="description" content="{{ event.description|raw|nl2br|striptags|slice(0, 200)|raw }}..."/> #}
+    {#    {% if event.tags %} #}
+    {#        <meta name="keywords" #}
+    {#              content="{{ event.name }}, {{ event.category.name }}, {% for tag in event.tags|split(',') %}{{ tag }}{{ not loop.last ? ', ' : '' }}{% endfor %}"/> #}
+    {#    {% else %} #}
+    {#        <meta name="keywords" content="{{ services.getSetting("website_keywords_" ~ app.request.get('_locale')) }}"/> #}
+    {#    {% endif %} #}
+    {#    <meta property="og:title" content="{{ event.name }}"/> #}
+    {#    <meta property="og:image" #}
+    {#          content="{{ app.request.getSchemeAndHttpHost() }}{{ event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder }}"/> #}
+    {#    <meta property="og:description" content="{{ event.description|raw|nl2br|striptags|slice(0, 200)|raw }}..."/> #}
+    {#    <meta name="twitter:title" content="{{ event.name }}"/> #}
+    {#    <meta name="twitter:image" #}
+    {#          content="{{ app.request.getSchemeAndHttpHost() }}{{ event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder }}"/> #}
+    {#    <meta name="twitter:image:alt" content="{{ event.name }}"/> #}
+    {#    <meta name="twitter:description" content="{{ event.description|raw|nl2br|striptags|slice(0, 200)|raw }}..."/> #}
 {% endblock %}
 
 {% block content %}
@@ -98,59 +98,59 @@
                                 </dl>
                             {% endif %}
                             <ul class="list-group list-group-flush mt-5 mb-5 p-0">
-                                <li class="list-group-item pl-0 pr-0">
-                                    {% if event.category %}
-                                        <dl class="dlist-align">
-                                            <dt class="text-muted">{{ "Category" }}</dt>
-                                            <dd class="text-right">{{ event.category.name }}</dd>
-                                        </dl>
-                                    {% endif %}
-                                    {#                                    {% if event.country %} #}
-                                    {#                                        <dl class="dlist-align"> #}
-                                    {#                                            <dt class="text-muted">{{"Country"}}</dt> #}
-                                    {#                                            <dd class="text-right"><span class="flag flag-{{event.country.code|lower}}"></span> {{ event.country.name }}</dd> #}
-                                    {#                                        </dl> #}
-                                    {#                                    {% endif %} #}
-                                    {#                                    {% if event.languages|length > 0 %} #}
-                                    {#                                        <dl class="dlist-align"> #}
-                                    {#                                            <dt class="text-muted">{{"Languages"}}</dt> #}
-                                    {#                                            <dd class="text-right">{{ event.displayLanguages }}</dd> #}
-                                    {#                                        </dl> #}
-                                    {#                                    {% endif %} #}
-                                    {#                                    {% if event.subtitles|length > 0 %} #}
-                                    {#                                        <dl class="dlist-align"> #}
-                                    {#                                            <dt class="text-muted">{{"Subtitles"}}</dt> #}
-                                    {#                                            <dd class="text-right">{{ event.displaySubtitles }}</dd> #}
-                                    {#                                        </dl> #}
-                                    {#                                    {% endif %} #}
-                                    {#                                    {% if event.artists %} #}
-                                    {#                                        <dl class="dlist-align"> #}
-                                    {#                                            <dt class="text-muted">{{"Artists"}}</dt> #}
-                                    {#                                            <dd class="text-right">{{ event.artists }}</dd> #}
-                                    {#                                        </dl> #}
-                                    {#                                    {% endif %} #}
-                                    {#                                    {% if event.year %} #}
-                                    {#                                        <dl class="dlist-align"> #}
-                                    {#                                            <dt class="text-muted">{{"Year"}}</dt> #}
-                                    {#                                            <dd class="text-right">{{ event.year }}</dd> #}
-                                    {#                                        </dl> #}
-                                    {#                                    {% endif %} #}
-                                    {% if event.audiences|length > 0 %}
-                                        <dl class="dlist-align">
-                                            <dt class="text-muted">{{ "Audience" }}</dt>
-                                            <dd class="text-right">
-                                                <ul class="list-inline">
-                                                    {% for audience in event.audiences %}
-                                                        <li class="list-inline-item" data-toggle="tooltip"
-                                                            title="{{ audience.name }}"><img
-                                                                    src="{{ audience.imageName ? asset(audience.getImagePath) : audience.getImagePlaceholder }}"
-                                                                    class="img-xxs" alt="{{ audience.name }}"/></li>
-                                                    {% endfor %}
-                                                </ul>
-                                            </dd>
-                                        </dl>
-                                    {% endif %}
-                                </li>
+                                {#                                <li class="list-group-item pl-0 pr-0"> #}
+                                {#                                    {% if event.category %} #}
+                                {#                                        <dl class="dlist-align"> #}
+                                {#                                            <dt class="text-muted">{{ "Category" }}</dt> #}
+                                {#                                            <dd class="text-right">{{ event.category.name }}</dd> #}
+                                {#                                        </dl> #}
+                                {#                                    {% endif %} #}
+                                {#                                    {% if event.country %} #}
+                                {#                                        <dl class="dlist-align"> #}
+                                {#                                            <dt class="text-muted">{{"Country"}}</dt> #}
+                                {#                                            <dd class="text-right"><span class="flag flag-{{event.country.code|lower}}"></span> {{ event.country.name }}</dd> #}
+                                {#                                        </dl> #}
+                                {#                                    {% endif %} #}
+                                {#                                    {% if event.languages|length > 0 %} #}
+                                {#                                        <dl class="dlist-align"> #}
+                                {#                                            <dt class="text-muted">{{"Languages"}}</dt> #}
+                                {#                                            <dd class="text-right">{{ event.displayLanguages }}</dd> #}
+                                {#                                        </dl> #}
+                                {#                                    {% endif %} #}
+                                {#                                    {% if event.subtitles|length > 0 %} #}
+                                {#                                        <dl class="dlist-align"> #}
+                                {#                                            <dt class="text-muted">{{"Subtitles"}}</dt> #}
+                                {#                                            <dd class="text-right">{{ event.displaySubtitles }}</dd> #}
+                                {#                                        </dl> #}
+                                {#                                    {% endif %} #}
+                                {#                                    {% if event.artists %} #}
+                                {#                                        <dl class="dlist-align"> #}
+                                {#                                            <dt class="text-muted">{{"Artists"}}</dt> #}
+                                {#                                            <dd class="text-right">{{ event.artists }}</dd> #}
+                                {#                                        </dl> #}
+                                {#                                    {% endif %} #}
+                                {#                                    {% if event.year %} #}
+                                {#                                        <dl class="dlist-align"> #}
+                                {#                                            <dt class="text-muted">{{"Year"}}</dt> #}
+                                {#                                            <dd class="text-right">{{ event.year }}</dd> #}
+                                {#                                        </dl> #}
+                                {#                                    {% endif %} #}
+                                {#                                    {% if event.audiences|length > 0 %} #}
+                                {#                                        <dl class="dlist-align"> #}
+                                {#                                            <dt class="text-muted">{{ "Audience" }}</dt> #}
+                                {#                                            <dd class="text-right"> #}
+                                {#                                                <ul class="list-inline"> #}
+                                {#                                                    {% for audience in event.audiences %} #}
+                                {#                                                        <li class="list-inline-item" data-toggle="tooltip" #}
+                                {#                                                            title="{{ audience.name }}"><img #}
+                                {#                                                                    src="{{ audience.imageName ? asset(audience.getImagePath) : audience.getImagePlaceholder }}" #}
+                                {#                                                                    class="img-xxs" alt="{{ audience.name }}"/></li> #}
+                                {#                                                    {% endfor %} #}
+                                {#                                                </ul> #}
+                                {#                                        </dl> #}
+                                {#                                            </dd> #}
+                                {#                                    {% endif %} #}
+                                {#                                </li> #}
                             </ul>
                             {% if event.images|length > 0 %}
                                 <dl class="mt-5">
@@ -263,7 +263,8 @@
                                 </div>
                             {% endif %}
 
-                            {% if event.enablereviews %}
+                            {% if false %}
+                                {#                            {% if event.enablereviews %} #}
                                 <hr class="mb-5">
                                 <div class="row">
                                     <div class="col-12 col-sm-6 mb-5">
@@ -434,13 +435,16 @@
                                     {% if is_granted('ROLE_ATTENDEE') %}
                                         <button id="add-to-cart-button" type="button"
                                                 class="btn btn-primary btn-block mt-3 mb-3"><i
-                                                    class="fas fa-cart-plus"></i> {{ "Add to cart" }}</button>
+                                                    class="fas fa-cart-plus"></i> {{ "Book" }}</button>
                                     {% endif %}
 
                                 {% endif %}
 
-                                <form id="add-to-cart-form" action="{{ path('dashboard_attendee_cart_add') }}"
+
+                                <form id="add-to-cart-form"
+                                      action="{{ path('dashboard_attendee_bookevent', {'reference': event.id}) }}"
                                       method="post">
+                                    <input type="hidden" name="reference" value="{{ event.id }}">
                                     {% for eventDate in event.eventdates if eventDate.isOnSale %}
 
                                         <div id="eventDate-{{ eventDate.reference }}-wrapper"
@@ -455,11 +459,12 @@
                                                         {% set eventstartdate = "" %}
                                                         {% set eventenddate = "" %}
                                                         {% set eventlocation = "" %}
-                                                        {% if eventDate.venue %}
-                                                            {% set eventlocation = eventDate.venue.name ~ ': ' ~ eventDate.venue.stringifyAddress %}
-                                                        {% else %}
-                                                            {% set eventlocation = "Online" %}
-                                                        {% endif %}
+                                                        {#                                                        {% if eventDate.venue %} #}
+                                                        {#                                                            {% set eventlocation = "On Campus" %} #}
+                                                        {#                                                            #}{#                                                            {% set eventlocation = eventDate.venue.name ~ ': ' ~ eventDate.venue.stringifyAddress %} #}
+                                                        {#                                                        {% else %} #}
+                                                        {#                                                            {% set eventlocation = "Online" %} #}
+                                                        {#                                                        {% endif %} #}
                                                         {% if eventDate.startdate %}
                                                             <div class="display-inline-block">
                                                                 <div class="display-inline-block">
@@ -542,68 +547,68 @@
                                                 </dd>
                                             </dl>
                                             <hr class="hr-md">
-                                            {% if eventDate.venue %}
-                                                <dl>
-                                                    <dt class="text-muted">
-                                                        <span class="{% if app.request.locale == "ar" %}float-right{% else %}float-left{% endif %}">{{ "Venue" }}</span>
-                                                        {% if eventDate.venue.listedondirectory %}
-                                                            <a href="{{ path('venue', { slug: eventDate.venue.slug }) }}"
-                                                               class="{% if app.request.locale == "ar" %}float-left{% else %}float-right{% endif %} text-sm"><i
-                                                                        class="far fa-building"></i> {{ "Details" }}
-                                                            </a>
-                                                        {% endif %}
-                                                        <div class="clearfix"></div>
-                                                    </dt>
-                                                    <dd class="mr-0">
-                                                        <h4 class="text-center">{{ eventDate.venue.name }}</h4>
-                                                        <p>{{ eventDate.venue.stringifyAddress }}</p>
-                                                        <div class="d-flex mb-3">
-                                                            <ul class="list-inline mx-auto">
-                                                                <li class="list-inline-item"><a
-                                                                            href="https://www.google.com/maps/dir/?api=1&destination={{ eventDate.venue.lat }},{{ eventDate.venue.lng }}&travelmode=driving"
-                                                                            class="text-black-50" data-toggle="tooltip"
-                                                                            title="{{ "Display itinerary driving" }}"
-                                                                            target="_blank"><i
-                                                                                class="fas fa-car fa-fw"></i></a></li>
-                                                                <li class="list-inline-item"><a
-                                                                            href="https://www.google.com/maps/dir/?api=1&destination={{ eventDate.venue.lat }},{{ eventDate.venue.lng }}&travelmode=walking"
-                                                                            class="text-black-50" data-toggle="tooltip"
-                                                                            title="{{ "Display itinerary walking" }}"
-                                                                            target="_blank"><i
-                                                                                class="fas fa-walking fa-fw"></i></a>
-                                                                </li>
-                                                                <li class="list-inline-item"><a
-                                                                            href="https://www.google.com/maps/dir/?api=1&destination={{ eventDate.venue.lat }},{{ eventDate.venue.lng }}&travelmode=transit"
-                                                                            class="text-black-50" data-toggle="tooltip"
-                                                                            title="{{ "Display itinerary on public transportation" }}"
-                                                                            target="_blank"><i
-                                                                                class="fas fa-bus fa-fw"></i></a></li>
-                                                                <li class="list-inline-item"><a
-                                                                            href="https://www.google.com/maps/dir/?api=1&destination={{ eventDate.venue.lat }},{{ eventDate.venue.lng }}&travelmode=bicycling"
-                                                                            class="text-black-50" data-toggle="tooltip"
-                                                                            title="{{ "Display itinerary bicycling" }}"
-                                                                            target="_blank"><i
-                                                                                class="fas fa-bicycle fa-fw"></i></a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <iframe class="w-100 border-0 venue-map" height="300"
-                                                                src="{{ services.getCurrentRequestProtocol() }}://maps.google.com/maps?q={{ eventDate.venue.name|url_encode ~ '%20' ~ eventDate.venue.stringifyAddress|url_encode }}&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
-                                                    </dd>
-                                                </dl>
-                                            {% else %}
-                                                <dl>
-                                                    <dt class="text-muted">
-                                                        <span class="{% if app.request.locale == "ar" %}float-right{% else %}float-left{% endif %}">{{ "Venue" }}</span>
+                                            {#                                            {% if eventDate.venue %} #}
+                                            {#                                                <dl> #}
+                                            {#                                                    <dt class="text-muted"> #}
+                                            {#                                                        <span class="{% if app.request.locale == "ar" %}float-right{% else %}float-left{% endif %}">{{ "Venue" }}</span> #}
+                                            {#                                                        {% if eventDate.venue.listedondirectory %} #}
+                                            {#                                                            <a href="{{ path('venue', { slug: eventDate.venue.slug }) }}" #}
+                                            {#                                                               class="{% if app.request.locale == "ar" %}float-left{% else %}float-right{% endif %} text-sm"><i #}
+                                            {#                                                                        class="far fa-building"></i> {{ "Details" }} #}
+                                            {#                                                            </a> #}
+                                            {#                                                        {% endif %} #}
+                                            {#                                                        <div class="clearfix"></div> #}
+                                            {#                                                    </dt> #}
+                                            {#                                                    <dd class="mr-0"> #}
+                                            {#                                                        <h4 class="text-center">{{ eventDate.venue.name }}</h4> #}
+                                            {#                                                        <p>{{ eventDate.venue.stringifyAddress }}</p> #}
+                                            {#                                                        <div class="d-flex mb-3"> #}
+                                            {#                                                            <ul class="list-inline mx-auto"> #}
+                                            {#                                                                <li class="list-inline-item"><a #}
+                                            {#                                                                            href="https://www.google.com/maps/dir/?api=1&destination={{ eventDate.venue.lat }},{{ eventDate.venue.lng }}&travelmode=driving" #}
+                                            {#                                                                            class="text-black-50" data-toggle="tooltip" #}
+                                            {#                                                                            title="{{ "Display itinerary driving" }}" #}
+                                            {#                                                                            target="_blank"><i #}
+                                            {#                                                                                class="fas fa-car fa-fw"></i></a></li> #}
+                                            {#                                                                <li class="list-inline-item"><a #}
+                                            {#                                                                            href="https://www.google.com/maps/dir/?api=1&destination={{ eventDate.venue.lat }},{{ eventDate.venue.lng }}&travelmode=walking" #}
+                                            {#                                                                            class="text-black-50" data-toggle="tooltip" #}
+                                            {#                                                                            title="{{ "Display itinerary walking" }}" #}
+                                            {#                                                                            target="_blank"><i #}
+                                            {#                                                                                class="fas fa-walking fa-fw"></i></a> #}
+                                            {#                                                                </li> #}
+                                            {#                                                                <li class="list-inline-item"><a #}
+                                            {#                                                                            href="https://www.google.com/maps/dir/?api=1&destination={{ eventDate.venue.lat }},{{ eventDate.venue.lng }}&travelmode=transit" #}
+                                            {#                                                                            class="text-black-50" data-toggle="tooltip" #}
+                                            {#                                                                            title="{{ "Display itinerary on public transportation" }}" #}
+                                            {#                                                                            target="_blank"><i #}
+                                            {#                                                                                class="fas fa-bus fa-fw"></i></a></li> #}
+                                            {#                                                                <li class="list-inline-item"><a #}
+                                            {#                                                                            href="https://www.google.com/maps/dir/?api=1&destination={{ eventDate.venue.lat }},{{ eventDate.venue.lng }}&travelmode=bicycling" #}
+                                            {#                                                                            class="text-black-50" data-toggle="tooltip" #}
+                                            {#                                                                            title="{{ "Display itinerary bicycling" }}" #}
+                                            {#                                                                            target="_blank"><i #}
+                                            {#                                                                                class="fas fa-bicycle fa-fw"></i></a> #}
+                                            {#                                                                </li> #}
+                                            {#                                                            </ul> #}
+                                            {#                                                        </div> #}
+                                            {#                                                        <iframe class="w-100 border-0 venue-map" height="300" #}
+                                            {#                                                                src="{{ services.getCurrentRequestProtocol() }}://maps.google.com/maps?q={{ eventDate.venue.name|url_encode ~ '%20' ~ eventDate.venue.stringifyAddress|url_encode }}&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe> #}
+                                            {#                                                    </dd> #}
+                                            {#                                                </dl> #}
+                                            {#                                            {% else %} #}
+                                            {#                                                <dl> #}
+                                            {#                                                    <dt class="text-muted"> #}
+                                            {#                                                        <span class="{% if app.request.locale == "ar" %}float-right{% else %}float-left{% endif %}">{{ "Venue" }}</span> #}
 
-                                                    </dt>
-                                                    <dd>
-                                                        <br>
-                                                        <h4 class="text-center">{{ "Online" }}</h4>
-                                                    </dd>
-                                                </dl>
-                                            {% endif %}
-                                            <hr class="hr-md">
+                                            {#                                                    </dt> #}
+                                            {#                                                    <dd> #}
+                                            {#                                                        <br> #}
+                                            {#                                                        <h4 class="text-center">{{ "Online" }}</h4> #}
+                                            {#                                                    </dd> #}
+                                            {#                                                </dl> #}
+                                            {#                                            {% endif %} #}
+                                            {#                                            <hr class="hr-md"> #}
                                             <dl class="mt-5">
                                                 <dt class="text-muted">{{ "Tickets" }}</dt>
                                                 <dd class="mr-0">
@@ -621,7 +626,7 @@
                                                                             {% if not ticket.isOnSale %}
                                                                                 <span class="badge badge-{{ ticket.stringifyStatusClass }}">{{ ticket.stringifyStatus }}</span>
                                                                             {% else %}
-                                                                                {{ ticket.free ? "Free" : ((services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '') ~ ticket.getSalePrice() ~ (services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '')) }}
+                                                                                {{ ticket.free ? "Available" : ((services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '') ~ ticket.getSalePrice() ~ (services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '')) }}
                                                                                 {% if ticket.promotionalprice and not ticket.free %}
                                                                                     <del class="price-old">{{ (services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '') ~ ticket.getPrice() ~ (services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '') }}</del>
                                                                                 {% endif %}
@@ -659,14 +664,16 @@
                                     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                                         {% if event.isAddedToFavoritesBy(app.user) %}
                                             <button class="event-favorites-remove btn btn-outline-primary btn-block"
-                                                    data-target="{{ path('dashboard_attendee_favorites_remove', { slug : event.slug }) }}"
-                                                    data-toggle="tooltip" title="" data-placement="bottom"><i
+                                                    data-target="{{ path('favorites_remove', { slug : event.slug }) }}"
+                                                    data-toggle="tooltip" title="Remove from favorites"
+                                                    data-placement="bottom"><i
                                                         class="fas fa-heart"></i> {{ "Remove from favorites" }}
                                             </button>
                                         {% else %}
                                             <button class="event-favorites-add btn btn-outline-primary btn-block"
-                                                    data-target="{{ path('dashboard_attendee_favorites_add', { slug : event.slug }) }}"
-                                                    data-toggle="tooltip" title="" data-placement="bottom"><i
+                                                    data-target="{{ path('favorites_add', { slug : event.slug }) }}"
+                                                    data-toggle="tooltip" title="Add to favorites"
+                                                    data-placement="bottom"><i
                                                         class="far fa-heart"></i> {{ "Add to favorites" }}
                                             </button>
                                         {% endif %}
@@ -705,12 +712,12 @@
                                                 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                                                     {% if event.organizer.isFollowedBy(app.user) %}
                                                         <button class="organizer-unfollow btn btn-primary btn-sm"
-                                                                data-target="{{ path('dashboard_attendee_following_remove', { slug : event.organizer.slug }) }}">
+                                                                data-target="{{ path('app_dashboard_attendee_following_remove', { slug : event.organizer.slug }) }}">
                                                             <i class="fas fa-folder-minus"></i> {{ "Unfollow" }}
                                                         </button>
                                                     {% else %}
                                                         <button class="organizer-follow btn btn-primary btn-sm"
-                                                                data-target="{{ path('dashboard_attendee_following_add', { slug : event.organizer.slug }) }}">
+                                                                data-target="{{ path('app_dashboard_attendee_following_add', { slug : event.organizer.slug }) }}">
                                                             <i class="fas fa-folder-plus"></i> {{ "Follow" }}
                                                         </button>
                                                     {% endif %}
@@ -804,25 +811,25 @@
                 </div>
             {% endif %}
 
-            {% set similareventscriteria = {"category" : event.category.slug, "limit" : 8, "otherthan": event.slug} %}
-            {#            {% if event.getFirstVenue %} #}
-            {#                {% set similareventscriteria = similareventscriteria|merge({"country" : event.getFirstVenue.country.slug}) %} #}
-            {#            {% endif %} #}
-            {% set similarevents = services.getEvents(similareventscriteria).getQuery().getResult() %}
+            {#            {% set similareventscriteria = {"category" : event.category.slug, "limit" : 8, "otherthan": event.slug} %} #}
+            {#            #}{#            {% if event.getFirstVenue %} #}
+            {#            #}{#                {% set similareventscriteria = similareventscriteria|merge({"country" : event.getFirstVenue.country.slug}) %} #}
+            {#            #}{#            {% endif %} #}
+            {#            {% set similarevents = services.getEvents(similareventscriteria).getQuery().getResult() %} #}
 
-            {% if similarevents|length > 0 %}
-                <div class="row">
-                    <div class="col-12">
-                        <h3 class="mt-5 mb-4 text-center">{{ "Similar events" }}</h3>
-                        <div class="owl-init owl-carousel" data-margin="15" data-items="4" data-dots="false"
-                             data-nav="true" data-autoplay="true" data-loop="false">
-                            {% for event in similarevents %}
-                                {% include "Global/event-card.html.twig" with {event: event} %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
+            {#            {% if similarevents|length > 0 %} #}
+            {#                <div class="row"> #}
+            {#                    <div class="col-12"> #}
+            {#                        <h3 class="mt-5 mb-4 text-center">{{ "Similar events" }}</h3> #}
+            {#                        <div class="owl-init owl-carousel" data-margin="15" data-items="4" data-dots="false" #}
+            {#                             data-nav="true" data-autoplay="true" data-loop="false"> #}
+            {#                            {% for event in similarevents %} #}
+            {#                                {% include "Global/event-card.html.twig" with {event: event} %} #}
+            {#                            {% endfor %} #}
+            {#                        </div> #}
+            {#                    </div> #}
+            {#                </div> #}
+            {#            {% endif %} #}
 
         </div>
     </section>
@@ -831,4 +838,59 @@
 
 {% block javascripts %}
     {{ encore_entry_script_tags('event') }}
+
+    {#    <script> #}
+    {#        // Opens the respective event date pop up #}
+    {#        $(document).on("click", ".buy-tickets-modal-button", function () { #}
+    {#            var eventDateReference = $(this).find(".cld-title > a").attr("href"); #}
+    {#            var eventDateHour = $(this).find(".cld-title > a").text(); #}
+    {#            alert("as123daasdaads"); #}
+    {#            if (eventDateReference.indexOf("|") == -1) { #}
+    {#                $('.event-eventDate-wrapper').hide() #}
+    {#                $("#eventDate-" + eventDateReference + "-wrapper").show(); #}
+    {#                $('#buy-tickets-modal-eventDate-' + eventDateReference).modal('show'); #}
+    {#            } else { #}
+    {#                var eventDateHoursDialogContent = ""; #}
+    {#                var eventDatesReferences = eventDateReference.split("|"); #}
+    {#                var eventDatesHours = eventDateHour.split(", "); #}
+    {#                for (var i = 0; i < eventDatesReferences.length; i++) { #}
+    {#                    eventDateHoursDialogContent += '<div>' + #}
+    {#                        '<b class="float-left">@ ' + eventDatesHours[i] + '</b>' + #}
+    {#                        '<button class="eventDate-hours-modal-tickets-button float-right btn btn-primary btn-sm" data-eventDate-reference="' + eventDatesReferences[i] + '" data-dismiss="modal">' + Translator.trans("Tickets") + '</button>' + #}
+    {#                        '<div class="clearfix"></div>' + #}
+    {#                        '</div>'; #}
+    {#                    if (i != eventDatesReferences.length - 1) { #}
+    {#                        eventDateHoursDialogContent += "<hr>"; #}
+    {#                    } #}
+    {#                } #}
+    {#                bootbox.dialog({ #}
+    {#                    title: Translator.trans("There are multiple hours at this date"), #}
+    {#                    message: eventDateHoursDialogContent, #}
+    {#                    size: 'medium', #}
+    {#                    onEscape: true, #}
+    {#                    backdrop: true, #}
+    {#                    className: ' modal-dialog-centered modal-dialog-scrollable', #}
+    {#                    buttons: { #}
+    {#                        fee: { #}
+    {#                            label: '<i class="far fa-window-close"></i> ' + Translator.trans("Close"), #}
+    {#                            className: 'btn btn-outline-primary', #}
+    {#                            callback: function () { #}
+
+    {#                            } #}
+    {#                        } #}
+    {#                    }, #}
+    {#                    onShown: function (e) { #}
+    {#                        $(document).on("click", ".eventDate-hours-modal-tickets-button", function () { #}
+    {#                            var eventDateReference = $(this).data("eventdate-reference"); #}
+    {#                            $('.event-eventDate-wrapper').hide() #}
+    {#                            $("#eventDate-" + eventDateReference + "-wrapper").show(); #}
+    {#                            setTimeout(function () { #}
+    {#                                $("#buy-tickets-modal-eventDate-" + eventDateReference).modal('show'); #}
+    {#                            }, 250); #}
+    {#                        }); #}
+    {#                    } #}
+    {#                }); #}
+    {#            } #}
+    {#        }); #}
+    {#    </script> #}
 {% endblock %}

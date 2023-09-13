@@ -1,21 +1,29 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Controller\Front;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Knp\Component\Pager\PaginatorInterface;
-use App\Service\AppServices;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use App\Form\VenueQuoteType;
+use App\Service\AppServices;
+use Knp\Component\Pager\PaginatorInterface;
+use Swift_Mailer;
+use Swift_Message;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class VenueController extends AbstractController {
+class VenueController extends AbstractController
+{
 
     /**
      * @Route("/venues", name="venues")
      */
-    public function venues(Request $request, PaginatorInterface $paginator, AppServices $services) {
+    public function venues(Request $request, PaginatorInterface $paginator, AppServices $services): Response
+    {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
         $country = ($request->query->get('country')) == "" ? "all" : $request->query->get('country');
         $venuetypes = ($request->query->get('venuetypes')) == "" ? "all" : $request->query->get('venuetypes');
@@ -25,14 +33,15 @@ class VenueController extends AbstractController {
         $maxstandingguests = ($request->query->get('maxstandingguests')) == "" ? "all" : $request->query->get('maxstandingguests');
         $venues = $paginator->paginate($services->getVenues(array('directory' => true, 'keyword' => $keyword, 'country' => $country, 'venuetypes' => $venuetypes, 'minseatedguests' => $minseatedguests, 'maxseatedguests' => $maxseatedguests, 'minstandingguests' => $minstandingguests, 'maxstandingguests' => $maxstandingguests)), $request->query->getInt('page', 1), 8);
         return $this->render('Front/Venue/venues.html.twig', [
-                    'venues' => $venues
+            'venues' => $venues
         ]);
     }
 
     /**
      * @Route("/venue/{slug}", name="venue")
      */
-    public function venue(Request $request, $slug, AppServices $services, TranslatorInterface $translator, \Swift_Mailer $mailer) {
+    public function venue(Request $request, $slug, AppServices $services, TranslatorInterface $translator, Swift_Mailer $mailer): Response
+    {
         $venue = $services->getVenues(array('directory' => true, 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$venue) {
             $this->addFlash('error', $translator->trans('The venue can not be found'));
@@ -45,14 +54,14 @@ class VenueController extends AbstractController {
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 $quoterequest = $form->getData();
-                $email = (new \Swift_Message($translator->trans('New quote request')))
-                        ->setFrom($services->getSetting("no_reply_email"))
-                        ->setTo($venue->getContactemail())
-                        ->setBody(
+                $email = (new Swift_Message($translator->trans('New quote request')))
+                    ->setFrom($services->getSetting("no_reply_email"))
+                    ->setTo($venue->getContactemail())
+                    ->setBody(
                         $this->renderView(
-                                'Front/Venue/email.html.twig', ['quoterequest' => $quoterequest, 'venue' => $venue]
+                            'Front/Venue/email.html.twig', ['quoterequest' => $quoterequest, 'venue' => $venue]
                         ), 'text/html'
-                );
+                    );
                 $mailer->send($email);
                 $this->addFlash('success', $translator->trans('Your quote request has been successfully sent'));
                 $this->redirectToRoute("venue", ['slug' => $venue->getSlug()]);
@@ -62,9 +71,8 @@ class VenueController extends AbstractController {
         }
 
         return $this->render('Front/Venue/venue.html.twig', [
-                    'venue' => $venue,
-                    'form' => $form->createView()
+            'venue' => $venue,
+            'form' => $form->createView()
         ]);
     }
-
 }

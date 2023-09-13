@@ -54,7 +54,7 @@
             
             $results = array();
             foreach ($events as $event) {
-                if ($elapsed = (!"all" && !$event->hasAnEventDateOnSale())) {
+                if ((!"all" && !$event->hasAnEventDateOnSale())) {
                     continue;
                 }
                 $venue = $translator->trans("Online");

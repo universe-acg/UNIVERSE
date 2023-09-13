@@ -1,8 +1,8 @@
 {% extends "Global/layout.html.twig" %}
 
-{% set pagetitle = 'Checkout' | trans %}
+{% set pagetitle = 'Checkout' %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 
@@ -43,40 +43,40 @@
                             <div class="table-responsive">
                                 <table class="table table-hover shopping-cart-wrap">
                                     <thead class="text-muted">
-                                        <tr>
-                                            <th scope="col">{{ "Event / Ticket" }}</th>
-                                            <th scope="col" width="100">{{ "Price" }}</th>
-                                            <th scope="col" width="100">{{ "Quantity" }}</th>
-                                            <th scope="col" class="text-right" width="100">{{ "Subtotal" }}</th>
-                                        </tr>
+                                    <tr>
+                                        <th scope="col">{{ "Event / Ticket" }}</th>
+                                        <th scope="col" width="100">{{ "Price" }}</th>
+                                        <th scope="col" width="100">{{ "Quantity" }}</th>
+                                        <th scope="col" class="text-right" width="100">{{ "Subtotal" }}</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
-                                        {% for orderelement in order.orderelements %}
-                                            <tr>
-                                                <td>
-                                                    {% include "Global/event-preview-horizontal.html.twig" with { eventticket: orderelement.eventticket } %}
-                                                </td>
-                                                <td>
-                                                    <div class="price-wrap">
-                                                        {% if orderelement.eventticket.eventdate.event.isFree %}
-                                                            <span class="price-new">{{ "Free" }}</span>
-                                                        {% else %}
-                                                            {% if orderelement.eventticket.eventdate %}
-                                                                <span class="price-new">{{ services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '' }}{{ orderelement.eventticket.getSalePrice }}{{ services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '' }}</span>
-                                                            {% endif %}
+                                    {% for orderelement in order.orderelements %}
+                                        <tr>
+                                            <td>
+                                                {% include "Global/event-preview-horizontal.html.twig" with { eventticket: orderelement.eventticket } %}
+                                            </td>
+                                            <td>
+                                                <div class="price-wrap">
+                                                    {% if orderelement.eventticket.eventdate.event.isFree %}
+                                                        {#                                                        <span class="price-new">{{ "Free" }}</span> #}
+                                                    {% else %}
+                                                        {% if orderelement.eventticket.eventdate %}
+                                                            {#                                                            <span class="price-new">{{ services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '' }}{{ orderelement.eventticket.getSalePrice }}{{ services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '' }}</span> #}
                                                         {% endif %}
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    {{ orderelement.quantity }}
-                                                </td>
-                                                <td class="text-right">
-                                                    <div class="price-wrap">
-                                                        <var class="price">{{ services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '' }}{{ orderelement.getPrice }}{{ services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '' }}</var>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {{ orderelement.quantity }}
+                                            </td>
+                                            <td class="text-right">
+                                                <div class="price-wrap">
+                                                    <var class="price">{{ services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '' }}{{ orderelement.getPrice }}{{ services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '' }}</var>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
@@ -118,13 +118,17 @@
                     </dl>
                     <dl class="dlist-align h4">
                         <dt>{{ "Total" }}</dt>
-                        <dd class="text-right ml-5"><strong>{{ services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '' }}{{ order.getOrderElementsPriceSum(true) }}{{ services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '' }}</strong></dd>
+                        <dd class="text-right ml-5">
+                            <strong>{{ services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '' }}{{ order.getOrderElementsPriceSum(true) }}{{ services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '' }}</strong>
+                        </dd>
                     </dl>
 
                     {% if order.getOrderElementsPriceSum(true) > 0 %}
-                        <button id="checkout_submit" type="submit" class="btn btn-primary btn-block mt-4"><i class="fas fa-money-check"></i> {{ "Confirm payment and place order" }}</button>
+                        <button id="checkout_submit" type="submit" class="btn btn-primary btn-block mt-4"><i
+                                    class="fas fa-money-check"></i> {{ "Confirm payment and place order" }}</button>
                     {% else %}
-                        <button id="checkout_submit" type="submit" class="btn btn-primary btn-block mt-4"><i class="fas fa-edit"></i> {{ "Register attendees" }}</button>
+                        <button id="checkout_submit" type="submit" class="btn btn-primary btn-block mt-4"><i
+                                    class="fas fa-edit"></i> {{ "Register attendees" }}</button>
                     {% endif %}
                     {{ form_widget(form._token) }}
 

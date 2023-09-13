@@ -1,25 +1,32 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Controller\Dashboard\Attendee;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Routing\Annotation\Route;
-use Knp\Component\Pager\PaginatorInterface;
 use App\Service\AppServices;
-use Symfony\Component\HttpFoundation\Request;
+use Knp\Component\Pager\PaginatorInterface;
+use MaxMind\Db\Reader\InvalidDatabaseException;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class FavoritesController extends Controller {
+class FavoritesController extends Controller
+{
 
     /**
      * @Route("/my-favorites", name="favorites")
+     * @throws InvalidDatabaseException
      */
-    public function index(Request $request, PaginatorInterface $paginator, AppServices $services) {
+    public function index(Request $request, PaginatorInterface $paginator, AppServices $services)
+    {
 
         $events = $paginator->paginate($services->getEvents(array("addedtofavoritesby" => $this->getUser()))->getQuery(), $request->query->getInt('page', 1), 12, array('wrap-queries' => true));
         return $this->render('Dashboard/Attendee/favorites.html.twig', [
-                    'events' => $events
+            'events' => $events
         ]);
     }
 
@@ -28,8 +35,10 @@ class FavoritesController extends Controller {
     /**
      * @Route("/my-favorites/add/{slug}", name="favorites_add", condition="request.isXmlHttpRequest()")
      * @Route("/my-favorites/remove/{slug}", name="favorites_remove", condition="request.isXmlHttpRequest()")
+     * @throws InvalidDatabaseException
      */
-    public function addRemove($slug, AppServices $services, TranslatorInterface $translator) {
+    public function addRemove($slug, AppServices $services, TranslatorInterface $translator)
+    {
 
         $event = $services->getEvents(array("slug" => $slug))->getQuery()->getOneOrNullResult();
         if (!$event) {
@@ -41,12 +50,11 @@ class FavoritesController extends Controller {
             $em->persist($this->getUser());
             $em->flush();
             return new JsonResponse(['success' => $translator->trans('The event has been removed from your favorites')]);
-        } else {
-            $this->getUser()->addFavorite($event);
-            $em->persist($this->getUser());
-            $em->flush();
-            return new JsonResponse(['success' => $translator->trans('The event has been added to your favorites')]);
         }
-    }
 
+        $this->getUser()->addFavorite($event);
+        $em->persist($this->getUser());
+        $em->flush();
+        return new JsonResponse(['success' => $translator->trans('The event has been added to your favorites')]);
+    }
 }

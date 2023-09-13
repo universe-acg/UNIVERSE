@@ -1,6 +1,6 @@
 {% extends "Global/layout.html.twig" %}
 
-{% set pagetitle = 'active events' | trans %}
+{% set pagetitle = 'active events' %}
 
 {% block title %}{{ pagetitle }}{% endblock %}
 
@@ -19,10 +19,10 @@
                     {% if events.getTotalItemCount > 0 %}
                         <div class="box shadow-none bg-gray mb-4">
                             <div class="row">
-                                <div class="col-sm-12 col-lg-6 text-center text-lg-left mb-3 mb-lg-0">
+                                <div class="col-sm-12 col-lg-6  mb-3 mb-lg-0">
                                     <span class="center-lg-y text-muted">{{ "%resultsCount% event(s) currently on sale" |trans({'%resultsCount%': events.getTotalItemCount}) }}</span>
                                 </div>
-                                <div class="col-sm-12 col-lg-6 text-center text-lg-right">
+                                <div class="col-sm-12 col-lg-6 ">
                                     <button id="pos-save-order-button" class="btn btn-primary"><i
                                                 class="fas fa-cart-arrow-down"></i> {{ "Save order" }}</button>
                                 </div>
@@ -62,11 +62,11 @@
                                                                     <i class="fas fa-clock fa-fw"></i> {{ eventDate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}
 
                                                                     <i class="fas fa-map-marker-alt fa-fw"></i>
-                                                                    {% if eventDate.venue %}
-                                                                        {{ eventDate.venue.name }}: {{ eventDate.venue.stringifyAddress }}
-                                                                    {% else %}
-                                                                        {{ "Online" }}
-                                                                    {% endif %}
+                                                                    {#                                                                    {% if eventDate.venue %} #}
+                                                                    {#                                                                        {{ eventDate.venue.name }}: {{ eventDate.venue.stringifyAddress }} #}
+                                                                    {#                                                                    {% else %} #}
+                                                                    {#                                                                        {{ "Online" }} #}
+                                                                    {#                                                                    {% endif %} #}
                                                                 </div>
                                                                 <div class="card-body">
                                                                     {% for ticket in eventDate.tickets %}

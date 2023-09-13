@@ -20,13 +20,13 @@
                                         <h2 class="text-light mb-4">{{ event.name }}</h2>
 
                                         {% if event.getFirstOnSaleEventDate %}
-                                            <h5 class="text-light mb-2"><i class="fas fa-map-marker-alt fa-fw"></i>
-                                                {% if event.getFirstOnSaleEventDate.venue %}
-                                                    {{ event.getFirstOnSaleEventDate.venue.name }}: {{ event.getFirstOnSaleEventDate.venue.city ~ ', ' ~ event.getFirstOnSaleEventDate.venue.country.name }}
-                                                {% else %}
-                                                    {{ "Online" }}
-                                                {% endif %}
-                                            </h5>
+                                            {#                                            <h5 class="text-light mb-2"><i class="fas fa-map-marker-alt fa-fw"></i> #}
+                                            {#                                                {% if event.getFirstOnSaleEventDate.venue %} #}
+                                            {#                                                    {{ event.getFirstOnSaleEventDate.venue.name }}: {{ event.getFirstOnSaleEventDate.venue.city ~ ', ' ~ event.getFirstOnSaleEventDate.venue.country.name }} #}
+                                            {#                                                {% else %} #}
+                                            {#                                                    {{ "Online" }} #}
+                                            {#                                                {% endif %} #}
+                                            {#                                            </h5> #}
                                             {% if event.getFirstOnSaleEventDate.startdate %}
                                                 <h5 class="text-light mb-4"><i
                                                             class="fas fa-clock fa-fw"></i> {{ event.getFirstOnSaleEventDate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}
@@ -36,7 +36,7 @@
 
                                         <a href="{{ path('event', { slug : event.slug }) }}"
                                            class="btn btn-light btn-lg"><i
-                                                    class="fas fa-ticket-alt fa-fw"></i> {{ "Get tickets" }}</a>
+                                                    class="fas fa-ticket-alt fa-fw"></i> {{ "Book event" }}</a>
                                     </div>
                                 </div>
                             </div>
@@ -66,7 +66,7 @@
                                             {% endif %}
                                             <a href="{{ path('events', { organizer : user.organizer.slug }) }}"
                                                class="btn btn-light btn-lg"><i
-                                                        class="fas fa-ticket-alt fa-fw"></i> {{ "Get tickets" }}
+                                                        class="fas fa-ticket-alt fa-fw"></i> {{ "Book event" }}
                                             </a>
                                         </div>
                                     </div>
@@ -212,7 +212,7 @@
             <section class="section-content padding-y-lg bg-white">
                 <div class="{{ services.getSetting("app_layout") }}">
                     <header class="section-headin mb-5">
-                        <h4 class="title-section text-center text-muted text-uppercase">{{ 'Upcoming events' | trans }}</h4>
+                        <h4 class="title-section text-center text-muted text-uppercase">{{ 'Upcoming events' }}</h4>
                     </header>
                     <div class="row-sm">
                         {% for event in homepageEvents %}
@@ -230,7 +230,7 @@
         <section class="section-content padding-y-lg">
             <div class="{{ services.getSetting("app_layout") }}">
                 <header class="section-headin mb-5">
-                    <h4 class="title-section text-center text-muted text-uppercase">{{ 'Featured categories' | trans }}</h4>
+                    <h4 class="title-section text-center text-muted text-uppercase">{{ 'Featured categories' }}</h4>
                 </header>
                 <div class="row-sm"
                      style="display: flex; justify-content: center; align-content: center; align-items: center; margin: auto">
@@ -250,7 +250,7 @@
             <section class="section-content padding-y-lg bg-white">
                 <div class="{{ services.getSetting("app_layout") }}">
                     <header class="section-headin mb-5">
-                        <h4 class="title-section text-center text-muted text-uppercase">{{ 'Lastest blog posts' | trans }}</h4>
+                        <h4 class="title-section text-center text-muted text-uppercase">{{ 'Lastest blog posts' }}</h4>
                     </header>
                     <div class="row">
                         <div class="col-12">
@@ -272,13 +272,13 @@
             <div class="{{ services.getSetting("app_layout") }}">
                 <div class="row">
                     <div class="col-md-10 text-center">
-                        <article class="text-dark text-center text-lg-left mb-3">
+                        <article class="text-dark  mb-3">
                             <h3>{{ "Are you ready to take your" }} <b
                                         class="rotate-words">{% for category in services.getCategories({ "featured": true, "limit": 9 }).getQuery().getResult() %}{{ category.name|lower }}{% if not loop.last %}|{% endif %}{% endfor %}</b> {{ "event to the next level ?" }}
                             </h3>
                         </article>
                     </div>
-                    <div class="col-md-2 text-center text-lg-right">
+                    <div class="col-md-2 ">
                         <a href="{{ path('dashboard_organizer_event_add') }}" class="btn btn-light"><i
                                     class="fas fa-calendar-plus"></i> {{ "Create my event" }}</a>
                     </div>

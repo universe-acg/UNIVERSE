@@ -1,4 +1,7 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Repository;
 
@@ -6,13 +9,16 @@ use App\Entity\EventTicket;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class EventTicketRepository extends ServiceEntityRepository {
+class EventTicketRepository extends ServiceEntityRepository
+{
 
-    public function __construct(ManagerRegistry $registry) {
+    public function __construct(ManagerRegistry $registry)
+    {
         parent::__construct($registry, EventTicket::class);
     }
 
-    public function getEventTickets($reference, $organizer, $event, $eventdate, $limit) {
+    public function getEventTickets($reference, $organizer, $event, $eventdate, $limit)
+    {
         $qb = $this->createQueryBuilder("e");
         $qb->select("e");
         if ($reference !== "all") {
@@ -42,4 +48,16 @@ class EventTicketRepository extends ServiceEntityRepository {
         return $qb;
     }
 
+    public function findByEventTicketId($eventId)
+    {
+        $qb = $this->createQueryBuilder("e")
+            ->select("e")
+            ->leftJoin("e.eventdate", "eventdate")
+            ->leftJoin("eventdate.event", "event")
+            ->andWhere("event.id = :eventId")
+            ->setParameter("eventId", $eventId)
+            ->orderBy("e.id", "ASC");
+
+        return $qb->getQuery()->getResult();
+    }
 }

@@ -1,6 +1,6 @@
 {% extends "Global/layout.html.twig" %}
 
-{% set pagetitle = 'Payout requests' | trans %}
+{% set pagetitle = 'Payout requests' %}
 
 {% block title %}{{ pagetitle }}{% endblock %}
 
@@ -21,14 +21,14 @@
                     {% endif %}
                     <div class="box shadow-none bg-gray mb-4">
                         <div class="row">
-                            <div class="col-sm-12 col-lg-3 text-center text-lg-left mb-3 mb-lg-0">
+                            <div class="col-sm-12 col-lg-3  mb-3 mb-lg-0">
                                 <span class="center-lg-y text-muted">{{ "%resultsCount% result(s) found" |trans ({'%resultsCount%': payoutRequests.getTotalItemCount}) }}</span>
                             </div>
-                            <div class="col-sm-12 col-lg-5 text-center text-lg-right">
+                            <div class="col-sm-12 col-lg-5 ">
                                 <label for="sortable-select" class="display-inline">{{ "Sort by" }}
                                     <select id="sortable-select"
                                             class="form-control display-inline-block bg-white select2 ml-3"
-                                            data-placeholder="{{ "Select an option" }}" style="width: 50%;">
+                                            data-placeholder="{{ "Select an option" }}" style="width: 100%;">
                                         {{ knp_pagination_sortable(payoutRequests, "Creation date" ~ ' (' ~ "desc" ~ ')', "p.createdAt", {"direction": "desc", "criteria": "p.createdAt"}) }}
                                         {{ knp_pagination_sortable(payoutRequests, "Creation date" ~ ' (' ~ "asc" ~ ')', "p.createdAt", {"direction": "asc", "criteria": "p.createdAt"}) }}
                                         {{ knp_pagination_sortable(payoutRequests, "Processing date" ~ ' (' ~ "desc" ~ ')', "p.updatedAt", {"direction": "desc", "criteria": "p.updatedAt"}) }}
@@ -36,10 +36,10 @@
                                     </select>
                                 </label>
                             </div>
-                            <div class="col-sm-12 col-lg-4 text-center text-lg-right">
+                            <div class="col-sm-12 col-lg-4 ">
                                 <a href="#search-filters" class="btn btn-primary has-tooltip" data-toggle="collapse"
                                    title="{{ "Toggle display the search filters" }}" aria-expanded="false"
-                                   aria-controls="search-filters"><i class="fab fa-searchengin fa-lg"></i></a>
+                                   aria-controls="search-filters"><i class="fa fa-eye fa-lg"></i></a>
                             </div>
                             <div id="search-filters" class="col-sm-12 col-lg-12 text-center mb-3 mb-lg-0 collapse show">
                                 <hr>

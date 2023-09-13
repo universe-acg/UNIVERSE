@@ -1,6 +1,6 @@
 {% extends "Global/layout.html.twig" %}
 
-{% set pagetitle = 'My points of sale' | trans %}
+{% set pagetitle = 'My points of sale' %}
 
 {% block title %}{{ pagetitle }}{% endblock %}
 
@@ -19,7 +19,7 @@
 
                     <div class="box shadow-none bg-gray mb-4">
                         <div class="row">
-                            <div class="col-sm-12 col-lg-2 text-center text-lg-left mb-3 mb-lg-0">
+                            <div class="col-sm-12 col-lg-2  mb-3 mb-lg-0">
                                 <span class="center-lg-y text-muted">{{ "%resultsCount% result(s) found" |trans ({'%resultsCount%': pointofsales.getTotalItemCount}) }}</span>
                             </div>
                             <div class="col-sm-12 col-lg-4 text-center mb-3 mb-lg-0">
@@ -65,17 +65,17 @@
                                     </ul>
                                 </form>
                             </div>
-                            <div class="col-sm-12 col-lg-6 text-center text-lg-right">
+                            <div class="col-sm-12 col-lg-6 ">
                                 <label for="sortable-select" class="display-inline">{{ "Sort by" }}
                                     <select id="sortable-select"
                                             class="form-control display-inline-block bg-white select2 ml-3"
-                                            data-placeholder="{{ "Select an option" }}" style="width: 50%;">
+                                            data-placeholder="{{ "Select an option" }}" style="width: 100%;">
                                         {{ knp_pagination_sortable(pointofsales, "Creation date" ~ ' (' ~ "desc" ~ ')', "u.createdAt", {"direction": "desc", "criteria": "u.createdAt"}) }}
                                         {{ knp_pagination_sortable(pointofsales, "Creation date" ~ ' (' ~ "asc" ~ ')', "u.createdAt", {"direction": "asc", "criteria": "u.createdAt"}) }}
                                     </select>
                                 </label>
                                 <a href="{{ path('dashboard_organizer_pointofsale_add') }}" class="btn btn-primary ml-3"
-                                   data-toggle="tooltip" title="{{ 'Add a new point of sale' | trans }}"><i
+                                   data-toggle="tooltip" title="{{ 'Add a new point of sale' }}"><i
                                             class="fas fa-plus"></i></a>
                             </div>
                         </div>
@@ -91,10 +91,10 @@
                                         <table class="table table-hover table-vcenter text-nowrap">
                                             <thead>
                                             <tr>
-                                                <th>{{ 'Name / Username' | trans }}</th>
-                                                <th>{{ 'Creation date / Last login' | trans }}</th>
-                                                <th>{{ 'Events count' | trans }}</th>
-                                                <th>{{ 'Status' | trans }}</th>
+                                                <th>{{ 'Name / Username' }}</th>
+                                                <th>{{ 'Creation date / Last login' }}</th>
+                                                <th>{{ 'Events count' }}</th>
+                                                <th>{{ 'Status' }}</th>
                                                 <th class="text-center"><i class="fas fa-cog"></i></th>
                                             </tr>
                                             </thead>

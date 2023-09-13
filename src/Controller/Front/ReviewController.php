@@ -1,20 +1,26 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Controller\Front;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Routing\Annotation\Route;
-use Knp\Component\Pager\PaginatorInterface;
 use App\Service\AppServices;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ReviewController extends Controller {
+class ReviewController extends Controller
+{
 
     /**
      * @Route("/event/{slug}/reviews", name="event_reviews")
      */
-    public function eventreviews($slug, Request $request, PaginatorInterface $paginator, AppServices $services, TranslatorInterface $translator) {
+    public function eventreviews($slug, Request $request, PaginatorInterface $paginator, AppServices $services, TranslatorInterface $translator): Response
+    {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
 
         $event = $services->getEvents(array("slug" => $slug, "elapsed" => "all"))->getQuery()->getOneOrNullResult();
@@ -26,9 +32,8 @@ class ReviewController extends Controller {
         $reviews = $paginator->paginate($services->getReviews(array("event" => $event->getSlug(), "keyword" => $keyword))->getQuery(), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
 
         return $this->render('Front/Event/reviews.html.twig', [
-                    'reviews' => $reviews,
-                    'event' => $event
+            'reviews' => $reviews,
+            'event' => $event
         ]);
     }
-
 }

@@ -2,7 +2,7 @@
 
 {% set pagetitle = article.title %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 
@@ -14,22 +14,25 @@
             <div class="row">
                 <aside class="col-lg-3 order-1 order-lg-0">
                     <div class="card card-filter">
-                        <article class="card-group-item">
-                            <header class="card-header">
-                                <a class="" aria-expanded="true" href="#" data-toggle="collapse" data-target="#filter-keyword">
-                                    <i class="icon-action fa fa-chevron-down"></i>
-                                    <h6 class="title">{{ "Search help center" }}</h6>
-                                </a>
-                            </header>
-                            <div class="filter-content collapse show" id="filter-keyword">
-                                <div class="card-body">
-                                    <form class="pb-3" action="{{ path('help_center') }}">
-                                        <input class="form-control mb-3" placeholder="{{ "Keyword" }}" name="keyword" type="text">
-                                        <button type="submit" class="btn btn-outline-primary btn-block"><i class="fas fa-search"></i> {{ "Search" }}</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </article>
+                        {#                        <article class="card-group-item"> #}
+                        {#                            <header class="card-header"> #}
+                        {#                                <a class="" aria-expanded="true" href="#" data-toggle="collapse" #}
+                        {#                                   data-target="#filter-keyword"> #}
+                        {#                                    <i class="icon-action fa fa-chevron-down"></i> #}
+                        {#                                    <h6 class="title">{{ "Search help center" }}</h6> #}
+                        {#                                </a> #}
+                        {#                            </header> #}
+                        {#                            <div class="filter-content collapse show" id="filter-keyword"> #}
+                        {#                                <div class="card-body"> #}
+                        {#                                    <form class="pb-3" action="{{ path('help_center') }}"> #}
+                        {#                                        <input class="form-control mb-3" placeholder="{{ "Keyword" }}" name="keyword" #}
+                        {#                                               type="text"> #}
+                        {#                                        <button type="submit" class="btn btn-outline-primary btn-block"><i #}
+                        {#                                                    class="fas fa-search"></i> {{ "Search" }}</button> #}
+                        {#                                    </form> #}
+                        {#                                </div> #}
+                        {#                            </div> #}
+                        {#                        </article> #}
                         <article class="card-group-item">
                             <header class="card-header">
                                 <a href="#" data-toggle="collapse" data-target="#filter-event-type">
@@ -43,7 +46,8 @@
                                         {% set helpcentercategories = services.getHelpCenterCategories({}).getQuery().getResult() %}
                                         {% for helpcentercategory in helpcentercategories %}
                                             <li class="mb-2">
-                                                <a href="{{ path('help_center_category', {slug: helpcentercategory.slug}) }}" class="font-weight-semibold">
+                                                <a href="{{ path('help_center_category', {slug: helpcentercategory.slug}) }}"
+                                                   class="font-weight-semibold">
                                                     {% if app.request.locale != 'ar' %}
                                                         <i class="fas fa-angle-right ml-1 mr-1 pr-2"></i>
                                                     {% endif %}
@@ -76,7 +80,8 @@
                                             <div class="col-12">
                                                 <small class="text-muted">{{ article.category.name }}</small>
                                                 <h6 class="mb-0">
-                                                    <a href="{{ path('help_center_article', { slug : article.slug }) }}" class="text-1">{{ article.title }}</a>
+                                                    <a href="{{ path('help_center_article', { slug : article.slug }) }}"
+                                                       class="text-1">{{ article.title }}</a>
                                                 </h6>
                                             </div>
                                         </article>
@@ -85,19 +90,20 @@
                             </div>
                         </article>
                         <article class="card-group-item">
-                            <header class="card-header">
-                                <a href="#" data-toggle="collapse" data-target="#collapseTags">
-                                    <i class="icon-action fa fa-chevron-down"></i>
-                                    <h6 class="title">{{ "Tags" }}</h6>
-                                </a>
-                            </header>
-                            <div class="filter-content collapse show" id="collapseTags">
-                                <div class="card-body">
-                                    {% for tag in services.getHelpCenterArticles({"selecttags": true}).getQuery().getOneOrNullResult()[1]|split(',') %}
-                                        <a href="{{ path('help_center', { keyword: tag }) }}" class="btn btn-sm btn-default mr-2 mb-2 mt-2">{{ tag }}</a>
-                                    {% endfor %}
-                                </div>
-                            </div>
+                            {#                            <header class="card-header"> #}
+                            {#                                <a href="#" data-toggle="collapse" data-target="#collapseTags"> #}
+                            {#                                    <i class="icon-action fa fa-chevron-down"></i> #}
+                            {#                                    <h6 class="title">{{ "Tags" }}</h6> #}
+                            {#                                </a> #}
+                            {#                            </header> #}
+                            {#                            <div class="filter-content collapse show" id="collapseTags"> #}
+                            {#                                <div class="card-body"> #}
+                            {#                                    {% for tag in services.getHelpCenterArticles({"selecttags": true}).getQuery().getOneOrNullResult()[1]|split(',') %} #}
+                            {#                                        <a href="{{ path('help_center', { keyword: tag }) }}" #}
+                            {#                                           class="btn btn-sm btn-default mr-2 mb-2 mt-2">{{ tag }}</a> #}
+                            {#                                    {% endfor %} #}
+                            {#                                </div> #}
+                            {#                            </div> #}
                         </article>
 
                     </div>
@@ -117,9 +123,10 @@
                             {% if article.tags %}
                                 <hr>
                                 <div class="row">
-                                    <div class="col-12 text-center text-lg-left">
+                                    <div class="col-12 ">
                                         {% for tag in article.tags|split(',') %}
-                                            <a href="{{ path('help_center', { keyword: tag }) }}" class="btn btn-sm btn-default mr-3 mb-3 mt-3">{{ tag }}</a>
+                                            <a href="{{ path('help_center', { keyword: tag }) }}"
+                                               class="btn btn-sm btn-default mr-3 mb-3 mt-3">{{ tag }}</a>
                                         {% endfor %}
                                     </div>
                                 </div>

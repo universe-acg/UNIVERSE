@@ -1,10 +1,10 @@
 {% extends "Global/layout.html.twig" %}
 
-{% set pagetitle = 'Add a new category' | trans %}
+{% set pagetitle = 'Add a new category' %}
 
-{% if category.id %}{% set pagetitle = 'Update the category' | trans %}{% endif %}
+{% if category.id %}{% set pagetitle = 'Update the category' %}{% endif %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 

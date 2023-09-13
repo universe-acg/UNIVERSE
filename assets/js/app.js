@@ -43,7 +43,6 @@ import Blazy from 'blazy/blazy.min.js';
 import Ouical from 'add-to-calendar-buttons/ouical.min.js';
 import Bloodhound from 'typeahead.js/dist/bloodhound.min.js';
 import Routing from '../../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min.js';
-import Handlebars from 'handlebars/dist/handlebars.min.js';
 import moment from 'moment/moment.js';
 import KnpPaginatorAjax from '../vendor/knppaginator-ajax/knppaginator-ajax.js';
 import caleandar from '../vendor/caleandar.js/caleandar.js';
@@ -86,7 +85,6 @@ require('jquery-parallax.js/parallax.min.js');
 require('material-scrolltop/dist/material-scrolltop.js');
 
 $(document).ready(function () {
-
     // Declares utility functions
 
     // Sets the language for the date pickers
@@ -338,7 +336,7 @@ $(document).ready(function () {
                             btnClass: 'btn-primary btn-sm',
                             keys: ['enter'],
                             action: function () {
-                                location.href = location.protocol + '//' + location.host + Routing.generate('dashboard_attendee_cart', {}, false);
+                                location.href = location.protocol + '//' + location.host + Routing.generate('dashboard_attendee_bookevent', {}, false);
                             }
                         }
                     }
@@ -644,20 +642,20 @@ $(document).ready(function () {
     }
 
 // Select2 autocomplete
-    if ($('.autocomplete').length) {
-        $('.autocomplete').each(function () {
-            var $thisAutocomplete = $(this);
-            $thisAutocomplete.autocompleter({
-                url_list: $thisAutocomplete.data('url-list'),
-                otherOptions: {
-                    minimumInputLength: typeof $thisAutocomplete.data("minimum-input-length") !== 'undefined' ? $thisAutocomplete.data("minimum-input-length") : 3,
-                    formatNoMatches: Translator.trans('No results found', {}, 'javascript'),
-                    formatSearching: Translator.trans('Searching ...', {}, 'javascript'),
-                    formatInputTooShort: Translator.trans('Insert at least 3 characters', {}, 'javascript')
-                }
-            });
-        });
-    }
+//     if ($('.autocomplete').length) {
+//         $('.autocomplete').each(function () {
+//             var $thisAutocomplete = $(this);
+    // $thisAutocomplete.autocompleter({
+    // url_list: $thisAutocomplete.data('url-list'),
+    // otherOptions: {
+    // minimumInputLength: typeof $thisAutocomplete.data("minimum-input-length") !== 'undefined' ? $thisAutocomplete.data("minimum-input-length") : 3,
+    // formatNoMatches: Translator.trans('No results found', {}, 'javascript'),
+    // formatSearching: Translator.trans('Searching ...', {}, 'javascript'),
+    // formatInputTooShort: Translator.trans('Insert at least 3 characters', {}, 'javascript')
+    // }
+    // });
+    // });
+    // }
 
 // Tags input
     if ($(".tags-input").length) {
@@ -849,9 +847,9 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.hasOwnProperty('success')) {
                     if ($thisButton.hasClass('event-favorites-add')) {
-                        $thisButton.html('<i class="fas fa-heart"></i>');
+                        $thisButton.html('<i class="fas fa-heart"></i>Remove from favorites');
                     } else {
-                        $thisButton.html('<i class="far fa-heart"></i>');
+                        $thisButton.html('<i class="far fa-heart"></i>Add to favorites');
                     }
                     $thisButton.attr("title", response.success).tooltip("_fixTitle");
                     showStackBarTop('success', '', response.success);
@@ -958,41 +956,62 @@ $(document).ready(function () {
         document.querySelector('#add-to-calendar').appendChild(myCalendar);
     }
 
-// Follow / unfollow organizer
     $(document).on("click", ".organizer-follow, .organizer-unfollow", function () {
-        var $thisButton = $(this);
+        const $thisButton = $(this);
         if ($thisButton.attr("data-action-done") == "1") {
-            $thisButton.unbind("click");
+            // Prevent multiple clicks
             return false;
         }
+
+        const targetUrl = $thisButton.data('target'); // Get the URL from data attribute
+
         $.ajax({
             type: "GET",
-            url: $thisButton.data('target'),
+            url: targetUrl, // Use the extracted URL
             beforeSend: function () {
+                // Set the data-action-done attribute to prevent multiple clicks
                 $thisButton.attr("data-action-done", "1");
-                $thisButton.html("<i class='fas fa-spinner fa-spin'></i>");
+
+                // Update button text with spinner and action description
+                if ($thisButton.hasClass('organizer-follow')) {
+                    $thisButton.html('<i class="fas fa-spinner fa-spin"></i> Following');
+                } else {
+                    $thisButton.html('<i class="fas fa-spinner fa-spin"></i> Unfollowing');
+                }
             },
             success: function (response) {
+                // Restore the original button text
+                if ($thisButton.hasClass('organizer-follow')) {
+                    $thisButton.html('<i class="fas fa-folder-minus"></i> Unfollow');
+                } else {
+                    $thisButton.html('<i class="fas fa-folder-plus"></i> Follow');
+                }
+
                 if (response.hasOwnProperty('success')) {
-                    if ($thisButton.hasClass('organizer-follow')) {
-                        $thisButton.html('<i class="fas fa-folder-plus"></i>');
-                    } else {
-                        $thisButton.html('<i class="fas fa-folder-minus"></i>');
-                    }
-                    $thisButton.attr("title", response.success).tooltip("_fixTitle");
+                    // Show success message
                     showStackBarTop('success', '', response.success);
                 } else if (response.hasOwnProperty('error')) {
-                    $thisButton.html('<i class="fas fa-folder"></i>');
-                    $thisButton.attr("title", response.error).tooltip("_fixTitle");
+                    // Show error message
                     showStackBarTop('error', '', response.error);
                 } else {
-                    $thisButton.html('<i class="fas fa-folder"></i>');
-                    $thisButton.attr("title", Translator.trans('An error has occured', {}, 'javascript')).tooltip("_fixTitle");
-                    showStackBarTop('error', '', Translator.trans('An error has occured', {}, 'javascript'));
+                    // Show a generic error message
+                    showStackBarTop('error', '', 'An error has occurred');
                 }
+            },
+            error: function () {
+                // Restore the original button text on error
+                if ($thisButton.hasClass('organizer-follow')) {
+                    $thisButton.html('<i class="fas fa-folder-plus"></i> Follow');
+                } else {
+                    $thisButton.html('<i class="fas fa-folder-minus"></i> Unfollow');
+                }
+
+                // Show a generic error message
+                showStackBarTop('error', '', 'An error has occurred');
             }
         });
     });
+
 
 //Newsletter subscribe
     $(document).on("click", "#newsletter-subscribe", function () {
@@ -1045,24 +1064,24 @@ $(document).ready(function () {
         },
     });
 
-    $('.top-search').typeahead({
-        hint: false,
-        highlight: true,
-        minLength: 0,
-        limit: 3
-    }, {
-        name: 'top-search',
-        display: 'text',
-        source: eventsForTopSearch,
-        templates: {
-            empty: [
-                '<div class="dropdown-menu show">',
-                Translator.trans('No results found', {}, 'javascript'),
-                '</div>'
-            ].join('\n'),
-            suggestion: Handlebars.compile($("#top-search-result-template").html())
-        }
-    });
+    // $('.top-search').typeahead({
+    //     hint: false,
+    //     highlight: true,
+    //     minLength: 0,
+    //     limit: 3
+    // }, {
+    //     name: 'top-search',
+    //     display: 'text',
+    //     source: eventsForTopSearch,
+    // templates: {
+    //     empty: [
+    //         '<div class="dropdown-menu show">',
+    //         Translator.trans('No results found', {}, 'javascript'),
+    //         '</div>'
+    //     ].join('\n'),
+    //     suggestion: Handlebars.compile($("#top-search-result-template").html())
+    // }
+    // });
 
 // Initializes Ajax Pagination
     if ($('.ajax-pagination').length) {
@@ -1317,7 +1336,7 @@ $(document).ready(function () {
                                 $("#eventDate-" + eventDateReference + "-wrapper").show();
                                 setTimeout(function () {
                                     $("#buy-tickets-modal-eventDate-" + eventDateReference).modal('show');
-                                }, 250);
+                                }, 2050);
                             });
                         }
                     });
@@ -1544,5 +1563,4 @@ $(document).ready(function () {
             }
         });
     });
-
 });

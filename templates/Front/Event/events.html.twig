@@ -34,11 +34,11 @@
                         {% if eventdate.venue and services.getSetting("show_map_button") == "yes" %}
                             {% if eventdate.venue.lat and eventdate.venue.lng %}
                                 {% if eventsonmap|length == 0 %}
-                                    {% set eventsonmap = eventsonmap|merge([{"name": event.name, "image": event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder, "address": (eventdate.venue.name ~ ": " ~eventdate.venue.stringifyAddress),"date": (eventdate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format)), "price": (eventdate.isFree ? "Free" : eventdate.getCheapestTicket.getSalePrice), "lat":eventdate.venue.lat, "lng":eventdate.venue.lng, "link": (path('event', { slug: event.slug })) }]) %}
+                                    {% set eventsonmap = eventsonmap|merge([{"name": event.name, "image": event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder, "address": (eventdate.venue.name ~ ": " ~eventdate.venue.stringifyAddress),"date": (eventdate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format)), "price": (eventdate.isFree ? "" : eventdate.getCheapestTicket.getSalePrice), "lat":eventdate.venue.lat, "lng":eventdate.venue.lng, "link": (path('event', { slug: event.slug })) }]) %}
                                 {% else %}
                                     {% for eventonmap in eventsonmap %}
                                         {% if eventonmap.lat != eventdate.venue.lat and eventonmap.lng != eventdate.venue.lng %}
-                                            {% set eventsonmap = eventsonmap|merge([{"name": event.name, "image": event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder, "address": (eventdate.venue.name ~ ": " ~eventdate.venue.stringifyAddress),"date": (eventdate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format)), "price": (eventdate.isFree ? "Free" : eventdate.getCheapestTicket.getSalePrice), "lat":eventdate.venue.lat, "lng":eventdate.venue.lng, "link": (path('event', { slug: event.slug })) }]) %}
+                                            {% set eventsonmap = eventsonmap|merge([{"name": event.name, "image": event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder, "address": (eventdate.venue.name ~ ": " ~eventdate.venue.stringifyAddress),"date": (eventdate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format)), "price": (eventdate.isFree ? "" : eventdate.getCheapestTicket.getSalePrice), "lat":eventdate.venue.lat, "lng":eventdate.venue.lng, "link": (path('event', { slug: event.slug })) }]) %}
                                         {% endif %}
                                     {% endfor %}
                                 {% endif %}
@@ -64,11 +64,11 @@
 
             <div class="box shadow-none bg-gray mb-4">
                 <div class="row">
-                    <div class="col-sm-12 col-lg-6 text-center text-lg-left mb-3 mb-lg-0">
+                    <div class="col-sm-12 col-lg-2  mb-3 mb-lg-0">
                         <span class="center-lg-y text-muted">{{ "%resultsCount% event(s) found"  |trans ({'%resultsCount%': events.getTotalItemCount}) }}</span>
                     </div>
                     {% if events.getTotalItemCount > 0 %}
-                        <div class="col-sm-12 col-lg-6 text-center text-lg-right">
+                        <div class="col-sm-12 col-lg-6 ">
                             {% if eventsonmap|length > 0 and services.getSetting("show_map_button") == "yes" and google_maps_api_key != "" %}
                                 <a href="#events-map" class="btn btn-primary has-tooltip" data-toggle="collapse"
                                    title="{{ "Show events on map" }}" aria-expanded="false"
@@ -301,7 +301,7 @@
                                                 <input type="checkbox" class="custom-control-input"
                                                        id="free-events-only" name="freeonly" value="1">
                                                 <label class="custom-control-label" for="free-events-only">
-                                                    {{ "Free events only" }}
+                                                    {#                                                    {{ "Free events only" }} #}
                                                 </label>
                                             </div>
 

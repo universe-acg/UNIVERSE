@@ -1,26 +1,32 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Controller\Dashboard\Shared;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Routing\Annotation\Route;
-use Knp\Component\Pager\PaginatorInterface;
-use App\Service\AppServices;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use App\Entity\Review;
 use App\Form\ReviewType;
+use App\Service\AppServices;
+use Knp\Component\Pager\PaginatorInterface;
+use MaxMind\Db\Reader\InvalidDatabaseException;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ReviewController extends Controller {
+class ReviewController extends Controller
+{
 
     /**
      * @Route("/attendee/my-reviews", name="dashboard_attendee_reviews")
      * @Route("/organizer/reviews", name="dashboard_organizer_reviews")
      * @Route("/administrator/manage-reviews", name="dashboard_administrator_reviews")
      */
-    public function index(Request $request, PaginatorInterface $paginator, AppServices $services, AuthorizationCheckerInterface $authChecker) {
+    public function index(Request $request, PaginatorInterface $paginator, AppServices $services, AuthorizationCheckerInterface $authChecker)
+    {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
         $event = ($request->query->get('event')) == "" ? "all" : $request->query->get('event');
         $visible = ($request->query->get('visible')) == "" ? "all" : $request->query->get('visible');
@@ -39,14 +45,16 @@ class ReviewController extends Controller {
 
         $reviews = $paginator->paginate($services->getReviews(array("user" => $user, "organizer" => $organizer, "keyword" => $keyword, "event" => $event, "slug" => $slug, "visible" => $visible, "rating" => $rating))->getQuery(), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
         return $this->render('Dashboard/Shared/Review/reviews.html.twig', [
-                    'reviews' => $reviews
+            'reviews' => $reviews
         ]);
     }
 
     /**
      * @Route("/attendee/my-reviews/{slug}/add", name="dashboard_attendee_reviews_add")
+     * @throws InvalidDatabaseException
      */
-    public function add($slug, Request $request, AppServices $services, TranslatorInterface $translator, UrlGeneratorInterface $router) {
+    public function add($slug, Request $request, AppServices $services, TranslatorInterface $translator, UrlGeneratorInterface $router)
+    {
         $event = $services->getEvents(array("slug" => $slug, "elapsed" => "all"))->getQuery()->getOneOrNullResult();
         if (!$event) {
             $this->addFlash('error', $translator->trans('The event not be found'));
@@ -69,8 +77,8 @@ class ReviewController extends Controller {
             }
         }
         return $this->render('Dashboard/Shared/Review/add.html.twig', array(
-                    "event" => $event,
-                    "form" => $form->createView(),
+            "event" => $event,
+            "form" => $form->createView(),
         ));
     }
 
@@ -78,7 +86,8 @@ class ReviewController extends Controller {
      * @Route("/administrator/manage-reviews/{slug}/show", name="dashboard_administrator_review_show", methods="GET")
      * @Route("/administrator/manage-reviews/{slug}/hide", name="dashboard_administrator_review_hide", methods="GET")
      */
-    public function showhide(AppServices $services, TranslatorInterface $translator, $slug) {
+    public function showhide(AppServices $services, TranslatorInterface $translator, $slug)
+    {
 
         $review = $services->getReviews(array('slug' => $slug, 'visible' => 'all'))->getQuery()->getOneOrNullResult();
         if (!$review) {
@@ -102,7 +111,8 @@ class ReviewController extends Controller {
      * @Route("/administrator/manage-reviews/{slug}/delete-permanently", name="dashboard_administrator_review_delete_permanently", methods="GET")
      * @Route("/administrator/manage-reviews/{slug}/delete", name="dashboard_administrator_review_delete", methods="GET")
      */
-    public function delete($slug, AppServices $services, TranslatorInterface $translator, AuthorizationCheckerInterface $authChecker) {
+    public function delete($slug, AppServices $services, TranslatorInterface $translator, AuthorizationCheckerInterface $authChecker)
+    {
 
         $review = $services->getReviews(array('slug' => $slug, 'visible' => 'all'))->getQuery()->getOneOrNullResult();
         if (!$review) {
@@ -126,7 +136,8 @@ class ReviewController extends Controller {
     /**
      * @Route("/administrator/manage-reviews/{slug}/restore", name="dashboard_administrator_review_restore", methods="GET")
      */
-    public function restore($slug, Request $request, TranslatorInterface $translator, AppServices $services) {
+    public function restore($slug, Request $request, TranslatorInterface $translator, AppServices $services)
+    {
 
         $review = $services->getReviews(array('slug' => $slug, 'visible' => 'all'))->getQuery()->getOneOrNullResult();
         if (!$review) {

@@ -1,6 +1,6 @@
 {% extends "Global/layout.html.twig" %}
 
-{% set pagetitle = 'Payout request details' | trans %}
+{% set pagetitle = 'Payout request details' %}
 
 {% block title %}{{ pagetitle }}{% endblock %}
 
@@ -140,7 +140,7 @@
                                        data-target="{{ path('dashboard_administrator_payout_request_delete', { reference : payoutRequest.reference, forceRedirect: 1 }) }}"
                                        class="btn btn-primary cursor-pointer requires-confirmation"
                                        data-confirmation-text="{{ "You are about to delete the payout request and all its related information" ~ " " ~ "PERMANENTLY" }}"><i
-                                                class="fas fa-trash fa-fw"></i> {{ "Delete permanently" }}</a>
+                                                class="fas fa-trash fa-fw"></i> {{ "Delete" }}</a>
                                     <a href="{{ path('dashboard_administrator_payout_request_restore', { reference : payoutRequest.reference }) }}"
                                        class="btn btn-primary"><i
                                                 class="dropdown-icon fas fa-trash-restore fa-fw"></i> {{ "Restore" }}

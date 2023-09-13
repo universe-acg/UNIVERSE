@@ -18,17 +18,16 @@
                     {% endif %}
 
                     <div class="shadow rounded overflow-hidden">
-
                         {% if organizer.coverName %}
                         <div class="organizer-profile-cover parallax-window" data-parallax="scroll"
                              data-image-src="{{ asset(organizer.getCoverPath) }}"></div>{% endif %}
 
                         <div class="row">
-                            <div class="col-12 col-lg-4">
+                            <div class="col-12 col-lg-4" style="background: white !important;">
                                 <div class="organizer-profile-sidebar text-center {% if not organizer.coverName %}mt-3 mb-3{% endif %}">
 
                                     <span class="avatar organizer-profile-logo"
-                                          style="background: url('{{ organizer.logoName ? asset(organizer.getLogoPath) : organizer.getLogoPlaceholder }}');"></span>
+                                          style="background-size: cover; background: url('{{ organizer.logoName ? asset(organizer.getLogoPath) : organizer.getLogoPlaceholder }}');"></span>
 
                                     <h4 class="font-weight-bold text-center my-5">{{ organizer.name }}</h4>
 
@@ -142,12 +141,13 @@
                                                 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                                                     {% if organizer.isFollowedBy(app.user) %}
                                                         <button class="organizer-unfollow btn btn-outline-primary btn-sm btn-block"
-                                                                data-target="{{ path('dashboard_attendee_following_remove', { slug : organizer.slug }) }}">
+                                                                data-target="{{ path('app_dashboard_attendee_following_remove', { slug : organizer.slug }) }}">
                                                             <i class="fas fa-folder-minus"></i> {{ "Unfollow"|trans }}
                                                         </button>
                                                     {% else %}
                                                         <button class="organizer-follow btn btn-outline-primary btn-sm btn-block"
-                                                                data-target="{{ path('dashboard_attendee_following_add', { slug : organizer.slug }) }}">
+                                                                data-target="{{ path('app_dashboard_attendee_following_add', { slug : organizer.slug }) }}"
+                                                        >
                                                             <i class="fas fa-folder-plus"></i> {{ "Follow"|trans }}
                                                         </button>
                                                     {% endif %}
@@ -169,15 +169,15 @@
                                             <a class="nav-link active" data-toggle="pill"
                                                href="#organizer-onsale-events" role="tab"
                                                aria-controls="organizer-onsale-events"
-                                               aria-selected="true">{{ "active events"|trans }}
+                                               aria-selected="true">{{ "Active events"|trans }}
                                                 ({{ onsaleeventscount }})</a>
                                         </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" data-toggle="pill" href="#organizer-past-events"
-                                               role="tab" aria-controls="organizer-past-events"
-                                               aria-selected="false">{{ "Past events"|trans }} ({{ pasteventscount }}
-                                                )</a>
-                                        </li>
+                                        {#                                        <li class="nav-item"> #}
+                                        {#                                            <a class="nav-link" data-toggle="pill" href="#organizer-past-events" #}
+                                        {#                                               role="tab" aria-controls="organizer-past-events" #}
+                                        {#                                               aria-selected="false">{{ "Past events"|trans }} ({{ pasteventscount }} #}
+                                        {#                                                )</a> #}
+                                        {#                                        </li> #}
                                     </ul>
                                     <div class="tab-content">
                                         <div class="tab-pane fade show active" id="organizer-onsale-events"
@@ -281,6 +281,13 @@
         <script async defer
                 src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap">
         </script>
+
         {% include "Global/organizer-info-box.html.twig" %}
     {% endif %}
+
+    <style>
+        .parallax-mirror {
+            position: absolute !important;
+        }
+    </style>
 {% endblock %}

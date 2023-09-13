@@ -1,3 +1,7 @@
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
+
 define(function () {
   // English
   return {
@@ -34,9 +38,9 @@ define(function () {
 
       return message;
     },
-    noResults: function () {
-      return 'No results found';
-    },
+    // noResults: function () {
+    //   return 'No results found';
+    // },
     searching: function () {
       return 'Searching…';
     },

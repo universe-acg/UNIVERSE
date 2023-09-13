@@ -1,6 +1,6 @@
 {% extends "Global/layout.html.twig" %}
 
-{% set pagetitle = 'Layout settings' | trans %}
+{% set pagetitle = 'Layout settings' %}
 
 {% block title %}{{ pagetitle }}{% endblock %}
 
@@ -139,7 +139,7 @@
                             </div>
 
                             {{ form_row(form.contact_phone) }}
-                            {{ form_row(form.contact_fax) }}
+                            {{ form_row(form.contact_email) }}
                             {{ form_row(form.contact_address) }}
                             {{ form_row(form.facebook_url) }}
                             {{ form_row(form.instagram_url) }}

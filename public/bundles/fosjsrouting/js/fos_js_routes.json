@@ -1,11 +1,11 @@
 {
   "base_url": "",
   "routes": {
-    "dashboard_attendee_cart": {
+    "dashboard_attendee_bookevent": {
       "tokens": [
         [
           "text",
-          "\/dashboard\/attendee\/cart"
+          "\/dashboard\/attendee\/bookevent"
         ],
         [
           "variable",

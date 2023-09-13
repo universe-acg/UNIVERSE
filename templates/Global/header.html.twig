@@ -54,10 +54,10 @@
                                                             {{ cartelement.eventticket.eventdate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}
                                                         </div>
                                                     {% endif %}
-                                                    {% if cartelement.eventticket.eventdate.venue %}
-                                                        <div class="text-black-50 small">{{ cartelement.eventticket.eventdate.venue.name }}
-                                                            : {{ cartelement.eventticket.eventdate.venue.stringifyAddress }}</div>
-                                                    {% endif %}
+                                                    {#                                                    {% if cartelement.eventticket.eventdate.venue %} #}
+                                                    {#                                                        <div class="text-black-50 small">{{ cartelement.eventticket.eventdate.venue.name }} #}
+                                                    {#                                                            : {{ cartelement.eventticket.eventdate.venue.stringifyAddress }}</div> #}
+                                                    {#                                                    {% endif %} #}
                                                 </figcaption>
                                             </figure>
 
@@ -65,12 +65,12 @@
 
                                         {% endfor %}
 
-                                        <a href="{{ path('dashboard_attendee_cart') }}"
-                                           class="btn btn-outline-dark btn-block"><i
-                                                    class="fas fa-cart-arrow-down"></i> {{ "View cart" }}</a>
+                                        {#                                        <a href="{{ path('dashboard_attendee_cart') }}" #}
+                                        {#                                           class="btn btn-outline-dark btn-block"><i #}
+                                        {#                                                    class="fas fa-cart-arrow-down"></i> {{ "View cart" }}</a> #}
 
                                     {% else %}
-                                        {% include "Global/message.html.twig" with { icon: "fas fa-shopping-cart", type: "info", message: ('Your cart is empty') } %}
+                                        {#                                        {% include "Global/message.html.twig" with { icon: "fas fa-shopping-cart", type: "info", message: ('Your cart is empty') } %} #}
                                     {% endif %}
                                 </div>
                             </div>
@@ -155,7 +155,6 @@
         <div class="{{ services.getSetting("app_layout") }}">
             <div class="collapse navbar-collapse" id="main_nav">
                 <ul class="navbar-nav nav-fill w-100">
-
                     {% for menuElement in services.getMenus({"slug" : "header-menu"}).getQuery().getOneOrNullResult().getMenuElements() %}
                         {% set link = "#0" %}
                         {% if menuElement.customLink %}
@@ -164,8 +163,9 @@
                         {% if menuElement.link %}
                             {% set link = services.changeLinkLocale(app.request.locale, menuElement.link) %}
                         {% endif %}
+
                         {% if link == "categories_dropdown" %}
-                            <li class="nav-item dropdown dropdown-hover  {% if app.request.get('_route') == "categories" %}active{% endif %}">
+                            <li class="nav-item dropdown dropdown-hover {% if app.request.get('_route') == "categories" %}active{% endif %}">
                                 <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown"
                                    aria-haspopup="true" aria-expanded="false"><i
                                             class="{{ menuElement.icon }} fa-fw"></i> {{ menuElement.label }}</a>
@@ -175,11 +175,14 @@
                                            class="dropdown-item"><i
                                                     class="{{ category.icon }} fa-fw"></i> {{ category.name }}</a>
                                     {% endfor %}
-                                    {#                                    <a href="{{ path('categories') }}" class="dropdown-item"><i #}
-                                    {#                                                class="fas fa-folder-open fa-fw"></i> {{ "All categories" }}</a> #}
+                                    {% if is_granted('ROLE_ATTENDEE') %}
+                                        <a href="{{ path('events', { category: 'my-tickets' }) }}"
+                                           class="dropdown-item"><i class="fas fa-ticket fa-fw"></i> {{ "My Tickets" }}
+                                        </a>
+                                    {% endif %}
                                 </div>
                             </li>
-                        {% else %}
+                        {% elseif link != "my-tickets" %} {# Exclude "My Tickets" from other menu items #}
                             <li class="nav-item {% if app.request.pathinfo == link %}active{% endif %}">
                                 <a class="nav-link" href="{{ link }}">
                                     {% if menuElement.icon %}
@@ -191,9 +194,7 @@
                                 </a>
                             </li>
                         {% endif %}
-
                     {% endfor %}
-
                 </ul>
             </div>
         </div>

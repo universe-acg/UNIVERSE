@@ -25,7 +25,7 @@
     <li class="nav-item">
         <a href="#settings-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu"
            class="nav-link dropdown-toggle">
-            <i class="fas fa-sliders-h fa-fw"></i> {{ 'Settings' | trans }}
+            <i class="fas fa-sliders-h fa-fw"></i> {{ 'Settings' }}
         </a>
         <ul id="settings-submenu-{{ random }}"
             class="nav flex-column ml-3 collapse {% if routename == "dashboard_administrator_settings_homepage" or routename == "dashboard_administrator_settings_payment" or routename == "dashboard_administrator_settings_newsletter" or routename == "dashboard_administrator_settings_layout" or routename == "dashboard_administrator_settings_payment_gateways_add" or routename == "dashboard_administrator_settings_payment_gateways_edit" or routename == "dashboard_administrator_settings_checkout" or routename == "dashboard_administrator_settings_events_list_page" or routename == "dashboard_administrator_settings_blog" or routename == "dashboard_administrator_settings_venue_page" or routename == "dashboard_administrator_settings_mail_server" or routename == "dashboard_administrator_settings_google_recaptcha" or routename == "dashboard_administrator_settings_google_maps" or routename == "dashboard_administrator_settings_social_login" or routename == "dashboard_administrator_settings_menus" or routename == "dashboard_administrator_settings_menus_edit" or routename == "dashboard_administrator_currency" or routename == "dashboard_administrator_currency_add" or routename == "dashboard_administrator_currency_edit" %}show{% endif %}">
@@ -41,10 +41,10 @@
                 <a class="nav-link {% if routename == "dashboard_administrator_settings_homepage" %}active{% endif %}"
                    href="{{ path('dashboard_administrator_settings_homepage') }}">{{ "Homepage" }}</a>
             </li>
-            {#            <li class="nav-item"> #}
-            {#                <a class="nav-link {% if routename == "dashboard_administrator_settings_payment" or routename == "dashboard_administrator_settings_payment_gateways_add" or routename == "dashboard_administrator_settings_payment_gateways_edit" or routename == "dashboard_administrator_currency" or routename == "dashboard_administrator_currency_add" or routename == "dashboard_administrator_currency_edit" %}active{% endif %}" #}
-            {#                   href="{{ path('dashboard_administrator_settings_payment') }}">{{ "Payments and Fees" }}</a> #}
-            {#            </li> #}
+            <li class="nav-item">
+                <a class="nav-link {% if routename == "dashboard_administrator_settings_payment" or routename == "dashboard_administrator_settings_payment_gateways_add" or routename == "dashboard_administrator_settings_payment_gateways_edit" or routename == "dashboard_administrator_currency" or routename == "dashboard_administrator_currency_add" or routename == "dashboard_administrator_currency_edit" %}active{% endif %}"
+                   href="{{ path('dashboard_administrator_settings_payment') }}">{{ "Payments and Fees" }}</a>
+            </li>
             {#            <li class="nav-item"> #}
             {#                <a class="nav-link {% if routename == "dashboard_administrator_settings_checkout" %}active{% endif %}" #}
             {#                   href="{{ path('dashboard_administrator_settings_checkout') }}">{{ "Checkout" }}</a> #}
@@ -92,7 +92,7 @@
     <li class="nav-item">
         <a href="#events-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu"
            class="nav-link dropdown-toggle">
-            <i class="fas fa-calendar-alt fa-fw"></i> {{ 'Events' | trans }}
+            <i class="fas fa-calendar-alt fa-fw"></i> {{ 'Events' }}
         </a>
         <ul id="events-submenu-{{ random }}"
             class="nav flex-column ml-3 collapse {% if routename == "dashboard_administrator_event" or routename == "dashboard_administrator_event_date_statistics" or routename == "dashboard_administrator_category" or routename == "dashboard_administrator_category_add" or routename == "dashboard_administrator_category_edit" or routename == "dashboard_administrator_country" or routename == "dashboard_administrator_country_add" or routename == "dashboard_administrator_country_edit" or routename == "dashboard_administrator_language" or routename == "dashboard_administrator_language_add" or routename == "dashboard_administrator_language_edit" or routename == "dashboard_administrator_audience" or routename == "dashboard_administrator_audience_add" or routename == "dashboard_administrator_audience_edit" %}show{% endif %}">
@@ -149,27 +149,27 @@
         </a>
     </li>
 
-    <li class="nav-item">
-        <a href="#venues-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu"
-           class="nav-link dropdown-toggle">
-            <i class="fas fa-map-marker-alt fa-fw"></i> {{ 'Venues' | trans }}
-        </a>
-        <ul id="venues-submenu-{{ random }}"
-            class="nav flex-column ml-3 collapse {% if routename == "dashboard_administrator_venue" or routename == "dashboard_administrator_venue_add" or routename == "dashboard_administrator_venue_edit" or routename == "dashboard_administrator_venuetype" or routename == "dashboard_administrator_venuetype_add" or routename == "dashboard_administrator_venuetype_edit" or routename == "dashboard_administrator_amenity" or routename == "dashboard_administrator_amenity_add" or routename == "dashboard_administrator_amenity_edit" %}show{% endif %}">
-            <li class="nav-item">
-                <a class="nav-link {% if routename == "dashboard_administrator_venue" or routename == "dashboard_administrator_venue_add" or routename == "dashboard_administrator_venue_edit" %}active{% endif %}"
-                   href="{{ path('dashboard_administrator_venue') }}">{{ "Manage venues" }}</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {% if routename == "dashboard_administrator_venuetype" or routename == "dashboard_administrator_venuetype_add" or routename == "dashboard_administrator_venuetype_edit" %}active{% endif %}"
-                   href="{{ path('dashboard_administrator_venuetype') }}">{{ "Venue types" }}</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {% if routename == "dashboard_administrator_amenity" or routename == "dashboard_administrator_amenity_add" or routename == "dashboard_administrator_amenity_edit" %}active{% endif %}"
-                   href="{{ path('dashboard_administrator_amenity') }}">{{ "Amenities" }}</a>
-            </li>
-        </ul>
-    </li>
+    {#    <li class="nav-item"> #}
+    {#        <a href="#venues-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu" #}
+    {#           class="nav-link dropdown-toggle"> #}
+    {#            <i class="fas fa-map-marker-alt fa-fw"></i> {{ 'Venues' }} #}
+    {#        </a> #}
+    {#        <ul id="venues-submenu-{{ random }}" #}
+    {#            class="nav flex-column ml-3 collapse {% if routename == "dashboard_administrator_venue" or routename == "dashboard_administrator_venue_add" or routename == "dashboard_administrator_venue_edit" or routename == "dashboard_administrator_venuetype" or routename == "dashboard_administrator_venuetype_add" or routename == "dashboard_administrator_venuetype_edit" or routename == "dashboard_administrator_amenity" or routename == "dashboard_administrator_amenity_add" or routename == "dashboard_administrator_amenity_edit" %}show{% endif %}"> #}
+    {#            <li class="nav-item"> #}
+    {#                <a class="nav-link {% if routename == "dashboard_administrator_venue" or routename == "dashboard_administrator_venue_add" or routename == "dashboard_administrator_venue_edit" %}active{% endif %}" #}
+    {#                   href="{{ path('dashboard_administrator_venue') }}">{{ "Manage venues" }}</a> #}
+    {#            </li> #}
+    {#            <li class="nav-item"> #}
+    {#                <a class="nav-link {% if routename == "dashboard_administrator_venuetype" or routename == "dashboard_administrator_venuetype_add" or routename == "dashboard_administrator_venuetype_edit" %}active{% endif %}" #}
+    {#                   href="{{ path('dashboard_administrator_venuetype') }}">{{ "Venue types" }}</a> #}
+    {#            </li> #}
+    {#            <li class="nav-item"> #}
+    {#                <a class="nav-link {% if routename == "dashboard_administrator_amenity" or routename == "dashboard_administrator_amenity_add" or routename == "dashboard_administrator_amenity_edit" %}active{% endif %}" #}
+    {#                   href="{{ path('dashboard_administrator_amenity') }}">{{ "Amenities" }}</a> #}
+    {#            </li> #}
+    {#        </ul> #}
+    {#    </li> #}
     {#    <li class="nav-item"> #}
     {#        <a href="{{ path('dashboard_administrator_translation') }}" #}
     {#           class="nav-link {% if routename == "dashboard_administrator_translation" %}active{% endif %}"> #}
@@ -191,17 +191,17 @@
         </a>
     </li>
 
-    <li class="nav-item">
-        <a href="{{ path('dashboard_administrator_reviews') }}"
-           class="nav-link {% if routename == "dashboard_administrator_reviews" %}active{% endif %}">
-            <i class="fas fa-star fa-fw"></i> {{ 'Reviews' }}
-        </a>
-    </li>
+    {#    <li class="nav-item"> #}
+    {#        <a href="{{ path('dashboard_administrator_reviews') }}" #}
+    {#           class="nav-link {% if routename == "dashboard_administrator_reviews" %}active{% endif %}"> #}
+    {#            <i class="fas fa-star fa-fw"></i> {{ 'Reviews' }} #}
+    {#        </a> #}
+    {#    </li> #}
 
     <li class="nav-item">
         <a href="#blog-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu"
            class="nav-link dropdown-toggle">
-            <i class="far fa-newspaper fa-fw"></i> {{ 'Blog' | trans }}
+            <i class="far fa-newspaper fa-fw"></i> {{ 'Blog' }}
         </a>
         <ul id="blog-submenu-{{ random }}"
             class="nav flex-column ml-3 collapse {% if routename == "dashboard_administrator_blog_post" or routename == "dashboard_administrator_blog_post_add" or routename == "dashboard_administrator_blog_post_edit" or routename == "dashboard_administrator_blog_post_category" or routename == "dashboard_administrator_blog_post_category_add" or routename == "dashboard_administrator_blog_post_category_edit" %}show{% endif %}">
@@ -223,7 +223,7 @@
     <li class="nav-item">
         <a href="#helpcenter-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu"
            class="nav-link dropdown-toggle">
-            <i class="far fa-life-ring fa-fw"></i> {{ 'Help center' | trans }}
+            <i class="far fa-life-ring fa-fw"></i> {{ 'Help center' }}
         </a>
         <ul id="helpcenter-submenu-{{ random }}"
             class="nav flex-column ml-3 collapse {% if routename == "dashboard_administrator_help_center_category" or routename == "dashboard_administrator_help_center_category_add" or routename == "dashboard_administrator_help_center_category_edit" or routename == "dashboard_administrator_help_center_article" or routename == "dashboard_administrator_help_center_article_add" or routename == "dashboard_administrator_help_center_article_edit" %}show{% endif %}">
@@ -276,12 +276,12 @@
         </a>
     </li>
 
-    <li class="nav-item">
-        <a href="{{ path('dashboard_organizer_venue') }}"
-           class="nav-link {% if routename == "dashboard_organizer_venue" or routename == "dashboard_organizer_venue_add" or routename == "dashboard_organizer_venue_edit" %}active{% endif %}">
-            <i class="fas fa-map-marker-alt fa-fw"></i> {{ 'My venues' }}
-        </a>
-    </li>
+    {#    <li class="nav-item"> #}
+    {#        <a href="{{ path('dashboard_organizer_venue') }}" #}
+    {#           class="nav-link {% if routename == "dashboard_organizer_venue" or routename == "dashboard_organizer_venue_add" or routename == "dashboard_organizer_venue_edit" %}active{% endif %}"> #}
+    {#            <i class="fas fa-map-marker-alt fa-fw"></i> {{ 'My venues' }} #}
+    {#        </a> #}
+    {#    </li> #}
 
     {#    <li class="nav-item"> #}
     {#        <a href="#scanner-app-submenu-{{random}}" data-toggle="collapse" data-parent="#dashboard-menu" class="nav-link dropdown-toggle"> #}
@@ -309,17 +309,17 @@
     {#        </a> #}
     {#    </li> #}
 
-    <li class="nav-item">
-        <a href="{{ path('dashboard_organizer_reviews') }}"
-           class="nav-link {% if routename == "dashboard_organizer_reviews" %}active{% endif %}">
-            <i class="fas fa-star fa-fw"></i> {{ 'Reviews' }}
-        </a>
-    </li>
+    {#    <li class="nav-item"> #}
+    {#        <a href="{{ path('dashboard_organizer_reviews') }}" #}
+    {#           class="nav-link {% if routename == "dashboard_organizer_reviews" %}active{% endif %}"> #}
+    {#            <i class="fas fa-star fa-fw"></i> {{ 'Reviews' }} #}
+    {#        </a> #}
+    {#    </li> #}
 
     {#    <li class="nav-item"> #}
     {#        <a href="#payout-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu" #}
     {#           class="nav-link dropdown-toggle"> #}
-    {#            <i class="fas fa-file-invoice-dollar fa-fw"></i> {{ 'Payouts' | trans }} #}
+    {#            <i class="fas fa-file-invoice-dollar fa-fw"></i> {{ 'Payouts' }} #}
     {#        </a> #}
     {#        <ul id="payout-submenu-{{ random }}" #}
     {#            class="nav flex-column ml-3 collapse {% if routename == "dashboard_organizer_event_date_request_payout" or routename == "dashboard_organizer_payout_requests" or routename == "dashboard_organizer_settings_payouts" or routename == "dashboard_organizer_settings_payouts_add" or routename == "dashboard_organizer_settings_payouts_edit" or routename == "dashboard_organizer_payout_request_details" %}show{% endif %}"> #}
@@ -389,19 +389,19 @@
         </a>
     </li>
 
-    <li class="nav-item">
-        <a href="{{ path('dashboard_attendee_reviews') }}"
-           class="nav-link {% if routename == "dashboard_attendee_reviews" %}active{% endif %}">
-            <i class="far fa-star fa-fw"></i> {{ 'My reviews' }}
-        </a>
-    </li>
+    {#    <li class="nav-item"> #}
+    {#        <a href="{{ path('dashboard_attendee_reviews') }}" #}
+    {#           class="nav-link {% if routename == "dashboard_attendee_reviews" %}active{% endif %}"> #}
+    {#            <i class="far fa-star fa-fw"></i> {{ 'My reviews' }} #}
+    {#        </a> #}
+    {#    </li> #}
 
-    <li class="nav-item">
-        <a href="{{ path('dashboard_attendee_following') }}"
-           class="nav-link {% if routename == "dashboard_attendee_following" %}active{% endif %}">
-            <i class="far fa-folder-open fa-fw"></i> {{ 'Following' }}
-        </a>
-    </li>
+    {#    <li class="nav-item"> #}
+    {#        <a href="{{ path('dashboard_attendee_following') }}" #}
+    {#           class="nav-link {% if routename == "dashboard_attendee_following" %}active{% endif %}"> #}
+    {#            <i class="far fa-folder-open fa-fw"></i> {{ 'Following' }} #}
+    {#        </a> #}
+    {#    </li> #}
 
     {% if app.user.facebookId is null and app.user.googleId is null %}
 

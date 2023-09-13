@@ -6,6 +6,7 @@
 namespace App\Security;
 
 use App\Service\AppServices as Services;
+use Exception;
 use Gedmo\Sluggable\Util as Sluggable;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider as BaseClass;
@@ -37,7 +38,10 @@ class FOSUBUserProvider extends BaseClass
         $this->userManager->updateUser($user);
     }
 
-    public function loadUserByOAuthUserResponse(UserResponseInterface $response): \AppBundle\Entity\User|UserInterface|\FOS\UserBundle\Model\UserInterface
+    /**
+     * @throws Exception
+     */
+    public function loadUserByOAuthUserResponse(UserResponseInterface $response): UserInterface
     {
         $username = $response->getUsername();
         $email = $response->getEmail();
@@ -66,7 +70,7 @@ class FOSUBUserProvider extends BaseClass
             $user->setLastname($lastname);
             $user->setUsername(Sluggable\Urlizer::urlize($user->getFullName(), '-'));
             $user->setUsernameCanonical(Sluggable\Urlizer::urlize($user->getFullName(), '-'));
-            $temporaryPassword = Services::generateReference(8);
+            $temporaryPassword = (new Services)->generateReference(8);
             $user->setPlainPassword($temporaryPassword);
             if ($response->getProfilePicture() != null) {
                 $user->setFacebookProfilePicture($response->getProfilePicture());

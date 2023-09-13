@@ -1,10 +1,10 @@
 {% extends "Global/layout.html.twig" %}
 
-{% set pagetitle = 'Add a new blog post' | trans %}
+{% set pagetitle = 'Add a new blog post' %}
 
-{% if blogpost.id %}{% set pagetitle = 'Update the blog post' | trans %}{% endif %}
+{% if blogpost.id %}{% set pagetitle = 'Update the blog post' %}{% endif %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 

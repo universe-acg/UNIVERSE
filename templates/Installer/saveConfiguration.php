@@ -28,7 +28,7 @@
 </html>
 <?php
     
-    function updateEnv($key, $value)
+    function updateEnv($key, $value): void
     {
         if (!$key || !$value) {
             return;

@@ -1,8 +1,8 @@
 {% extends "Global/layout.html.twig" %}
 
-{% set pagetitle = 'Execute Symfony commands' | trans %}
+{% set pagetitle = 'Execute Symfony commands' %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 
@@ -26,11 +26,15 @@
                                     <h5 class="mt-2">
                                         <i class="fas fa-long-arrow-alt-{{ app.request.locale == 'ar' ? 'left' : 'right' }}"></i>
                                         {{ "Clear the application cache for the production environment" }}
-                                        <i class="fas fa-question-circle text-primary ml-1" data-toggle="tooltip" data-title="{{ "Execute this command after editing a file in the application source code or after modifying a string in the translations files" }}"></i>
+                                        <i class="fas fa-question-circle text-primary ml-1" data-toggle="tooltip"
+                                           data-title="{{ "Execute this command after editing a file in the application source code or after modifying a string in the translations files" }}"></i>
                                     </h5>
                                 </div>
                                 <div class="col-md-4">
-                                    <button type="button" class="btn btn-primary btn-block ajax-loading" data-title="{{ "Response" }}" data-url="{{ path('dashboard_administrator_console_execute_command', {command: 'cache:clear', optionKey: '--env', optionValue: 'prod'}) }}"><i class="fas fa-check"></i> {{ "Execute command" }}</button>
+                                    <button type="button" class="btn btn-primary btn-block ajax-loading"
+                                            data-title="{{ "Response" }}"
+                                            data-url="{{ path('dashboard_administrator_console_execute_command', {command: 'cache:clear', optionKey: '--env', optionValue: 'prod'}) }}">
+                                        <i class="fas fa-check"></i> {{ "Execute command" }}</button>
                                 </div>
                             </div>
                             <div class="row">
@@ -38,11 +42,15 @@
                                     <h5 class="mt-2">
                                         <i class="fas fa-long-arrow-alt-{{ app.request.locale == 'ar' ? 'left' : 'right' }}"></i>
                                         {{ "Clear the application cache for the development environment" }}
-                                        <i class="fas fa-question-circle text-primary ml-1" data-toggle="tooltip" data-title="{{ "Execute this command if you are in the development mode and the modifications you applied in the application did take effect" }}"></i>
+                                        <i class="fas fa-question-circle text-primary ml-1" data-toggle="tooltip"
+                                           data-title="{{ "Execute this command if you are in the development mode and the modifications you applied in the application did take effect" }}"></i>
                                     </h5>
                                 </div>
                                 <div class="col-md-4">
-                                    <button type="button" class="btn btn-primary btn-block ajax-loading" data-title="{{ "Response" }}" data-url="{{ path('dashboard_administrator_console_execute_command', {command: 'cache:clear', optionKey: '--env', optionValue: 'dev'}) }}"><i class="fas fa-check"></i> {{ "Execute command" }}</button>
+                                    <button type="button" class="btn btn-primary btn-block ajax-loading"
+                                            data-title="{{ "Response" }}"
+                                            data-url="{{ path('dashboard_administrator_console_execute_command', {command: 'cache:clear', optionKey: '--env', optionValue: 'dev'}) }}">
+                                        <i class="fas fa-check"></i> {{ "Execute command" }}</button>
                                 </div>
                             </div>
                         </div>

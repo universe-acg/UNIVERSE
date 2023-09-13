@@ -2,14 +2,11 @@
 
 {% set pagetitle = 'About us' %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 
     {% set navigation = [{"current" : (pagetitle)}] %}
     {% include "Global/navigation.html.twig" with navigation %}
-
-
-
 
 {% endblock %}

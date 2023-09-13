@@ -2,9 +2,27 @@
 
 {% set pagetitle = 'Contact us' %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
+    <style>
+        @media (max-width: 767px) {
+            .itemside {
+                width: 50% !important;
+                margin: auto !important;
+                text-align: center !important;
+            }
+
+            .contact-item {
+                width: 100% !important;
+                margin-bottom: 20px !important; /* Add some spacing between items */
+            }
+
+            .flex-wrap {
+                flex-wrap: wrap !important; /* Allow items to wrap into a new row on small screens */
+            }
+        }
+    </style>
 
     {% set navigation = [{"current": (pagetitle)}] %}
     {% include "Global/navigation.html.twig" with navigation %}
@@ -17,22 +35,23 @@
                         <div class="card-body">
                             <h1 class="text-center mb-5">{{ "FAQ" }}</h1>
                             {% for featuredHelpCenterArticle in services.getHelpCenterArticles({"featured" : true, "limit": 5}).getQuery().getResult() %}
-                                <p class="text-center"><a href="{{ path('help_center_article', {slug: featuredHelpCenterArticle.slug}) }}">{{ featuredHelpCenterArticle.title }}</a></p>
-                                {% endfor %}
-                            <h4 class="text-center mt-5"><a href="{{ path('help_center') }}"><i class="fas fa-life-ring"></i> {{ "Help center" }}</a></h4>
+                                <p class="text-center"><a
+                                            href="{{ path('help_center_article', {slug: featuredHelpCenterArticle.slug}) }}">{{ featuredHelpCenterArticle.title }}</a>
+                                </p>
+                            {% endfor %}
+                            <h4 class="text-center mt-5"><a href="{{ path('help_center') }}"><i
+                                            class="fas fa-life-ring"></i> {{ "Help center" }}</a></h4>
 
-                            {% if services.getSetting("contact_email") != "" or services.getSetting("contact_phone") != "" or services.getSetting("contact_fax") != "" or services.getSetting("contact_address") != "" %}
+                            {% if services.getSetting("contact_email") != "" or services.getSetting("contact_phone") != "" or services.getSetting("contact_email") != "" or services.getSetting("contact_address") != "" %}
 
                                 <hr class="mt-5 mb-5">
 
                                 <h1 class="text-center mb-5">{{ "Contact information" }}</h1>
 
-                                <div class="row">
-
+                                <div class="row text-center flex-wrap justify-content-center align-items-center">
                                     {% if services.getSetting("contact_email") != "" %}
-
-                                        <div class="col-12 col-lg-4 card border-0 card-body text-center shadow-none">
-                                            <figure class="itemside">
+                                        <div class="col-4 col-lg-4 col-md-12 card border-0 card-body text-center shadow-none itemside contact-item">
+                                            <figure>
                                                 <div class="aside">
                                                     <span class="icon-wrap icon-md round bg-info">
                                                         <i class="fas fa-envelope-open-text white"></i>
@@ -43,47 +62,43 @@
                                                 </figcaption>
                                             </figure>
                                         </div>
-
                                     {% endif %}
 
-                                    {% if services.getSetting("contact_phone") != "" %}
+                                    {# Include other contact information blocks here... #}
 
-                                        <div class="col-12 col-lg-4 card border-0 card-body text-center shadow-none">
-                                            <figure class="itemside">
-                                                <div class="aside">
-                                                    <span class="icon-wrap icon-md round bg-info">
-                                                        <i class="fas fa-phone white"></i>
-                                                    </span>
-                                                </div>
-                                                <figcaption class="text-wrap align-self-center">
-                                                    <h6 class="title">{{ services.getSetting("contact_phone") }}</h6>
-                                                </figcaption>
-                                            </figure>
-                                        </div>
+                                    {#                                    {% if services.getSetting("contact_phone") != "" %} #}
+                                    {#                                        <div class="col-4 col-lg-4 col-md-12 card border-0 card-body text-center shadow-none itemside contact-item"> #}
+                                    {#                                            <figure> #}
+                                    {#                                                <div class="aside"> #}
+                                    {#                                                    <span class="icon-wrap icon-md round bg-info"> #}
+                                    {#                                                        <i class="fas fa-phone white"></i> #}
+                                    {#                                                    </span> #}
+                                    {#                                                </div> #}
+                                    {#                                                <figcaption class="text-wrap align-self-center"> #}
+                                    {#                                                    <h6 class="title">{{ services.getSetting("contact_phone") }}</h6> #}
+                                    {#                                                </figcaption> #}
+                                    {#                                            </figure> #}
+                                    {#                                        </div> #}
+                                    {#                                    {% endif %} #}
 
-                                    {% endif %}
-
-                                    {% if services.getSetting("contact_fax") != "" %}
-
-                                        <div class="col-12 col-lg-4 card border-0 card-body text-center shadow-none">
-                                            <figure class="itemside">
-                                                <div class="aside">
-                                                    <span class="icon-wrap icon-md round bg-info">
-                                                        <i class="fas fa-fax white"></i>
-                                                    </span>
-                                                </div>
-                                                <figcaption class="text-wrap align-self-center">
-                                                    <h6 class="title">{{ services.getSetting("contact_fax") }}</h6>
-                                                </figcaption>
-                                            </figure>
-                                        </div>
-
-                                    {% endif %}
+                                    {#                                    {% if services.getSetting("contact_email") != "" %} #}
+                                    {#                                        <div class="col-4 col-lg-4 card border-0 card-body text-center shadow-none itemside contact-item"> #}
+                                    {#                                            <figure> #}
+                                    {#                                                <div class="aside"> #}
+                                    {#                                                    <span class="icon-wrap icon-md round bg_info"> #}
+                                    {#                                                        <i class="fas fa-fax white"></i> #}
+                                    {#                                                    </span> #}
+                                    {#                                                </div> #}
+                                    {#                                                <figcaption class="text-wrap align-self-center"> #}
+                                    {#                                                    <h6 class="title">{{ services.getSetting("contact_email") }}</h6> #}
+                                    {#                                                </figcaption> #}
+                                    {#                                            </figure> #}
+                                    {#                                        </div> #}
+                                    {#                                    {% endif %} #}
 
                                     {% if services.getSetting("contact_address") != "" %}
-
-                                        <div class="col card border-0 card-body text-center shadow-none">
-                                            <figure class="itemside">
+                                        <div class="col-4 col-lg-4 col-md-12 card border-0 card-body text-center shadow-none itemside contact-item">
+                                            <figure>
                                                 <div class="aside">
                                                     <span class="icon-wrap icon-md round bg-info">
                                                         <i class="fas fa-map-marker white"></i>
@@ -94,16 +109,13 @@
                                                 </figcaption>
                                             </figure>
                                         </div>
-
                                     {% endif %}
-
                                 </div>
 
                                 {% if services.getSetting("contact_email") %}
-
                                     <hr class="mt-5 mb-5">
-
                                     <h1 class="text-center mb-5">{{ "Send us an email" }}</h1>
+                                    <h3 class="text-center mb-5">{{ "Don't hesitate, we are social : ) " }}</h3>
 
                                     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'col-12 col-lg-8 mx-auto'}}) }}
                                     {{ form_widget(form) }}

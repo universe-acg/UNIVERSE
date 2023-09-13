@@ -55,17 +55,17 @@
     {{ encore_entry_link_tags('app') }}
 
     {# i18n lang specific styles #}
-    {% if app.request.locale == "fr" %}
-        {{ encore_entry_link_tags('app.fr') }}
-    {% elseif app.request.locale == "ar" %}
-        {{ encore_entry_link_tags('app.ar') }}
-    {% elseif app.request.locale == "es" %}
-        {{ encore_entry_link_tags('app.es') }}
-    {% elseif app.request.locale == "de" %}
-        {{ encore_entry_link_tags('app.de') }}
-    {% elseif app.request.locale == "pt" %}
-        {{ encore_entry_link_tags('app.pt') }}
-    {% endif %}
+    {#    {% if app.request.locale == "fr" %} #}
+    {#        {{ encore_entry_link_tags('app.fr') }} #}
+    {#    {% elseif app.request.locale == "ar" %} #}
+    {#        {{ encore_entry_link_tags('app.ar') }} #}
+    {#    {% elseif app.request.locale == "es" %} #}
+    {#        {{ encore_entry_link_tags('app.es') }} #}
+    {#    {% elseif app.request.locale == "de" %} #}
+    {#        {{ encore_entry_link_tags('app.de') }} #}
+    {#    {% elseif app.request.locale == "pt" %} #}
+    {#        {{ encore_entry_link_tags('app.pt') }} #}
+    {#    {% endif %} #}
 
     {# Application theme #}
     {{ encore_entry_link_tags('app.'~services.getSetting('app_theme')) }}

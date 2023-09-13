@@ -1,10 +1,10 @@
 {% extends "Global/layout.html.twig" %}
 
-{% set pagetitle = 'Add a new amenity' | trans %}
+{% set pagetitle = 'Add a new amenity' %}
 
-{% if amenity.id %}{% set pagetitle = 'Update the amenity' | trans %}{% endif %}
+{% if amenity.id %}{% set pagetitle = 'Update the amenity' %}{% endif %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 

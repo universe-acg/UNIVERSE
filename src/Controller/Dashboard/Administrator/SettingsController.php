@@ -425,7 +425,7 @@ class SettingsController extends Controller
                 $services->setSetting("website_keywords_de", $settings['website_keywords_de']);
                 $services->setSetting("website_keywords_pt", $settings['website_keywords_pt']);
                 $services->setSetting("contact_phone", $settings['contact_phone']);
-                $services->setSetting("contact_fax", $settings['contact_fax']);
+                $services->setSetting("contact_email", $settings['contact_email']);
                 $services->setSetting("contact_address", $settings['contact_address']);
                 $services->setSetting("facebook_url", $settings['facebook_url']);
                 $services->setSetting("instagram_url", $settings['instagram_url']);
@@ -492,7 +492,7 @@ class SettingsController extends Controller
             $form->get('website_keywords_de')->setData($services->getSetting("website_keywords_de"));
             $form->get('website_keywords_pt')->setData($services->getSetting("website_keywords_pt"));
             $form->get('contact_phone')->setData($services->getSetting("contact_phone"));
-            $form->get('contact_fax')->setData($services->getSetting("contact_fax"));
+            $form->get('contact_email')->setData($services->getSetting("contact_email"));
             $form->get('contact_address')->setData($services->getSetting("contact_address"));
             $form->get('facebook_url')->setData($services->getSetting("facebook_url"));
             $form->get('instagram_url')->setData($services->getSetting("instagram_url"));

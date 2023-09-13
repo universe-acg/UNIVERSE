@@ -1,10 +1,10 @@
 {% extends "Global/layout.html.twig" %}
 
-{% set pagetitle = 'Add a new venue type' | trans %}
+{% set pagetitle = 'Add a new venue type' %}
 
-{% if venuetype.id %}{% set pagetitle = 'Update the venue type' | trans %}{% endif %}
+{% if venuetype.id %}{% set pagetitle = 'Update the venue type' %}{% endif %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 

@@ -14,7 +14,7 @@
 
             <div class="box shadow-none bg-gray mb-4">
                 <div class="row">
-                    <div class="col-sm-12 col-lg-4 text-center text-lg-left mb-3 mb-lg-0">
+                    <div class="col-sm-12 col-lg-4  mb-3 mb-lg-0">
                         <span class="center-lg-y text-muted">{{ "%resultsCount% reviews(s) found" |trans ({'%resultsCount%': reviews.getTotalItemCount}) }}</span>
                     </div>
                     <div class="col-sm-12 col-lg-4 text-center mb-3 mb-lg-0">
@@ -27,10 +27,10 @@
                                         class="fas fa-search"></i></button>
                         </form>
                     </div>
-                    <div class="col-sm-12 col-lg-4 text-center text-lg-right">
+                    <div class="col-sm-12 col-lg-4 ">
                         <label for="sortable-select" class="display-inline">{{ "Sort by" }}
                             <select id="sortable-select" class="form-control display-inline-block bg-white select2 ml-3"
-                                    data-placeholder="{{ "Select an option" }}" style="width: 50%;">
+                                    data-placeholder="{{ "Select an option" }}" style="width: 100%;">
                                 {{ knp_pagination_sortable(reviews, "Rating" ~ ' (' ~ "desc" ~ ')', "r.rating", {"direction": "desc", "criteria": "r.rating"}) }}
                                 {{ knp_pagination_sortable(reviews, "Rating" ~ ' (' ~ "asc" ~ ')', "r.rating", {"direction": "asc", "criteria": "r.rating"}) }}
                                 {{ knp_pagination_sortable(reviews, "Review date" ~ ' (' ~ "desc" ~ ')', "r.createdAt", {"direction": "desc", "criteria": "r.createdAt"}) }}

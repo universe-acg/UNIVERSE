@@ -1,19 +1,24 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Controller\Dashboard\Shared;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use App\Form\AccountSettingsType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class AccountController extends Controller {
+class AccountController extends Controller
+{
 
     /**
      * @Route("/attendee/account/settings", name="dashboard_attendee_account_settings")
      */
-    public function settings(Request $request, TranslatorInterface $translator) {
+    public function settings(Request $request, TranslatorInterface $translator)
+    {
 
         $form = $this->createForm(AccountSettingsType::class, $this->getUser());
         $form->handleRequest($request);
@@ -30,8 +35,7 @@ class AccountController extends Controller {
         }
 
         return $this->render('Dashboard/Shared/Account/settings.html.twig', [
-                    'form' => $form->createView()
+            'form' => $form->createView()
         ]);
     }
-
 }

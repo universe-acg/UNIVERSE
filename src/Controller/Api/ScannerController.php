@@ -1,22 +1,30 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Controller\Api;
 
+use App\Service\AppServices;
+use DateTime;
+use MaxMind\Db\Reader\InvalidDatabaseException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Asset\Packages;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Service\AppServices;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Asset\Packages;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ScannerController extends Controller {
+class ScannerController extends Controller
+{
 
     /**
      * @Route("/login", name="api_scanner_login")
+     * @throws InvalidDatabaseException
      */
-    public function login(Request $request, AppServices $services, UserPasswordEncoderInterface $passwordEncoder, Packages $assetsManager, TranslatorInterface $translator): Response {
+    public function login(Request $request, AppServices $services, UserPasswordEncoderInterface $passwordEncoder, Packages $assetsManager, TranslatorInterface $translator): Response
+    {
 
         $username = $request->query->get('username');
         $password = $request->query->get('password');
@@ -33,7 +41,7 @@ class ScannerController extends Controller {
         if (!$user->getApiKey()) {
             $user->setApiKey($services->generateReference(50));
         }
-        $user->setLastLogin(new \DateTime);
+        $user->setLastLogin(new DateTime);
         $em = $this->getDoctrine()->getManager();
         $em->persist($user);
         $em->flush();
@@ -76,22 +84,23 @@ class ScannerController extends Controller {
         }
 
         return $this->json(array(
-                    "type" => "success",
-                    "apiKey" => $user->getApiKey(),
-                    "scannerName" => $user->getScanner()->getName(),
-                    "username" => $user->getUsername(),
-                    "organizerName" => $user->getScanner()->getOrganizer()->getName(),
-                    "organizerLogo" => $organizerLogo,
-                    "showEventDateStats" => $user->getScanner()->getOrganizer()->getShowEventDateStatsOnScannerApp(),
-                    "allowTapToCheckIn" => $user->getScanner()->getOrganizer()->getAllowTapToCheckInOnScannerApp(),
-                    "eventDatesArray" => $eventDatesArray,
+            "type" => "success",
+            "apiKey" => $user->getApiKey(),
+            "scannerName" => $user->getScanner()->getName(),
+            "username" => $user->getUsername(),
+            "organizerName" => $user->getScanner()->getOrganizer()->getName(),
+            "organizerLogo" => $organizerLogo,
+            "showEventDateStats" => $user->getScanner()->getOrganizer()->getShowEventDateStatsOnScannerApp(),
+            "allowTapToCheckIn" => $user->getScanner()->getOrganizer()->getAllowTapToCheckInOnScannerApp(),
+            "eventDatesArray" => $eventDatesArray,
         ));
     }
 
     /**
      * @Route("/scanner/get-event-date-attendees/{reference}", name="api_scanner_get_event_date_attendees")
      */
-    public function getEventDateAttendees($reference, Request $request, AppServices $services, TranslatorInterface $translator): Response {
+    public function getEventDateAttendees($reference, Request $request, AppServices $services, TranslatorInterface $translator): Response
+    {
 
         $eventDate = $services->getEventDates(array("organizer" => $this->getUser()->getScanner()->getOrganizer()->getSlug(), "reference" => $reference))->getQuery()->getOneOrNullResult();
         if (!$eventDate) {
@@ -122,7 +131,8 @@ class ScannerController extends Controller {
     /**
      * @Route("/scanner/event-date/{eventDateReference}/grant-access/{ticketReference}", name="api_scanner_grant_access")
      */
-    public function grantAccess($eventDateReference, $ticketReference, Request $request, AppServices $services, TranslatorInterface $translator): Response {
+    public function grantAccess($eventDateReference, $ticketReference, Request $request, AppServices $services, TranslatorInterface $translator): Response
+    {
 
         $eventDate = $services->getEventDates(array("organizer" => $this->getUser()->getScanner()->getOrganizer()->getSlug(), "reference" => $eventDateReference))->getQuery()->getOneOrNullResult();
         if (!$eventDate) {
@@ -146,5 +156,4 @@ class ScannerController extends Controller {
 
         return $this->json(array("type" => "success", "message" => $translator->trans("Access granted")));
     }
-
 }

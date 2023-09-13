@@ -67,10 +67,8 @@
                                     </p>
                                 {% endfor %}
 
-                                <hr>
-
                                 <a class="btn btn-outline-primary btn-block"
-                                   href="{{ path('help_center_category', { slug: category.slug }) }}">{{ "See more articles" }}
+                                   href="{{ path('help_center_category', { slug: category.slug }) }}">{{ "See articles" }}
                                     {% if app.request.locale == 'ar' %}
                                         <i class="fas fa-chevron-left mr-3"></i>
                                     {% else %}

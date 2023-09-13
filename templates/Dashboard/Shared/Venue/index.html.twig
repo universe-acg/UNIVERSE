@@ -1,9 +1,9 @@
 {% extends "Global/layout.html.twig" %}
 
 {% if is_granted('ROLE_ADMINISTRATOR') %}
-    {% set pagetitle = 'Manage venues' | trans %}
+    {% set pagetitle = 'Manage venues' %}
 {% else %}
-    {% set pagetitle = 'My venues' | trans %}
+    {% set pagetitle = 'My venues' %}
 {% endif %}
 
 {% block title %}{{ pagetitle }}{% endblock %}
@@ -23,7 +23,7 @@
 
                     <div class="box shadow-none bg-gray mb-4">
                         <div class="row">
-                            <div class="col-sm-12 col-lg-2 text-center text-lg-left mb-3 mb-lg-0">
+                            <div class="col-sm-12 col-lg-2  mb-3 mb-lg-0">
                                 <span class="center-lg-y text-muted">{{ "%resultsCount% result(s) found" |trans ({'%resultsCount%': venues.getTotalItemCount}) }}</span>
                             </div>
                             <div class="col-sm-12 col-lg-4 text-center mb-3 mb-lg-0">
@@ -71,11 +71,11 @@
                                     </ul>
                                 </form>
                             </div>
-                            <div class="col-sm-12 col-lg-6 text-center text-lg-right">
+                            <div class="col-sm-12 col-lg-6 ">
                                 <label for="sortable-select" class="display-inline">{{ "Sort by" }}
                                     <select id="sortable-select"
                                             class="form-control display-inline-block bg-white select2 ml-3"
-                                            data-placeholder="{{ "Select an option" }}" style="width: 50%;">
+                                            data-placeholder="{{ "Select an option" }}" style="width: 100%;">
                                         {{ knp_pagination_sortable(venues, "Creation date" ~ ' (' ~ "desc" ~ ')', "v.createdAt", {"direction": "desc", "criteria": "v.createdAt"}) }}
                                         {{ knp_pagination_sortable(venues, "Creation date" ~ ' (' ~ "asc" ~ ')', "v.createdAt", {"direction": "asc", "criteria": "v.createdAt"}) }}
                                     </select>
@@ -83,10 +83,10 @@
                                 {% if is_granted('ROLE_ADMINISTRATOR') %}
                                     <a href="{{ path('dashboard_administrator_venue_add') }}"
                                        class="btn btn-primary ml-3" data-toggle="tooltip"
-                                       title="{{ 'Add a new venue' | trans }}"><i class="fas fa-plus"></i></a>
+                                       title="{{ 'Add a new venue' }}"><i class="fas fa-plus"></i></a>
                                 {% elseif is_granted('ROLE_ORGANIZER') %}
                                     <a href="{{ path('dashboard_organizer_venue_add') }}" class="btn btn-primary ml-3"
-                                       data-toggle="tooltip" title="{{ 'Add a new venue' | trans }}"><i
+                                       data-toggle="tooltip" title="{{ 'Add a new venue' }}"><i
                                                 class="fas fa-plus"></i></a>
                                 {% endif %}
                             </div>
@@ -103,13 +103,13 @@
                                         <table class="table table-hover table-vcenter text-nowrap">
                                             <thead>
                                             <tr>
-                                                <th>{{ 'Name' | trans }}</th>
-                                                <th>{{ 'Image' | trans }}</th>
+                                                <th>{{ 'Name' }}</th>
+                                                <th>{{ 'Image' }}</th>
                                                 {% if is_granted('ROLE_ADMINISTRATOR') %}
-                                                    <th>{{ 'Organizer' | trans }}</th>
+                                                    <th>{{ 'Organizer' }}</th>
                                                 {% endif %}
-                                                <th>{{ 'Events count' | trans }}</th>
-                                                <th>{{ 'Status' | trans }}</th>
+                                                <th>{{ 'Events count' }}</th>
+                                                <th>{{ 'Status' }}</th>
                                                 <th class="text-center"><i class="fas fa-cog"></i></th>
                                             </tr>
                                             </thead>

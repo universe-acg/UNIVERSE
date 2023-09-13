@@ -1,49 +1,66 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Controller\Dashboard\Attendee;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Routing\Annotation\Route;
-use Knp\Component\Pager\PaginatorInterface;
 use App\Service\AppServices;
-use Symfony\Component\HttpFoundation\Request;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class FollowingController extends Controller {
+class FollowingController extends Controller
+{
 
     /**
-     * @Route("/following", name="following")
+     * @Route("/following", name="dashboard_attendee_following")
      */
-    public function index(Request $request, PaginatorInterface $paginator, AppServices $services) {
+    public function index(Request $request, PaginatorInterface $paginator, AppServices $services)
+    {
         $users = $paginator->paginate($services->getUsers(array("followedby" => $this->getUser()))->getQuery(), $request->query->getInt('page', 1), 12, array('wrap-queries' => true));
         return $this->render('Dashboard/Attendee/following.html.twig', [
-                    'users' => $users
+            'users' => $users
         ]);
     }
 
     /**
-     * @Route("/following/add/{slug}", name="following_add", condition="request.isXmlHttpRequest()")
-     * @Route("/following/remove/{slug}", name="following_remove", condition="request.isXmlHttpRequest()")
+     * @Route("/en/dashboard/attendee/following/add/{slug}", name="app_dashboard_attendee_following_add", condition="request.isXmlHttpRequest()")
+     * @Route("/en/dashboard/attendee/following/remove/{slug}", name="app_dashboard_attendee_following_remove", condition="request.isXmlHttpRequest()")
      */
-    public function addRemove($slug, AppServices $services, TranslatorInterface $translator) {
-
+    public function addRemove($slug, AppServices $services, TranslatorInterface $translator, Request $request, RequestStack $requestStack)
+    {
         $user = $services->getUsers(array("organizerslug" => $slug))->getQuery()->getOneOrNullResult();
+
         if (!$user) {
-            return new JsonResponse(['error' => $translator->trans('The organizer can not be found')]);
+            return new JsonResponse(['error' => $translator->trans('The organizer cannot be found')]);
         }
+
         $em = $this->getDoctrine()->getManager();
+
         if ($user->getOrganizer()->isFollowedBy($this->getUser())) {
             $user->getOrganizer()->removeFollowedby($this->getUser());
-            $em->persist($user->getOrganizer());
-            $em->flush();
-            return new JsonResponse(['success' => $translator->trans('You are no longer following this organizer')]);
         } else {
             $user->getOrganizer()->addFollowedby($this->getUser());
-            $em->persist($user->getOrganizer());
-            $em->flush();
-            return new JsonResponse(['success' => $translator->trans('You are following this organizer')]);
         }
-    }
 
+        $em->persist($user->getOrganizer());
+        $em->flush();
+
+        // Define the response data based on the outcome of the operation
+        $responseData = [];
+
+        if ($user->getOrganizer()->isFollowedBy($this->getUser())) {
+            $responseData['success'] = 'You are now following this organizer.';
+        } else {
+            $responseData['success'] = 'You have unfollowed this organizer.';
+        }
+
+        // Return a JsonResponse with the $responseData
+        return new JsonResponse($responseData);
+    }
 }

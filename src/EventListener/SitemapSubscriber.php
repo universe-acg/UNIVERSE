@@ -1,8 +1,12 @@
 <?php
+    /*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
     
     namespace App\EventListener;
     
     use App\Service\AppServices;
+    use MaxMind\Db\Reader\InvalidDatabaseException;
     use Presta\SitemapBundle\Event\SitemapPopulateEvent;
     use Presta\SitemapBundle\Service\UrlContainerInterface;
     use Presta\SitemapBundle\Sitemap\Url\GoogleMultilangUrlDecorator;
@@ -36,7 +40,7 @@
         /**
          * @inheritdoc
          */
-        public static function getSubscribedEvents()
+        public static function getSubscribedEvents(): array
         {
             return [
                 SitemapPopulateEvent::ON_SITEMAP_POPULATE => 'populate',
@@ -45,6 +49,7 @@
         
         /**
          * @param SitemapPopulateEvent $event
+         * @throws InvalidDatabaseException
          */
         public function populate(SitemapPopulateEvent $event): void
         {
@@ -53,6 +58,7 @@
         
         /**
          * @param UrlContainerInterface $urls
+         * @throws InvalidDatabaseException
          */
         public function registerUrls(UrlContainerInterface $urls): void
         {

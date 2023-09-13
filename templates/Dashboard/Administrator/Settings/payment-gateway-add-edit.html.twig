@@ -1,10 +1,10 @@
 {% extends "Global/layout.html.twig" %}
 
-{% set pagetitle = 'Add a new payment gateway' | trans %}
+{% set pagetitle = 'Add a new payment gateway' %}
 
-{% if paymentgateway.id %}{% set pagetitle = 'Update the payment gateway' | trans %}{% endif %}
+{% if paymentgateway.id %}{% set pagetitle = 'Update the payment gateway' %}{% endif %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 

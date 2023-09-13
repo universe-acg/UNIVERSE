@@ -1,20 +1,25 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Controller\Dashboard\Administrator;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Knp\Component\Pager\PaginatorInterface;
 use App\Service\AppServices;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class UserController extends Controller {
+class UserController extends Controller
+{
 
     /**
      * @Route("/manage-users", name="user", methods="GET")
      */
-    public function index(Request $request, PaginatorInterface $paginator, AppServices $services) {
+    public function index(Request $request, PaginatorInterface $paginator, AppServices $services)
+    {
 
         $role = ($request->query->get('role')) == "" ? "all" : $request->query->get('role');
         $createdbyorganizerslug = ($request->query->get('createdbyorganizerslug')) == "" ? "all" : $request->query->get('createdbyorganizerslug');
@@ -28,7 +33,7 @@ class UserController extends Controller {
         $users = $paginator->paginate($services->getUsers(array('role' => $role, 'createdbyorganizerslug' => $createdbyorganizerslug, 'organizername' => $organizername, 'username' => $username, 'email' => $email, 'firstname' => $firstname, 'lastname' => $lastname, 'enabled' => $enabled, 'countryslug' => $countryslug)), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
 
         return $this->render('Dashboard/Administrator/User/index.html.twig', [
-                    'users' => $users
+            'users' => $users
         ]);
     }
 
@@ -36,47 +41,66 @@ class UserController extends Controller {
      * @Route("/manage-users/{slug}/delete-permanently", name="user_delete_permanently", methods="GET")
      * @Route("/manage-users/{slug}/delete", name="user_delete", methods="GET")
      */
-    public function delete(AppServices $services, TranslatorInterface $translator, $slug) {
-
+    public function delete(AppServices $services, TranslatorInterface $translator, $slug)
+    {
         $user = $services->getUsers(array('slug' => $slug, 'enabled' => 'all'))->getQuery()->getOneOrNullResult();
+
         if (!$user) {
             $this->addFlash('error', $translator->trans('The user can not be found'));
             return $services->redirectToReferer('user');
         }
+
         $em = $this->getDoctrine()->getManager();
 
-        if ($user->getDeletedAt() !== null) {
+// Check if the user has an associated organizer
+        if ($user->getOrganizer()) {
+            $organizer = $user->getOrganizer();
+
+            // Remove the association from both sides
+            $organizer->setUser(null);
+            $user->setOrganizer(null);
+
             /* if ($user->getOrganizer()) {
-              $user->getOrganizer()->setUser(null);
-              $em->persist($user->getOrganizer());
-              $em->flush();
-              $user->setOrganizer(null);
-              }
-              if ($user->hasRole('ROLE_SCANNER')) {
-              $user->getScanner()->setUser(null);
-              $em->persist($user->getScanner());
-              $em->flush();
-              $user->setScanner(null);
-              }
-              if ($user->hasRole('ROLE_POINTOFSALE')) {
-              $user->getPointofsale()->setUser(null);
-              $em->persist($user->getPointofsale());
-              $em->flush();
-              $user->setPointofsale(null);
-              } */
+                $user->getOrganizer()->setUser(null);
+                $em->persist($user->getOrganizer());
+                $em->flush();
+                $user->setOrganizer(null);
+                }
+                if ($user->hasRole('ROLE_SCANNER')) {
+                $user->getScanner()->setUser(null);
+                $em->persist($user->getScanner());
+                $em->flush();
+                $user->setScanner(null);
+                }
+                if ($user->hasRole('ROLE_POINTOFSALE')) {
+                $user->getPointofsale()->setUser(null);
+                $em->persist($user->getPointofsale());
+                $em->flush();
+                $user->setPointofsale(null);
+                } */
+
+            // Remove the organizer entity (if cascade={"remove"} is configured)
+            $em->remove($organizer);
+        }
+
+        if ($user->getDeletedAt() !== null) {
             $this->addFlash('error', $translator->trans('The user has been permanently deleted'));
         } else {
             $this->addFlash('notice', $translator->trans('The user has been deleted'));
         }
+
+// Remove the user entity itself
         $em->remove($user);
         $em->flush();
+
         return $services->redirectToReferer('user');
     }
 
     /**
      * @Route("/manage-users/{slug}/restore", name="user_restore", methods="GET")
      */
-    public function restore($slug, Request $request, TranslatorInterface $translator, AppServices $services) {
+    public function restore($slug, Request $request, TranslatorInterface $translator, AppServices $services)
+    {
 
         $user = $services->getUsers(array('slug' => $slug, 'enabled' => 'all'))->getQuery()->getOneOrNullResult();
         if (!$user) {
@@ -97,7 +121,8 @@ class UserController extends Controller {
      * @Route("/manage-users/{slug}/enable", name="user_enable", methods="GET")
      * @Route("/manage-users/{slug}/disable", name="user_disable", methods="GET")
      */
-    public function enabledisable(AppServices $services, TranslatorInterface $translator, $slug) {
+    public function enabledisable(AppServices $services, TranslatorInterface $translator, $slug)
+    {
 
         $user = $services->getUsers(array('slug' => $slug, 'enabled' => 'all'))->getQuery()->getOneOrNullResult();
         if (!$user) {
@@ -140,21 +165,23 @@ class UserController extends Controller {
     /**
      * @Route("/administrator/manage-users/{slug}/more-information", name="user_information", methods="GET")
      */
-    public function details(AppServices $services, TranslatorInterface $translator, $slug) {
+    public function details(AppServices $services, TranslatorInterface $translator, $slug)
+    {
 
         $user = $services->getUsers(array("slug" => $slug, "enabled" => "all"))->getQuery()->getOneOrNullResult();
         if (!$user) {
             return new Response($translator->trans('The user can not be found'));
         }
         return $this->render('Dashboard/Administrator/User/information.html.twig', [
-                    'user' => $user,
+            'user' => $user,
         ]);
     }
 
     /**
      * @Route("/administrator/manage-users/{slug}/empty-cart", name="user_empty_cart", methods="GET")
      */
-    public function emptyCart(AppServices $services, TranslatorInterface $translator, $slug) {
+    public function emptyCart(AppServices $services, TranslatorInterface $translator, $slug)
+    {
 
         $user = $services->getUsers(array("slug" => $slug, "enabled" => "all"))->getQuery()->getOneOrNullResult();
         if (!$user) {

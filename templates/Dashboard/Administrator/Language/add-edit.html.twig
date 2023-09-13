@@ -1,10 +1,10 @@
 {% extends "Global/layout.html.twig" %}
 
-{% set pagetitle = 'Add a new language' | trans %}
+{% set pagetitle = 'Add a new language' %}
 
-{% if language.id %}{% set pagetitle = 'Update the language' | trans %}{% endif %}
+{% if language.id %}{% set pagetitle = 'Update the language' %}{% endif %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 

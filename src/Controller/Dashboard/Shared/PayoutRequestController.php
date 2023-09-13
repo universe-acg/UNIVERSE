@@ -1,38 +1,54 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Controller\Dashboard\Shared;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use App\Service\AppServices;
 use App\Entity\PayoutRequest;
+use App\Service\AppServices;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use PayPal\Rest\ApiContext;
-use PayPal\Auth\OAuthTokenCredential;
-use Payum\Core\Security\CypherInterface;
-use PayPal\Api\Payer;
 use PayPal\Api\Amount;
-use PayPal\Api\Transaction;
-use PayPal\Api\RedirectUrls;
+use PayPal\Api\Payer;
 use PayPal\Api\Payment;
 use PayPal\Api\PaymentExecution;
+use PayPal\Api\RedirectUrls;
+use PayPal\Api\Transaction;
+use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Exception\PayPalConnectionException;
+use PayPal\Rest\ApiContext;
+use Payum\Core\Security\CypherInterface;
+use Stripe\Charge;
+use Stripe\Error\Api;
+use Stripe\Error\ApiConnection;
+use Stripe\Error\Authentication;
+use Stripe\Error\Base;
+use Stripe\Error\Card;
+use Stripe\Error\InvalidRequest;
+use Stripe\Error\Permission;
+use Stripe\Error\RateLimit;
+use Stripe\Stripe;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class PayoutRequestController extends Controller {
+class PayoutRequestController extends Controller
+{
 
     private $cypher;
 
-    public function __construct(CypherInterface $cypher = null) {
+    public function __construct(CypherInterface $cypher = null)
+    {
         $this->cypher = $cypher;
     }
 
     /**
      * @Route("/organizer/my-payout-requests/add/{eventDateReference}", name="dashboard_organizer_event_date_request_payout")
      */
-    public function payoutRequestAdd($eventDateReference, Request $request, TranslatorInterface $translator, AppServices $services) {
+    public function payoutRequestAdd($eventDateReference, Request $request, TranslatorInterface $translator, AppServices $services)
+    {
 
         $organizerPayoutMethods = $services->getPaymentGateways(array("organizer" => $this->getUser()->getOrganizer()->getSlug()))->getQuery()->getResult();
         if (count($organizerPayoutMethods) == 0) {
@@ -76,20 +92,20 @@ class PayoutRequestController extends Controller {
             $em->flush();
             $this->addFlash('success', $translator->trans('The payout request has been successfully submitted, you will be notified by email once it is processed'));
             return $this->redirectToRoute("dashboard_organizer_payout_requests");
-        } else {
-
-            return $this->render('Dashboard/Shared/Payout/request.html.twig', [
-                        'eventDate' => $eventDate,
-                        'organizerPayoutMethods' => $organizerPayoutMethods
-            ]);
         }
+
+        return $this->render('Dashboard/Shared/Payout/request.html.twig', [
+            'eventDate' => $eventDate,
+            'organizerPayoutMethods' => $organizerPayoutMethods
+        ]);
     }
 
     /**
      * @Route("/administrator/manage-payout-requests", name="dashboard_administrator_payout_requests")
      * @Route("/organizer/my-payout-requests", name="dashboard_organizer_payout_requests")
      */
-    public function payoutRequests(Request $request, AppServices $services, PaginatorInterface $paginator) {
+    public function payoutRequests(Request $request, AppServices $services, PaginatorInterface $paginator)
+    {
 
         $reference = ($request->query->get('reference')) == "" ? "all" : $request->query->get('reference');
         $eventdate = ($request->query->get('eventdate')) == "" ? "all" : $request->query->get('eventdate');
@@ -101,7 +117,7 @@ class PayoutRequestController extends Controller {
         $payoutRequests = $paginator->paginate($services->getPayoutRequests(array("reference" => $reference, "eventdate" => $eventdate, "organizer" => $organizer, "datefrom" => $datefrom, "dateto" => $dateto, "status" => $status))->getQuery(), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
 
         return $this->render('Dashboard/Shared/Payout/requests.html.twig', [
-                    "payoutRequests" => $payoutRequests
+            "payoutRequests" => $payoutRequests
         ]);
     }
 
@@ -109,7 +125,8 @@ class PayoutRequestController extends Controller {
      * @Route("/administrator/manage-payout-requests/{reference}/cancel", name="dashboard_administrator_payout_request_cancel")
      * @Route("/organizer/my-payout-requests/{reference}/cancel", name="dashboard_organizer_payout_request_cancel")
      */
-    public function cancel($reference, Request $request, TranslatorInterface $translator, AppServices $services) {
+    public function cancel($reference, Request $request, TranslatorInterface $translator, AppServices $services)
+    {
 
         $payoutRequest = $services->getPayoutRequests(array("reference" => $reference, "status" => "all"))->getQuery()->getOneOrNullResult();
 
@@ -146,7 +163,8 @@ class PayoutRequestController extends Controller {
     /**
      * @Route("/administrator/manage-payout-requests/{reference}/failed", name="dashboard_administrator_payout_request_failed")
      */
-    public function failed($reference, Request $request, TranslatorInterface $translator, AppServices $services) {
+    public function failed($reference, Request $request, TranslatorInterface $translator, AppServices $services)
+    {
 
         $payoutRequest = $services->getPayoutRequests(array("reference" => $reference, "status" => 0))->getQuery()->getOneOrNullResult();
 
@@ -178,7 +196,8 @@ class PayoutRequestController extends Controller {
     /**
      * @Route("/administrator/manage-payout-requests/{reference}/delete", name="dashboard_administrator_payout_request_delete")
      */
-    public function delete($reference, Request $request, TranslatorInterface $translator, AppServices $services) {
+    public function delete($reference, Request $request, TranslatorInterface $translator, AppServices $services)
+    {
 
         $payoutRequest = $services->getPayoutRequests(array("reference" => $reference, "status" => "all"))->getQuery()->getOneOrNullResult();
         if (!$payoutRequest) {
@@ -210,7 +229,8 @@ class PayoutRequestController extends Controller {
     /**
      * @Route("/administrator/manage-payout-requests/{reference}/restore", name="dashboard_administrator_payout_request_restore")
      */
-    public function restore($reference, Request $request, TranslatorInterface $translator, AppServices $services) {
+    public function restore($reference, Request $request, TranslatorInterface $translator, AppServices $services)
+    {
 
         $payoutRequest = $services->getPayoutRequests(array("reference" => $reference, "status" => "all"))->getQuery()->getOneOrNullResult();
         if (!$payoutRequest) {
@@ -231,7 +251,8 @@ class PayoutRequestController extends Controller {
     /**
      * @Route("/administrator/manage-payout-requests/{reference}/approve", name="dashboard_administrator_payout_request_approve")
      */
-    public function approve($reference, Request $request, TranslatorInterface $translator, AppServices $services) {
+    public function approve($reference, Request $request, TranslatorInterface $translator, AppServices $services)
+    {
 
         $em = $this->getDoctrine()->getManager();
         $payoutRequest = $services->getPayoutRequests(array("reference" => $reference, "status" => "all"))->getQuery()->getOneOrNullResult();
@@ -249,9 +270,9 @@ class PayoutRequestController extends Controller {
         if ($payoutRequest->getPaymentGateway()->getFactoryName() == "paypal_rest") {
 
             $apiContext = new ApiContext(
-                    new OAuthTokenCredential(
+                new OAuthTokenCredential(
                     $payoutRequest->getPaymentGateway()->getConfig()['client_id'], $payoutRequest->getPaymentGateway()->getConfig()['client_secret']
-                    )
+                )
             );
 
             $mode = "sandbox";
@@ -275,14 +296,14 @@ class PayoutRequestController extends Controller {
 
             $redirectUrls = new RedirectUrls();
             $redirectUrls->setReturnUrl($this->generateUrl("dashboard_administrator_payout_request_approved", ["reference" => $payoutRequest->getReference()], UrlGeneratorInterface::ABSOLUTE_URL))
-                    ->setCancelUrl($this->generateUrl("dashboard_administrator_payout_request_failed", ["reference" => $payoutRequest->getReference()], UrlGeneratorInterface::ABSOLUTE_URL));
+                ->setCancelUrl($this->generateUrl("dashboard_administrator_payout_request_failed", ["reference" => $payoutRequest->getReference()], UrlGeneratorInterface::ABSOLUTE_URL));
 
 
             $payment = new Payment();
             $payment->setIntent("ORDER")
-                    ->setPayer($payer)
-                    ->setTransactions(array($transaction))
-                    ->setRedirectUrls($redirectUrls);
+                ->setPayer($payer)
+                ->setTransactions(array($transaction))
+                ->setRedirectUrls($redirectUrls);
 
             try {
                 $payment->create($apiContext);
@@ -298,41 +319,41 @@ class PayoutRequestController extends Controller {
 
             if ($request->isMethod("POST")) {
 
-                \Stripe\Stripe::setApiKey($payoutRequest->getPaymentGateway()->getConfig()['secret_key']);
+                Stripe::setApiKey($payoutRequest->getPaymentGateway()->getConfig()['secret_key']);
 
                 $token = $request->request->get('stripeToken');
 
                 $stripePaymentError = false;
 
                 try {
-                    $charge = \Stripe\Charge::create([
-                                'amount' => number_format($payoutRequest->getEventDate()->getOrganizerPayoutAmount(), 2, '', ''),
-                                'currency' => $services->getSetting("currency_ccy"),
-                                'description' => $translator->trans("Organizer revenue from %website_name%", ["%website_name%" => $services->getSetting("website_name")]),
-                                'source' => $token,
+                    $charge = Charge::create([
+                        'amount' => number_format($payoutRequest->getEventDate()->getOrganizerPayoutAmount(), 2, '', ''),
+                        'currency' => $services->getSetting("currency_ccy"),
+                        'description' => $translator->trans("Organizer revenue from %website_name%", ["%website_name%" => $services->getSetting("website_name")]),
+                        'source' => $token,
                     ]);
-                } catch (\Stripe\Error\Card $e) {
+                } catch (Card $e) {
                     $this->addFlash('error', $translator->trans('An error has occured while processing your request') . ": " . $e->getMessage());
                     $stripePaymentError = true;
-                } catch (\Stripe\Error\Api $e) {
+                } catch (Api $e) {
                     $this->addFlash('error', $translator->trans('An error has occured while processing your request') . ": " . $e->getMessage());
                     $stripePaymentError = true;
-                } catch (\Stripe\Error\ApiConnection $e) {
+                } catch (ApiConnection $e) {
                     $this->addFlash('error', $translator->trans('An error has occured while processing your request') . ": " . $e->getMessage());
                     $stripePaymentError = true;
-                } catch (\Stripe\Error\Authentication $e) {
+                } catch (Authentication $e) {
                     $this->addFlash('error', $translator->trans('An error has occured while processing your request') . ": " . $e->getMessage());
                     $stripePaymentError = true;
-                } catch (\Stripe\Error\Base $e) {
+                } catch (Base $e) {
                     $this->addFlash('error', $translator->trans('An error has occured while processing your request') . ": " . $e->getMessage());
                     $stripePaymentError = true;
-                } catch (\Stripe\Error\InvalidRequest $e) {
+                } catch (InvalidRequest $e) {
                     $this->addFlash('error', $translator->trans('An error has occured while processing your request') . ": " . $e->getMessage());
                     $stripePaymentError = true;
-                } catch (\Stripe\Error\Permission $e) {
+                } catch (Permission $e) {
                     $this->addFlash('error', $translator->trans('An error has occured while processing your request') . ": " . $e->getMessage());
                     $stripePaymentError = true;
-                } catch (\Stripe\Error\RateLimit $e) {
+                } catch (RateLimit $e) {
                     $this->addFlash('error', $translator->trans('An error has occured while processing your request') . ": " . $e->getMessage());
                     $stripePaymentError = true;
                 } catch (Exception $e) {
@@ -359,7 +380,7 @@ class PayoutRequestController extends Controller {
                 }
             } else {
                 return $this->render('Dashboard/Shared/Payout/stripe.html.twig', [
-                            "stripePublishableKey" => $payoutRequest->getPaymentGateway()->getConfig()['publishable_key']
+                    "stripePublishableKey" => $payoutRequest->getPaymentGateway()->getConfig()['publishable_key']
                 ]);
             }
         }
@@ -370,7 +391,8 @@ class PayoutRequestController extends Controller {
     /**
      * @Route("/administrator/manage-payout-requests/{reference}/approved", name="dashboard_administrator_payout_request_approved")
      */
-    public function approved($reference, Request $request, TranslatorInterface $translator, AppServices $services) {
+    public function approved($reference, Request $request, TranslatorInterface $translator, AppServices $services)
+    {
 
         $payoutRequest = $services->getPayoutRequests(array("reference" => $reference, "status" => 0))->getQuery()->getOneOrNullResult();
 
@@ -412,9 +434,9 @@ class PayoutRequestController extends Controller {
 
             $payoutRequest->getPaymentGateway()->decrypt($this->cypher);
             $apiContext = new ApiContext(
-                    new OAuthTokenCredential(
+                new OAuthTokenCredential(
                     $payoutRequest->getPaymentGateway()->getConfig()['client_id'], $payoutRequest->getPaymentGateway()->getConfig()['client_secret']
-                    )
+                )
             );
 
             $mode = "sandbox";
@@ -448,7 +470,8 @@ class PayoutRequestController extends Controller {
      * @Route("/administrator/manage-payout-requests/{reference}/details", name="dashboard_administrator_payout_request_details")
      * @Route("/organizer/my-payout-requests/{reference}/details", name="dashboard_organizer_payout_request_details")
      */
-    public function details($reference, Request $request, TranslatorInterface $translator, AppServices $services) {
+    public function details($reference, Request $request, TranslatorInterface $translator, AppServices $services)
+    {
 
         $payoutRequest = $services->getPayoutRequests(array("reference" => $reference, "status" => "all"))->getQuery()->getOneOrNullResult();
 
@@ -458,7 +481,7 @@ class PayoutRequestController extends Controller {
         }
 
         return $this->render('Dashboard/Shared/Payout/details.html.twig', [
-                    "payoutRequest" => $payoutRequest
+            "payoutRequest" => $payoutRequest
         ]);
     }
 

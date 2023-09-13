@@ -1,6 +1,6 @@
 {% extends "Global/layout.html.twig" %}
 
-{% set pagetitle = 'Manage languages' | trans %}
+{% set pagetitle = 'Manage languages' %}
 
 {% block title %}{{ pagetitle }}{% endblock %}
 
@@ -19,7 +19,7 @@
 
                     <div class="box shadow-none bg-gray mb-4">
                         <div class="row">
-                            <div class="col-sm-12 col-lg-2 text-center text-lg-left mb-3 mb-lg-0">
+                            <div class="col-sm-12 col-lg-2  mb-3 mb-lg-0">
                                 <span class="center-lg-y text-muted">{{ "%resultsCount% result(s) found" |trans ({'%resultsCount%': languages.getTotalItemCount}) }}</span>
                             </div>
                             <div class="col-sm-12 col-lg-4 text-center mb-3 mb-lg-0">
@@ -41,18 +41,18 @@
                                     </ul>
                                 </form>
                             </div>
-                            <div class="col-sm-12 col-lg-6 text-center text-lg-right">
+                            <div class="col-sm-12 col-lg-6 ">
                                 <label for="sortable-select" class="display-inline">{{ "Sort by" }}
                                     <select id="sortable-select"
                                             class="form-control display-inline-block bg-white select2 ml-3"
-                                            data-placeholder="{{ "Select an option" }}" style="width: 50%;">
+                                            data-placeholder="{{ "Select an option" }}" style="width: 100%;">
                                         {{ knp_pagination_sortable(languages, "Creation date" ~ ' (' ~ "desc" ~ ')', "l.createdAt", {"direction": "desc", "criteria": "l.createdAt"}) }}
                                         {{ knp_pagination_sortable(languages, "Creation date" ~ ' (' ~ "asc" ~ ')', "l.createdAt", {"direction": "asc", "criteria": "l.createdAt"}) }}
                                     </select>
                                 </label>
                                 <a href="{{ path('dashboard_administrator_language_add') }}"
                                    class="btn btn-primary ml-3" data-toggle="tooltip"
-                                   title="{{ 'Add a new language' | trans }}"><i class="fas fa-plus"></i></a>
+                                   title="{{ 'Add a new language' }}"><i class="fas fa-plus"></i></a>
                             </div>
                         </div>
                     </div>
@@ -67,9 +67,9 @@
                                         <table class="table table-hover table-vcenter text-nowrap">
                                             <thead>
                                             <tr>
-                                                <th>{{ 'Name' | trans }}</th>
-                                                <th>{{ 'Events count' | trans }}</th>
-                                                <th>{{ 'Status' | trans }}</th>
+                                                <th>{{ 'Name' }}</th>
+                                                <th>{{ 'Events count' }}</th>
+                                                <th>{{ 'Status' }}</th>
                                                 <th class="text-center"><i class="fas fa-cog"></i></th>
                                             </tr>
                                             </thead>

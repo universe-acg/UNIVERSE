@@ -1,0 +1,44 @@
+{% set runtimeConfig = {"thumbnail": {"size": [500, 250] }} %}
+
+{% if customLink is defined %}
+    {% set link = customLink %}
+{% else %}
+    {% set link = path('event', { slug : creator.slug }) %}
+{% endif %}
+
+<style>
+    .image-container[data-src] {
+        object-fit: contain !important;
+    }
+</style>
+
+<a href="{{ path('organizer', {slug: (creator.getOrganizer().slug)}) }}" class="text-dark">
+
+    <div class="card card-event">
+        <div class="img-wrap img-lazy-load image-container" style="height: 260px"
+             data-src="{{ creator.getOrganizer().logoName ? asset(creator.getOrganizer().getLogoPath) : creator.getOrganizer().getLogoPlaceholder }}">
+            {#        <a href="{{ path('organizer', {slug: (creator.slug)}) }}" class="text-dark">{{ link }}</a> #}
+            {#        <a href="{{ link }}"></a> #}
+            <div class="loader"></div>
+        </div>
+        <div class="info-wrap">
+            {% if (not is_granted('IS_AUTHENTICATED_REMEMBERED') or is_granted('ROLE_ATTENDEE')) and hideFavoriteButton is not defined %}
+            {% endif %}
+            <div class="event-info">
+                <h5>
+                    <a href="{{ path('organizer', {slug: (creator.getOrganizer().slug)}) }}"
+                       class="text-dark">{{ creator.getOrganizer().name }}</a>
+                </h5>
+            </div>
+            {% if orderReference is defined %}
+                <div class="order-reference">
+                    <a href="{{ path('dashboard_attendee_order_details', {reference: orderReference}) }}"><small>{{ "Order" }}
+                            #{{ orderReference }}</small></a>
+                </div>
+            {% endif %}
+            <div class="clearfix"></div>
+        </div>
+        <span class="event-category">{{ creator.getOrganizer().getCategory() }}</span>
+
+    </div>
+</a>

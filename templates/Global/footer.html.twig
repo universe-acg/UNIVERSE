@@ -84,18 +84,17 @@
                 </aside>
                 <aside class="col-sm-6 col-lg-3">
                     <article>
-                        {% if services.getSetting("contact_phone") != "" or services.getSetting("contact_fax") != "" or services.getSetting("facebook_url") != "" or services.getSetting("instagram_url") != "" or services.getSetting("youtube_url") != "" or services.getSetting("twitter_url") != "" %}
+                        {% if services.getSetting("contact_phone") != "" or services.getSetting("contact_email") != "" or services.getSetting("facebook_url") != "" or services.getSetting("instagram_url") != "" or services.getSetting("youtube_url") != "" or services.getSetting("twitter_url") != "" %}
                             <h5 class="title text-dark">{{ "Contact Us" }}</h5>
                         {% endif %}
 
-                        {% if services.getSetting("contact_phone") != "" or services.getSetting("contact_fax") != "" %}
+                        {% if services.getSetting("contact_phone") != "" or services.getSetting("contact_email") != "" %}
                             <p>
-                                {% if services.getSetting("contact_phone") != "" %}
-                                    <strong>{{ "Phone" }}: </strong> {{ services.getSetting("contact_phone") }}
-                                {% endif %}
-                                {% if services.getSetting("contact_fax") != "" %}
-                                    <br>
-                                    <strong>{{ "Fax" }}:</strong> {{ services.getSetting("contact_fax") }}
+                                {#                                {% if services.getSetting("contact_phone") != "" %} #}
+                                {#                                    <strong>{{ "Phone" }}: </strong> {{ services.getSetting("contact_phone") }} #}
+                                {#                                {% endif %} #}
+                                {% if services.getSetting("contact_email") != "" %}
+                                    <strong>{{ "Email" }}:</strong> {{ services.getSetting("contact_email") }}
                                 {% endif %}
 
                             </p>
@@ -192,7 +191,8 @@
             </div>
             <div class="col-sm-12">
                 <p class="text-dark-50 text-center">
-                    {{ "Copyright" }} &copy; {{ "now"|date('Y') }}
+                    {{ "The creators of this project are the IB Society, ACG (All Conditions Graphics), and Alexandros Kourtis" }}
+                    &copy; {{ "now"|date('Y') }}
                 </p>
             </div>
         </section>

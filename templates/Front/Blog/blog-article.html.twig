@@ -2,22 +2,25 @@
 
 {% set pagetitle = blogpost.name %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block meta_dynamic_seo %}
-    <meta name="description" content="{{ blogpost.content|raw|nl2br|striptags|slice(0, 200)|raw }}..." />
+    <meta name="description" content="{{ blogpost.content|raw|nl2br|striptags|slice(0, 200)|raw }}..."/>
     {% if blogpost.tags %}
-        <meta name="keywords" content="{{ blogpost.name }}, {{ blogpost.category.name }}, {% for tag in blogpost.tags|split(',') %}{{ tag }}{{ not loop.last ? ', ' : '' }}{% endfor %}" />
+        <meta name="keywords"
+              content="{{ blogpost.name }}, {{ blogpost.category.name }}, {% for tag in blogpost.tags|split(',') %}{{ tag }}{{ not loop.last ? ', ' : '' }}{% endfor %}"/>
     {% else %}
-        <meta name="keywords" content="{{ services.getSetting("website_keywords_" ~ app.request.get('_locale')) }}" />
+        <meta name="keywords" content="{{ services.getSetting("website_keywords_" ~ app.request.get('_locale')) }}"/>
     {% endif %}
-    <meta property="og:title" content="{{ blogpost.name }}" />
-    <meta property="og:image" content="{{ app.request.getSchemeAndHttpHost() }}{{ blogpost.imageName ? asset(blogpost.getImagePath) : blogpost.getImagePlaceholder }}" />
-    <meta property="og:description" content="{{ blogpost.content|raw|nl2br|striptags|slice(0, 200)|raw }}..." />
-    <meta name="twitter:title" content="{{ blogpost.name }}" />
-    <meta name="twitter:image" content="{{ app.request.getSchemeAndHttpHost() }}{{ blogpost.imageName ? asset(blogpost.getImagePath) : blogpost.getImagePlaceholder }}" />
-    <meta name="twitter:image:alt" content="{{ blogpost.name }}" />
-    <meta name="twitter:description" content="{{ blogpost.content|raw|nl2br|striptags|slice(0, 200)|raw }}..." />
+    <meta property="og:title" content="{{ blogpost.name }}"/>
+    <meta property="og:image"
+          content="{{ app.request.getSchemeAndHttpHost() }}{{ blogpost.imageName ? asset(blogpost.getImagePath) : blogpost.getImagePlaceholder }}"/>
+    <meta property="og:description" content="{{ blogpost.content|raw|nl2br|striptags|slice(0, 200)|raw }}..."/>
+    <meta name="twitter:title" content="{{ blogpost.name }}"/>
+    <meta name="twitter:image"
+          content="{{ app.request.getSchemeAndHttpHost() }}{{ blogpost.imageName ? asset(blogpost.getImagePath) : blogpost.getImagePlaceholder }}"/>
+    <meta name="twitter:image:alt" content="{{ blogpost.name }}"/>
+    <meta name="twitter:description" content="{{ blogpost.content|raw|nl2br|striptags|slice(0, 200)|raw }}..."/>
 {% endblock %}
 
 {% block content %}
@@ -32,7 +35,8 @@
                     <div class="card card-filter">
                         <article class="card-group-item">
                             <header class="card-header">
-                                <a class="" aria-expanded="true" href="#" data-toggle="collapse" data-target="#filter-keyword">
+                                <a class="" aria-expanded="true" href="#" data-toggle="collapse"
+                                   data-target="#filter-keyword">
                                     <i class="icon-action fa fa-chevron-down"></i>
                                     <h6 class="title">{{ "Search blog" }}</h6>
                                 </a>
@@ -40,8 +44,10 @@
                             <div class="filter-content collapse show" id="filter-keyword">
                                 <div class="card-body">
                                     <form class="pb-3" action="{{ path('blog') }}">
-                                        <input class="form-control mb-3" placeholder="{{ "Keyword" }}" name="keyword" type="text" value="{{ app.request.get('keyword') }}">
-                                        <button type="submit" class="btn btn-outline-primary btn-block"><i class="fas fa-search"></i> {{ "Search" }}</button>
+                                        <input class="form-control mb-3" placeholder="{{ "Keyword" }}" name="keyword"
+                                               type="text" value="{{ app.request.get('keyword') }}">
+                                        <button type="submit" class="btn btn-outline-primary btn-block"><i
+                                                    class="fas fa-search"></i> {{ "Search" }}</button>
                                     </form>
                                 </div>
                             </div>
@@ -59,7 +65,8 @@
                                         {% set topblogpostcategories = services.getBlogPostCategories({ order: "blogpostscount", limit: 5 }).getQuery().getResult() %}
                                         {% for blogpostcategory in topblogpostcategories %}
                                             <li class="mb-2">
-                                                <a href="{{ path('blog', {category: blogpostcategory.slug}) }}" class="font-weight-semibold">
+                                                <a href="{{ path('blog', {category: blogpostcategory.slug}) }}"
+                                                   class="font-weight-semibold">
                                                     {% if app.request.locale != 'ar' %}
                                                         <i class="fas fa-angle-right ml-1 mr-1 pr-2"></i>
                                                     {% endif %}
@@ -92,13 +99,17 @@
                                         <article class="row align-items-center mb-3">
                                             <div class="col-4 pr-0">
                                                 <a href="{{ path('blog_article', { slug : popularblogpost.slug }) }}">
-                                                    <img src="{{ asset('assets/img/loader.svg') }}" data-src="{{ popularblogpost.imageName ? (popularblogpost.getImagePath|imagine_filter('thumbnail', runtimeConfig)) : popularblogpost.getImagePlaceholder }}" class="img-lazy-load img-fluid hover-effect-2" alt="{{ popularblogpost.name }}">
+                                                    <img src="{{ asset('assets/img/loader.svg') }}"
+                                                         data-src="{{ popularblogpost.imageName ? (popularblogpost.getImagePath|imagine_filter('thumbnail', runtimeConfig)) : popularblogpost.getImagePlaceholder }}"
+                                                         class="img-lazy-load img-fluid hover-effect-2"
+                                                         alt="{{ popularblogpost.name }}">
                                                 </a>
                                             </div>
                                             <div class="col-8">
                                                 <small class="text-muted">{{ popularblogpost.category.name }}</small>
                                                 <h6 class="mb-0">
-                                                    <a href="{{ path('blog_article', { slug : popularblogpost.slug }) }}" class="text-1">{{ popularblogpost.name }}</a>
+                                                    <a href="{{ path('blog_article', { slug : popularblogpost.slug }) }}"
+                                                       class="text-1">{{ popularblogpost.name }}</a>
                                                 </h6>
                                             </div>
                                         </article>
@@ -107,19 +118,20 @@
                             </div>
                         </article>
                         <article class="card-group-item">
-                            <header class="card-header">
-                                <a href="#" data-toggle="collapse" data-target="#collapseTags">
-                                    <i class="icon-action fa fa-chevron-down"></i>
-                                    <h6 class="title">{{ "Tags" }}</h6>
-                                </a>
-                            </header>
-                            <div class="filter-content collapse show" id="collapseTags">
-                                <div class="card-body">
-                                    {% for tag in services.getBlogPosts({"selecttags": true}).getQuery().getOneOrNullResult()[1]|split(',') %}
-                                        <a href="{{ path('blog', { keyword: tag }) }}" class="btn btn-sm btn-default mr-2 mb-2 mt-2">{{ tag }}</a>
-                                    {% endfor %}
-                                </div>
-                            </div>
+                            {#                            <header class="card-header"> #}
+                            {#                                <a href="#" data-toggle="collapse" data-target="#collapseTags"> #}
+                            {#                                    <i class="icon-action fa fa-chevron-down"></i> #}
+                            {#                                    <h6 class="title">{{ "Tags" }}</h6> #}
+                            {#                                </a> #}
+                            {#                            </header> #}
+                            {#                            <div class="filter-content collapse show" id="collapseTags"> #}
+                            {#                                <div class="card-body"> #}
+                            {#                                    {% for tag in services.getBlogPosts({"selecttags": true}).getQuery().getOneOrNullResult()[1]|split(',') %} #}
+                            {#                                        <a href="{{ path('blog', { keyword: tag }) }}" #}
+                            {#                                           class="btn btn-sm btn-default mr-2 mb-2 mt-2">{{ tag }}</a> #}
+                            {#                                    {% endfor %} #}
+                            {#                                </div> #}
+                            {#                            </div> #}
                         </article>
                         {% if services.getSetting("newsletter_enabled") == "yes" and services.getSetting("mailchimp_api_key") and services.getSetting("mailchimp_list_id") %}
                             {% include "Global/newsletter-box.html.twig" %}
@@ -129,17 +141,24 @@
                 </aside>
                 <div class="col-lg-9 order-0 order-lg-1">
                     <div class="card box">
-                        <img class="card-img-top img-lazy-load" src="{{ asset('assets/img/loader.svg') }}" data-src="{{ blogpost.imageName ? asset(blogpost.getImagePath) : blogpost.getImagePlaceholder }}" alt="{{ blogpost.name }}">
+                        <img class="card-img-top img-lazy-load" src="{{ asset('assets/img/loader.svg') }}"
+                             data-src="{{ blogpost.imageName ? asset(blogpost.getImagePath) : blogpost.getImagePlaceholder }}"
+                             alt="{{ blogpost.name }}">
                         <div class="card-body">
 
                             <header class="section-heading mb-1">
                                 <h1 class="title-section">{{ blogpost.name }}</h1>
                             </header>
                             <p class="mb-4">
-                                <small class="text-muted mr-2"><a href="{{ path('blog', { category: blogpost.category.slug }) }}"><i class="fas fa-sitemap"></i> {{ blogpost.category.name }}</a></small>
-                                <small class="text-muted mr-2"><i class="far fa-clock"></i> {{ blogpost.createdAt|ago }}</small>
+                                <small class="text-muted mr-2"><a
+                                            href="{{ path('blog', { category: blogpost.category.slug }) }}"><i
+                                                class="fas fa-sitemap"></i> {{ blogpost.category.name }}</a></small>
+                                <small class="text-muted mr-2"><i class="far fa-clock"></i> {{ blogpost.createdAt|ago }}
+                                </small>
                                 {% if blogpost.readtime %}
-                                    <small class="text-muted"><i class="fas fa-book-reader"></i> {{ blogpost.readtime }} {{ "min read" }}</small>
+                                    <small class="text-muted"><i
+                                                class="fas fa-book-reader"></i> {{ blogpost.readtime }} {{ "min read" }}
+                                    </small>
                                 {% endif %}
                             </p>
                             <article>
@@ -148,13 +167,14 @@
                             <hr>
                             <div class="row">
                                 {% if blogpost.tags %}
-                                    <div class="col-12 col-lg-6 text-center text-lg-left">
+                                    <div class="col-12 col-lg-6 ">
                                         {% for tag in blogpost.tags|split(',') %}
-                                            <a href="{{ path('blog', { keyword: tag }) }}" class="btn btn-sm btn-default mr-3 mb-3 mt-3">{{ tag }}</a>
+                                            <a href="{{ path('blog', { keyword: tag }) }}"
+                                               class="btn btn-sm btn-default mr-3 mb-3 mt-3">{{ tag }}</a>
                                         {% endfor %}
                                     </div>
                                 {% endif %}
-                                <div class="col-12 col-lg-6 text-center text-lg-right sharer mt-3">
+                                <div class="col-12 col-lg-6  sharer mt-3">
                                 </div>
                             </div>
 
@@ -165,8 +185,10 @@
                                         {% include '@FOSComment/Thread/async.html.twig' with {'id':blogpost.slug} %}
                                     {% elseif blog_comments_enabled == "facebook" and services.getSetting("facebook_app_id") %}
                                         <div id="fb-root"></div>
-                                        <script async defer crossorigin="anonymous" src="https://connect.facebook.net/{{ app.request.locale|lower~'_'~app.request.locale|upper }}/sdk.js#xfbml=1&version=v4.0&appId={{ services.getSetting("facebook_app_id") }}&autoLogAppEvents=1"></script>
-                                        <div class="fb-comments" data-href="{{ app.request.uri }}" data-width="100%" data-numposts="5"></div>
+                                        <script async defer crossorigin="anonymous"
+                                                src="https://connect.facebook.net/{{ app.request.locale|lower~'_'~app.request.locale|upper }}/sdk.js#xfbml=1&version=v4.0&appId={{ services.getSetting("facebook_app_id") }}&autoLogAppEvents=1"></script>
+                                        <div class="fb-comments" data-href="{{ app.request.uri }}" data-width="100%"
+                                             data-numposts="5"></div>
                                     {% elseif blog_comments_enabled == "disqus" and services.getSetting("disqus_subdomain") %}
                                         <div id="disqus_thread"></div>
                                         <script>
@@ -185,7 +207,9 @@
                                                 (d.head || d.body).appendChild(s);
                                             })();
                                         </script>
-                                        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                                        <noscript>Please enable JavaScript to view the <a
+                                                    href="https://disqus.com/?ref_noscript">comments powered by
+                                                Disqus.</a></noscript>
                                     {% endif %}
                                 </div>
                             {% endif %}
@@ -200,7 +224,8 @@
                 <div class="row">
                     <div class="col-12">
                         <h3 class="mt-5 mb-4 text-center">{{ "Related posts" }}</h3>
-                        <div class="owl-init owl-carousel" data-margin="15" data-items="4" data-dots="false" data-nav="true" data-autoplay="false">
+                        <div class="owl-init owl-carousel" data-margin="15" data-items="4" data-dots="false"
+                             data-nav="true" data-autoplay="false">
                             {% for similarblogpost in similarblogposts %}
                                 {% include "Global/blog-card.html.twig" with { blogpost: similarblogpost, thumbnailsize: [241, 241] } %}
                             {% endfor %}

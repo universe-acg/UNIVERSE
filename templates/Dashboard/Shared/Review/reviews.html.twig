@@ -1,11 +1,11 @@
 {% extends "Global/layout.html.twig" %}
 
 {% if is_granted('ROLE_ATTENDEE') %}
-    {% set pagetitle = 'My reviews' | trans %}
+    {% set pagetitle = 'My reviews' %}
 {% elseif is_granted('ROLE_ORGANIZER') %}
-    {% set pagetitle = 'Reviews' | trans %}
+    {% set pagetitle = 'Reviews' %}
 {% elseif is_granted('ROLE_ADMINISTRATOR') %}
-    {% set pagetitle = 'Manage reviews' | trans %}
+    {% set pagetitle = 'Manage reviews' %}
 {% endif %}
 
 {% block title %}{{ pagetitle }}{% endblock %}
@@ -26,14 +26,14 @@
                     {% if is_granted('ROLE_ORGANIZER') or is_granted('ROLE_ADMINISTRATOR') %}
                         <div class="box shadow-none bg-gray mb-4">
                             <div class="row">
-                                <div class="col-sm-12 col-lg-5 text-center text-lg-left mb-3 mb-lg-0">
+                                <div class="col-sm-12 col-lg-5  mb-3 mb-lg-0">
                                     <span class="center-lg-y text-muted">{{ "%resultsCount% reviews(s) found" |trans ({'%resultsCount%': reviews.getTotalItemCount}) }}</span>
                                 </div>
-                                <div class="col-sm-12 col-lg-5 text-center text-lg-right">
+                                <div class="col-sm-12 col-lg-5 ">
                                     <label for="sortable-select" class="display-inline">{{ "Sort by" }}
                                         <select id="sortable-select"
                                                 class="form-control display-inline-block bg-white select2 ml-3"
-                                                data-placeholder="{{ "Select an option" }}" style="width: 50%;">
+                                                data-placeholder="{{ "Select an option" }}" style="width: 100%;">
                                             {{ knp_pagination_sortable(reviews, "Rating" ~ ' (' ~ "desc" ~ ')', "r.rating", {"direction": "desc", "criteria": "r.rating"}) }}
                                             {{ knp_pagination_sortable(reviews, "Rating" ~ ' (' ~ "asc" ~ ')', "r.rating", {"direction": "asc", "criteria": "r.rating"}) }}
                                             {{ knp_pagination_sortable(reviews, "Review date" ~ ' (' ~ "desc" ~ ')', "r.createdAt", {"direction": "desc", "criteria": "r.createdAt"}) }}
@@ -41,10 +41,10 @@
                                         </select>
                                     </label>
                                 </div>
-                                <div class="col-sm-12 col-lg-2 text-center text-lg-right">
+                                <div class="col-sm-12 col-lg-2 ">
                                     <a href="#search-filters" class="btn btn-primary has-tooltip" data-toggle="collapse"
                                        title="{{ "Toggle display the search filters" }}" aria-expanded="false"
-                                       aria-controls="search-filters"><i class="fab fa-searchengin fa-lg"></i></a>
+                                       aria-controls="search-filters"><i class="fa fa-eye fa-lg"></i></a>
                                 </div>
                                 <div id="search-filters"
                                      class="col-sm-12 col-lg-12 text-center mb-3 mb-lg-0 collapse show">

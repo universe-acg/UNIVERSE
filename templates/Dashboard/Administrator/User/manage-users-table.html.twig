@@ -3,11 +3,11 @@
         <thead>
         <tr>
             <th class="text-center"><i class="fas fa-sitemap"></i></th>
-            <th>{{ 'Name' | trans }}</th>
-            <th>{{ 'Username' | trans }} / {{ 'Email' | trans }}</th>
-            <th>{{ 'Registration date' | trans }}</th>
-            <th>{{ 'Last login' | trans }}</th>
-            <th>{{ 'Status' | trans }}</th>
+            <th>{{ 'Name' }}</th>
+            <th>{{ 'Username' }} / {{ 'Email' }}</th>
+            <th>{{ 'Registration date' }}</th>
+            <th>{{ 'Last login' }}</th>
+            <th>{{ 'Status' }}</th>
             <th class="text-center"><i class="fas fa-cog"></i></th>
         </tr>
         </thead>
@@ -100,7 +100,7 @@
                                 <span data-target="{{ path('dashboard_administrator_user_delete_permanently', { slug : user.slug }) }}"
                                       class="dropdown-item requires-confirmation"
                                       data-confirmation-text="{{ "You are about to delete the user and all its related information (orders, events...) PERMANENTLY" }}"><i
-                                            class="dropdown-icon fas fa-user-times fa-fw text-muted"></i> {{ "Delete permanently" }}</span>
+                                            class="dropdown-icon fas fa-user-times fa-fw text-muted"></i> {{ "Delete" }}</span>
                             {% else %}
                                 <a href="{{ path('dashboard_administrator_user_delete', { slug : user.slug }) }}"
                                    class="dropdown-item"><i

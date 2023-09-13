@@ -1,26 +1,33 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Controller\Front;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
 use App\Service\AppServices;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class HelpCenterController extends AbstractController {
+class HelpCenterController extends AbstractController
+{
 
     /**
      * @Route("/help-center", name="help_center")
      */
-    public function helpCenter(Request $request) {
+    public function helpCenter(Request $request): Response
+    {
         return $this->render('Front/HelpCenter/index.html.twig');
     }
 
     /**
      * @Route("/help-center/{slug}", name="help_center_category")
      */
-    public function helpCenterCategory($slug, AppServices $services, TranslatorInterface $translator) {
+    public function helpCenterCategory($slug, AppServices $services, TranslatorInterface $translator): Response
+    {
         $category = $services->getHelpCenterCategories(array("slug" => $slug))->getQuery()->getOneOrNullResult();
         if (!$category) {
             $this->addFlash('error', $translator->trans('The category not be found'));
@@ -32,7 +39,8 @@ class HelpCenterController extends AbstractController {
     /**
      * @Route("/help-center/article/{slug}", name="help_center_article")
      */
-    public function helpCenterArticle($slug, AppServices $services, TranslatorInterface $translator) {
+    public function helpCenterArticle($slug, AppServices $services, TranslatorInterface $translator): Response
+    {
         $article = $services->getHelpCenterArticles(array("slug" => $slug))->getQuery()->getOneOrNullResult();
         if (!$article) {
             $this->addFlash('error', $translator->trans('The article not be found'));

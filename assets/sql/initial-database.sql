@@ -4047,7 +4047,7 @@ INSERT INTO `universe_settings` (`id`, `key`, `value`) VALUES
 (56, 'website_keywords_en', 'organize my event, tickets online, buy tickets'),
 (57, 'contact_email', 'contact@yourdomain.com'),
 (58, 'contact_phone', '+123456789'),
-(59, 'contact_fax', '+123456789'),
+(59, 'contact_email', '+123456789'),
 (60, 'contact_address', '4916  Wyatt Street, 33128 Miami (FL), United States'),
 (61, 'facebook_url', 'https://www.facebook.com'),
 (62, 'instagram_url', 'https://www.instagram.com'),

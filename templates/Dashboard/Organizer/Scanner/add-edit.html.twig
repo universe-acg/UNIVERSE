@@ -1,10 +1,10 @@
 {% extends "Global/layout.html.twig" %}
 
-{% set pagetitle = 'Add a new scanner' | trans %}
+{% set pagetitle = 'Add a new scanner' %}
 
-{% if scanner.id %}{% set pagetitle = 'Update the scanner' | trans %}{% endif %}
+{% if scanner.id %}{% set pagetitle = 'Update the scanner' %}{% endif %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 

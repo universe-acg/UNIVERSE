@@ -38,14 +38,14 @@
 
                     <div class="box shadow-none bg-gray mb-4">
                         <div class="row">
-                            <div class="col-sm-12 col-lg-6 text-center text-lg-left mb-3 mb-lg-0">
+                            <div class="col-sm-12 col-lg-6  mb-3 mb-lg-0">
                                 <span class="center-lg-y text-muted">{{ "%resultsCount% attendee(s) found" |trans ({'%resultsCount%': tickets.getTotalItemCount}) }}</span>
                             </div>
-                            <div class="col-sm-12 col-lg-6 text-center text-lg-right">
+                            <div class="col-sm-12 col-lg-6 ">
                                 <label for="sortable-select" class="display-inline">{{ "Sort by" }}
                                     <select id="sortable-select"
                                             class="form-control display-inline-block bg-white select2 ml-3"
-                                            data-placeholder="{{ "Select an option" }}" style="width: 50%;">
+                                            data-placeholder="{{ "Select an option" }}" style="width: 100%;">
                                         {{ knp_pagination_sortable(tickets, "Order date" ~ ' (' ~ "desc" ~ ')', "t.createdAt", {"direction": "desc", "criteria": "t.createdAt"}) }}
                                         {{ knp_pagination_sortable(tickets, "Order date" ~ ' (' ~ "asc" ~ ')', "t.createdAt", {"direction": "asc", "criteria": "t.createdAt"}) }}
                                     </select>
@@ -101,7 +101,7 @@
                                                 <th class="text-center">#</th>
                                                 <th>{{ 'Attendee Name / Email' }}</th>
                                                 <th>{{ 'Ticket type' }}</th>
-                                                <th>{{ 'Status' | trans }}</th>
+                                                <th>{{ 'Status' }}</th>
                                             </tr>
                                             </thead>
                                             <tbody>

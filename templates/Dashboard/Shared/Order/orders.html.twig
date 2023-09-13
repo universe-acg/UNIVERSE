@@ -29,40 +29,40 @@
 
                         <div class="box shadow-none bg-gray mb-4">
                             <div class="row">
-                                <div class="col-sm-12 col-lg-3 text-center text-lg-left mb-3 mb-lg-0">
-                                    <span class="center-lg-y text-muted">{{ "%resultsCount% result(s) found" |trans ({'%resultsCount%': orders.getTotalItemCount}) }}</span>
-                                </div>
-                                <div class="col-sm-12 col-lg-5 text-center text-lg-right">
-                                    <label for="sortable-select" class="display-inline">{{ "Sort by" }}
-                                        <select id="sortable-select"
-                                                class="form-control display-inline-block bg-white select2 ml-3"
-                                                data-placeholder="{{ "Select an option" }}" style="width: 50%;">
-                                            {{ knp_pagination_sortable(orders, "Creation date" ~ ' (' ~ "desc" ~ ')', "o.createdAt", {"direction": "desc", "criteria": "o.createdAt"}) }}
-                                            {{ knp_pagination_sortable(orders, "Creation date" ~ ' (' ~ "asc" ~ ')', "o.createdAt", {"direction": "asc", "criteria": "o.createdAt"}) }}
-                                        </select>
-                                    </label>
-                                </div>
-                                <div class="col-sm-12 col-lg-4 text-center text-lg-right">
+                                {#                                <div class="col-sm-12 col-lg-3  mb-3 mb-lg-0"> #}
+                                {#                                    <span class="center-lg-y text-muted">{{ "%resultsCount% result(s) found" |trans ({'%resultsCount%': orders.getTotalItemCount}) }}</span> #}
+                                {#                                </div> #}
+                                {#                                <div class="col-sm-12 col-lg-5 "> #}
+                                {#                                    <label for="sortable-select" class="display-inline">{{ "Sort by" }} #}
+                                {#                                        <select id="sortable-select" #}
+                                {#                                                class="form-control display-inline-block bg-white select2 ml-3" #}
+                                {#                                                data-placeholder="{{ "Select an option" }}" style="width: 100%;"> #}
+                                {#                                            {{ knp_pagination_sortable(orders, "Creation date" ~ ' (' ~ "desc" ~ ')', "o.createdAt", {"direction": "desc", "criteria": "o.createdAt"}) }} #}
+                                {#                                            {{ knp_pagination_sortable(orders, "Creation date" ~ ' (' ~ "asc" ~ ')', "o.createdAt", {"direction": "asc", "criteria": "o.createdAt"}) }} #}
+                                {#                                        </select> #}
+                                {#                                    </label> #}
+                                {#                                </div> #}
+                                <div class="col-sm-12 col-lg-4 ">
                                     <a href="#search-filters" class="btn btn-primary has-tooltip" data-toggle="collapse"
                                        title="{{ "Toggle display the search filters" }}" aria-expanded="false"
-                                       aria-controls="search-filters"><i class="fab fa-searchengin fa-lg"></i></a>
-                                    {% if orders.getTotalItemCount %}
-                                        <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge(app.request.query.all|merge({'excel': 1 }))) }}"
-                                           target="_blank" class="btn btn-primary" data-toggle="tooltip"
-                                           title="{{ "Export current orders to an Excel file" }}"><i
-                                                    class="fas fa-file-excel fa-lg"></i></a>
-                                        <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge(app.request.query.all|merge({'csv': 1 }))) }}"
-                                           target="_blank" class="btn btn-primary" data-toggle="tooltip"
-                                           title="{{ "Export current orders to a CSV file" }}"><i
-                                                    class="fas fa-file-csv fa-lg"></i></a>
-                                        {% if not is_granted("ROLE_POINTOFSALE") %}
-                                            <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge(app.request.query.all|merge({'pdf': 1 }))) }}"
-                                               target="_blank"
-                                               class="btn btn-primary has-tooltip {% if not app.request.get("event") or app.request.get("status") != 1 %} disabled{% endif %}"
-                                               title="{% if not app.request.get("event") or app.request.get("status") != 1 %}{{ "You must choose an event and set the status to paid in order to export attendees list to a PDF file" }} {% else %} {{ "Export attendees list to a PDF file" }} {% endif %}"><i
-                                                        class="fas fa-file-pdf fa-lg"></i></a>
-                                        {% endif %}
-                                    {% endif %}
+                                       aria-controls="search-filters"><i class="fa fa-eye fa-lg"></i></a>
+                                    {#                                    {% if orders.getTotalItemCount %} #}
+                                    {#                                        <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge(app.request.query.all|merge({'excel': 1 }))) }}" #}
+                                    {#                                           target="_blank" class="btn btn-primary" data-toggle="tooltip" #}
+                                    {#                                           title="{{ "Export current orders to an Excel file" }}"><i #}
+                                    {#                                                    class="fas fa-file-excel fa-lg"></i></a> #}
+                                    {#                                        <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge(app.request.query.all|merge({'csv': 1 }))) }}" #}
+                                    {#                                           target="_blank" class="btn btn-primary" data-toggle="tooltip" #}
+                                    {#                                           title="{{ "Export current orders to a CSV file" }}"><i #}
+                                    {#                                                    class="fas fa-file-csv fa-lg"></i></a> #}
+                                    {#                                        {% if not is_granted("ROLE_POINTOFSALE") %} #}
+                                    {#                                            <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge(app.request.query.all|merge({'pdf': 1 }))) }}" #}
+                                    {#                                               target="_blank" #}
+                                    {#                                               class="btn btn-primary has-tooltip {% if not app.request.get("event") or app.request.get("status") != 1 %} disabled{% endif %}" #}
+                                    {#                                               title="{% if not app.request.get("event") or app.request.get("status") != 1 %}{{ "You must choose an event and set the status to paid in order to export attendees list to a PDF file" }} {% else %} {{ "Export attendees list to a PDF file" }} {% endif %}"><i #}
+                                    {#                                                        class="fas fa-file-pdf fa-lg"></i></a> #}
+                                    {#                                        {% endif %} #}
+                                    {#                                    {% endif %} #}
                                 </div>
                                 <div id="search-filters"
                                      class="col-sm-12 col-lg-12 text-center mb-3 mb-lg-0 collapse show">
@@ -133,18 +133,18 @@
                                                            data-minimum-input-length="0">
                                                 </div>
                                             {% endif %}
-                                            <div class="col-12 col-sm-4 text-left mb-4">
-                                                <label for="datefrom">{{ "From date" }}</label>
-                                                <input type="text"
-                                                       class="mr-sm-2 mb-2 mb-sm-0 form-control bg-white datetimepicker"
-                                                       id="datefrom" name="datefrom">
-                                            </div>
-                                            <div class="col-12 col-sm-4 text-left mb-4">
-                                                <label for="dateto">{{ "Until date" }}</label>
-                                                <input type="text"
-                                                       class="mr-sm-2 mb-2 mb-sm-0 form-control bg-white datetimepicker"
-                                                       id="dateto" name="dateto">
-                                            </div>
+                                            {#                                            <div class="col-12 col-sm-4 text-left mb-4"> #}
+                                            {#                                                <label for="datefrom">{{ "From date" }}</label> #}
+                                            {#                                                <input type="text" #}
+                                            {#                                                       class="mr-sm-2 mb-2 mb-sm-0 form-control bg-white datetimepicker" #}
+                                            {#                                                       id="datefrom" name="datefrom"> #}
+                                            {#                                            </div> #}
+                                            {#                                            <div class="col-12 col-sm-4 text-left mb-4"> #}
+                                            {#                                                <label for="dateto">{{ "Until date" }}</label> #}
+                                            {#                                                <input type="text" #}
+                                            {#                                                       class="mr-sm-2 mb-2 mb-sm-0 form-control bg-white datetimepicker" #}
+                                            {#                                                       id="dateto" name="dateto"> #}
+                                            {#                                            </div> #}
                                             {#                                            {% if not is_granted("ROLE_POINTOFSALE") %} #}
                                             {#                                                <div class="col-12 col-sm-4 text-left mb-4"> #}
                                             {#                                                    <div class="custom-control custom-checkbox"> #}

@@ -1,9 +1,12 @@
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
+
 // css & scss
 
 // js
 
 $(document).ready(function () {
-
     // Cart quantity check before saving the current cart element
     $('#add-to-cart-button').click(function (e) {
         var $ticketsQte = 0;
@@ -13,7 +16,7 @@ $(document).ready(function () {
             }
         });
         if ($ticketsQte == 0) {
-            showStackBarTop('error', '', Translator.trans('Please select the tickets quantity you want to buy', {}, 'javascript'));
+            showStackBarTop('error', '', Translator.trans('Please select the tickets quantity of tickets you want to order', {}, 'javascript'));
         } else {
             $('#add-to-cart-form').submit();
         }

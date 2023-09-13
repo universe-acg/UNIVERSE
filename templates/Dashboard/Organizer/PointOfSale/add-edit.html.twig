@@ -1,10 +1,10 @@
 {% extends "Global/layout.html.twig" %}
 
-{% set pagetitle = 'Add a new point of sale' | trans %}
+{% set pagetitle = 'Add a new point of sale' %}
 
-{% if pointofsale.id %}{% set pagetitle = 'Update the point of sale' | trans %}{% endif %}
+{% if pointofsale.id %}{% set pagetitle = 'Update the point of sale' %}{% endif %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 

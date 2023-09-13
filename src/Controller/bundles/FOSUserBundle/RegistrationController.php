@@ -46,7 +46,7 @@ class RegistrationController extends Controller
      *
      * @return Response
      */
-    public function registerAttendeeAction(Request $request)
+    public function registerAttendeeAction(Request $request): Response
     {
 
         if ($this->isGranted("IS_AUTHENTICATED_REMEMBERED")) {
@@ -73,8 +73,8 @@ class RegistrationController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
+            $event = new FormEvent($form, $request);
             if ($form->isValid()) {
-                $event = new FormEvent($form, $request);
                 $this->eventDispatcher->dispatch(FOSUserEvents::REGISTRATION_SUCCESS, $event);
                 $user->addRole('ROLE_ATTENDEE');
                 $this->userManager->updateUser($user);
@@ -84,10 +84,7 @@ class RegistrationController extends Controller
                 }
                 $this->eventDispatcher->dispatch(FOSUserEvents::REGISTRATION_COMPLETED, new FilterUserResponseEvent($user, $request, $response));
                 return $response;
-            } else {
-
             }
-            $event = new FormEvent($form, $request);
             $this->eventDispatcher->dispatch(FOSUserEvents::REGISTRATION_FAILURE, $event);
             if (null !== $response = $event->getResponse()) {
                 return $response;
@@ -101,10 +98,9 @@ class RegistrationController extends Controller
 
     /**
      * @param Request $request
-     *
-     * @return RedirectResponse|Response
+     * @return Response
      */
-    public function registerOrganizerAction(Request $request): RedirectResponse|Response
+    public function registerOrganizerAction(Request $request): Response
     {
 
         if ($this->isGranted("IS_AUTHENTICATED_REMEMBERED")) {
@@ -130,10 +126,12 @@ class RegistrationController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
+            $event = new FormEvent($form, $request);
             if ($form->isValid()) {
-                $event = new FormEvent($form, $request);
-//                $this->eventDispatcher->dispatch(FOSUserEvents::REGISTRATION_SUCCESS, $event);
+                //                $this->eventDispatcher->dispatch(FOSUserEvents::REGISTRATION_SUCCESS, $event);
                 $user->addRole('ROLE_ORGANIZER');
+                $creatorCategory = $form->get('organizer')->get('category')->getData();
+                $user->getOrganizer()->setCategory($creatorCategory);
                 $user->getOrganizer()->setUser($user);
                 $this->userManager->updateUser($user);
 
@@ -142,12 +140,11 @@ class RegistrationController extends Controller
                     $response = new RedirectResponse($url);
                 }
 
-                $this->eventDispatcher->dispatch(FOSUserEvents::REGISTRATION_COMPLETED, new FilterUserResponseEvent($user, $request, $response));
+                $this->eventDispatcher->dispatch(FOSUserEvents::REGISTRATION_CONFIRM, new FilterUserResponseEvent($user, $request, $response));
 
                 return $response;
             }
 
-            $event = new FormEvent($form, $request);
             $this->eventDispatcher->dispatch(FOSUserEvents::REGISTRATION_FAILURE, $event);
 
             if (null !== $response = $event->getResponse()) {
@@ -163,7 +160,7 @@ class RegistrationController extends Controller
     /**
      * Tell the user to check their email provider.
      */
-    public function checkEmailAction(Request $request): RedirectResponse|Response
+    public function checkEmailAction(Request $request): Response
     {
         $email = $request->getSession()->get('fos_user_send_confirmation_email/email');
 
@@ -191,7 +188,7 @@ class RegistrationController extends Controller
      *
      * @return Response
      */
-    public function confirmAction(Request $request, $token)
+    public function confirmAction(Request $request, $token): Response
     {
         $userManager = $this->userManager;
 
@@ -222,7 +219,7 @@ class RegistrationController extends Controller
     /**
      * Tell the user his account is now confirmed.
      */
-    public function confirmedAction(Request $request)
+    public function confirmedAction(Request $request): Response
     {
         $user = $this->getUser();
         if (!is_object($user) || !$user instanceof UserInterface) {
@@ -238,7 +235,7 @@ class RegistrationController extends Controller
     /**
      * @return string|null
      */
-    private function getTargetUrlFromSession(SessionInterface $session)
+    private function getTargetUrlFromSession(SessionInterface $session): ?string
     {
         $key = sprintf('_security.%s.target_path', $this->tokenStorage->getToken()->getProviderKey());
 

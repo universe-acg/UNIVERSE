@@ -2,7 +2,7 @@
   "type": "project",
   "license": "proprietary",
   "require": {
-    "php": "8.0",
+    "php": "7.4.33",
     "ext-ctype": "*",
     "ext-iconv": "*",
     "a2lix/translation-form-bundle": "^3.0",
@@ -17,7 +17,7 @@
     "doctrine/doctrine-cache-bundle": "^1.4",
     "doctrine/doctrine-migrations-bundle": "^2.2",
     "doctrine/orm": "^2.7",
-    "dompdf/dompdf": "^0.8.4",
+    "dompdf/dompdf": "^2.0.2",
     "excelwebzone/recaptcha-bundle": "^1.5",
     "exercise/htmlpurifier-bundle": "^3.0",
     "friendsofsymfony/comment-bundle": "2.1.*",
@@ -73,9 +73,12 @@
     "vich/uploader-bundle": "^1.8",
     "welp/mailchimp-bundle": "^1.2",
     "willdurand/js-translation-bundle": "^2.6",
-    "yellowskies/qr-code-bundle": "^1.2"
+    "yellowskies/qr-code-bundle": "^1.2",
+    "ext-mysqli": "*",
+    "ext-bcmath": "*"
   },
   "require-dev": {
+    "roave/security-advisories": "^5.0",
     "doctrine/doctrine-fixtures-bundle": "^3.2",
     "phpunit/phpunit": "^7.5",
     "symfony/browser-kit": "4.4.*",
@@ -114,7 +117,8 @@
     "symfony/polyfill-iconv": "*",
     "symfony/polyfill-php71": "*",
     "symfony/polyfill-php70": "*",
-    "symfony/polyfill-php56": "*"
+    "symfony/polyfill-php56": "*",
+    "symfony/polyfill-php80": "1.27.0"
   },
   "scripts": {
     "auto-scripts": {
@@ -130,7 +134,9 @@
     ]
   },
   "conflict": {
-    "symfony/symfony": "*"
+    "symfony/symfony": "*",
+    "roave/security-advisories": "*",
+    "dompdf/dompdf": "*"
   },
   "extra": {
     "symfony": {

@@ -28,8 +28,9 @@
                 $organizer = $this->getUser()->getOrganizer()->getSlug();
             }
             $eventDate = $services->getEventDates(array("organizer" => $organizer, 'reference' => $reference))->getQuery()->getOneOrNullResult();
-            if (!$eventDate)
+            if (!$eventDate) {
                 return $this->json(array());
+            }
             return $this->json(array("id" => $eventDate->getReference(), "text" => $eventDate->getEvent()->getName() . ' (' . date($this->getParameter("date_format_simple"), $eventDate->getStartdate()->getTimestamp()) . ')'));
         }
         
@@ -53,7 +54,6 @@
                 $result = array(
                     'id' => $eventDate->getReference(),
                     'text' => $eventDate->getEvent()->getName() . ' (' . date($this->getParameter("date_format_simple"), $eventDate->getStartdate()->getTimestamp()) . ')');
-//            array_push($results, $result);
                 array_push($results, $result);
             }
             return $this->json($results);
