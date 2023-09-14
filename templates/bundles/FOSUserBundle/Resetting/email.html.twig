@@ -1,13 +1,13 @@
 {% trans_default_domain 'FOSUserBundle' %}
 {% block subject %}
     {%- autoescape false -%}
-        {{ 'resetting.email.subject'({'%username%': user.username}) }}
+        {{ 'resetting.email.subject'|trans({'%username%': user.username}) }}
     {%- endautoescape -%}
 {% endblock %}
 
 {% block body_text %}
     {% autoescape false %}
-        {{ 'resetting.email.message'({'%username%': user.username, '%confirmationUrl%': confirmationUrl}) }}
+        {{ 'resetting.email.message'|trans({'%username%': user.username, '%confirmationUrl%': confirmationUrl}) }}
     {% endautoescape %}
 {% endblock %}
 
@@ -19,7 +19,7 @@
     <head>
         <meta name="viewport" content="width=device-width"/>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        <title>{{ "Welcome" }} {{ user.getFullName }}</title>
+        <title>{{ "Welcome"|trans }} {{ user.getFullName() }}</title>
 
         <style type="text/css">
             img {
@@ -133,14 +133,14 @@
                                         <td class="content-block"
                                             style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;"
                                             valign="top">
-                                            {{ "Welcome" . ({}, 'messages') }} {{ user.getFullName }},
+                                            {{ "Welcome"|trans }} {{ user.getFullName() }},
                                         </td>
                                     </tr>
                                     <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
                                         <td class="content-block"
                                             style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;"
                                             valign="top">
-                                            {{ 'To reset your password, click on the following button and follow the instructions'({}, 'messages') }}
+                                            {{ 'To reset your password, click on the following button and follow the instructions'|trans({}, 'messages') }}
                                         </td>
                                     </tr>
                                     <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
@@ -149,14 +149,14 @@
                                             style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;"
                                             valign="top">
                                             <a href="{{ confirmationUrl }}" class="btn-primary" itemprop="url"
-                                               style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; color: #FFF; text-decoration: none; line-height: 1.5; font-weight: bold; text-align: center; cursor: pointer; display: inline-block; border-radius: 50px; text-transform: capitalize; background-color: {{ services.getSetting("primary_color") }}; margin: 0; border-color: {{ services.getSetting("primary_color") }}; border-style: solid; padding: .625rem 1.25rem; box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);">{{ "Confirm account" . ({}, 'messages') }} </a>
+                                               style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; color: #FFF; text-decoration: none; line-height: 1.5; font-weight: bold; text-align: center; cursor: pointer; display: inline-block; border-radius: 50px; text-transform: capitalize; background-color: {{ services.getSetting("primary_color") }}; margin: 0; border-color: {{ services.getSetting("primary_color") }}; border-style: solid; padding: .625rem 1.25rem; box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);">{{ "Confirm account"|trans({}, 'messages') }} </a>
                                         </td>
                                     </tr>
                                     <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
                                         <td class="content-block"
                                             style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;"
                                             valign="top">
-                                            &mdash; {{ 'Best regards, the %website_name% team'({'%website_name%': services.getSetting("website_name")}, 'messages') }}
+                                            &mdash; {{ 'Best regards, the %website_name% team'|trans({'%website_name%': services.getSetting("website_name")}, 'messages') }}
                                         </td>
                                     </tr>
                                 </table>

@@ -66,28 +66,28 @@
                     <div class="col-12 col-lg-8 {% if app.request.locale !="ar" %}border-right{% endif %} order-1 order-lg-0">
                         <div class="card-body">
                             <h1 class="card-title b d-none d-lg-block">{{ event.name }}</h1>
-                            {% set reviewscount = services.getReviews({"count": true, "event": event.slug}).getQuery().getSingleScalarResult() %}
-                            {% if event.enablereviews %}
-                                <div class="rating-wrap d-none d-lg-block">
-                                    <ul class="rating-stars">
-                                        <li style="width:{{ event.getRatingPercentage }}%" class="stars-active">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                        </li>
-                                        <li>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                        </li>
-                                    </ul>
-                                    <div class="label-rating">{{ reviewscount }} {{ "Review(s)"|lower }}</div>
-                                </div>
-                            {% endif %}
+                            {#                            {% set reviewscount = services.getReviews({"count": true, "event": event.slug}).getQuery().getSingleScalarResult() %} #}
+                            {#                            {% if event.enablereviews %} #}
+                            {#                                <div class="rating-wrap d-none d-lg-block"> #}
+                            {#                                    <ul class="rating-stars"> #}
+                            {#                                        <li style="width:{{ event.getRatingPercentage }}%" class="stars-active"> #}
+                            {#                                            <i class="fa fa-star"></i> #}
+                            {#                                            <i class="fa fa-star"></i> #}
+                            {#                                            <i class="fa fa-star"></i> #}
+                            {#                                            <i class="fa fa-star"></i> #}
+                            {#                                            <i class="fa fa-star"></i> #}
+                            {#                                        </li> #}
+                            {#                                        <li> #}
+                            {#                                            <i class="fa fa-star"></i> #}
+                            {#                                            <i class="fa fa-star"></i> #}
+                            {#                                            <i class="fa fa-star"></i> #}
+                            {#                                            <i class="fa fa-star"></i> #}
+                            {#                                            <i class="fa fa-star"></i> #}
+                            {#                                        </li> #}
+                            {#                                    </ul> #}
+                            {#                                    <div class="label-rating">{{ reviewscount }} {{ "Review(s)"|lower }}</div> #}
+                            {#                                </div> #}
+                            {#                            {% endif %} #}
                             {% if event.description %}
                                 <dl class="mt-5 event-description">
                                     <dt class="text-muted">{{ "Description" }}</dt>
@@ -268,26 +268,26 @@
                                 <hr class="mb-5">
                                 <div class="row">
                                     <div class="col-12 col-sm-6 mb-5">
-                                        <h3 class="mb-1">{{ reviewscount }} {{ "review"|lower }}</h3>
-                                        <div class="rating-wrap">
-                                            <ul class="rating-stars">
-                                                <li style="width:{{ event.getRatingPercentage }}%" class="stars-active">
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                </li>
-                                                <li>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                </li>
-                                            </ul>
-                                            <div class="label-rating">{{ event.getRatingAvg }} {{ "out of 5 stars"|lower }}</div>
-                                        </div>
+                                        {#                                        <h3 class="mb-1">{{ reviewscount }} {{ "review"|lower }}</h3> #}
+                                        {#                                        <div class="rating-wrap"> #}
+                                        {#                                            <ul class="rating-stars"> #}
+                                        {#                                                <li style="width:{{ event.getRatingPercentage }}%" class="stars-active"> #}
+                                        {#                                                    <i class="fa fa-star"></i> #}
+                                        {#                                                    <i class="fa fa-star"></i> #}
+                                        {#                                                    <i class="fa fa-star"></i> #}
+                                        {#                                                    <i class="fa fa-star"></i> #}
+                                        {#                                                    <i class="fa fa-star"></i> #}
+                                        {#                                                </li> #}
+                                        {#                                                <li> #}
+                                        {#                                                    <i class="fa fa-star"></i> #}
+                                        {#                                                    <i class="fa fa-star"></i> #}
+                                        {#                                                    <i class="fa fa-star"></i> #}
+                                        {#                                                    <i class="fa fa-star"></i> #}
+                                        {#                                                    <i class="fa fa-star"></i> #}
+                                        {#                                                </li> #}
+                                        {#                                            </ul> #}
+                                        {#                                            <div class="label-rating">{{ event.getRatingAvg }} {{ "out of 5 stars"|lower }}</div> #}
+                                        {#                                        </div> #}
                                     </div>
                                     <div class="col-12 col-sm-6 text-sm-right">
                                         {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
@@ -376,21 +376,21 @@
                                     </div>
                                 </div>
 
-                                {% if reviewscount|length %}
-                                    <div id="reviews" class="row">
-                                        <div class="col-12">
-                                            {% for review in services.getReviews({"event": event.slug, "limit": 8}).getQuery().getResult() %}
-                                                {% include "Global/user-review.html.twig" with { review : review, showuser: 1 } %}
-                                            {% endfor %}
-                                            {% if reviewscount > 8 %}
-                                                <a href="{{ path('event_reviews') }}"
-                                                   class="btn btn-outline-primary mx-auto"><i
-                                                            class="far fa-star-half-full"></i> {{ "See all %reviewscount% reviews"|trans({'%reviewscount%': reviewscount}) }}
-                                                </a>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                {% endif %}
+                                {#                                {% if reviewscount|length %} #}
+                                {#                                    <div id="reviews" class="row"> #}
+                                {#                                        <div class="col-12"> #}
+                                {#                                            {% for review in services.getReviews({"event": event.slug, "limit": 8}).getQuery().getResult() %} #}
+                                {#                                                {% include "Global/user-review.html.twig" with { review : review, showuser: 1 } %} #}
+                                {#                                            {% endfor %} #}
+                                {#                                            {% if reviewscount > 8 %} #}
+                                {#                                                <a href="{{ path('event_reviews') }}" #}
+                                {#                                                   class="btn btn-outline-primary mx-auto"><i #}
+                                {#                                                            class="far fa-star-half-full"></i> {{ "See all %reviewscount% reviews"|trans({'%reviewscount%': reviewscount}) }} #}
+                                {#                                                </a> #}
+                                {#                                            {% endif %} #}
+                                {#                                        </div> #}
+                                {#                                    </div> #}
+                                {#                                {% endif %} #}
 
                             {% endif %}
 
@@ -399,27 +399,27 @@
                     <div class="col-12 col-lg-4 order-0 order-lg-1 {% if app.request.locale=="ar" %}border-right{% endif %}">
                         <div class="card-body">
                             <h1 class="card-title b d-lg-none text-center">{{ event.name }}</h1>
-                            {% if event.enablereviews %}
-                                <div class="rating-wrap mb-5 d-lg-none text-center">
-                                    <ul class="rating-stars">
-                                        <li style="width:{{ event.getRatingPercentage }}%" class="stars-active">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                        </li>
-                                        <li>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                        </li>
-                                    </ul>
-                                    <div class="label-rating">{{ reviewscount }} {{ "Reviews"|lower }}</div>
-                                </div>
-                            {% endif %}
+                            {#                            {% if event.enablereviews %} #}
+                            {#                                <div class="rating-wrap mb-5 d-lg-none text-center"> #}
+                            {#                                    <ul class="rating-stars"> #}
+                            {#                                        <li style="width:{{ event.getRatingPercentage }}%" class="stars-active"> #}
+                            {#                                            <i class="fa fa-star"></i> #}
+                            {#                                            <i class="fa fa-star"></i> #}
+                            {#                                            <i class="fa fa-star"></i> #}
+                            {#                                            <i class="fa fa-star"></i> #}
+                            {#                                            <i class="fa fa-star"></i> #}
+                            {#                                        </li> #}
+                            {#                                        <li> #}
+                            {#                                            <i class="fa fa-star"></i> #}
+                            {#                                            <i class="fa fa-star"></i> #}
+                            {#                                            <i class="fa fa-star"></i> #}
+                            {#                                            <i class="fa fa-star"></i> #}
+                            {#                                            <i class="fa fa-star"></i> #}
+                            {#                                        </li> #}
+                            {#                                    </ul> #}
+                            {#                                    <div class="label-rating">{{ reviewscount }} {{ "Reviews"|lower }}</div> #}
+                            {#                                </div> #}
+                            {#                            {% endif %} #}
                             {% if event.hasAnEventDateOnSale %}
 
                                 {# Event Dates calendar used on multi date events #}

@@ -50,69 +50,69 @@
                                             <div class="table-responsive">
                                                 <table class="table table-borderless table-striped table-hover table-sm mb-0">
                                                     <tbody>
-                                                        {% if eventDate.payoutRequested %}
-                                                            <tr>
-                                                                <td width="30%">{{ "Payout request" }}</td>
-                                                                <td>
-                                                                    <a href="{{ path("dashboard_organizer_payout_requests", {eventdate: eventDate.reference}) }}"><i
-                                                                                class="fas fa-file-invoice-dollar"></i> {{ "View details" }}
-                                                                    </a>
-                                                                </td>
-                                                            </tr>
-                                                        {% endif %}
+                                                    {% if eventDate.payoutRequested %}
                                                         <tr>
-                                                            <td width="30%">{{ "Status" }}</td>
+                                                            <td width="30%">{{ "Payout request" }}</td>
                                                             <td>
-                                                                <span class="badge badge-{{ eventDate.stringifyStatusClass }}">{{ eventDate.stringifyStatus }}</span>
+                                                                <a href="{{ path("dashboard_organizer_payout_requests", {eventdate: eventDate.reference}) }}"><i
+                                                                            class="fas fa-file-invoice-dollar"></i> {{ "View details" }}
+                                                                </a>
                                                             </td>
                                                         </tr>
+                                                    {% endif %}
+                                                    <tr>
+                                                        <td width="30%">{{ "Status" }}</td>
+                                                        <td>
+                                                            <span class="badge badge-{{ eventDate.stringifyStatusClass }}">{{ eventDate.stringifyStatus }}</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{ "Reference" }}</td>
+                                                        <td>{{ eventDate.reference }}</td>
+                                                    </tr>
+                                                    {% if eventDate.venue %}
                                                         <tr>
-                                                            <td>{{ "Reference" }}</td>
-                                                            <td>{{ eventDate.reference }}</td>
+                                                            <td width="50%">{{ "Venue" }}</td>
+                                                            <td>{{ eventDate.venue.name }}</td>
                                                         </tr>
-                                                        {% if eventDate.venue %}
-                                                            <tr>
-                                                                <td width="50%">{{ "Venue" }}</td>
-                                                                <td>{{ eventDate.venue.name }}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>{{ "Address" }}</td>
-                                                                <td>{{ eventDate.venue.stringifyAddress }}</td>
-                                                            </tr>
-                                                        {% else %}
-                                                            <tr>
-                                                                <td width="50%">{{ "Where" }}</td>
-                                                                <td>{{ "Online" }}</td>
-                                                            </tr>
-                                                        {% endif %}
                                                         <tr>
-                                                            <td>{{ "Tickets types" }}</td>
-                                                            <td>{{ eventDate.tickets|length }}</td>
+                                                            <td>{{ "Address" }}</td>
+                                                            <td>{{ eventDate.venue.stringifyAddress }}</td>
                                                         </tr>
-                                                        {% if eventDate.startdate|length %}
-                                                            <tr>
-                                                                <td>{{ "Start date" }}</td>
-                                                                <td>{{ eventDate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
-                                                            </tr>
-                                                        {% endif %}
-                                                        {% if eventDate.enddate|length %}
-                                                            <tr>
-                                                                <td>{{ "End date" }}</td>
-                                                                <td>{{ eventDate.enddate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
-                                                            </tr>
-                                                        {% endif %}
-                                                        {% if eventDate.scanners|length %}
-                                                            <tr>
-                                                                <td>{{ "Scanners" }}</td>
-                                                                <td>{{ eventDate.displayScannersNames }}</td>
-                                                            </tr>
-                                                        {% endif %}
-                                                        {% if eventDate.pointofsales|length %}
-                                                            <tr>
-                                                                <td>{{ "Point of sales" }}</td>
-                                                                <td>{{ eventDate.displayPosNames }}</td>
-                                                            </tr>
-                                                        {% endif %}
+                                                    {% else %}
+                                                        <tr>
+                                                            <td width="50%">{{ "Where" }}</td>
+                                                            <td>{{ "Online" }}</td>
+                                                        </tr>
+                                                    {% endif %}
+                                                    <tr>
+                                                        <td>{{ "Tickets types" }}</td>
+                                                        <td>{{ eventDate.tickets|length }}</td>
+                                                    </tr>
+                                                    {% if eventDate.startdate|length %}
+                                                        <tr>
+                                                            <td>{{ "Start date" }}</td>
+                                                            <td>{{ eventDate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
+                                                        </tr>
+                                                    {% endif %}
+                                                    {% if eventDate.enddate|length %}
+                                                        <tr>
+                                                            <td>{{ "End date" }}</td>
+                                                            <td>{{ eventDate.enddate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
+                                                        </tr>
+                                                    {% endif %}
+                                                    {% if eventDate.scanners|length %}
+                                                        <tr>
+                                                            <td>{{ "Scanners" }}</td>
+                                                            <td>{{ eventDate.displayScannersNames }}</td>
+                                                        </tr>
+                                                    {% endif %}
+                                                    {% if eventDate.pointofsales|length %}
+                                                        <tr>
+                                                            <td>{{ "Point of sales" }}</td>
+                                                            <td>{{ eventDate.displayPosNames }}</td>
+                                                        </tr>
+                                                    {% endif %}
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -307,5 +307,5 @@
 
 {% block javascripts %}
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">        {{ gc_language(app.request.locale) }}        {% if ticketsSoldByChannelPieChart is not null %}            {{ gc_draw(ticketsSoldByChannelPieChart, 'ticketsSoldByChannelPieChart') }}        {% endif %}        {% if grossSalesByChannelPieChart is not null %}            {{ gc_draw(grossSalesByChannelPieChart, 'grossSalesByChannelPieChart') }}        {% endif %}        {% if ticketsSalesByDateLineChart is not null %}            {{ gc_draw(ticketsSalesByDateLineChart, 'ticketsSalesByDateLineChart') }}        {% endif %}        {% for ticketsSoldByChannelPieChartFromArray in ticketsSoldByChannelPieChartsArray if ticketsSoldByChannelPieChartFromArray is not null %}            {{ gc_draw(ticketsSoldByChannelPieChartFromArray, 'ticketsSoldByChannelPieChart'~loop.index) }}        {% endfor %}        {% for ticketsGrossSalesByChannelPieChartFromArray in ticketsGrossSalesByChannelPieChartsArray if ticketsGrossSalesByChannelPieChartFromArray is not null %}            {{ gc_draw(ticketsGrossSalesByChannelPieChartFromArray, 'grossSalesByChannelPieChart'~loop.index) }}        {% endfor %}        {% if eventDate.getOrderElementsQuantitySum(1, "all", "ROLE_POINTOFSALE") %}            {% if ticketsSoldPerPointOfSalePieChart is not null %}                {{ gc_draw([ticketsSoldPerPointOfSalePieChart], ['ticketsSoldPerPointOfSalePieChart']) }}            {% endif %}            {% if grossSalesPerPointOfSalePieChart is not null %}                {{ gc_draw([grossSalesPerPointOfSalePieChart], ['grossSalesPerPointOfSalePieChart']) }}            {% endif %}        {% endif %}    </script>
+    {#    <script type="text/javascript">        {{ gc_language(app.request.locale) }}        {% if ticketsSoldByChannelPieChart is not null %}            {{ gc_draw(ticketsSoldByChannelPieChart, 'ticketsSoldByChannelPieChart') }}        {% endif %}        {% if grossSalesByChannelPieChart is not null %}            {{ gc_draw(grossSalesByChannelPieChart, 'grossSalesByChannelPieChart') }}        {% endif %}        {% if ticketsSalesByDateLineChart is not null %}            {{ gc_draw(ticketsSalesByDateLineChart, 'ticketsSalesByDateLineChart') }}        {% endif %}        {% for ticketsSoldByChannelPieChartFromArray in ticketsSoldByChannelPieChartsArray if ticketsSoldByChannelPieChartFromArray is not null %}            {{ gc_draw(ticketsSoldByChannelPieChartFromArray, 'ticketsSoldByChannelPieChart'~loop.index) }}        {% endfor %}        {% for ticketsGrossSalesByChannelPieChartFromArray in ticketsGrossSalesByChannelPieChartsArray if ticketsGrossSalesByChannelPieChartFromArray is not null %}            {{ gc_draw(ticketsGrossSalesByChannelPieChartFromArray, 'grossSalesByChannelPieChart'~loop.index) }}        {% endfor %}        {% if eventDate.getOrderElementsQuantitySum(1, "all", "ROLE_POINTOFSALE") %}            {% if ticketsSoldPerPointOfSalePieChart is not null %}                {{ gc_draw([ticketsSoldPerPointOfSalePieChart], ['ticketsSoldPerPointOfSalePieChart']) }}            {% endif %}            {% if grossSalesPerPointOfSalePieChart is not null %}                {{ gc_draw([grossSalesPerPointOfSalePieChart], ['grossSalesPerPointOfSalePieChart']) }}            {% endif %}        {% endif %}    </script> #}
 {% endblock %}

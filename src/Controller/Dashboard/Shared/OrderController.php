@@ -12,6 +12,10 @@ use App\Service\AppServices;
 use Datetime;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
 use Exception;
 use Knp\Component\Pager\PaginatorInterface;
 use Payum\Core\Request\GetHumanStatus;
@@ -35,7 +39,6 @@ use function is_string;
 
 class OrderController extends Controller
 {
-
     /**
      * @Route("/attendee/checkout", name="dashboard_attendee_checkout")
      * @Route("/pointofsale/checkout", name="dashboard_pointofsale_checkout")
@@ -293,8 +296,8 @@ class OrderController extends Controller
 
     /**
      * @Route("/attendee/my-tickets", name="dashboard_attendee_orders")
-     * @Route("/pointofsale/my-orders", name="dashboard_pointofsale_orders")
      * @Route("/organizer/manage-orders", name="dashboard_organizer_orders")
+     * @Route("/pointofsale/my-orders", name="dashboard_pointofsale_orders")
      * @Route("/administrator/manage-orders", name="dashboard_administrator_orders")
      */
     public function orders(Request $request, AppServices $services, PaginatorInterface $paginator, AuthorizationCheckerInterface $authChecker, TranslatorInterface $translator)
@@ -439,6 +442,38 @@ class OrderController extends Controller
     }
 
     /**
+     * @Route("/organizer/manage-attendees", name="dashboard_organizer_attendees")
+     */
+    public function attendees(Request $request, AppServices $services, PaginatorInterface $paginator, AuthorizationCheckerInterface $authChecker, TranslatorInterface $translator)
+    {
+
+//$upcomingtickets = ($request->query->get('upcomingtickets')) == "" ? 1 : intval($request->query->get('upcomingtickets'));
+        $reference = ($request->query->get('reference')) == "" ? "all" : $request->query->get('reference');
+        $event = ($request->query->get('event')) == "" ? "all" : $request->query->get('event');
+        $eventdate = ($request->query->get('eventdate')) == "" ? "all" : $request->query->get('eventdate');
+        $eventticket = ($request->query->get('eventticket')) == "" ? "all" : $request->query->get('eventticket');
+        $user = ($request->query->get('user')) == "" ? "all" : $request->query->get('user');
+        $organizer = ($request->query->get('organizer')) == "" ? "all" : $request->query->get('organizer');
+        $datefrom = ($request->query->get('datefrom')) == "" ? "all" : $request->query->get('datefrom');
+        $dateto = ($request->query->get('dateto')) == "" ? "all" : $request->query->get('dateto');
+        $status = ($request->query->get('status')) == "" ? "all" : $request->query->get('status');
+        $paymentgateway = ($request->query->get('paymentgateway')) == "" ? "all" : $request->query->get('paymentgateway');
+
+        $authChecker->isGranted("ROLE_ATTENDEE") ? $status = "all" : $upcomingtickets = "all";
+
+        $ordersQuery = $services->getOrders(array("reference" => $reference, "event" => $event, "eventdate" => $eventdate, "eventticket" => $eventticket, "user" => $user, "organizer" => $organizer, "datefrom" => $datefrom, "dateto" => $dateto, "status" => $status, "paymentgateway" => $paymentgateway))->getQuery();
+
+// Export current orders query results into Excel / Csv
+
+        $ordersPagination = $paginator->paginate($ordersQuery, $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
+
+        return $this->render('Dashboard/Shared/Order/attendees.html.twig', [
+            'orders' => $ordersPagination,
+        ]);
+    }
+
+
+    /**
      * @Route("/attendee/my-tickets/{reference}", name="dashboard_attendee_order_details")
      * @Route("/pointofsale/my-orders/{reference}", name="dashboard_pointofsale_order_details")
      * @Route("/organizer/recent-orders/{reference}", name="dashboard_organizer_order_details")
@@ -491,7 +526,7 @@ class OrderController extends Controller
 
         $services->handleCanceledPayment($order->getReference(), $request->query->get('note'));
 
-        $this->addFlash('error', $translator->trans('The order has been permanently canceled'));
+        $this->addFlash('error', $translator->trans('The ticket has been canceled'));
 
         return $services->redirectToReferer('orders');
     }
@@ -510,9 +545,9 @@ class OrderController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if ($order->getDeletedAt()) {
-            $this->addFlash('error', $translator->trans('The order has been permanently canceled'));
+            $this->addFlash('error', $translator->trans('The ticket is deleted'));
         } else {
-            $this->addFlash('notice', $translator->trans('The order has been canceled'));
+            $this->addFlash('notice', $translator->trans('The ticket has been deleted'));
         }
 
         if ($order->getPayment()) {
@@ -568,25 +603,35 @@ class OrderController extends Controller
      */
     public function printTickets($reference, Request $request, TranslatorInterface $translator, AppServices $services, UrlHelper $urlHelper, Packages $assetsManager)
     {
-
         $order = $services->getOrders(array("reference" => $reference))->getQuery()->getOneOrNullResult();
+        $eventlink = $request->query->get('link');
+
         if (!$order) {
             $this->addFlash('error', $translator->trans('The order can not be found'));
             return $this->redirectToRoute("dashboard_attendee_orders");
         }
 
-        if ($request->getLocale() == "ar") {
-            return $this->redirectToRoute("dashboard_tickets_print", ["reference" => $reference, "_locale" => "en"]);
-        }
-
         $eventDateTicketReference = $request->query->get('event', 'all');
 
         $pdfOptions = new Options();
-//$pdfOptions->set('defaultFont', 'Arial');
+        $pdfOptions->set('defaultFont', 'Arial');
         $dompdf = new Dompdf($pdfOptions);
+
+        // Generate QR code
+        $qrCodeData = $eventlink;
+        $qrCode = new QrCode($qrCodeData);
+        $qrCode->setEncoding(new Encoding('UTF-8'));
+        $qrCode->setErrorCorrectionLevel(new ErrorCorrectionLevelLow());
+
+        // Render the QR code as a PNG image
+        $renderer = new PngWriter();
+        $qrCodeImage = $renderer->write($qrCode);
+        $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($qrCodeImage->getString());
+
         $html = $this->renderView('Dashboard/Shared/Order/ticket-pdf.html.twig', [
             'order' => $order,
             'eventDateTicketReference' => $eventDateTicketReference,
+            'qrCodeImage' => $qrCodeBase64,
         ]);
 
         $dompdf->loadHtml($html);
@@ -697,5 +742,4 @@ class OrderController extends Controller
 
         return $services->redirectToReferer('orders');
     }
-
 }

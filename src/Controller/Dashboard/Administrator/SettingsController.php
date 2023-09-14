@@ -598,17 +598,17 @@ class SettingsController extends Controller
 //                        new NotNull()
 //                    ),
             ])
-            ->add('show_ticket_price_filter', ChoiceType::class, [
-                'required' => false,
-                'multiple' => false,
-                'expanded' => true,
-                'label' => 'Show ticket price filter',
-                'choices' => ['Yes' => 'yes', 'No' => 'no'],
-                'label_attr' => ['class' => 'radio-custom radio-inline'],
-//                    'constraints' => array(
-//                        new NotNull()
-//                    ),
-            ])
+//            ->add('show_ticket_price_filter', ChoiceType::class, [
+//                'required' => false,
+//                'multiple' => false,
+//                'expanded' => true,
+//                'label' => 'Show ticket price filter',
+//                'choices' => ['Yes' => 'yes', 'No' => 'no'],
+//                'label_attr' => ['class' => 'radio-custom radio-inline'],
+////                    'constraints' => array(
+////                        new NotNull()
+////                    ),
+//            ])
             ->add('show_audience_filter', ChoiceType::class, [
                 'required' => false,
                 'multiple' => false,

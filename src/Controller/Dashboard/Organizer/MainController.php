@@ -40,7 +40,7 @@ class MainController extends Controller
         $ticketsSalesByDateLineChart->getOptions()->getLegend()->setPosition('none');
 
         return $this->render('Dashboard/Organizer/index.html.twig', [
-            'ticketsSalesByDateLineChart' => $ticketsSalesByDateLineChart
+//            'ticketsSalesByDateLineChart' => $ticketsSalesByDateLineChart
         ]);
     }
 }

@@ -6,6 +6,17 @@ app_installer:
   name_prefix: 'installer_'
   trailing_slash_on_root: false
 
+blog_post_category_add:
+  path: /en/dashboard/organizer/manage-blog-post-categories/add
+  controller: 'App\Controller\Dashboard\Organizer\BlogPostCategoryController::addedit'
+  methods: [ 'GET', 'POST' ]
+
+blog_post_organizer:
+  path: /en/dashboard/organizer/manage-blog-posts-organizer/
+  controller: 'App\Controller\Dashboard\Organizer\BlogPostController::index'
+  methods: [ 'GET', 'POST' ]
+
+
 # Dashboard routes
 dashboard_attendee_following:
   path: /{_locale}/dashboard/attendee/following

@@ -136,10 +136,10 @@
 
 {% block javascripts %}
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-        {{ gc_language(app.request.locale) }}
-        {% if ticketsSalesByDateLineChart is not null %}
-        {{ gc_draw(ticketsSalesByDateLineChart, 'ticketsSalesByDateLineChart') }}
-        {% endif %}
+    {#    <script type="text/javascript"> #}
+    {#        {{ gc_language(app.request.locale) }} #}
+    {#        #}{#        {% if ticketsSalesByDateLineChart is not null %} #}
+    {#        {{ gc_draw(ticketsSalesByDateLineChart, 'ticketsSalesByDateLineChart') }} #}
+    {#        #}{#    {% endif %} #}
     </script>
 {% endblock %}

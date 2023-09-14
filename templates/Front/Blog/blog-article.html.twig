@@ -155,6 +155,11 @@
                                                 class="fas fa-sitemap"></i> {{ blogpost.category.name }}</a></small>
                                 <small class="text-muted mr-2"><i class="far fa-clock"></i> {{ blogpost.createdAt|ago }}
                                 </small>
+                                {% if blogpost.user %}
+                                    <small class="text-muted "><a
+                                                href={{ "/en/organizer/" ~ blogpost.user.slug }} class="text-dark"><i
+                                                    class="fas fa-user"></i> {{ blogpost.user.username }}</a></small>
+                                {% endif %}
                                 {% if blogpost.readtime %}
                                     <small class="text-muted"><i
                                                 class="fas fa-book-reader"></i> {{ blogpost.readtime }} {{ "min read" }}

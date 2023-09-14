@@ -184,157 +184,157 @@
                                             <div class="table-responsive">
                                                 <table class="table table-hover shopping-cart-wrap">
                                                     <thead class="text-muted">
-                                                        <tr>
-                                                            <th scope="col">{{ "Event / Ticket" }}</th>
-                                                            <th scope="col" width="100">{{ "Price" }}</th>
-                                                            <th scope="col" width="100">{{ "Quantity" }}</th>
-                                                            <th scope="col" class="text-right"
-                                                                width="100">{{ "Subtotal" }}</th>
-                                                        </tr>
+                                                    <tr>
+                                                        <th scope="col">{{ "Event / Ticket" }}</th>
+                                                        <th scope="col" width="100">{{ "Price" }}</th>
+                                                        <th scope="col" width="100">{{ "Quantity" }}</th>
+                                                        <th scope="col" class="text-right"
+                                                            width="100">{{ "Subtotal" }}</th>
+                                                    </tr>
                                                     </thead>
                                                     <tbody>
-                                                        {% for orderelement in order.orderelements %}
+                                                    {% for orderelement in order.orderelements %}
 
-                                                            {% if is_granted('ROLE_ATTENDEE') or is_granted('ROLE_ADMINISTRATOR') or (is_granted('ROLE_ORGANIZER') and orderelement.belongsToOrganizer(app.user.organizer.slug)) or (is_granted("ROLE_POINTOFSALE") and order.user == app.user) %}
+                                                        {% if is_granted('ROLE_ATTENDEE') or is_granted('ROLE_ADMINISTRATOR') or (is_granted('ROLE_ORGANIZER') and orderelement.belongsToOrganizer(app.user.organizer.slug)) or (is_granted("ROLE_POINTOFSALE") and order.user == app.user) %}
 
-                                                                <tr>
-                                                                    <td>
-                                                                        {% include "Global/event-preview-horizontal.html.twig" with { eventticket: orderelement.eventticket } %}
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="price-wrap">
-                                                                            {{ orderelement.eventticket.free ? "Free" : ((services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '') ~ orderelement.displayUnitPrice ~ (services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '')) }}
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        {{ orderelement.quantity }}
-                                                                    </td>
-                                                                    <td class="text-right">
-                                                                        <div class="price-wrap">
-                                                                            <var class="price">{{ services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '' }}{{ orderelement.getPrice }}{{ services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '' }}</var>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-
-                                                            {% endif %}
-
-                                                            {% if is_granted('ROLE_ATTENDEE') %}
-                                                                <tr>
-                                                                    <td colspan="4">
-                                                                        <a href="{{ path('event', { slug: orderelement.eventticket.eventdate.event.slug }) }}"
-                                                                           class="btn btn-default btn-sm"><i
-                                                                                    class="fas fa-ticket-alt"></i> {{ "Get more tickets" }}
-                                                                        </a>
-                                                                        <a href="{{ path('dashboard_attendee_reviews_add', { slug: orderelement.eventticket.eventdate.event.slug }) }}"
-                                                                           class="btn btn-default btn-sm ml-3"><i
-                                                                                    class="far fa-star"></i> {{ "Leave a review" }}
-                                                                        </a>
-                                                                        <a href="{{ path('organizer', { slug: orderelement.eventticket.eventdate.event.organizer.slug }) }}"
-                                                                           class="btn btn-default btn-sm ml-3"><i
-                                                                                    class="far fa-id-card"></i> {{ "Organizer" }}
-                                                                        </a>
-                                                                    </td>
-                                                                </tr>
-                                                            {% endif %}
-                                                        {% endfor %}
-
-                                                    </tbody>
-                                                    <tfoot>
-                                                        {% if is_granted("ROLE_ADMNISTRATOR") or is_granted("ROLE_ATTENDEE") %}
                                                             <tr>
-                                                                <td colspan="5" class="text-right">
+                                                                <td>
+                                                                    {% include "Global/event-preview-horizontal.html.twig" with { eventticket: orderelement.eventticket } %}
+                                                                </td>
+                                                                <td>
                                                                     <div class="price-wrap">
-                                                                        <var class="price">{{ "Tickets" }}
-                                                                            : {{ services.getSetting('currency_position') == 'left' ? order.currencySymbol() : '' }}{{ order.getOrderElementsPriceSum() }}{{ services.getSetting('currency_position') == 'right' ? order.currencySymbol() : '' }}
-                                                                            ({{ order.getOrderElementsQuantitySum }} {{ "ticket(s)" }}
-                                                                            )</var>
+                                                                        {{ orderelement.eventticket.free ? "Free" : ((services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '') ~ orderelement.displayUnitPrice ~ (services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '')) }}
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    {{ orderelement.quantity }}
+                                                                </td>
+                                                                <td class="text-right">
+                                                                    <div class="price-wrap">
+                                                                        <var class="price">{{ services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '' }}{{ orderelement.getPrice }}{{ services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '' }}</var>
                                                                     </div>
                                                                 </td>
                                                             </tr>
+
+                                                        {% endif %}
+
+                                                        {% if is_granted('ROLE_ATTENDEE') %}
                                                             <tr>
-                                                                <td colspan="5" class="text-right">
-                                                                    <div class="price-wrap">
-                                                                        <var class="price">{{ "Fees" }}
-                                                                            : {{ services.getSetting('currency_position') == 'left' ? order.currencySymbol() : '' }}{{ order.getTotalFees() }}{{ services.getSetting('currency_position') == 'right' ? order.currencySymbol() : '' }}</var>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td colspan="5" class="text-right">
-                                                                    <div class="price-wrap">
-                                                                        <var class="price">{{ "Total" }}:
-                                                                            <strong>{{ services.getSetting('currency_position') == 'left' ? order.currencySymbol() : '' }}{{ order.getOrderElementsPriceSum(true) }}{{ services.getSetting('currency_position') == 'right' ? order.currencySymbol() : '' }}</strong></var>
-                                                                    </div>
+                                                                <td colspan="4">
+                                                                    <a href="{{ path('event', { slug: orderelement.eventticket.eventdate.event.slug }) }}"
+                                                                       class="btn btn-default btn-sm"><i
+                                                                                class="fas fa-ticket-alt"></i> {{ "Get more tickets" }}
+                                                                    </a>
+                                                                    <a href="{{ path('dashboard_attendee_reviews_add', { slug: orderelement.eventticket.eventdate.event.slug }) }}"
+                                                                       class="btn btn-default btn-sm ml-3"><i
+                                                                                class="far fa-star"></i> {{ "Leave a review" }}
+                                                                    </a>
+                                                                    <a href="{{ path('organizer', { slug: orderelement.eventticket.eventdate.event.organizer.slug }) }}"
+                                                                       class="btn btn-default btn-sm ml-3"><i
+                                                                                class="far fa-id-card"></i> {{ "Organizer" }}
+                                                                    </a>
                                                                 </td>
                                                             </tr>
                                                         {% endif %}
+                                                    {% endfor %}
+
+                                                    </tbody>
+                                                    <tfoot>
+                                                    {% if is_granted("ROLE_ADMNISTRATOR") or is_granted("ROLE_ATTENDEE") %}
                                                         <tr>
-                                                            <td class="pt-5 text-right" colspan="4">
+                                                            <td colspan="5" class="text-right">
+                                                                <div class="price-wrap">
+                                                                    <var class="price">{{ "Tickets" }}
+                                                                        : {{ services.getSetting('currency_position') == 'left' ? order.currencySymbol() : '' }}{{ order.getOrderElementsPriceSum() }}{{ services.getSetting('currency_position') == 'right' ? order.currencySymbol() : '' }}
+                                                                        ({{ order.getOrderElementsQuantitySum }} {{ "ticket(s)" }}
+                                                                        )</var>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="5" class="text-right">
+                                                                <div class="price-wrap">
+                                                                    <var class="price">{{ "Fees" }}
+                                                                        : {{ services.getSetting('currency_position') == 'left' ? order.currencySymbol() : '' }}{{ order.getTotalFees() }}{{ services.getSetting('currency_position') == 'right' ? order.currencySymbol() : '' }}</var>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="5" class="text-right">
+                                                                <div class="price-wrap">
+                                                                    <var class="price">{{ "Total" }}:
+                                                                        <strong>{{ services.getSetting('currency_position') == 'left' ? order.currencySymbol() : '' }}{{ order.getOrderElementsPriceSum(true) }}{{ services.getSetting('currency_position') == 'right' ? order.currencySymbol() : '' }}</strong></var>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    {% endif %}
+                                                    <tr>
+                                                        <td class="pt-5 text-right" colspan="4">
 
-                                                                {% if is_granted('ROLE_ADMINISTRATOR') %}
+                                                            {% if is_granted('ROLE_ADMINISTRATOR') %}
 
-                                                                    {% if order.status == 0 or order.status == 1 %}
-                                                                        <button id="order-cancel-button"
-                                                                                data-target="{{ path('dashboard_administrator_order_cancel', { reference : order.reference }) }}"
-                                                                                class="btn btn-outline-primary mr-3 requires-confirmation"
-                                                                                data-confirmation-text="{{ "You are about to cancel this order (this action cannot be undone)" }}">
-                                                                            <i class="fas fa-window-close fa-fw"></i> {{ "Cancel" }}
-                                                                        </button>
-                                                                    {% endif %}
+                                                                {% if order.status == 0 or order.status == 1 %}
+                                                                    <button id="order-cancel-button"
+                                                                            data-target="{{ path('dashboard_administrator_order_cancel', { reference : order.reference }) }}"
+                                                                            class="btn btn-outline-primary mr-3 requires-confirmation"
+                                                                            data-confirmation-text="{{ "You are about to cancel this order (this action cannot be undone)" }}">
+                                                                        <i class="fas fa-window-close fa-fw"></i> {{ "Cancel" }}
+                                                                    </button>
+                                                                {% endif %}
 
-                                                                    {% if order.deletedAt %}
-                                                                        <button data-target="{{ path('dashboard_administrator_order_delete', { reference : order.reference, forceRedirect: 1 }) }}"
-                                                                                class="btn btn-outline-primary mr-3 requires-confirmation"
-                                                                                data-confirmation-text="{{ "You are about to delete the order and all its related information (payment details, tickets...)" ~ " " ~ "PERMANENTLY" }}">
-                                                                            <i class="fas fa-trash fa-fw"></i> {{ "Delete" }}
-                                                                        </button>
-                                                                        <a href="{{ path('dashboard_administrator_order_restore', { reference : order.reference }) }}"
-                                                                           class="btn btn-outline-primary mr-3"><i
-                                                                                    class="fas fa-trash-restore fa-fw"></i> {{ "Restore" }}
-                                                                        </a>
-                                                                    {% else %}
-                                                                        <button data-target="{{ path('dashboard_administrator_order_delete', { reference : order.reference }) }}"
-                                                                                class="btn btn-outline-primary mr-3 requires-confirmation"
-                                                                                data-confirmation-text="{{ "You are about to delete the order and all its related information (payment details, tickets...)" }}">
-                                                                            <i class="fas fa-times fa-fw"></i> {{ "Delete" }}
-                                                                        </button>
-                                                                    {% endif %}
-
-                                                                    {% if order.status == 1 %}
-                                                                        <button data-target="{{ path('dashboard_administrator_order_resend_confirmation_email', { reference : order.reference }) }}"
-                                                                                data-initial-email-address="{{ order.payment.clientEmail }}"
-                                                                                class="btn btn-outline-primary mr-3 resend-confirmation-email-button"
-                                                                                data-confirmation-text="{{ "If you need to send the confirmation email to a different email address, you can change it before submitting" }}">
-                                                                            <i class="far fa-envelope fa-fw"></i> {{ "Resend confirmation email" }}
-                                                                        </button>
-                                                                    {% endif %}
-
-                                                                    {% if order.status == -2 or order.status == 1 %}
-                                                                        <button class="btn btn-outline-primary mr-3cursor-pointer"
-                                                                                data-toggle="modal"
-                                                                                data-target="#order-{{ order.reference }}-payment-details">
-                                                                            <i class="dropdown-icon fas fa-file-alt fa-fw"></i> {{ "Payment details" }}
-                                                                        </button>
-                                                                    {% endif %}
-
-                                                                    {% if order.status == 0 and not order.deletedAt and order.paymentGateway and order.paymentGateway.factoryName == "offline" %}
-                                                                        <span data-target="{{ path('dashboard_administrator_order_validate', { reference : order.reference }) }}"
-                                                                              class="btn btn-outline-primary requires-confirmation"
-                                                                              data-confirmation-text="{{ "You are about to validate this order, generate the tickets and send a confirmation email to the attendee" }}"><i
-                                                                                    class="dropdown-icon fas fa-check fa-fw"></i> {{ "Validate" }}</span>
-                                                                    {% endif %}
-
+                                                                {% if order.deletedAt %}
+                                                                    <button data-target="{{ path('dashboard_administrator_order_delete', { reference : order.reference, forceRedirect: 1 }) }}"
+                                                                            class="btn btn-outline-primary mr-3 requires-confirmation"
+                                                                            data-confirmation-text="{{ "You are about to delete the order and all its related information (payment details, tickets...)" ~ " " ~ "PERMANENTLY" }}">
+                                                                        <i class="fas fa-trash fa-fw"></i> {{ "Delete" }}
+                                                                    </button>
+                                                                    <a href="{{ path('dashboard_administrator_order_restore', { reference : order.reference }) }}"
+                                                                       class="btn btn-outline-primary mr-3"><i
+                                                                                class="fas fa-trash-restore fa-fw"></i> {{ "Restore" }}
+                                                                    </a>
+                                                                {% else %}
+                                                                    <button data-target="{{ path('dashboard_administrator_order_delete', { reference : order.reference }) }}"
+                                                                            class="btn btn-outline-primary mr-3 requires-confirmation"
+                                                                            data-confirmation-text="{{ "You are about to delete the order and all its related information (payment details, tickets...)" }}">
+                                                                        <i class="fas fa-times fa-fw"></i> {{ "Delete" }}
+                                                                    </button>
                                                                 {% endif %}
 
                                                                 {% if order.status == 1 %}
-                                                                    <a href="{{ path('dashboard_tickets_print', { reference: order.reference }) }}"
-                                                                       class="btn btn-primary" target="_blank"><i
-                                                                                class="fas fa-ticket-alt"></i> {{ "Print tickets" }}
-                                                                    </a>
+                                                                    <button data-target="{{ path('dashboard_administrator_order_resend_confirmation_email', { reference : order.reference }) }}"
+                                                                            data-initial-email-address="{{ order.payment.clientEmail }}"
+                                                                            class="btn btn-outline-primary mr-3 resend-confirmation-email-button"
+                                                                            data-confirmation-text="{{ "If you need to send the confirmation email to a different email address, you can change it before submitting" }}">
+                                                                        <i class="far fa-envelope fa-fw"></i> {{ "Resend confirmation email" }}
+                                                                    </button>
                                                                 {% endif %}
 
-                                                            </td>
-                                                        </tr>
+                                                                {% if order.status == -2 or order.status == 1 %}
+                                                                    <button class="btn btn-outline-primary mr-3cursor-pointer"
+                                                                            data-toggle="modal"
+                                                                            data-target="#order-{{ order.reference }}-payment-details">
+                                                                        <i class="dropdown-icon fas fa-file-alt fa-fw"></i> {{ "Payment details" }}
+                                                                    </button>
+                                                                {% endif %}
+
+                                                                {% if order.status == 0 and not order.deletedAt and order.paymentGateway and order.paymentGateway.factoryName == "offline" %}
+                                                                    <span data-target="{{ path('dashboard_administrator_order_validate', { reference : order.reference }) }}"
+                                                                          class="btn btn-outline-primary requires-confirmation"
+                                                                          data-confirmation-text="{{ "You are about to validate this order, generate the tickets and send a confirmation email to the attendee" }}"><i
+                                                                                class="dropdown-icon fas fa-check fa-fw"></i> {{ "Validate" }}</span>
+                                                                {% endif %}
+
+                                                            {% endif %}
+
+                                                            {% if order.status == 1 %}
+                                                                <a href="{{ path('dashboard_tickets_print', { reference: order.reference, link: "https://universeacg.xyz/en/event/" ~ orderelement.eventticket.eventdate.event.slug }) }}"
+                                                                   class="btn btn-primary" target="_blank"><i
+                                                                            class="fas fa-ticket-alt"></i> {{ "Print" }}
+                                                                </a>
+                                                            {% endif %}
+
+                                                        </td>
+                                                    </tr>
                                                     </tfoot>
                                                 </table>
                                                 {% if is_granted("ROLE_ADMINISTRATOR") and (order.status == -2 or order.status == 1) and order.payment %}

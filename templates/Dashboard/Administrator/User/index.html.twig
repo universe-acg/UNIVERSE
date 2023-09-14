@@ -22,18 +22,18 @@
                             <div class="col-sm-12 col-lg-4  mb-3 mb-lg-0">
                                 <span class="center-lg-y text-muted">{{ "%resultsCount% result(s) found" |trans ({'%resultsCount%': users.getTotalItemCount}) }}</span>
                             </div>
-                            <div class="col-sm-12 col-lg-6 ">
-                                <label for="sortable-select" class="display-inline">{{ "Sort by" }}
-                                    <select id="sortable-select"
-                                            class="form-control display-inline-block bg-white select2 ml-3"
-                                            data-placeholder="{{ "Select an option" }}" style="width: 100%;">
-                                        {{ knp_pagination_sortable(users, "Registration date" ~ ' (' ~ "desc" ~ ')', "u.createdAt", {"direction": "desc", "criteria": "u.createdAt"}) }}
-                                        {{ knp_pagination_sortable(users, "Registration date" ~ ' (' ~ "asc" ~ ')', "u.createdAt", {"direction": "asc", "criteria": "u.createdAt"}) }}
-                                        {{ knp_pagination_sortable(users, "Last login" ~ ' (' ~ "desc" ~ ')', "u.lastLogin", {"direction": "desc", "criteria": "u.lastLogin"}) }}
-                                        {{ knp_pagination_sortable(users, "Last login" ~ ' (' ~ "asc" ~ ')', "u.lastLogin", {"direction": "asc", "criteria": "u.lastLogin"}) }}
-                                    </select>
-                                </label>
-                            </div>
+                            {#                            <div class="col-sm-12 col-lg-6 "> #}
+                            {#                                <label for="sortable-select" class="display-inline">{{ "Sort by" }} #}
+                            {#                                    <select id="sortable-select" #}
+                            {#                                            class="form-control display-inline-block bg-white select2 ml-3" #}
+                            {#                                            data-placeholder="{{ "Select an option" }}" style="width: 100%;"> #}
+                            {#                                        {{ knp_pagination_sortable(users, "Registration date" ~ ' (' ~ "desc" ~ ')', "u.createdAt", {"direction": "desc", "criteria": "u.createdAt"}) }} #}
+                            {#                                        {{ knp_pagination_sortable(users, "Registration date" ~ ' (' ~ "asc" ~ ')', "u.createdAt", {"direction": "asc", "criteria": "u.createdAt"}) }} #}
+                            {#                                        {{ knp_pagination_sortable(users, "Last login" ~ ' (' ~ "desc" ~ ')', "u.lastLogin", {"direction": "desc", "criteria": "u.lastLogin"}) }} #}
+                            {#                                        {{ knp_pagination_sortable(users, "Last login" ~ ' (' ~ "asc" ~ ')', "u.lastLogin", {"direction": "asc", "criteria": "u.lastLogin"}) }} #}
+                            {#                                    </select> #}
+                            {#                                </label> #}
+                            {#                            </div> #}
                             <div class="col-sm-12 col-lg-2 ">
                                 <a href="#search-filters" class="btn btn-primary has-tooltip" data-toggle="collapse"
                                    title="{{ "Toggle display the search filters" }}" aria-expanded="false"

@@ -471,7 +471,6 @@ $(document).ready(function () {
 
         var $confirmDialog = $.confirm({
             title: Translator.trans('Confirmation required', {}, 'javascript'),
-            content: $thisElement.data('confirmation-text'),
             buttons: {
                 confirm: {
                     text: Translator.trans('Confirm', {}, 'javascript'),
@@ -847,9 +846,9 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.hasOwnProperty('success')) {
                     if ($thisButton.hasClass('event-favorites-add')) {
-                        $thisButton.html('<i class="fas fa-heart"></i>Remove from favorites');
+                        $thisButton.html('<i class="fas fa-heart"></i>');
                     } else {
-                        $thisButton.html('<i class="far fa-heart"></i>Add to favorites');
+                        $thisButton.html('<i class="far fa-heart"></i>');
                     }
                     $thisButton.attr("title", response.success).tooltip("_fixTitle");
                     showStackBarTop('success', '', response.success);

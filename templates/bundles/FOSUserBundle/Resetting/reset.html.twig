@@ -2,9 +2,10 @@
 
 {% trans_default_domain 'FOSUserBundle' %}
 
-{% set pagetitle = 'Set a new password'({}, 'messages') %}
+{% set pagetitle = 'Set a new password'|trans({}, 'messages') %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 
@@ -20,7 +21,9 @@
                                 {{ form_widget(form) }}
 
                                 <div class="form-group">
-                                    <button type="submit" class="btn btn-primary btn-block">{{ 'resetting.reset.submit' }}</button>
+                                    <button type="submit"
+                                            class="btn btn-primary btn-block"> Submit
+                                    </button>
                                 </div>
 
                                 {{ form_end(form) }}

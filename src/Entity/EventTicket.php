@@ -333,7 +333,7 @@ class EventTicket
         }
 
         if ($this->eventdate->getStartdate() < new Datetime) {
-            return "Event already started";
+            return "Event already started/ended";
         }
 
         if (!$this->active) {

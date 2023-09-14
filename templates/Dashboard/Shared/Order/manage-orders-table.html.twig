@@ -1,11 +1,12 @@
+{% set eventlink = "" %}
 <div class="table-responsive">
     <table class="table table-hover table-vcenter">
         <thead>
         <tr>
             {#            <th class="text-center">{{ "Reference" }}</th> #}
-            <th>{{ 'Organizer / Event / Date / Ticket' }}</th>
+            <th>{{ 'Event' }}</th>
             {% if not is_granted("ROLE_POINTOFSALE") and not is_granted("ROLE_ATTENDEE") %}
-                <th>{{ 'Attendee / POS' }}</th>
+                <th>{{ 'Attendee ' }}</th>
             {% endif %}
             <th>{{ 'Date booked' }}</th>
             <th>{{ 'Status' }}</th>
@@ -47,6 +48,7 @@
                                         {#                                            <a href="{{ path('organizer', { slug: orderelement.eventticket.eventdate.event.organizer.slug }) }}">{{ orderelement.eventticket.eventdate.event.organizer.name }}</a> #}
                                         {#                                            <i class="fas fa-chevron-{{ app.request.locale == "ar" ? "left" : "right" }} fa-sm"></i> #}
                                         {#                                        {% endif %} #}
+                                        {% set eventlink  = "https://universeacg.xyz/en/event/" ~ orderelement.eventticket.eventdate.event.slug %}
                                         <a href="{{ path('event', { slug: orderelement.eventticket.eventdate.event.slug }) }}">{{ orderelement.eventticket.eventdate.event.name }}</a>
                                         {#                                        <i class="fas fa-chevron-{{ app.request.locale == "ar" ? "left" : "right" }} fa-sm"></i> #}
                                         {#                                        {{ orderelement.eventticket.eventdate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }} #}
@@ -107,9 +109,9 @@
                             class="fas fa-ellipsis-v"></i></a>
                 <div class="dropdown-menu dropdown-menu-right">
                 {% if order.status == 1 %}
-                    <a href="{{ path('dashboard_tickets_print', { reference: order.reference }) }}"
+                    <a href="{{ path('dashboard_tickets_print', { reference: order.reference, link: eventlink }) }}"
                        class="dropdown-item" target="_blank"><i
-                                class="dropdown-icon fas fa-ticket-alt fa-fw text-muted"></i> {{ "Print tickets" }}
+                                class="dropdown-icon fas fa-ticket-alt fa-fw text-muted"></i> {{ "Print" }}
                     </a>
                 {% endif %}
                 {% if is_granted('ROLE_ADMINISTRATOR') %}
@@ -136,7 +138,7 @@
                                     class="dropdown-icon fas fa-check fa-fw text-muted"></i> {{ "Validate" }}</span>
                     {% endif %}
                     {% if order.deletedAt %}
-                        <a href="{{ path('dashboard_administrator_order_restore', { reference : order.reference }) }}"
+                        <a href="{{ path('dashboard_administrator_order_restore', { reference : order.reference  }) }}"
                            class="dropdown-item"><i
                                     class="dropdown-icon fas fa-trash-restore fa-fw text-muted"></i> {{ "Restore" }}
                         </a>
@@ -171,24 +173,19 @@
                     {#                    </a> #}
                 {% elseif is_granted('ROLE_ATTENDEE') %}
                     {% if not order.deletedAt %}
-                        {#                        {% if order.status == 0 %} #}
-                        {#                            <a href="{{ path('dashboard_attendee_checkout', { orderReference : order.reference }) }}" #}
-                        {#                               class="dropdown-item"><i #}
-                        {#                                        class="dropdown-icon fas fa-money-check fa-fw text-muted"></i> {{ "Checkout" }} #}
-                        {#                            </a> #}
-                        {#                        {% endif %} #}
-                        {#                        <span class="dropdown-item cursor-pointer" data-toggle="modal" #}
-                        {#                              data-target="#order-{{ order.reference }}-contactOrganizer"><i #}
-                        {#                                    class="dropdown-icon fas fa-envelope fa-fw text-muted"></i> {{ "Contact the organizer" }}</span> #}
-                        <span data-target="{{ path('dashboard_attendee_order_delete', { reference : order.reference }) }}"
-                              class="dropdown-item cursor-pointer order-cancel-button"
-                              data-confirmation-text="{{ "You are about to cancel your ticket" }}"><i
-                                    class="dropdown-icon fas fa-window-close fa-fw text-muted"></i> {{ "Cancel" }}</span>
+                        {% if order.status == 1 %}
+                            <span data-target="{{ path('dashboard_attendee_order_cancel', { reference : order.reference }) }}"
+                                  class="dropdown-item cursor-pointer order-cancel-button"
+                                  data-confirmation-text="{{ "You are about to cancel your ticket" }}"><i
+                                        class="dropdown-icon fas fa-window-close fa-fw text-muted"></i> {{ "Cancel" }}</span>
+                        {% endif %}
+                        {% if order.status == -1 %}
+                            <span data-target="{{ path('dashboard_attendee_order_delete', { reference : order.reference }) }}"
+                                  class="dropdown-item cursor-pointer order-cancel-button"
+                                  data-confirmation-text="{{ "You are about to cancel your ticket" }}"><i
+                                        class="dropdown-icon fas fa-window-close fa-fw text-muted"></i> {{ "Delete" }}</span>
+                        {% endif %}
                     {% endif %}
-                    {#                    <a href="{{ path('dashboard_attendee_order_details', { reference : order.reference }) }}" #}
-                    {#                       class="dropdown-item"><i #}
-                    {#                                class="dropdown-icon fas fa-file-invoice fa-fw text-muted"></i> {{ "Details" }} #}
-                    {#                    </a> #}
                 {% endif %}
             {% endif %}
             </div>

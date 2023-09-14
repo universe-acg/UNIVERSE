@@ -1,0 +1,155 @@
+{% extends "Global/layout.html.twig" %}
+
+{% if is_granted("ROLE_ADMINISTRATOR") %}
+    {% set pagetitle = 'Manage event participation' %}
+{% elseif is_granted("ROLE_ORGANIZER") %}
+    {% set pagetitle = 'Attendees' %}
+{% elseif is_granted("ROLE_ATTENDEE") %}
+    {% set pagetitle = 'My tickets' %}
+{% elseif is_granted("ROLE_POINTOFSALE") %}
+    {% set pagetitle = 'My orders' %}
+{% endif %}
+{% block title %}{{ pagetitle }}{% endblock %}
+
+{% block content %}
+
+    {% set navigation = [{"current":(pagetitle)}] %}
+    {% include "Global/navigation.html.twig" with navigation %}
+
+    <section class="section-content padding-y bg-white">
+        <div class="{{ services.getSetting("app_layout") }}">
+            <div class="row">
+                <aside class="col-lg-3 pt-3 pt-lg-0">
+                    {% include "Dashboard/sidebar.html.twig" %}
+                </aside>
+                <div class="col-lg-9 mt-4 mt-lg-0">
+
+                    {% if not is_granted('ROLE_ATTENDEE') %}
+
+                        <div class="box shadow-none bg-gray mb-4">
+                            <div class="row">
+                                <h4></h4>
+                            </div>
+                        </div>
+
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-12">
+
+                            {% if orders.getTotalItemCount %}
+                                <div class="card">
+                                    {% include "Dashboard/Shared/Order/manage-attendees-table.html.twig" with {orders: orders} %}
+                                </div>
+                            {% else %}
+                                {#                                {% include "Global/message.html.twig" with { type: "info", message: ('No orders found'), icon: "fas fa-exclamation-circle" } %} #}
+                            {% endif %}
+
+                            {{ knp_pagination_render(orders, null, {}, {'align': 'center'}) }}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script>
+
+        $(document).ready(function () {
+
+            if (getURLParameter("reference")) {
+                $("#reference").val("{{ app.request.get('reference') }}");
+            }
+
+            if (getURLParameter("event")) {
+                var url = "{{ path('get_event', { slug : "eventslug", published: "all", elapsed: "all" }) }}";
+                url = url.replace("eventslug", getURLParameter("event"));
+                $.ajax({
+                    type: 'GET',
+                    url: url
+                }).then(function (data) {
+                    $('#fake_event').select2('data', {id: data.slug, text: data.text});
+                    $('#event').val(data.slug).change();
+                });
+
+            }
+
+            if (getURLParameter("user")) {
+                var url = "{{ path('get_user', { slug : "slug" }) }}";
+                url = url.replace("slug", getURLParameter("user"));
+                $.ajax({
+                    type: 'GET',
+                    url: url
+                }).then(function (data) {
+                    $('#fake_user').select2('data', {id: data.slug, text: data.text});
+                    $('#user').val(data.slug).change();
+                });
+
+            }
+
+            if (getURLParameter("organizer")) {
+                var url = "{{ path('get_organizer', { slug : "slug" }) }}";
+                url = url.replace("slug", getURLParameter("organizer"));
+                $.ajax({
+                    type: 'GET',
+                    url: url
+                }).then(function (data) {
+                    $('#fake_organizer').select2('data', {id: data.slug, text: data.text});
+                    $('#organizer').val(data.slug).change();
+                });
+
+            }
+
+            if (getURLParameter("eventdate")) {
+                var url = "{{ path('get_eventdate', { reference : "reference" }) }}";
+                url = url.replace("reference", getURLParameter("eventdate"));
+                $.ajax({
+                    type: 'GET',
+                    url: url
+                }).then(function (data) {
+                    $('#fake_eventdate').select2('data', {id: data.id, text: data.text});
+                    $('#eventdate').val(data.id).change();
+                });
+
+            }
+
+            if (getURLParameter("eventticket")) {
+                var url = "{{ path('get_eventticket', { reference : "reference" }) }}";
+                url = url.replace("reference", getURLParameter("eventticket"));
+                $.ajax({
+                    type: 'GET',
+                    url: url
+                }).then(function (data) {
+                    $('#fake_eventticket').select2('data', {id: data.id, text: data.text});
+                    $('#eventticket').val(data.id).change();
+                });
+
+            }
+
+            if (getURLParameter("datefrom")) {
+                $("#datefrom").val("{{ app.request.get('datefrom') }}");
+            }
+
+            if (getURLParameter("dateto")) {
+                $("#dateto").val("{{ app.request.get('dateto') }}");
+            }
+
+            if (getURLParameter('status') != "null") {
+                $('input[type="radio"][name="status"][value="' + getURLParameter('status') + '"]').attr("checked", "checked");
+            }
+
+            if (getURLParameter('paymentgateway') != "null") {
+                $('input[type="radio"][name="paymentgateway"][value="' + getURLParameter('paymentgateway') + '"]').attr("checked", "checked");
+            }
+
+        });
+
+    </script>
+
+{% endblock %}

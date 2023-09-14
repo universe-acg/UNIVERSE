@@ -939,9 +939,6 @@
     "willdurand/negotiation": {
         "version": "v2.3.1"
     },
-    "yellowskies/qr-code-bundle": {
-        "version": "1.2.7"
-    },
     "zendframework/zend-code": {
         "version": "3.3.1"
     },

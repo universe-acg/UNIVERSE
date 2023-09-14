@@ -1,28 +1,33 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Controller\Dashboard\Administrator;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Knp\Component\Pager\PaginatorInterface;
-use App\Service\AppServices;
 use App\Entity\BlogPost;
 use App\Form\BlogPostType;
+use App\Service\AppServices;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class BlogPostController extends Controller {
+class BlogPostController extends Controller
+{
 
     /**
      * @Route("/manage-blog-posts", name="blog_post", methods="GET")
      */
-    public function index(Request $request, PaginatorInterface $paginator, AppServices $services) {
+    public function index(Request $request, PaginatorInterface $paginator, AppServices $services)
+    {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
 
         $blogposts = $paginator->paginate($services->getBlogPosts(array('keyword' => $keyword, 'hidden' => 'all')), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
 
         return $this->render('Dashboard/Administrator/BlogPost/index.html.twig', [
-                    'blogposts' => $blogposts,
+            'blogposts' => $blogposts,
         ]);
     }
 
@@ -30,11 +35,14 @@ class BlogPostController extends Controller {
      * @Route("/manage-blog-posts/add", name="blog_post_add", methods="GET|POST")
      * @Route("/manage-blog-posts/{slug}/edit", name="blog_post_edit", methods="GET|POST")
      */
-    public function addedit(Request $request, AppServices $services, TranslatorInterface $translator, $slug = null) {
+    public function addedit(Request $request, AppServices $services, TranslatorInterface $translator, $slug = null)
+    {
         $em = $this->getDoctrine()->getManager();
 
         if (!$slug) {
             $blogpost = new BlogPost();
+            $user = $this->getUser();
+            $blogpost->setUser($user);
         } else {
             $blogpost = $services->getBlogPosts(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
             if (!$blogpost) {
@@ -51,6 +59,8 @@ class BlogPostController extends Controller {
                 $em->persist($blogpost);
                 $em->flush();
                 if (!$slug) {
+                    $user = $this->getUser();
+                    $blogpost->setUser($user);
                     $this->addFlash('success', $translator->trans('The blog post has been successfully created'));
                 } else {
                     $this->addFlash('success', $translator->trans('The blog post has been successfully updated'));
@@ -61,8 +71,8 @@ class BlogPostController extends Controller {
             }
         }
         return $this->render('Dashboard/Administrator/BlogPost/add-edit.html.twig', array(
-                    "blogpost" => $blogpost,
-                    "form" => $form->createView(),
+            "blogpost" => $blogpost,
+            "form" => $form->createView(),
         ));
     }
 
@@ -70,7 +80,8 @@ class BlogPostController extends Controller {
      * @Route("/manage-blog-posts/{slug}/disable", name="blog_post_disable", methods="GET")
      * @Route("/manage-blog-posts/{slug}/delete", name="blog_post_delete", methods="GET")
      */
-    public function delete(AppServices $services, TranslatorInterface $translator, $slug) {
+    public function delete(AppServices $services, TranslatorInterface $translator, $slug)
+    {
 
         $blogpost = $services->getBlogPosts(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$blogpost) {
@@ -94,7 +105,8 @@ class BlogPostController extends Controller {
     /**
      * @Route("/manage-blog-posts/{slug}/restore", name="blog_post_restore", methods="GET")
      */
-    public function restore($slug, Request $request, TranslatorInterface $translator, AppServices $services) {
+    public function restore($slug, Request $request, TranslatorInterface $translator, AppServices $services)
+    {
 
         $blogpost = $services->getBlogPosts(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$blogpost) {
@@ -114,7 +126,8 @@ class BlogPostController extends Controller {
      * @Route("/manage-blog-posts/{slug}/show", name="blog_post_show", methods="GET")
      * @Route("/manage-blog-posts/{slug}/hide", name="blog_post_hide", methods="GET")
      */
-    public function showhide(AppServices $services, TranslatorInterface $translator, $slug) {
+    public function showhide(AppServices $services, TranslatorInterface $translator, $slug)
+    {
 
         $blogpost = $services->getBlogPosts(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$blogpost) {

@@ -2,9 +2,9 @@
 
 {% trans_default_domain 'FOSUserBundle' %}
 
-{% set pagetitle = 'Check your email inbox'({}, 'messages') %}
+{% set pagetitle = 'Check your email inbox'|trans({}, 'messages') %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 
@@ -17,7 +17,7 @@
                             <div class="col-12 col-md-6 mx-auto">
                                 <p class="text-center"><i class="fas fa-inbox fa-8x text-success"></i></p>
                                 <p class="text-center">
-                                    {{ 'resetting.check_email'({'%tokenLifetime%': tokenLifetime})|nl2br }}
+                                    {{ 'resetting.check_email'|trans({'%tokenLifetime%': tokenLifetime})|nl2br }}
                                 </p>
                             </div>
                         </div>

@@ -162,7 +162,7 @@ class EventDate
         }
 
         if ($this->getStartdate() < new Datetime) {
-            return "Event already started";
+            return "Event already started/ended";
         }
 
         if ($this->isSoldOut()) {
