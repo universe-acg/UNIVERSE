@@ -1,6 +1,9 @@
 <?php
-    
-    namespace App\Entity;
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
+
+namespace App\Entity;
     
     use DateTime;
     use DateTimeImmutable;
@@ -29,12 +32,12 @@
          * @ORM\ManyToOne(targetEntity="Event", inversedBy="images")
          */
         private $event;
-        
+
+//    * @Assert\NotNull(groups={"create"})
         /**
          * NOTE: This is not a mapped field of entity metadata, just a simple property.
          *
          * @Vich\UploadableField(mapping="event_image", fileNameProperty="imageName", size="imageSize", mimeType="imageMimeType", originalName="imageOriginalName", dimensions="imageDimensions")
-         * @Assert\NotNull(groups={"create"})
          * @Assert\File(
          *     maxSize = "5M",
          *     mimeTypes = {"image/jpeg", "image/jpg", "image/gif", "image/png"},

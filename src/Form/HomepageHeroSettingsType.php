@@ -3,17 +3,8 @@
  * AUTHOR: ALEXANDROS KOURTIS
  */
 
-    /*
-     * AUTHOR: ALEXANDROS KOURTIS
-     */
-    
-    /*
-     * AUTHOR: ALEXANDROS KOURTIS
-     */
-    
     namespace App\Form;
     
-    use A2lix\TranslationFormBundle\Form\Type\TranslationsType;
     use App\Entity\Event;
     use App\Entity\HomepageHeroSettings;
     use App\Entity\User;
@@ -85,33 +76,43 @@
                     'label' => 'Custom hero background image',
                     'translation_domain' => 'messages'
                 ])
-                ->add('translations', TranslationsType::class, [
+//                ->add('translations', TranslationsType::class, [
+//                    'required' => false,
+//                    'label' => 'Custom hero title and paragraph translation',
+//                    'fields' => [
+//                        'title' => [
+//                            'purify_html' => true,
+//                            'locale_options' => [
+//                                'en' => ['label' => 'Title'],
+////                            'fr' => ['label' => 'Titre'],
+////                            'es' => ['label' => 'Título'],
+////                            'ar' => ['label' => 'عنوان'],
+////                            'pt' => ['label' => 'Título'],
+////                            'de' => ['label' => 'Titel'],
+//                            ]
+//                        ],
+//                        'paragraph' => [
+//                            'purify_html' => true,
+//                            'locale_options' => [
+//                                'en' => ['label' => 'Paragraph'],
+////                                'fr' => ['label' => 'Paragraphe'],
+////                                'es' => ['label' => 'Párrafo'],
+////                                'ar' => ['label' => 'فقرة'],
+////                                'pt' => ['label' => 'Parágrafo'],
+////                                'de' => ['label' => 'Absatz'],
+//                            ]
+//                        ]
+//                    ],
+//                ])
+                ->add('title', TextType::class, [
                     'required' => false,
-                    'label' => 'Custom hero title and paragraph translation',
-                    'fields' => [
-                        'title' => [
-                            'purify_html' => true,
-                            'locale_options' => [
-                                'en' => ['label' => 'Title'],
-//                            'fr' => ['label' => 'Titre'],
-//                            'es' => ['label' => 'Título'],
-//                            'ar' => ['label' => 'عنوان'],
-//                            'pt' => ['label' => 'Título'],
-//                            'de' => ['label' => 'Titel'],
-                            ]
-                        ],
-                        'paragraph' => [
-                            'purify_html' => true,
-                            'locale_options' => [
-                                'en' => ['label' => 'Paragraph'],
-//                                'fr' => ['label' => 'Paragraphe'],
-//                                'es' => ['label' => 'Párrafo'],
-//                                'ar' => ['label' => 'فقرة'],
-//                                'pt' => ['label' => 'Parágrafo'],
-//                                'de' => ['label' => 'Absatz'],
-                            ]
-                        ]
-                    ],
+                    'label' => $options['title_label'],
+                    'purify_html' => true,
+                ])
+                ->add('paragraph', TextType::class, [
+                    'required' => false,
+                    'label' => $options['paragraph_label'],
+                    'purify_html' => true,
                 ])
                 ->add('show_search_box', ChoiceType::class, [
                     'required' => false,

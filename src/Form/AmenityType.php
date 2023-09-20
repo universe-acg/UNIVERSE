@@ -5,7 +5,6 @@
     
     namespace App\Form;
     
-    use A2lix\TranslationFormBundle\Form\Type\TranslationsType;
     use App\Entity\Amenity;
     use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -19,22 +18,27 @@
         public function buildForm(FormBuilderInterface $builder, array $options): void
         {
             $builder
-                ->add('translations', TranslationsType::class, [
-                    // 'label' => 'Translation',
-                    'fields' => [
-                        'name' => [
-                            'purify_html' => true,
-                            'locale_options' => [
-                                'en' => ['label' => 'Name'],
-//                                'fr' => ['label' => 'Nom'],
-//                                'es' => ['label' => 'Nombre'],
-//                                'ar' => ['label' => 'اسم'],
-//                                'pt' => ['label' => 'Nome'],
-//                                'de' => ['label' => 'Name'],
-                            ]
-                        ]
-                    ],
-                    'excluded_fields' => ['slug']
+//                ->add('translations', TranslationsType::class, [
+//                    // 'label' => 'Translation',
+//                    'fields' => [
+//                        'name' => [
+//                            'purify_html' => true,
+//                            'locale_options' => [
+//                                'en' => ['label' => 'Name'],
+////                                'fr' => ['label' => 'Nom'],
+////                                'es' => ['label' => 'Nombre'],
+////                                'ar' => ['label' => 'اسم'],
+////                                'pt' => ['label' => 'Nome'],
+////                                'de' => ['label' => 'Name'],
+//                            ]
+//                        ]
+//                    ],
+//                    'excluded_fields' => ['slug']
+//                ])
+                ->add('name', TextType::class, [
+                    'required' => false,
+                    'label' => $options['label'],
+                    'purify_html' => true,
                 ])
                 ->add('icon', TextType::class, [
                     'purify_html' => true,

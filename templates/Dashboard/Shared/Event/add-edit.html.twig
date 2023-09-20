@@ -37,9 +37,42 @@
 {% endblock %}
 
 {% block javascripts %}
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Summernote CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+
+    <!-- Summernote JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 
     <script>
+        // Assuming you're using jQuery for simplicity
         $(document).ready(function () {
+            const $editableDiv = $('.note-editable ');
+
+            $('#event_userEvents').change(function () {
+                var eventId = $(this).val();
+                // Make an AJAX request to fetch event details based on the selected event ID
+                $.ajax({
+                    type: 'GET',
+                    url: '/en/api/get-event-details/' + eventId,
+                    dataType: 'json',
+                    success: function (data) {
+                        // Populate the other form fields with data received from the server
+                        $('#event_name').val(data.name);
+                        $('#event_email').val(data.email);
+                        $editableDiv.html(data.description);
+                        $('#event_description').val(data.description);
+                        $('#event_phonenumber').val(data.phonenumber);
+                        $('#event_tags').val(data.tags);
+                        $('#event_volsneeded').val(data.volsneeded);
+                        console.dir(data);
+                    }
+                });
+            });
+
+
             {% if event.id %}
             {% for eventDate in event.eventdates if eventDate.payoutRequested %}
             $('.event-date-reference').each(function () {

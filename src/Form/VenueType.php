@@ -1,22 +1,10 @@
 <?php
+    /*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
     
     namespace App\Form;
     
-    ?>
-		
-		<style>
-            /*.form-group:has(*:disabled) {*/
-            /*    display: none !important;*/
-            /*}*/
-
-            .form-group:disabled {
-                display: none !important;
-            }
-		</style>
-        
-        <?php
-    
-    use A2lix\TranslationFormBundle\Form\Type\TranslationsType;
     use App\Entity\Amenity;
     use App\Entity\Venue;
     use App\Entity\VenueType as Type;
@@ -25,6 +13,7 @@
     use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\Extension\Core\Type\SubmitType;
     use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+    use Symfony\Component\Form\Extension\Core\Type\TextType;
     use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\OptionsResolver\OptionsResolver;
     
@@ -41,34 +30,42 @@
         public function buildForm(FormBuilderInterface $builder, array $options)
         {
             $builder
-                ->add('translations', TranslationsType::class, [
-                    // 'label' => 'Translation',
-                    'fields' => [
-                        'name' => [
-                            'purify_html' => true,
-                            'locale_options' => [
-                                'en' => ['label' => 'Name'],
-//                                'fr' => ['label' => 'Nom'],
-//                                'es' => ['label' => 'Nombre'],
-//                                'ar' => ['label' => 'اسم'],
-//                                'pt' => ['label' => 'Nome do menu'],
-//                                'de' => ['label' => 'Menüname'],
-                            ]
-                        ],
-                        'description' => [
-                            'field_type' => TextareaType::class,
-                            'attr' => ['class' => 'wysiwyg'],
-                            'locale_options' => [
-                                'en' => ['label' => 'Description'],
-//                                'fr' => ['label' => 'Description'],
-//                                'es' => ['label' => 'Descripción'],
-//                                'ar' => ['label' => 'التفاصيل'],
-//                                'pt' => ['label' => 'Descrição'],
-//                                'de' => ['label' => 'Beschreibung'],
-                            ]
-                        ]
-                    ],
-                    'excluded_fields' => ['slug']
+//                ->add('translations', TranslationsType::class, [
+//                    // 'label' => 'Translation',
+//                    'fields' => [
+//                        'name' => [
+//                            'purify_html' => true,
+//                            'locale_options' => [
+//                                'en' => ['label' => 'Name'],
+////                                'fr' => ['label' => 'Nom'],
+////                                'es' => ['label' => 'Nombre'],
+////                                'ar' => ['label' => 'اسم'],
+////                                'pt' => ['label' => 'Nome do menu'],
+////                                'de' => ['label' => 'Menüname'],
+//                            ]
+//                        ],
+//                        'description' => [
+//                            'field_type' => TextareaType::class,
+//                            'attr' => ['class' => 'wysiwyg'],
+//                            'locale_options' => [
+//                                'en' => ['label' => 'Description'],
+////                                'fr' => ['label' => 'Description'],
+////                                'es' => ['label' => 'Descripción'],
+////                                'ar' => ['label' => 'التفاصيل'],
+////                                'pt' => ['label' => 'Descrição'],
+////                                'de' => ['label' => 'Beschreibung'],
+//                            ]
+//                        ]
+//                    ],
+//                    'excluded_fields' => ['slug']
+//                ])
+                ->add('name', TextType::class, [
+                    'purify_html' => true,
+                    'label' => 'Name',
+                ])
+                ->add('description', TextareaType::class, [
+                    'attr' => ['class' => 'wysiwyg'],
+                    'label' => 'Description',
                 ])
                 ->add('type', EntityType::class, [
                     'required' => true,

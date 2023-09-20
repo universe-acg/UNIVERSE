@@ -5,9 +5,11 @@
     
     namespace App\Controller\Api;
     
+    use App\Repository\EventRepository;
     use App\Service\AppServices;
     use Symfony\Bundle\FrameworkBundle\Controller\Controller;
     use Symfony\Component\Asset\Packages;
+    use Symfony\Component\HttpFoundation\JsonResponse;
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\Routing\Annotation\Route;
@@ -15,6 +17,34 @@
     
     class EventController extends Controller
     {
+        
+        /**
+         * @Route("/get-event-details/{eventId}", name="get_event_details", methods={"GET"})
+         */
+        public function getEventDetails(Request $request, EventRepository $eventRepository, $eventId)
+        {
+            // Retrieve the event details based on the eventId
+            $event = $eventRepository->find($eventId);
+            
+            if (!$event) {
+                // Handle the case where the event is not found
+                return new JsonResponse(['error' => 'Event not found'], 404);
+            }
+            
+            // You can customize the data you want to send back to the client
+            $responseData = [
+                'name' => $event->getName(),
+                'description' => $event->getDescription(),
+                'email' => $event->getEmail(),
+                'phonenumber' => $event->getPhonenumber(),
+                'tags' => $event->getTags(),
+                'volsneeded' => $event->isVolsneeded(),
+                'audiences' => $event->getAudiences(),
+                'showattendees' => $event->getShowattendees(),
+            ];
+            
+            return new JsonResponse($responseData);
+        }
         
         /**
          * @Route("/get-event/{slug}", name="get_event")

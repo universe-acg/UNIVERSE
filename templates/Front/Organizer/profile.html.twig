@@ -19,8 +19,9 @@
 
                     <div class="shadow rounded overflow-hidden">
                         {% if organizer.coverName %}
-                        <div class="organizer-profile-cover parallax-window" data-parallax="scroll"
-                             data-image-src="{{ asset(organizer.getCoverPath) }}"></div>{% endif %}
+                        <img class="organizer-profile-cover parallax-window" data-parallax="scroll"
+                             style="height: 350px !important; width: 100% !important; object-fit: cover; object-position: center"
+                             src="{{ asset(organizer.getCoverPath) }}"></img>{% endif %}
 
                         <div class="row">
                             <div class="col-12 col-lg-4" style="background: white !important;">
@@ -91,6 +92,23 @@
                                         <div class="py-4 px-4 text-muted line-height-2 readmore"
                                              data-collapsed-height="150" data-height-margin="20">
                                             {{ organizer.description|raw|nl2br }}
+                                        </div>
+                                    {% endif %}
+                                    <br>
+                                    <br>
+                                    <br>
+                                    {% if organizer.showfollowers and organizer.followedby|length %}
+                                        <div class="py-4 px-4">
+                                            <h4 class="mb-2"><i
+                                                        class="fas fa-user-plus mr-1"></i> {{ "Followers"|trans }}
+                                            </h4>
+                                            <div class="card border-0 card-body overflow-auto text-nowrap">
+                                                <div class="avatar-list py-4">
+                                                    {% for user in organizer.followedby %}
+                                                        {% include "Global/user-avatar.html.twig" with { user: user, showusernametooltip: true } %}
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
                                         </div>
                                     {% endif %}
                                 </div>
@@ -169,7 +187,7 @@
                                             <a class="nav-link active" data-toggle="pill"
                                                href="#organizer-onsale-events" role="tab"
                                                aria-controls="organizer-onsale-events"
-                                               aria-selected="true">{{ "Active events"|trans }}
+                                               aria-selected="true">{{ "Events"|trans }}
                                                 ({{ onsaleeventscount }})</a>
                                         </li>
                                         {#                                        <li class="nav-item"> #}
@@ -183,7 +201,7 @@
                                         <div class="tab-pane fade show active" id="organizer-onsale-events"
                                              role="tabpanel" aria-labelledby="organizer-onsale-events-tab">
                                             {% if onsaleeventscount > 0 %}
-                                                {% for event in services.getEvents({elapsed: false, organizer: organizer.slug, limit: 10}).getQuery().getResult() %}
+                                                {% for event in services.getEvents({elapsed: true, organizer: organizer.slug, limit: 10}).getQuery().getResult() %}
                                                     {% include "Global/event-card.html.twig" with {event: event} %}
                                                 {% endfor %}
                                             {% else %}
@@ -235,20 +253,6 @@
                                                 frameborder="0"
                                                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                                                 allowfullscreen></iframe>
-                                    </div>
-                                {% endif %}
-
-                                {% if organizer.showfollowers and organizer.followedby|length %}
-                                    <div class="py-4 px-4">
-                                        <h4 class="mb-2"><i class="fas fa-user-plus mr-1"></i> {{ "Followers"|trans }}
-                                        </h4>
-                                        <div class="card border-0 card-body overflow-auto text-nowrap">
-                                            <div class="avatar-list py-4">
-                                                {% for user in organizer.followedby %}
-                                                    {% include "Global/user-avatar.html.twig" with { user: user, showusernametooltip: true } %}
-                                                {% endfor %}
-                                            </div>
-                                        </div>
                                     </div>
                                 {% endif %}
 

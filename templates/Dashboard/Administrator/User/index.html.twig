@@ -121,6 +121,13 @@
                                                     title="{{ "Search" }}"><i class="fas fa-search"></i></button>
                                             <button type="reset" class="btn btn-primary" data-toggle="tooltip"
                                                     title="{{ "Reset" }}"><i class="fas fa-search-minus"></i></button>
+
+                                            <a href="{{ path('registration_register_attendee_admin') }}"
+                                               class="btn btn-primary ml-3" data-toggle="tooltip"
+                                               title="{{ 'Add a new attendee' }}"><i class="fas fa-plus"></i></a>
+                                            <a href="{{ path('registration_register_organizer_admin') }}"
+                                               class="btn btn-primary ml-3" data-toggle="tooltip"
+                                               title="{{ 'Add a new creator' }}"><i class="fas fa-user"></i></a>
                                         </div>
                                     </div>
                                 </form>

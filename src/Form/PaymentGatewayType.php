@@ -1,17 +1,15 @@
 <?php
-/*
+    /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-
-namespace App\Form;
     
-    use A2lix\TranslationFormBundle\Form\Type\TranslationsType;
+    namespace App\Form;
+    
     use App\Entity\PaymentGateway;
     use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
     use Symfony\Component\Form\Extension\Core\Type\IntegerType;
     use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-    use Symfony\Component\Form\Extension\Core\Type\TextareaType;
     use Symfony\Component\Form\Extension\Core\Type\TextType;
     use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -58,24 +56,29 @@ namespace App\Form;
                     ),
                     'help' => "For 'Cash / Check / Bank Transfer / Other', the order will remain on the 'Awaiting' status until the organizer or the administrator approves it"
                 ])
-                ->add('translations', TranslationsType::class, [
+//                ->add('translations', TranslationsType::class, [
+//                    'required' => false,
+//                    'label' => 'Instructions',
+//                    'fields' => [
+//                        'instructions' => [
+//                            'required' => false,
+//                            'field_type' => TextareaType::class,
+//                            'attr' => ['class' => 'wysiwyg'],
+//                            'locale_options' => [
+//                                'en' => ['label' => 'Instructions'],
+////                            'fr' => ['label' => 'Instructions'],
+////                            'es' => ['label' => 'Instrucciones'],
+////                            'ar' => ['label' => 'تعليمات'],
+////                            'pt' => ['label' => 'Instruções'],
+////                            'de' => ['label' => 'Anweisungen'],
+//                            ]
+//                        ],
+//                    ],
+//                ])
+                ->add('instructions', TextareaType::class, [
                     'required' => false,
                     'label' => 'Instructions',
-                    'fields' => [
-                        'instructions' => [
-                            'required' => false,
-                            'field_type' => TextareaType::class,
-                            'attr' => ['class' => 'wysiwyg'],
-                            'locale_options' => [
-                                'en' => ['label' => 'Instructions'],
-//                            'fr' => ['label' => 'Instructions'],
-//                            'es' => ['label' => 'Instrucciones'],
-//                            'ar' => ['label' => 'تعليمات'],
-//                            'pt' => ['label' => 'Instruções'],
-//                            'de' => ['label' => 'Anweisungen'],
-                            ]
-                        ],
-                    ],
+                    'attr' => ['class' => 'wysiwyg'],
                 ])
                 ->add('gatewayLogoFile', VichImageType::class, [
                     'required' => true,

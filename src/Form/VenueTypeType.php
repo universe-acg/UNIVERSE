@@ -1,8 +1,10 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
+
+namespace App\Form;
     
-    namespace App\Form;
-    
-    use A2lix\TranslationFormBundle\Form\Type\TranslationsType;
     use App\Entity\VenueType;
     use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -15,22 +17,26 @@
         public function buildForm(FormBuilderInterface $builder, array $options)
         {
             $builder
-                ->add('translations', TranslationsType::class, [
-                    // 'label' => 'Translation',
-                    'fields' => [
-                        'name' => [
-                            'purify_html' => true,
-                            'locale_options' => [
-                                'en' => ['label' => 'Name'],
-//                            'fr' => ['label' => 'Nom'],
-//                            'es' => ['label' => 'Nombre'],
-//                            'ar' => ['label' => 'اسم'],
-//                            'pt' => ['label' => 'Nome do menu'],
-//                            'de' => ['label' => 'Menüname'],
-                            ]
-                        ]
-                    ],
-                    'excluded_fields' => ['slug']
+//                ->add('translations', TranslationsType::class, [
+//                    // 'label' => 'Translation',
+//                    'fields' => [
+//                        'name' => [
+//                            'purify_html' => true,
+//                            'locale_options' => [
+//                                'en' => ['label' => 'Name'],
+////                            'fr' => ['label' => 'Nom'],
+////                            'es' => ['label' => 'Nombre'],
+////                            'ar' => ['label' => 'اسم'],
+////                            'pt' => ['label' => 'Nome do menu'],
+////                            'de' => ['label' => 'Menüname'],
+//                            ]
+//                        ]
+//                    ],
+//                    'excluded_fields' => ['slug']
+//                ])
+                ->add('name', TextType::class, [
+                    'purify_html' => true,
+                    'label' => 'Name',
                 ])
                 ->add('save', SubmitType::class, [
                     'label' => 'Save',

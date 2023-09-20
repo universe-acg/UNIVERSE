@@ -255,6 +255,19 @@
                     {{ 'Change password' }}
                 </a>
             </li>
+
+            <li class="nav-item">
+                <a href="{{ path('email_change') }}"
+                   class="nav-link {% if routename == "email_change" %}active{% endif %}">
+                    {{ 'Change email' }}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ path('username_change') }}"
+                   class="nav-link {% if routename == "username_change" %}active{% endif %}">
+                    {{ 'Change username' }}
+                </a>
+            </li>
         </ul>
     </li>
 
@@ -361,10 +374,29 @@
         </a>
         <ul id="account-submenu-{{ random }}"
             class="nav flex-column ml-3 collapse {% if routename == "fos_user_change_password" %}show{% endif %}">
+
+            <li class="nav-item">
+                <a href="{{ path('dashboard_organizer_account_settings') }}"
+                   class="nav-link {% if routename == "dashboard_organizer_account_settings" %}active{% endif %}">
+                    {{ 'Settings' }}
+                </a>
+            </li>
             <li class="nav-item">
                 <a href="{{ path('fos_user_change_password') }}"
                    class="nav-link {% if routename == "fos_user_change_password" %}active{% endif %}">
                     {{ 'Change password' }}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ path('email_change') }}"
+                   class="nav-link {% if routename == "email_change" %}active{% endif %}">
+                    {{ 'Change email' }}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ path('username_change') }}"
+                   class="nav-link {% if routename == "username_change" %}active{% endif %}">
+                    {{ 'Change username' }}
                 </a>
             </li>
         </ul>
@@ -376,8 +408,22 @@
     {# Attendee role sidebar links #}
 
     <li class="nav-item">
+        <a href="{{ path('dashboard_attendee_following') }}"
+           class="nav-link {% if routename == "dashboard_attendee_following" %}active{% endif %}">
+            <i class="fas fa-address-book fa-fw"></i> {{ 'Creators Following' }}
+        </a>
+    </li>
+
+    {#    <li class="nav-item"> #}
+    {#        <a href="{{ path('dashboard_attendee_orders') }}" #}
+    {#           class="nav-link "> #}
+    {#            <i class="far fa-user"></i> {{ 'My profile page' }} #}
+    {#        </a> #}
+    {#    </li> #}
+
+    <li class="nav-item">
         <a href="{{ path('dashboard_attendee_orders') }}"
-           class="nav-link {% if routename == "dashboard_attendee_orders" or routename == "dashboard_attendee_order_details" %}active{% endif %}">
+           class="nav-link">
             <i class="fas fa-ticket-alt fa-fw"></i> {{ 'My tickets' }}
         </a>
     </li>
@@ -426,10 +472,29 @@
                         {{ 'Settings' }}
                     </a>
                 </li>
+                {#                <li class="nav-item"> #}
+                {#                    <a href="{{ path('dashboard_attendee_account_settings') }}" #}
+                {#                       class="nav-link "> #}
+                {#                        {{ 'Account settings' }} #}
+                {#                    </a> #}
+                {#                </li> #}
                 <li class="nav-item">
                     <a href="{{ path('fos_user_change_password') }}"
                        class="nav-link {% if routename == "fos_user_change_password" %}active{% endif %}">
                         {{ 'Change password' }}
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ path('email_change') }}"
+                       class="nav-link {% if routename == "email_change" %}active{% endif %}">
+                        {{ 'Change email' }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ path('username_change') }}"
+                       class="nav-link {% if routename == "username_change" %}active{% endif %}">
+                        {{ 'Change username' }}
                     </a>
                 </li>
             </ul>

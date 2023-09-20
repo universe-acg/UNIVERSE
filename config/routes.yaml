@@ -6,6 +6,27 @@ app_installer:
   name_prefix: 'installer_'
   trailing_slash_on_root: false
 
+fos_user_change_email:
+  path: /en/dashboard/change-email
+  controller: 'App\Controller\Api\EmailChangeController::changeEmail'
+
+fos_user_change_username:
+  path: /en/dashboard/change-username
+  controller: 'App\Controller\Api\UsernameChangeController::changeUsername'
+
+registration_register_attendee_admin:
+  path: /en/dashboard/administrator/signup/attendee
+  controller: 'App\Controller\Dashboard\Administrator\AdminRegistrationController::registerAttendeeAction'
+
+get_event_details:
+  path: '/get-event-details/{eventId}'
+  controller: 'App\Controller\Api\EventController::getEventDetails'
+  methods: [ 'GET' ]
+
+registration_register_organizer_admin:
+  path: /en/dashboard/administrator/signup/organizer
+  controller: 'App\Controller\Dashboard\Administrator\AdminRegistrationController::registerOrganizerAction'
+
 blog_post_category_add:
   path: /en/dashboard/organizer/manage-blog-post-categories/add
   controller: 'App\Controller\Dashboard\Organizer\BlogPostCategoryController::addedit'
@@ -201,3 +222,4 @@ facebook_login:
 
 google_login:
   path: /login/check-google
+

@@ -865,6 +865,43 @@ $(document).ready(function () {
         });
     });
 
+    // Event favorites ajax add and remove
+    $(document).on("click", ".bigbtn-event-favorites-add, .bigbtn-event-favorites-remove", function () {
+        var $thisButton = $(this);
+        if ($thisButton.attr("data-action-done") == "1") {
+            $thisButton.unbind("click");
+            return false;
+        }
+        $.ajax({
+            type: "GET",
+            url: $thisButton.data('target'),
+            beforeSend: function () {
+                $thisButton.attr("data-action-done", "1");
+                $thisButton.html("<i class='fas fa-spinner fa-spin'></i>");
+            },
+            success: function (response) {
+                if (response.hasOwnProperty('success')) {
+                    if ($thisButton.hasClass('bigbtn-event-favorites-add')) {
+                        $thisButton.html('<i class="fas fa-heart"></i> REMOVE FROM FAVORITES');
+                    } else {
+                        $thisButton.html('<i class="far fa-heart"></i> ADD TO FAVORITES');
+                    }
+                    $thisButton.attr("title", response.success).tooltip("_fixTitle");
+                    showStackBarTop('success', '', response.success);
+                } else if (response.hasOwnProperty('error')) {
+                    $thisButton.html('<i class="far fa-heart"></i>');
+                    $thisButton.attr("title", response.error).tooltip("_fixTitle");
+                    showStackBarTop('error', '', response.error);
+                } else {
+                    $thisButton.html('<i class="far fa-heart"></i>');
+                    $thisButton.attr("title", Translator.trans('An error has occured', {}, 'javascript')).tooltip("_fixTitle");
+                    showStackBarTop('error', '', Translator.trans('An error has occured', {}, 'javascript'));
+                }
+            }
+        });
+    });
+
+
 // Lazy loading images
     var bLazy = new Blazy({
         selector: '.img-lazy-load',

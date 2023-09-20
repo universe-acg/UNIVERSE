@@ -1,33 +1,33 @@
 <?php
-/*
+    /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-
-namespace App\Form;
-
-use App\Entity\EventDate;
-use App\Service\AppServices;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-
-class EventDateType extends AbstractType
-{
-    private $services;
-    private $user;
-
-    public function __construct(AppServices $services, TokenStorageInterface $tokenStorage)
+    
+    namespace App\Form;
+    
+    use App\Entity\EventDate;
+    use App\Service\AppServices;
+    use Symfony\Component\Form\AbstractType;
+    use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+    use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+    use Symfony\Component\Form\FormBuilderInterface;
+    use Symfony\Component\OptionsResolver\OptionsResolver;
+    use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+    
+    class EventDateType extends AbstractType
     {
-        $this->services = $services;
-        $this->user = $tokenStorage->getToken()->getUser();
-    }
-
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
-        $builder
+        private $services;
+        private $user;
+        
+        public function __construct(AppServices $services, TokenStorageInterface $tokenStorage)
+        {
+            $this->services = $services;
+            $this->user = $tokenStorage->getToken()->getUser();
+        }
+        
+        public function buildForm(FormBuilderInterface $builder, array $options): void
+        {
+            $builder
 //                ->add('active', ChoiceType::class, [
 //                    'required' => true,
 //                    'multiple' => false,
@@ -38,22 +38,22 @@ class EventDateType extends AbstractType
 //                    'label_attr' => ['class' => 'radio-custom radio-inline'],
 //                    'help' => 'Enabling sales for an event date does not affect the tickets individual sale status'
 //                ])
-            ->add('startdate', DateTimeType::class, [
-                'required' => true,
-                'label' => 'Starts On',
-                'widget' => 'single_text',
-                'html5' => false,
-                'attr' => ['class' => 'datetimepicker', 'autocomplete' => 'off'],
-                'format' => 'yyyy-MM-dd HH:mm',
-            ])
-            ->add('enddate', DateTimeType::class, [
-                'required' => false,
-                'label' => 'Ends On',
-                'widget' => 'single_text',
-                'html5' => false,
-                'attr' => ['class' => 'datetimepicker', 'autocomplete' => 'off'],
-                'format' => 'yyyy-MM-dd HH:mm',
-            ])
+                ->add('startdate', DateTimeType::class, [
+                    'required' => true,
+                    'label' => 'Starts On',
+                    'widget' => 'single_text',
+                    'html5' => false,
+                    'attr' => ['class' => 'datetimepicker', 'autocomplete' => 'off'],
+                    'format' => 'yyyy-MM-dd HH:mm',
+                ])
+                ->add('enddate', DateTimeType::class, [
+                    'required' => true,
+                    'label' => 'Ends On',
+                    'widget' => 'single_text',
+                    'html5' => false,
+                    'attr' => ['class' => 'datetimepicker', 'autocomplete' => 'off'],
+                    'format' => 'yyyy-MM-dd HH:mm',
+                ])
 //                ->add('online', ChoiceType::class, [
 //                    'required' => true,
 //                    'multiple' => false,
@@ -109,32 +109,32 @@ class EventDateType extends AbstractType
 //                    },
 //                    'attr' => ['class' => 'select2']
 //                ])
-            ->add('tickets', CollectionType::class, array(
-                'label' => 'Event tickets',
-                'entry_type' => EventTicketType::class,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'prototype' => true,
-                'prototype_name' => '__eventticket__',
-                'required' => true,
-                'by_reference' => false,
-                'attr' => array(
-                    'class' => 'form-collection eventtickets-collection manual-init',
-                ),
-            ));
-        // Set automatically on entity creation (generation function on entity class),
-        // added here as a trick to identity the event date on the form to disable the wrapping
-        // fieldset when payout request is pending on approved
+                ->add('tickets', CollectionType::class, array(
+                    'label' => 'Event tickets',
+                    'entry_type' => EventTicketType::class,
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'prototype' => true,
+                    'prototype_name' => '__eventticket__',
+                    'required' => true,
+                    'by_reference' => false,
+                    'attr' => array(
+                        'class' => 'form-collection eventtickets-collection manual-init',
+                    ),
+                ));
+            // Set automatically on entity creation (generation function on entity class),
+            // added here as a trick to identity the event date on the form to disable the wrapping
+            // fieldset when payout request is pending on approved
 //                ->add('reference', HiddenType::class, [
 //                    'attr' => [
 //                        'class' => 'event-date-reference']]);
+        }
+        
+        public function configureOptions(OptionsResolver $resolver): void
+        {
+            $resolver->setDefaults([
+                'data_class' => EventDate::class,
+                'validation_groups' => ['create', 'update']
+            ]);
+        }
     }
-
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => EventDate::class,
-            'validation_groups' => ['create', 'update']
-        ]);
-    }
-}

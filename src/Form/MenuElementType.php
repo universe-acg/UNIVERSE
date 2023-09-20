@@ -1,8 +1,10 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
+
+namespace App\Form;
     
-    namespace App\Form;
-    
-    use A2lix\TranslationFormBundle\Form\Type\TranslationsType;
     use App\Entity\MenuElement;
     use App\Service\AppServices;
     use Symfony\Component\Form\AbstractType;
@@ -31,22 +33,27 @@
                     'label' => 'Icon',
                     'attr' => ['class' => 'icon-picker', 'autocomplete' => 'disabled']
                 ])
-                ->add('translations', TranslationsType::class, [
-                    // 'label' => 'Translation',
-                    'fields' => [
-                        'label' => [
-                            'purify_html' => true,
-                            'locale_options' => [
-                                'en' => ['label' => 'Link text'],
-//                            'fr' => ['label' => 'Texte du lien'],
-//                            'es' => ['label' => 'Texto del enlace'],
-//                            'ar' => ['label' => 'نص الرابط'],
-//                            'pt' => ['label' => 'Texto do link'],
-//                            'de' => ['label' => 'Link Text'],
-                            ]
-                        ]
-                    ],
-                    'excluded_fields' => ['slug']
+//                ->add('translations', TranslationsType::class, [
+//                    // 'label' => 'Translation',
+//                    'fields' => [
+//                        'label' => [
+//                            'purify_html' => true,
+//                            'locale_options' => [
+//                                'en' => ['label' => 'Link text'],
+////                            'fr' => ['label' => 'Texte du lien'],
+////                            'es' => ['label' => 'Texto del enlace'],
+////                            'ar' => ['label' => 'نص الرابط'],
+////                            'pt' => ['label' => 'Texto do link'],
+////                            'de' => ['label' => 'Link Text'],
+//                            ]
+//                        ]
+//                    ],
+//                    'excluded_fields' => ['slug']
+//                ])
+                ->add('label', TextType::class, [
+                    'required' => false,
+                    'label' => $options['label'],
+                    'purify_html' => true,
                 ])
                 ->add('link', ChoiceType::class, [
                     'required' => false,

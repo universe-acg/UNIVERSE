@@ -262,7 +262,28 @@
                                     </div>
                                 </div>
                             {% endif %}
-
+                            <div class="mt-5">
+                                <div id="disqus_thread"></div>
+                                <script>
+                                    /**
+                                     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+                                     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+                                    var disqus_config = function () {
+                                        this.page.url = "{{ app.request.uri }}";  // Replace PAGE_URL with your page's canonical URL variable
+                                        this.page.identifier = "{{ event.slug }}"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+                                        this.language = "{{ app.request.locale|lower }}";
+                                    };
+                                    (function () { // DON'T EDIT BELOW THIS LINE
+                                        var d = document, s = d.createElement('script');
+                                        s.src = 'https://{{ services.getSetting("disqus_subdomain") }}.disqus.com/embed.js';
+                                        s.setAttribute('data-timestamp', +new Date());
+                                        (d.head || d.body).appendChild(s);
+                                    })();
+                                </script>
+                                <noscript>Please enable JavaScript to view the <a
+                                            href="https://disqus.com/?ref_noscript">comments powered by
+                                        Disqus.</a></noscript>
+                            </div>
                             {% if false %}
                                 {#                            {% if event.enablereviews %} #}
                                 <hr class="mb-5">
@@ -615,25 +636,25 @@
                                                     <div class="table-responsive">
                                                         <table class="table table-hover table-condensed">
                                                             <tbody>
-                                                            {% for ticket in eventDate.tickets %}
-                                                                {% if ticket.active %}
-                                                                    <tr class="bg-gray">
-                                                                        <td class="border-top-white"
-                                                                            style="width: 75%;">
-                                                                            {{ ticket.name }}
-                                                                        </td>
-                                                                        <td class="border-top-white text-right">
-                                                                            {% if not ticket.isOnSale %}
-                                                                                <span class="badge badge-{{ ticket.stringifyStatusClass }}">{{ ticket.stringifyStatus }}</span>
-                                                                            {% else %}
-                                                                                {{ ticket.free ? "Available" : ((services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '') ~ ticket.getSalePrice() ~ (services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '')) }}
-                                                                                {% if ticket.promotionalprice and not ticket.free %}
-                                                                                    <del class="price-old">{{ (services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '') ~ ticket.getPrice() ~ (services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '') }}</del>
+                                                                {% for ticket in eventDate.tickets %}
+                                                                    {% if ticket.active %}
+                                                                        <tr class="bg-gray">
+                                                                            <td class="border-top-white"
+                                                                                style="width: 75%;">
+                                                                                {{ ticket.name }}
+                                                                            </td>
+                                                                            <td class="border-top-white text-right">
+                                                                                {% if not ticket.isOnSale %}
+                                                                                    <span class="badge badge-{{ ticket.stringifyStatusClass }}">{{ ticket.stringifyStatus }}</span>
+                                                                                {% else %}
+                                                                                    {{ ticket.free ? "Available" : ((services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '') ~ ticket.getSalePrice() ~ (services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '')) }}
+                                                                                    {% if ticket.promotionalprice and not ticket.free %}
+                                                                                        <del class="price-old">{{ (services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '') ~ ticket.getPrice() ~ (services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '') }}</del>
+                                                                                    {% endif %}
                                                                                 {% endif %}
-                                                                            {% endif %}
-                                                                    </tr>
-                                                                {% endif %}
-                                                            {% endfor %}
+                                                                        </tr>
+                                                                    {% endif %}
+                                                                {% endfor %}
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -663,14 +684,14 @@
                                 {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') or is_granted('ROLE_ATTENDEE') %}
                                     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                                         {% if event.isAddedToFavoritesBy(app.user) %}
-                                            <button class="event-favorites-remove btn btn-outline-primary btn-block"
+                                            <button class="bigbtn-event-favorites-remove btn btn-outline-primary btn-block"
                                                     data-target="{{ path('favorites_remove', { slug : event.slug }) }}"
                                                     data-toggle="tooltip" title="Remove from favorites"
                                                     data-placement="bottom"><i
                                                         class="fas fa-heart"></i> {{ "Remove from favorites" }}
                                             </button>
                                         {% else %}
-                                            <button class="event-favorites-add btn btn-outline-primary btn-block"
+                                            <button class="bigbtn-event-favorites-add btn btn-outline-primary btn-block"
                                                     data-target="{{ path('favorites_add', { slug : event.slug }) }}"
                                                     data-toggle="tooltip" title="Add to favorites"
                                                     data-placement="bottom"><i
@@ -784,8 +805,20 @@
                                             </div>
                                         </dd>
                                     </dl>
+                                    {% if event.volsneeded %}
+                                        <dl class="mt-5">
+                                            <a href="mailto:{{ event.email }}"
+                                               class="btn btn-primary btn-block mb-2"
+                                            > Volunteer
+                                            </a>
+                                            <dt class="text-muted">The organizers are looking for volunteers to help.
+                                            </dt>
+
+                                        </dl>
+                                    {% endif %}
                                 {% endif %}
                             {% endif %}
+
                             {#                            {% if services.getSetting("newsletter_enabled") == "yes" and services.getSetting("mailchimp_api_key") and services.getSetting("mailchimp_list_id") %} #}
                             {#                                <div class="mt-5"> #}
                             {#                                    {% include "Global/newsletter-box.html.twig" %} #}
@@ -794,6 +827,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
 
             {% set othereventsbythisorganizer = services.getEvents({"organizer" : event.organizer.slug, "limit" : 8, "otherthan": event.slug}).getQuery().getResult() %}
@@ -832,6 +866,7 @@
             {#            {% endif %} #}
 
         </div>
+
     </section>
 
 {% endblock %}

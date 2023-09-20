@@ -350,7 +350,8 @@
                                     </header>
                                     <div class="filter-content collapse show" id="filter-audience">
                                         <div class="card-body">
-                                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                            <div class="btn-group btn-group-toggle" data-toggle="buttons"
+                                            >
                                                 {% for audience in services.getAudiences({}).getQuery().getResult() %}
                                                     <label class="btn btn-light btn-sm py-2 px-3" data-toggle="tooltip"
                                                            title="{{ audience.name }}">
@@ -365,12 +366,39 @@
                                     </div>
                                 </article>
                             {% endif %}
-                            <article class="card-group-item">
-                                <div class="card-body">
-                                    <button class="btn btn-block btn-outline-primary"><i
-                                                class="fas fa-search"></i> {{ "Search" }}</button>
+                            <div class="row">
+                                <div class="col-4">
+                                    <article class="card-group-item">
+                                        <div class="card-body">
+                                            <a href="{{ path('events') }}"
+                                               class="btn btn-outline-primary">
+                                                {{ "Clear" }}
+                                            </a>
+                                        </div>
+                                    </article>
                                 </div>
-                            </article>
+                                <div class="col-8">
+                                    <article class="card-group-item">
+                                        <div class="card-body">
+                                            <button class="btn btn-outline-primary"><i
+                                                        class="fas fa-search"></i> {{ "Search" }}</button>
+                                        </div>
+                                    </article>
+                                </div>
+                            </div>
+
+                            {#                            <article class="card-group-item"> #}
+                            {#                                <div class="card-body"> #}
+                            {#                                    <button class="btn btn-block btn-outline-primary"><i #}
+                            {#                                                class="fas fa-search"></i> {{ "Search" }}</button> #}
+                            {#                                </div> #}
+                            {#                                <div class="card-body"> #}
+                            {#                                    <a href="{{ path('events') }}" #}
+                            {#                                       class="btn btn-block btn-outline-primary btn-sm custom-smaller-width"> #}
+                            {#                                        {{ "Clear" }} #}
+                            {#                                    </a> #}
+                            {#                                </div> #}
+                            {#                            </article> #}
                         </form>
                     </div>
                     {% if services.getSetting("newsletter_enabled") == "yes" and services.getSetting("mailchimp_api_key") and services.getSetting("mailchimp_list_id") %}

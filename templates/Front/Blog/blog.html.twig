@@ -1,6 +1,6 @@
 {% extends "Global/layout.html.twig" %}
 
-{% set pagetitle = 'Blog' %}
+{% set pagetitle = 'News' %}
 
 {% block title %}{{ pagetitle }}{% endblock %}
 
@@ -21,7 +21,8 @@
                     <div class="col-sm-12 col-lg-6 offset-lg-3 ">
                         <form>
                             <input type="text" class="form-control bg-white col-6 display-inline" name="keyword"
-                                   placeholder="{{ "Search blog posts" }}" value="{{ app.request.get('keyword') }}"/>
+                                   placeholder="{{ "Search news/blog posts" }}"
+                                   value="{{ app.request.get('keyword') }}"/>
                             <button type="submit" class="btn btn-primary"
                                     style="float: right; margin-top: 6px; margin-right: 15px;"><i
                                         class="fas fa-search"></i>

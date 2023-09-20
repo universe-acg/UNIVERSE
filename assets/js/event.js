@@ -16,7 +16,7 @@ $(document).ready(function () {
             }
         });
         if ($ticketsQte == 0) {
-            showStackBarTop('error', '', Translator.trans('Please select the tickets quantity of tickets you want to order', {}, 'javascript'));
+            showStackBarTop('error', '', Translator.trans('Please select the quantity of tickets you want to order', {}, 'javascript'));
         } else {
             $('#add-to-cart-form').submit();
         }

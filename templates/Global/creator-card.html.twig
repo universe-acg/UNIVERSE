@@ -15,7 +15,8 @@
 <a href="{{ path('organizer', {slug: (creator.getOrganizer().slug)}) }}" class="text-dark">
 
     <div class="card card-event">
-        <div class="img-wrap img-lazy-load image-container" style="height: 260px"
+        <div class="img-wrap img-lazy-load image-container"
+             style="height: 260px;"
              data-src="{{ creator.getOrganizer().logoName ? asset(creator.getOrganizer().getLogoPath) : creator.getOrganizer().getLogoPlaceholder }}">
             {#        <a href="{{ path('organizer', {slug: (creator.slug)}) }}" class="text-dark">{{ link }}</a> #}
             {#        <a href="{{ link }}"></a> #}

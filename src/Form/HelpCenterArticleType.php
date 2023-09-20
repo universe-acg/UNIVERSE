@@ -3,13 +3,8 @@
  * AUTHOR: ALEXANDROS KOURTIS
  */
 
-    /*
-     * AUTHOR: ALEXANDROS KOURTIS
-     */
-    
     namespace App\Form;
     
-    use A2lix\TranslationFormBundle\Form\Type\TranslationsType;
     use App\Entity\HelpCenterArticle;
     use App\Entity\HelpCenterCategory;
     use App\Service\AppServices;
@@ -46,47 +41,62 @@
                         return $this->services->getHelpCenterCategories(array());
                     },
                 ])
-                ->add('translations', TranslationsType::class, [
-                    'label' => 'Article details',
-                    'fields' => [
-                        'title' => [
-                            'purify_html' => true,
-                            'locale_options' => [
-                                'en' => ['label' => 'Title'],
-//                                'fr' => ['label' => 'Titre'],
-//                                'es' => ['label' => 'Nombre'],
-//                                'ar' => ['label' => 'عنوان'],
-//                                'pt' => ['label' => 'Título'],
-//                                'de' => ['label' => 'Titel'],
-                            ]
-                        ],
-                        'content' => [
-                            'field_type' => TextareaType::class,
-                            'attr' => ['class' => 'wysiwyg'],
-                            'locale_options' => [
-                                'en' => ['label' => 'Content'],
-//                            'fr' => ['label' => 'Contenu'],
-//                            'es' => ['label' => 'Contenido'],
-//                            'ar' => ['label' => 'محتوى'],
-//                            'pt' => ['label' => 'Contente'],
-//                            'de' => ['label' => 'Inhalt'],
-                            ]
-                        ],
-                        'tags' => [
-                            'purify_html' => true,
-                            'field_type' => TextType::class,
-                            'attr' => ['class' => 'tags-input'],
-                            'locale_options' => [
-                                'en' => ['label' => 'Tags'],
-//                                'fr' => ['label' => 'Mots clés'],
-//                                'es' => ['label' => 'Palabras clave'],
-//                                'ar' => ['label' => 'الكلمات الرئيسية'],
-//                                'pt' => ['label' => 'Palavras-chave'],
-//                                'de' => ['label' => 'Schlüsselwörter'],
-                            ]
-                        ],
-                    ],
-                    'excluded_fields' => ['slug']
+//                ->add('translations', TranslationsType::class, [
+//                    'label' => 'Article details',
+//                    'fields' => [
+//                        'title' => [
+//                            'purify_html' => true,
+//                            'locale_options' => [
+//                                'en' => ['label' => 'Title'],
+////                                'fr' => ['label' => 'Titre'],
+////                                'es' => ['label' => 'Nombre'],
+////                                'ar' => ['label' => 'عنوان'],
+////                                'pt' => ['label' => 'Título'],
+////                                'de' => ['label' => 'Titel'],
+//                            ]
+//                        ],
+//                        'content' => [
+//                            'field_type' => TextareaType::class,
+//                            'attr' => ['class' => 'wysiwyg'],
+//                            'locale_options' => [
+//                                'en' => ['label' => 'Content'],
+////                            'fr' => ['label' => 'Contenu'],
+////                            'es' => ['label' => 'Contenido'],
+////                            'ar' => ['label' => 'محتوى'],
+////                            'pt' => ['label' => 'Contente'],
+////                            'de' => ['label' => 'Inhalt'],
+//                            ]
+//                        ],
+//                        'tags' => [
+//                            'purify_html' => true,
+//                            'field_type' => TextType::class,
+//                            'attr' => ['class' => 'tags-input'],
+//                            'locale_options' => [
+//                                'en' => ['label' => 'Tags'],
+////                                'fr' => ['label' => 'Mots clés'],
+////                                'es' => ['label' => 'Palabras clave'],
+////                                'ar' => ['label' => 'الكلمات الرئيسية'],
+////                                'pt' => ['label' => 'Palavras-chave'],
+////                                'de' => ['label' => 'Schlüsselwörter'],
+//                            ]
+//                        ],
+//                    ],
+//                    'excluded_fields' => ['slug']
+//                ])
+                ->add('title', TextType::class, [
+                    'required' => false,
+                    'label' => $options['title_label'],
+                    'purify_html' => true,
+                ])
+                ->add('content', TextareaType::class, [
+                    'required' => false,
+                    'label' => $options['content_label'],
+                    'attr' => ['class' => 'wysiwyg'],
+                ])
+                ->add('tags', TextType::class, [
+                    'required' => false,
+                    'label' => $options['tags_label'],
+                    'attr' => ['class' => 'tags-input'],
                 ])
                 ->add('save', SubmitType::class, [
                     'label' => 'Save',

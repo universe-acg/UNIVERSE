@@ -1,4 +1,7 @@
 <?php
+    /*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
     
     namespace App\Entity;
     
@@ -150,10 +153,10 @@
          * @Assert\Length(min = 2, max = 15)
          */
         private $postalcode;
-        
+
+//    * @Assert\NotNull
         /**
          * @ORM\ManyToOne(targetEntity="Country", inversedBy="venues")
-         * @Assert\NotNull
          */
         private $country;
         
@@ -166,10 +169,10 @@
          * @ORM\Column(type="string", length=255, nullable=true)
          */
         private $lng;
-        
+
+//    * @Assert\NotNull
         /**
          * @ORM\Column(type="boolean")
-         * @Assert\NotNull
          */
         private $listedondirectory = true;
         

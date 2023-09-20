@@ -1,11 +1,10 @@
 <?php
-/*
+    /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-
-namespace App\Form;
     
-    use A2lix\TranslationFormBundle\Form\Type\TranslationsType;
+    namespace App\Form;
+    
     use App\Entity\HelpCenterCategory;
     use App\Service\AppServices;
     use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -40,22 +39,27 @@ namespace App\Form;
                         return $this->services->getHelpCenterCategories(array("parent" => "none"));
                     }
                 ])
-                ->add('translations', TranslationsType::class, [
-                    // 'label' => 'Translation',
-                    'fields' => [
-                        'name' => [
-                            'purify_html' => true,
-                            'locale_options' => [
-                                'en' => ['label' => 'Name'],
-//                                'fr' => ['label' => 'Nom'],
-//                                'es' => ['label' => 'Nombre'],
-//                                'ar' => ['label' => 'اسم'],
-//                                'pt' => ['label' => 'Nome'],
-//                                'de' => ['label' => 'Name'],
-                            ]
-                        ]
-                    ],
-                    'excluded_fields' => ['slug']
+//                ->add('translations', TranslationsType::class, [
+//                    // 'label' => 'Translation',
+//                    'fields' => [
+//                        'name' => [
+//                            'purify_html' => true,
+//                            'locale_options' => [
+//                                'en' => ['label' => 'Name'],
+////                                'fr' => ['label' => 'Nom'],
+////                                'es' => ['label' => 'Nombre'],
+////                                'ar' => ['label' => 'اسم'],
+////                                'pt' => ['label' => 'Nome'],
+////                                'de' => ['label' => 'Name'],
+//                            ]
+//                        ]
+//                    ],
+//                    'excluded_fields' => ['slug']
+//                ])
+                ->add('name', TextType::class, [
+                    'required' => false,
+                    'label' => $options['name_label'],
+                    'purify_html' => true,
                 ])
                 ->add('icon', TextType::class, [
                     'purify_html' => true,
