@@ -11,7 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BlogController extends AbstractController
 {
@@ -33,11 +32,11 @@ class BlogController extends AbstractController
     /**
      * @Route("/blog-article/{slug}", name="blog_article")
      */
-    public function blogArticle($slug, AppServices $services, TranslatorInterface $translator): Response
+    public function blogArticle($slug, AppServices $services): Response
     {
         $blogpost = $services->getBlogPosts(array("slug" => $slug))->getQuery()->getOneOrNullResult();
         if (!$blogpost) {
-            $this->addFlash('error', $translator->trans('The blog post not be found'));
+            $this->addFlash('error', 'The blog post not be found');
             return $this->redirectToRoute('blog');
         }
         $blogpost->viewed();

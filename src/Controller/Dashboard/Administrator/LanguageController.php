@@ -1,28 +1,32 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Controller\Dashboard\Administrator;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Knp\Component\Pager\PaginatorInterface;
-use App\Service\AppServices;
 use App\Entity\Language;
 use App\Form\LanguageType;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use App\Service\AppServices;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
-class LanguageController extends Controller {
+class LanguageController extends Controller
+{
 
     /**
      * @Route("/manage-languages", name="language", methods="GET")
      */
-    public function index(Request $request, PaginatorInterface $paginator, AppServices $services) {
+    public function index(Request $request, PaginatorInterface $paginator, AppServices $services)
+    {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
 
         $languages = $paginator->paginate($services->getLanguages(array('keyword' => $keyword, 'hidden' => 'all', 'sort' => 'l.createdAt', 'order' => 'DESC')), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
 
         return $this->render('Dashboard/Administrator/Language/index.html.twig', [
-                    'languages' => $languages,
+            'languages' => $languages,
         ]);
     }
 
@@ -30,7 +34,8 @@ class LanguageController extends Controller {
      * @Route("/manage-languages/add", name="language_add", methods="GET|POST")
      * @Route("/manage-languages/{slug}/edit", name="language_edit", methods="GET|POST")
      */
-    public function addedit(Request $request, AppServices $services, TranslatorInterface $translator, $slug = null) {
+    public function addedit(Request $request, AppServices $services, $slug = null)
+    {
         $em = $this->getDoctrine()->getManager();
 
         if (!$slug) {
@@ -61,8 +66,8 @@ class LanguageController extends Controller {
             }
         }
         return $this->render('Dashboard/Administrator/Language/add-edit.html.twig', array(
-                    "language" => $language,
-                    "form" => $form->createView(),
+            "language" => $language,
+            "form" => $form->createView(),
         ));
     }
 
@@ -70,7 +75,8 @@ class LanguageController extends Controller {
      * @Route("/manage-languages/{slug}/disable", name="language_disable", methods="GET")
      * @Route("/manage-languages/{slug}/delete", name="language_delete", methods="GET")
      */
-    public function delete(AppServices $services, TranslatorInterface $translator, $slug) {
+    public function delete(AppServices $services, $slug)
+    {
 
         $language = $services->getLanguages(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$language) {
@@ -98,7 +104,8 @@ class LanguageController extends Controller {
     /**
      * @Route("/manage-languages/{slug}/restore", name="language_restore", methods="GET")
      */
-    public function restore($slug, Request $request, TranslatorInterface $translator, AppServices $services) {
+    public function restore($slug, Request $request, AppServices $services)
+    {
 
         $language = $services->getLanguages(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$language) {
@@ -118,7 +125,8 @@ class LanguageController extends Controller {
      * @Route("/manage-languages/{slug}/show", name="language_show", methods="GET")
      * @Route("/manage-languages/{slug}/hide", name="language_hide", methods="GET")
      */
-    public function showhide(AppServices $services, TranslatorInterface $translator, $slug) {
+    public function showhide(AppServices $services, $slug)
+    {
 
         $language = $services->getLanguages(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$language) {

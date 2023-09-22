@@ -12,7 +12,6 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BlogPostController extends Controller
 {
@@ -35,7 +34,7 @@ class BlogPostController extends Controller
      * @Route("/manage-blog-posts/add", name="blog_post_add", methods="GET|POST")
      * @Route("/manage-blog-posts/{slug}/edit", name="blog_post_edit", methods="GET|POST")
      */
-    public function addedit(Request $request, AppServices $services, TranslatorInterface $translator, $slug = null)
+    public function addedit(Request $request, AppServices $services, $slug = null)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -80,7 +79,7 @@ class BlogPostController extends Controller
      * @Route("/manage-blog-posts/{slug}/disable", name="blog_post_disable", methods="GET")
      * @Route("/manage-blog-posts/{slug}/delete", name="blog_post_delete", methods="GET")
      */
-    public function delete(AppServices $services, TranslatorInterface $translator, $slug)
+    public function delete(AppServices $services, $slug)
     {
 
         $blogpost = $services->getBlogPosts(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
@@ -105,7 +104,7 @@ class BlogPostController extends Controller
     /**
      * @Route("/manage-blog-posts/{slug}/restore", name="blog_post_restore", methods="GET")
      */
-    public function restore($slug, Request $request, TranslatorInterface $translator, AppServices $services)
+    public function restore($slug, Request $request, AppServices $services)
     {
 
         $blogpost = $services->getBlogPosts(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
@@ -126,7 +125,7 @@ class BlogPostController extends Controller
      * @Route("/manage-blog-posts/{slug}/show", name="blog_post_show", methods="GET")
      * @Route("/manage-blog-posts/{slug}/hide", name="blog_post_hide", methods="GET")
      */
-    public function showhide(AppServices $services, TranslatorInterface $translator, $slug)
+    public function showhide(AppServices $services, $slug)
     {
 
         $blogpost = $services->getBlogPosts(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();

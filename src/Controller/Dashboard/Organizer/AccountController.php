@@ -10,7 +10,6 @@ use App\Form\OrganizerProfileType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AccountController extends Controller
 {
@@ -18,7 +17,7 @@ class AccountController extends Controller
     /**
      * @Route("/profile", name="profile", methods={"GET", "POST"})
      */
-    public function edit(Request $request, TranslatorInterface $translator)
+    public function edit(Request $request)
     {
         // Retrieve the user
         $user = $this->getUser();

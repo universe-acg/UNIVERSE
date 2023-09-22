@@ -10,7 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class HelpCenterController extends AbstractController
 {
@@ -26,7 +25,7 @@ class HelpCenterController extends AbstractController
     /**
      * @Route("/help-center/{slug}", name="help_center_category")
      */
-    public function helpCenterCategory($slug, AppServices $services, TranslatorInterface $translator): Response
+    public function helpCenterCategory($slug, AppServices $services): Response
     {
         $category = $services->getHelpCenterCategories(array("slug" => $slug))->getQuery()->getOneOrNullResult();
         if (!$category) {
@@ -39,7 +38,7 @@ class HelpCenterController extends AbstractController
     /**
      * @Route("/help-center/article/{slug}", name="help_center_article")
      */
-    public function helpCenterArticle($slug, AppServices $services, TranslatorInterface $translator): Response
+    public function helpCenterArticle($slug, AppServices $services): Response
     {
         $article = $services->getHelpCenterArticles(array("slug" => $slug))->getQuery()->getOneOrNullResult();
         if (!$article) {

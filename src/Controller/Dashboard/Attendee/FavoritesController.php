@@ -12,7 +12,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FavoritesController extends Controller
 {
@@ -37,7 +36,7 @@ class FavoritesController extends Controller
      * @Route("/my-favorites/remove/{slug}", name="favorites_remove", condition="request.isXmlHttpRequest()")
      * @throws InvalidDatabaseException
      */
-    public function addRemove($slug, AppServices $services, TranslatorInterface $translator)
+    public function addRemove($slug, AppServices $services)
     {
 
         $event = $services->getEvents(array("slug" => $slug))->getQuery()->getOneOrNullResult();

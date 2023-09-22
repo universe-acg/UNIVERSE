@@ -14,7 +14,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class VenueController extends AbstractController
 {
@@ -34,17 +33,17 @@ class VenueController extends AbstractController
         $venues = $paginator->paginate($services->getVenues(array('directory' => true, 'keyword' => $keyword, 'country' => $country, 'venuetypes' => $venuetypes, 'minseatedguests' => $minseatedguests, 'maxseatedguests' => $maxseatedguests, 'minstandingguests' => $minstandingguests, 'maxstandingguests' => $maxstandingguests)), $request->query->getInt('page', 1), 8);
         return $this->render('Front/Venue/venues.html.twig', [
             'venues' => $venues
-        ]);
+        ]);git
     }
 
     /**
      * @Route("/venue/{slug}", name="venue")
      */
-    public function venue(Request $request, $slug, AppServices $services, TranslatorInterface $translator, Swift_Mailer $mailer): Response
+    public function venue(Request $request, $slug, AppServices $services, Swift_Mailer $mailer): Response
     {
         $venue = $services->getVenues(array('directory' => true, 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$venue) {
-            $this->addFlash('error', $translator->trans('The venue can not be found'));
+            $this->addFlash('error', 'The venue can not be found');
             return $this->redirectToRoute('venues');
         }
 
@@ -54,7 +53,7 @@ class VenueController extends AbstractController
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 $quoterequest = $form->getData();
-                $email = (new Swift_Message($translator->trans('New quote request')))
+                $email = (new Swift_Message('New quote request'))
                     ->setFrom($services->getSetting("no_reply_email"))
                     ->setTo($venue->getContactemail())
                     ->setBody(
@@ -63,10 +62,10 @@ class VenueController extends AbstractController
                         ), 'text/html'
                     );
                 $mailer->send($email);
-                $this->addFlash('success', $translator->trans('Your quote request has been successfully sent'));
+                $this->addFlash('success', 'Your quote request has been successfully sent');
                 $this->redirectToRoute("venue", ['slug' => $venue->getSlug()]);
             } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+                $this->addFlash('error', 'The form contains invalid data');
             }
         }
 

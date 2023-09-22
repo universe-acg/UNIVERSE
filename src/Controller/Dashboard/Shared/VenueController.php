@@ -1,4 +1,7 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Controller\Dashboard\Shared;
 
@@ -10,7 +13,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class VenueController extends Controller
 {
@@ -42,7 +44,7 @@ class VenueController extends Controller
      * @Route("/organizer/my-venues/add", name="dashboard_organizer_venue_add", methods="GET|POST")
      * @Route("/organizer/my-venues/{slug}/edit", name="dashboard_organizer_venue_edit", methods="GET|POST")
      */
-    public function addedit(Request $request, AppServices $services, TranslatorInterface $translator, $slug = null, AuthorizationCheckerInterface $authChecker)
+    public function addedit(Request $request, AppServices $services, $slug = null, AuthorizationCheckerInterface $authChecker)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -105,7 +107,7 @@ class VenueController extends Controller
      * @Route("/organizer/my-venues/{slug}/disable", name="dashboard_organizer_venue_disable", methods="GET")
      * @Route("/organizer/my-venues/{slug}/delete", name="dashboard_organizer_venue_delete", methods="GET")
      */
-    public function delete(AppServices $services, TranslatorInterface $translator, $slug, AuthorizationCheckerInterface $authChecker)
+    public function delete(AppServices $services, $slug, AuthorizationCheckerInterface $authChecker)
     {
 
         $organizer = "all";
@@ -140,7 +142,7 @@ class VenueController extends Controller
     /**
      * @Route("/administrator/manage-venues/{slug}/restore", name="dashboard_administrator_venue_restore", methods="GET")
      */
-    public function restore($slug, Request $request, TranslatorInterface $translator, AppServices $services)
+    public function restore($slug, Request $request, AppServices $services)
     {
 
         $venue = $services->getVenues(array('organizer' => "all", 'hidden' => 'all', 'slug' => $slug, "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();
@@ -163,7 +165,7 @@ class VenueController extends Controller
      * @Route("/organizer/my-venues/{slug}/show", name="dashboard_organizer_venue_show", methods="GET")
      * @Route("/organizer/my-venues/{slug}/hide", name="dashboard_organizer_venue_hide", methods="GET")
      */
-    public function showhide(AppServices $services, TranslatorInterface $translator, $slug, AuthorizationCheckerInterface $authChecker)
+    public function showhide(AppServices $services, $slug, AuthorizationCheckerInterface $authChecker)
     {
 
         $organizer = "all";
@@ -195,7 +197,7 @@ class VenueController extends Controller
      * @Route("/administrator/manage-venues/{slug}/listondirectory", name="dashboard_administrator_venue_listondirectory", methods="GET")
      * @Route("/administrator/manage-venues/{slug}/hidefromdirectory", name="dashboard_administrator_venue_hidefromdirectory", methods="GET")
      */
-    public function publicvenuesdirectory(AppServices $services, TranslatorInterface $translator, $slug)
+    public function publicvenuesdirectory(AppServices $services, $slug)
     {
 
         $venue = $services->getVenues(array('hidden' => 'all', 'slug' => $slug, "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();

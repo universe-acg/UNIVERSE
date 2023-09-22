@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ReviewController extends Controller
 {
@@ -53,7 +52,7 @@ class ReviewController extends Controller
      * @Route("/attendee/my-reviews/{slug}/add", name="dashboard_attendee_reviews_add")
      * @throws InvalidDatabaseException
      */
-    public function add($slug, Request $request, AppServices $services, TranslatorInterface $translator, UrlGeneratorInterface $router)
+    public function add($slug, Request $request, AppServices $services, UrlGeneratorInterface $router)
     {
         $event = $services->getEvents(array("slug" => $slug, "elapsed" => "all"))->getQuery()->getOneOrNullResult();
         if (!$event) {
@@ -86,7 +85,7 @@ class ReviewController extends Controller
      * @Route("/administrator/manage-reviews/{slug}/show", name="dashboard_administrator_review_show", methods="GET")
      * @Route("/administrator/manage-reviews/{slug}/hide", name="dashboard_administrator_review_hide", methods="GET")
      */
-    public function showhide(AppServices $services, TranslatorInterface $translator, $slug)
+    public function showhide(AppServices $services, $slug)
     {
 
         $review = $services->getReviews(array('slug' => $slug, 'visible' => 'all'))->getQuery()->getOneOrNullResult();
@@ -111,7 +110,7 @@ class ReviewController extends Controller
      * @Route("/administrator/manage-reviews/{slug}/delete-permanently", name="dashboard_administrator_review_delete_permanently", methods="GET")
      * @Route("/administrator/manage-reviews/{slug}/delete", name="dashboard_administrator_review_delete", methods="GET")
      */
-    public function delete($slug, AppServices $services, TranslatorInterface $translator, AuthorizationCheckerInterface $authChecker)
+    public function delete($slug, AppServices $services, AuthorizationCheckerInterface $authChecker)
     {
 
         $review = $services->getReviews(array('slug' => $slug, 'visible' => 'all'))->getQuery()->getOneOrNullResult();
@@ -136,7 +135,7 @@ class ReviewController extends Controller
     /**
      * @Route("/administrator/manage-reviews/{slug}/restore", name="dashboard_administrator_review_restore", methods="GET")
      */
-    public function restore($slug, Request $request, TranslatorInterface $translator, AppServices $services)
+    public function restore($slug, Request $request, AppServices $services)
     {
 
         $review = $services->getReviews(array('slug' => $slug, 'visible' => 'all'))->getQuery()->getOneOrNullResult();

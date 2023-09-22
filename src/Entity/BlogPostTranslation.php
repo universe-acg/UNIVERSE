@@ -1,4 +1,7 @@
 <?php
+    /*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
     
     namespace App\Entity;
     
@@ -59,9 +62,25 @@
             return $this->slug;
         }
         
-        public function setSlug($slug)
+        public function setSlug($slug = null)
         {
+            if ($slug === null) {
+                $slug = $this->generateUniqueSlug();
+            }
             $this->slug = $slug;
+        }
+        
+        private function generateUniqueSlug()
+        {
+            $baseSlug = // Generate the base slug here, for example, from the title or some unique identifier.
+            $salt = uniqid('', true); // Generate a unique salt, you can use other methods if needed.
+            
+            // Combine the base slug and salt to create a unique slug.
+            $uniqueSlug = $baseSlug . '-' . $salt;
+            
+            // You can further sanitize or modify the uniqueSlug if needed.
+            
+            return $uniqueSlug;
         }
         
         public function getContent()

@@ -11,7 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class OrganizerController extends AbstractController
 {
@@ -19,7 +18,7 @@ class OrganizerController extends AbstractController
     /**
      * @Route("/organizer/{slug}", name="organizer")
      */
-    public function organizer($slug, Request $request, AppServices $services, TranslatorInterface $translator): Response
+    public function organizer($slug, Request $request, AppServices $services): Response
     {
 
         $user = $services->getUsers(array('organizerslug' => $slug))->getQuery()->getOneOrNullResult();

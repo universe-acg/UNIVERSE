@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ScannerController extends Controller
 {
@@ -43,7 +42,7 @@ class ScannerController extends Controller
      * @throws Exception
      * @throws InvalidArgumentException
      */
-    public function addedit(Request $request, AppServices $services, TranslatorInterface $translator, $slug = null): Response
+    public function addedit(Request $request, AppServices $services, $slug = null): Response
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -122,7 +121,7 @@ class ScannerController extends Controller
      * @Route("/my-scanners/{slug}/delete-permanently", name="scanner_delete_permanently", methods="GET")
      * @Route("/my-scanners/{slug}/delete", name="scanner_delete", methods="GET")
      */
-    public function delete(AppServices $services, TranslatorInterface $translator, $slug): RedirectResponse
+    public function delete(AppServices $services, $slug): RedirectResponse
     {
 
         $scanner = $services->getUsers(array("role" => "scanner", "createdbyorganizerslug" => $this->getUser()->getOrganizer()->getSlug(), "enabled" => "all", "slug" => $slug))->getQuery()->getOneOrNullResult();
@@ -145,7 +144,7 @@ class ScannerController extends Controller
      * @Route("/my-scanners/{slug}/enable", name="scanner_enable", methods="GET")
      * @Route("/my-scanners/{slug}/disable", name="scanner_disable", methods="GET")
      */
-    public function enabledisable(AppServices $services, TranslatorInterface $translator, $slug): RedirectResponse
+    public function enabledisable(AppServices $services, $slug): RedirectResponse
     {
 
         $scanner = $services->getUsers(array("role" => "scanner", "createdbyorganizerslug" => $this->getUser()->getOrganizer()->getSlug(), "enabled" => "all", "slug" => $slug))->getQuery()->getOneOrNullResult();

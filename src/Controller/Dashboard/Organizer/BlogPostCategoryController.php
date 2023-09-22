@@ -11,7 +11,6 @@ use App\Service\AppServices;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BlogPostCategoryController extends Controller
 {
@@ -20,7 +19,7 @@ class BlogPostCategoryController extends Controller
      * @Route("/manage-blog-post-categories/add", name="blog_post_category_add", methods="GET|POST")
      * @Route("/manage-blog-post-categories/{slug}/edit", name="blog_post_category_edit", methods="GET|POST")
      */
-    public function addedit(Request $request, AppServices $services, TranslatorInterface $translator, $slug = null)
+    public function addedit(Request $request, AppServices $services, $slug = null)
     {
         $em = $this->getDoctrine()->getManager();
 

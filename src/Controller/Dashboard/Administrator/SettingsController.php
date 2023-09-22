@@ -23,7 +23,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig_Environment;
 
 class SettingsController extends Controller
@@ -32,7 +31,7 @@ class SettingsController extends Controller
     /**
      * @Route("/settings/payment", name="settings_payment", methods="GET|POST")
      */
-    public function payment(Request $request, AppServices $services, TranslatorInterface $translator)
+    public function payment(Request $request, AppServices $services)
     {
 
         $form = $this->createFormBuilder()
@@ -147,7 +146,7 @@ class SettingsController extends Controller
     /**
      * @Route("/settings/checkout", name="settings_checkout", methods="GET|POST")
      */
-    public function checkout(Request $request, AppServices $services, TranslatorInterface $translator)
+    public function checkout(Request $request, AppServices $services)
     {
 
         $form = $this->createFormBuilder()
@@ -201,7 +200,7 @@ class SettingsController extends Controller
      * @Route("/settings/payment/gateways/add", name="settings_payment_gateways_add", methods="GET|POST")
      * @Route("/settings/payment/gateways/{slug}/edit", name="settings_payment_gateways_edit", methods="GET|POST")
      */
-    public function paymentgatewaysaddedit(Request $request, AppServices $services, TranslatorInterface $translator, $slug = null)
+    public function paymentgatewaysaddedit(Request $request, AppServices $services, $slug = null)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -243,7 +242,7 @@ class SettingsController extends Controller
     /**
      * @Route("/settings/newsletter", name="settings_newsletter", methods="GET|POST")
      */
-    public function newsletter(Request $request, AppServices $services, TranslatorInterface $translator)
+    public function newsletter(Request $request, AppServices $services)
     {
 
         $form = $this->createFormBuilder()
@@ -304,7 +303,7 @@ class SettingsController extends Controller
     /**
      * @Route("/settings/homepage-hero", name="settings_homepage", methods="GET|POST")
      */
-    public function homepagehero(Request $request, AppServices $services, TranslatorInterface $translator)
+    public function homepagehero(Request $request, AppServices $services)
     {
 
         $em = $this->getDoctrine()->getManager();
@@ -372,7 +371,7 @@ class SettingsController extends Controller
     /**
      * @Route("/settings/layout", name="settings_layout", methods="GET|POST")
      */
-    public function layout(Request $request, AppServices $services, TranslatorInterface $translator)
+    public function layout(Request $request, AppServices $services)
     {
 
         $em = $this->getDoctrine()->getManager();
@@ -523,7 +522,7 @@ class SettingsController extends Controller
     /**
      * @Route("/settings/events-list-page", name="settings_events_list_page", methods="GET|POST")
      */
-    public function eventsListPage(Request $request, AppServices $services, TranslatorInterface $translator)
+    public function eventsListPage(Request $request, AppServices $services)
     {
 
         $form = $this->createFormBuilder()
@@ -664,7 +663,7 @@ class SettingsController extends Controller
     /**
      * @Route("/settings/venue-page", name="settings_venue_page", methods="GET|POST")
      */
-    public function venuePage(Request $request, AppServices $services, TranslatorInterface $translator)
+    public function venuePage(Request $request, AppServices $services)
     {
 
         $form = $this->createFormBuilder()
@@ -722,7 +721,7 @@ class SettingsController extends Controller
     /**
      * @Route("/settings/blog", name="settings_blog", methods="GET|POST")
      */
-    public function blog(Request $request, AppServices $services, TranslatorInterface $translator)
+    public function blog(Request $request, AppServices $services)
     {
 
         $form = $this->createFormBuilder()
@@ -787,7 +786,7 @@ class SettingsController extends Controller
     /**
      * @Route("/settings/mail-server", name="settings_mail_server", methods="GET|POST")
      */
-    public function mailServer(Request $request, AppServices $services, TranslatorInterface $translator)
+    public function mailServer(Request $request, AppServices $services)
     {
 
         if ($services->getEnv("DEMO_MODE") == "1") {
@@ -928,7 +927,7 @@ class SettingsController extends Controller
     /**
      * @Route("/settings/mail-server/test", name="settings_mail_server_test", methods="GET|POST")
      */
-    public function mailServerTest(Request $request, AppServices $services, Swift_Mailer $mailer, Twig_Environment $templating, TranslatorInterface $translator)
+    public function mailServerTest(Request $request, AppServices $services, Swift_Mailer $mailer, Twig_Environment $templating)
     {
 
         $email = new Swift_Message($translator->trans("Mail server test email"));
@@ -951,7 +950,7 @@ class SettingsController extends Controller
     /**
      * @Route("/settings/google-recaptcha", name="settings_google_recaptcha", methods="GET|POST")
      */
-    public function googleRecaptcha(Request $request, AppServices $services, TranslatorInterface $translator)
+    public function googleRecaptcha(Request $request, AppServices $services)
     {
 
         $form = $this->createFormBuilder()
@@ -1010,7 +1009,7 @@ class SettingsController extends Controller
     /**
      * @Route("/settings/google-maps", name="settings_google_maps", methods="GET|POST")
      */
-    public function googleMaps(Request $request, AppServices $services, TranslatorInterface $translator)
+    public function googleMaps(Request $request, AppServices $services)
     {
 
         $form = $this->createFormBuilder()
@@ -1048,7 +1047,7 @@ class SettingsController extends Controller
     /**
      * @Route("/settings/social-login", name="settings_social_login", methods="GET|POST")
      */
-    public function socialLogin(Request $request, AppServices $services, TranslatorInterface $translator)
+    public function socialLogin(Request $request, AppServices $services)
     {
 
         $form = $this->createFormBuilder()
@@ -1134,7 +1133,7 @@ class SettingsController extends Controller
     /**
      * @Route("/settings/menus", name="settings_menus", methods="GET")
      */
-    public function menus(Request $request, AppServices $services, TranslatorInterface $translator)
+    public function menus(Request $request, AppServices $services)
     {
 
         $menus = $services->getMenus(array())->getQuery()->getResult();
@@ -1147,7 +1146,7 @@ class SettingsController extends Controller
     /**
      * @Route("/settings/menus/{slug}/edit", name="settings_menus_edit", methods="GET|POST")
      */
-    public function menuEdit(Request $request, AppServices $services, TranslatorInterface $translator, $slug)
+    public function menuEdit(Request $request, AppServices $services, $slug)
     {
 
         $em = $this->getDoctrine()->getManager();

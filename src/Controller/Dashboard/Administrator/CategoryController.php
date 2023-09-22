@@ -1,29 +1,33 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Controller\Dashboard\Administrator;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Knp\Component\Pager\PaginatorInterface;
-use App\Service\AppServices;
 use App\Entity\Category;
 use App\Form\CategoryType;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use App\Service\AppServices;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
-class CategoryController extends Controller {
+class CategoryController extends Controller
+{
 
     /**
      * @Route("/manage-categories", name="category", methods="GET")
      */
-    public function index(Request $request, PaginatorInterface $paginator, AppServices $services) {
+    public function index(Request $request, PaginatorInterface $paginator, AppServices $services)
+    {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
         $featured = ($request->query->get('featured')) == "" ? "all" : $request->query->get('featured');
 
         $categories = $paginator->paginate($services->getCategories(array('keyword' => $keyword, 'hidden' => 'all', 'featured' => $featured, 'sort' => 'c.createdAt', 'order' => 'DESC')), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
 
         return $this->render('Dashboard/Administrator/Category/index.html.twig', [
-                    'categories' => $categories,
+            'categories' => $categories,
         ]);
     }
 
@@ -31,7 +35,8 @@ class CategoryController extends Controller {
      * @Route("/manage-categories/add", name="category_add", methods="GET|POST")
      * @Route("/manage-categories/{slug}/edit", name="category_edit", methods="GET|POST")
      */
-    public function addedit(Request $request, AppServices $services, TranslatorInterface $translator, $slug = null) {
+    public function addedit(Request $request, AppServices $services, $slug = null)
+    {
         $em = $this->getDoctrine()->getManager();
 
         if (!$slug) {
@@ -62,8 +67,8 @@ class CategoryController extends Controller {
             }
         }
         return $this->render('Dashboard/Administrator/Category/add-edit.html.twig', array(
-                    "category" => $category,
-                    "form" => $form->createView(),
+            "category" => $category,
+            "form" => $form->createView(),
         ));
     }
 
@@ -71,7 +76,8 @@ class CategoryController extends Controller {
      * @Route("/manage-categories/{slug}/disable", name="category_disable", methods="GET")
      * @Route("/manage-categories/{slug}/delete", name="category_delete", methods="GET")
      */
-    public function delete(AppServices $services, TranslatorInterface $translator, $slug) {
+    public function delete(AppServices $services, $slug)
+    {
 
         $category = $services->getCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$category) {
@@ -100,7 +106,8 @@ class CategoryController extends Controller {
     /**
      * @Route("/manage-categories/{slug}/restore", name="category_restore", methods="GET")
      */
-    public function restore($slug, Request $request, TranslatorInterface $translator, AppServices $services) {
+    public function restore($slug, Request $request, AppServices $services)
+    {
 
         $category = $services->getCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$category) {
@@ -120,7 +127,8 @@ class CategoryController extends Controller {
      * @Route("/manage-categories/{slug}/show", name="category_show", methods="GET")
      * @Route("/manage-categories/{slug}/hide", name="category_hide", methods="GET")
      */
-    public function showhide(AppServices $services, TranslatorInterface $translator, $slug) {
+    public function showhide(AppServices $services, $slug)
+    {
 
         $category = $services->getCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$category) {
@@ -145,7 +153,8 @@ class CategoryController extends Controller {
      * @Route("/manage-categories/{slug}/featured", name="category_featured", methods="GET")
      * @Route("/manage-categories/{slug}/notfeatured", name="category_notfeatured", methods="GET")
      */
-    public function featured(AppServices $services, TranslatorInterface $translator, $slug) {
+    public function featured(AppServices $services, $slug)
+    {
 
         $category = $services->getCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$category) {

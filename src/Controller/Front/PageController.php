@@ -15,7 +15,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PageController extends AbstractController
 {
@@ -23,12 +22,12 @@ class PageController extends AbstractController
     /**
      * @Route("/page/{slug}", name="page")
      */
-    public function page($slug, AppServices $services, TranslatorInterface $translator): Response
+    public function page($slug, AppServices $services): Response
     {
         $page = $services->getPages(array('slug' => $slug))->getQuery()->getOneOrNullResult();
 
         if (!$page) {
-            $this->addFlash("error", $translator->trans("The page can not be found"));
+            $this->addFlash("error", "The page can not be found");
             return $this->redirectToRoute("homepage");
         }
 
@@ -40,7 +39,7 @@ class PageController extends AbstractController
     /**
      * @Route("/contact", name="contact")
      */
-    public function contact(Request $request, TranslatorInterface $translator, Swift_Mailer $mailer, AppServices $services): Response
+    public function contact(Request $request, Swift_Mailer $mailer, AppServices $services): Response
     {
 
         $form = $this->createFormBuilder()
@@ -107,9 +106,9 @@ class PageController extends AbstractController
 
                 $mailer->send($email);
 
-                $this->addFlash('success', $translator->trans('Your message has been successfully sent'));
+                $this->addFlash('success', 'Your message has been successfully sent');
             } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+                $this->addFlash('error', 'The form contains invalid data');
             }
         }
 

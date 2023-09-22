@@ -1,4 +1,7 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Controller\Dashboard\Administrator;
 
@@ -9,7 +12,6 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class VenueTypeController extends Controller
 {
@@ -32,7 +34,7 @@ class VenueTypeController extends Controller
      * @Route("/manage-venues-types/add", name="venuetype_add", methods="GET|POST")
      * @Route("/manage-venues-types/{slug}/edit", name="venuetype_edit", methods="GET|POST")
      */
-    public function addedit(Request $request, AppServices $services, TranslatorInterface $translator, $slug = null)
+    public function addedit(Request $request, AppServices $services, $slug = null)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -73,7 +75,7 @@ class VenueTypeController extends Controller
      * @Route("/manage-venues-types/{slug}/disable", name="venuetype_disable", methods="GET")
      * @Route("/manage-venues-types/{slug}/delete", name="venuetype_delete", methods="GET")
      */
-    public function delete(AppServices $services, TranslatorInterface $translator, $slug)
+    public function delete(AppServices $services, $slug)
     {
 
         $venuetype = $services->getVenuesTypes(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
@@ -102,7 +104,7 @@ class VenueTypeController extends Controller
     /**
      * @Route("/manage-venues-types/{slug}/restore", name="venuetype_restore", methods="GET")
      */
-    public function restore($slug, Request $request, TranslatorInterface $translator, AppServices $services)
+    public function restore($slug, Request $request, AppServices $services)
     {
 
         $venuetype = $services->getVenuesTypes(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
@@ -123,7 +125,7 @@ class VenueTypeController extends Controller
      * @Route("/manage-venues-types/{slug}/show", name="venuetype_show", methods="GET")
      * @Route("/manage-venues-types/{slug}/hide", name="venuetype_hide", methods="GET")
      */
-    public function showhide(AppServices $services, TranslatorInterface $translator, $slug)
+    public function showhide(AppServices $services, $slug)
     {
 
         $venuetype = $services->getVenuesTypes(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();

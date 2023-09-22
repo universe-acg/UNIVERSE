@@ -13,7 +13,6 @@ use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig_Environment;
 
 class MaintenanceModeSubscriber implements EventSubscriberInterface
@@ -25,7 +24,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface
     private $templating;
     private $services;
 
-    public function __construct(ParameterBagInterface $params, Security $security, TranslatorInterface $translator, Twig_Environment $templating, AppServices $services)
+    public function __construct(ParameterBagInterface $params, Security $security, Twig_Environment $templating, AppServices $services)
     {
         $this->params = $params;
         $this->security = $security;

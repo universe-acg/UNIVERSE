@@ -1,0 +1,49 @@
+<style>
+    /* Custom CSS for table */
+    .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px; /* Add some margin for spacing */
+    }
+
+    /* Style for table headers */
+    .custom-table th {
+        background-color: #f5f5f5; /* Header background color */
+        text-align: left;
+        padding: 10px;
+    }
+
+    /* Style for table cells */
+    .custom-table td {
+        padding: 10px;
+        border: 1px solid #ddd; /* Add borders for cells */
+    }
+
+    /* Style for alternate rows (striped rows) */
+    .custom-table tbody tr:nth-child(even) {
+        background-color: #f2f2f2; /* Alternate row background color */
+    }
+
+    /* Additional custom style for td elements */
+    .custom-td {
+        width: 50%; /* Evenly space the td elements within each column */
+    }
+
+</style>
+
+<table class="table table-hover table-vcenter custom-table">
+    <thead>
+        <tr>
+            <th>Full name</th>
+            <th>Date booked</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+            <tr>
+                <td class="custom-td">{{ order.user.getCrossRoleName }}</td>
+                <td class="custom-td">{{ order.createdAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

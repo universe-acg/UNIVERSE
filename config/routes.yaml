@@ -18,6 +18,10 @@ registration_register_attendee_admin:
   path: /en/dashboard/administrator/signup/attendee
   controller: 'App\Controller\Dashboard\Administrator\AdminRegistrationController::registerAttendeeAction'
 
+generate_attendees_pdf:
+  path: /en/dashboard/generate-attendees-pdf
+  controller: 'App\Controller\Dashboard\Shared\PdfController::generatePdf'
+
 get_event_details:
   path: '/get-event-details/{eventId}'
   controller: 'App\Controller\Api\EventController::getEventDetails'
@@ -36,7 +40,6 @@ blog_post_organizer:
   path: /en/dashboard/organizer/manage-blog-posts-organizer/
   controller: 'App\Controller\Dashboard\Organizer\BlogPostController::index'
   methods: [ 'GET', 'POST' ]
-
 
 # Dashboard routes
 dashboard_attendee_following:

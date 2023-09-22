@@ -1,29 +1,33 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Controller\Dashboard\Administrator;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Knp\Component\Pager\PaginatorInterface;
-use App\Service\AppServices;
 use App\Entity\HelpCenterCategory;
 use App\Form\HelpCenterCategoryType;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use App\Service\AppServices;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
-class HelpCenterCategoryController extends Controller {
+class HelpCenterCategoryController extends Controller
+{
 
     /**
      * @Route("/manage-help-center/categories", name="help_center_category", methods="GET")
      */
-    public function index(Request $request, PaginatorInterface $paginator, AppServices $services) {
+    public function index(Request $request, PaginatorInterface $paginator, AppServices $services)
+    {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
         $hidden = ($request->query->get('hidden')) == "" ? "all" : $request->query->get('hidden');
 
         $categories = $paginator->paginate($services->getHelpCenterCategories(array('keyword' => $keyword, 'hidden' => $hidden, 'order' => 'c.createdAt', 'sort' => 'DESC')), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
 
         return $this->render('Dashboard/Administrator/HelpCenter/Category/index.html.twig', [
-                    'categories' => $categories,
+            'categories' => $categories,
         ]);
     }
 
@@ -31,7 +35,8 @@ class HelpCenterCategoryController extends Controller {
      * @Route("/manage-help-center/categories/add", name="help_center_category_add", methods="GET|POST")
      * @Route("/manage-help-center/categories/{slug}/edit", name="help_center_category_edit", methods="GET|POST")
      */
-    public function addedit(Request $request, AppServices $services, TranslatorInterface $translator, $slug = null) {
+    public function addedit(Request $request, AppServices $services, $slug = null)
+    {
         $em = $this->getDoctrine()->getManager();
 
         if (!$slug) {
@@ -62,8 +67,8 @@ class HelpCenterCategoryController extends Controller {
             }
         }
         return $this->render('Dashboard/Administrator/HelpCenter/Category/add-edit.html.twig', array(
-                    "category" => $category,
-                    "form" => $form->createView(),
+            "category" => $category,
+            "form" => $form->createView(),
         ));
     }
 
@@ -71,7 +76,8 @@ class HelpCenterCategoryController extends Controller {
      * @Route("/manage-help-center/categories/{slug}/disable", name="help_center_category_disable", methods="GET")
      * @Route("/manage-help-center/categories/{slug}/delete", name="help_center_category_delete", methods="GET")
      */
-    public function delete(AppServices $services, TranslatorInterface $translator, $slug) {
+    public function delete(AppServices $services, $slug)
+    {
 
         $category = $services->getHelpCenterCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$category) {
@@ -99,7 +105,8 @@ class HelpCenterCategoryController extends Controller {
     /**
      * @Route("/manage-help-center/categories/{slug}/restore", name="help_center_category_restore", methods="GET")
      */
-    public function restore($slug, Request $request, TranslatorInterface $translator, AppServices $services) {
+    public function restore($slug, Request $request, AppServices $services)
+    {
 
         $category = $services->getHelpCenterCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$category) {
@@ -119,7 +126,8 @@ class HelpCenterCategoryController extends Controller {
      * @Route("/manage-help-center/categories/{slug}/show", name="help_center_category_show", methods="GET")
      * @Route("/manage-help-center/categories/{slug}/hide", name="help_center_category_hide", methods="GET")
      */
-    public function showhide(AppServices $services, TranslatorInterface $translator, $slug) {
+    public function showhide(AppServices $services, $slug)
+    {
 
         $category = $services->getHelpCenterCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$category) {

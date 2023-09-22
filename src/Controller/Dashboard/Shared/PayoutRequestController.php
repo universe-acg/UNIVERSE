@@ -32,7 +32,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PayoutRequestController extends Controller
 {
@@ -47,7 +46,7 @@ class PayoutRequestController extends Controller
     /**
      * @Route("/organizer/my-payout-requests/add/{eventDateReference}", name="dashboard_organizer_event_date_request_payout")
      */
-    public function payoutRequestAdd($eventDateReference, Request $request, TranslatorInterface $translator, AppServices $services)
+    public function payoutRequestAdd($eventDateReference, Request $request, AppServices $services)
     {
 
         $organizerPayoutMethods = $services->getPaymentGateways(array("organizer" => $this->getUser()->getOrganizer()->getSlug()))->getQuery()->getResult();
@@ -125,7 +124,7 @@ class PayoutRequestController extends Controller
      * @Route("/administrator/manage-payout-requests/{reference}/cancel", name="dashboard_administrator_payout_request_cancel")
      * @Route("/organizer/my-payout-requests/{reference}/cancel", name="dashboard_organizer_payout_request_cancel")
      */
-    public function cancel($reference, Request $request, TranslatorInterface $translator, AppServices $services)
+    public function cancel($reference, Request $request, AppServices $services)
     {
 
         $payoutRequest = $services->getPayoutRequests(array("reference" => $reference, "status" => "all"))->getQuery()->getOneOrNullResult();
@@ -163,7 +162,7 @@ class PayoutRequestController extends Controller
     /**
      * @Route("/administrator/manage-payout-requests/{reference}/failed", name="dashboard_administrator_payout_request_failed")
      */
-    public function failed($reference, Request $request, TranslatorInterface $translator, AppServices $services)
+    public function failed($reference, Request $request, AppServices $services)
     {
 
         $payoutRequest = $services->getPayoutRequests(array("reference" => $reference, "status" => 0))->getQuery()->getOneOrNullResult();
@@ -196,7 +195,7 @@ class PayoutRequestController extends Controller
     /**
      * @Route("/administrator/manage-payout-requests/{reference}/delete", name="dashboard_administrator_payout_request_delete")
      */
-    public function delete($reference, Request $request, TranslatorInterface $translator, AppServices $services)
+    public function delete($reference, Request $request, AppServices $services)
     {
 
         $payoutRequest = $services->getPayoutRequests(array("reference" => $reference, "status" => "all"))->getQuery()->getOneOrNullResult();
@@ -229,7 +228,7 @@ class PayoutRequestController extends Controller
     /**
      * @Route("/administrator/manage-payout-requests/{reference}/restore", name="dashboard_administrator_payout_request_restore")
      */
-    public function restore($reference, Request $request, TranslatorInterface $translator, AppServices $services)
+    public function restore($reference, Request $request, AppServices $services)
     {
 
         $payoutRequest = $services->getPayoutRequests(array("reference" => $reference, "status" => "all"))->getQuery()->getOneOrNullResult();
@@ -251,7 +250,7 @@ class PayoutRequestController extends Controller
     /**
      * @Route("/administrator/manage-payout-requests/{reference}/approve", name="dashboard_administrator_payout_request_approve")
      */
-    public function approve($reference, Request $request, TranslatorInterface $translator, AppServices $services)
+    public function approve($reference, Request $request, AppServices $services)
     {
 
         $em = $this->getDoctrine()->getManager();
@@ -391,7 +390,7 @@ class PayoutRequestController extends Controller
     /**
      * @Route("/administrator/manage-payout-requests/{reference}/approved", name="dashboard_administrator_payout_request_approved")
      */
-    public function approved($reference, Request $request, TranslatorInterface $translator, AppServices $services)
+    public function approved($reference, Request $request, AppServices $services)
     {
 
         $payoutRequest = $services->getPayoutRequests(array("reference" => $reference, "status" => 0))->getQuery()->getOneOrNullResult();
@@ -470,7 +469,7 @@ class PayoutRequestController extends Controller
      * @Route("/administrator/manage-payout-requests/{reference}/details", name="dashboard_administrator_payout_request_details")
      * @Route("/organizer/my-payout-requests/{reference}/details", name="dashboard_organizer_payout_request_details")
      */
-    public function details($reference, Request $request, TranslatorInterface $translator, AppServices $services)
+    public function details($reference, Request $request, AppServices $services)
     {
 
         $payoutRequest = $services->getPayoutRequests(array("reference" => $reference, "status" => "all"))->getQuery()->getOneOrNullResult();

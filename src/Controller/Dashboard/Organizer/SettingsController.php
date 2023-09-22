@@ -1,56 +1,59 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Controller\Dashboard\Organizer;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\NotNull;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use App\Entity\PaymentGateway;
 use App\Form\OrganizerPayoutPaymentGatewayType;
 use App\Service\AppServices;
+use DateTime;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
-class SettingsController extends Controller {
+class SettingsController extends Controller
+{
 
     /**
      * @Route("/settings/scanner-app", name="settings_scanner_app", methods="GET|POST")
      */
-    public function scannerApp(Request $request, TranslatorInterface $translator) {
+    public function scannerApp(Request $request)
+    {
 
         $form = $this->createFormBuilder()
-                ->add('showEventDateStatsOnScannerApp', ChoiceType::class, [
-                    'required' => true,
-                    'multiple' => false,
-                    'expanded' => true,
-                    'label' => 'Show event date stats on the scanner app',
-                    'choices' => ['Yes' => 1, 'No' => 0],
-                    'label_attr' => ['class' => 'radio-custom radio-inline'],
-                    'help' => 'The event date stats (sales and attendance) will be visible on the scanner app',
+            ->add('showEventDateStatsOnScannerApp', ChoiceType::class, [
+                'required' => true,
+                'multiple' => false,
+                'expanded' => true,
+                'label' => 'Show event date stats on the scanner app',
+                'choices' => ['Yes' => 1, 'No' => 0],
+                'label_attr' => ['class' => 'radio-custom radio-inline'],
+                'help' => 'The event date stats (sales and attendance) will be visible on the scanner app',
 //                    'constraints' => array(
 //                        new NotNull()
 //                    ),
-                ])
-                ->add('allowTapToCheckInOnScannerApp', ChoiceType::class, [
-                    'required' => true,
-                    'multiple' => false,
-                    'expanded' => true,
-                    'label' => 'Allow tap to check in on the scanner app',
-                    'choices' => ['Yes' => 1, 'No' => 0],
-                    'label_attr' => ['class' => 'radio-custom radio-inline'],
-                    'help' => 'Besides the qr code scanning feature, the scanner account will be able to check in the attendees using a list and a button',
+            ])
+            ->add('allowTapToCheckInOnScannerApp', ChoiceType::class, [
+                'required' => true,
+                'multiple' => false,
+                'expanded' => true,
+                'label' => 'Allow tap to check in on the scanner app',
+                'choices' => ['Yes' => 1, 'No' => 0],
+                'label_attr' => ['class' => 'radio-custom radio-inline'],
+                'help' => 'Besides the qr code scanning feature, the scanner account will be able to check in the attendees using a list and a button',
 //                    'constraints' => array(
 //                        new NotNull()
 //                    ),
-                ])
-                ->add('save', SubmitType::class, [
-                    'label' => 'Save',
-                    'attr' => ['class' => 'btn btn-primary'],
-                ])
-                ->getForm();
+            ])
+            ->add('save', SubmitType::class, [
+                'label' => 'Save',
+                'attr' => ['class' => 'btn btn-primary'],
+            ])
+            ->getForm();
 
         $form->handleRequest($request);
 
@@ -72,14 +75,15 @@ class SettingsController extends Controller {
         }
 
         return $this->render('Dashboard/Organizer/Settings/scanner-app.html.twig', [
-                    'form' => $form->createView()
+            'form' => $form->createView()
         ]);
     }
 
     /**
      * @Route("/settings/payouts", name="settings_payouts", methods="GET|POST")
      */
-    public function payout() {
+    public function payout()
+    {
         return $this->render('Dashboard/Organizer/Settings/payout-methods.html.twig');
     }
 
@@ -87,7 +91,8 @@ class SettingsController extends Controller {
      * @Route("/settings/payouts/add", name="settings_payouts_add", methods="GET|POST")
      * @Route("/settings/payouts/{slug}/edit", name="settings_payouts_edit", methods="GET|POST")
      */
-    public function payoutAddEdit(Request $request, AppServices $services, TranslatorInterface $translator, $slug = null) {
+    public function payoutAddEdit(Request $request, AppServices $services, $slug = null)
+    {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -128,7 +133,7 @@ class SettingsController extends Controller {
                         $paymentgateway->setName("Stripe");
                     }
                 }
-                $paymentgateway->setUpdatedAt(new \DateTime);
+                $paymentgateway->setUpdatedAt(new DateTime);
                 $em->persist($paymentgateway);
                 $em->flush();
                 if (!$slug) {
@@ -143,15 +148,16 @@ class SettingsController extends Controller {
         }
 
         return $this->render('Dashboard/Organizer/Settings/payout-add-edit.html.twig', [
-                    'form' => $form->createView(),
-                    'paymentgateway' => $paymentgateway
+            'form' => $form->createView(),
+            'paymentgateway' => $paymentgateway
         ]);
     }
 
     /**
      * @Route("/settings/payouts/{slug}/unset", name="settings_payouts_unset", methods="GET")
      */
-    public function payoutUnset(Request $request, AppServices $services, TranslatorInterface $translator, $slug = null) {
+    public function payoutUnset(Request $request, AppServices $services, $slug = null)
+    {
 
         $paymentgateway = $services->getPaymentGateways(array('organizer' => $this->getUser()->getOrganizer()->getSlug(), 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$paymentgateway) {

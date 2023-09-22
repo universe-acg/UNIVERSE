@@ -13,7 +13,6 @@ use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class StatisticsController extends Controller
 {
@@ -23,7 +22,7 @@ class StatisticsController extends Controller
      * @Route("/organizer/my-events/{eventSlug}/event-dates/{eventDateReference}/statistics", name="dashboard_organizer_event_date_statistics")
      * @throws InvalidArgumentException
      */
-    public function eventDateStatistics($eventDateReference, Request $request, TranslatorInterface $translator, AppServices $services)
+    public function eventDateStatistics($eventDateReference, Request $request, AppServices $services)
     {
 
         $organizer = "all";
@@ -126,7 +125,9 @@ class StatisticsController extends Controller
         $ticketsSoldByChannelPieChartsArray = array();
         $ticketsGrossSalesByChannelPieChartsArray = array();
 
-        foreach ($eventDate->getTickets() as $eventTicket) {
+        foreach ($eventdate->getTickets() as $eventticket) {
+            $eventdate->setTitle($event->getName());
+            $eventdate->setDescription($event->getDescription());
 
             $thisTicketsSoldByChannelPieChart = new PieChart();
             $thisTicketsSoldByChannelPieChart->getData()->setArrayToDataTable(

@@ -23,152 +23,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class CartController extends Controller
 {
 
-
-//            $em = $this->getDoctrine()->getManager();
-//
-//        // Remove previous ticket reservations
-//        if (count($this->getUser()->getTicketreservations())) {
-//            foreach ($this->getUser()->getTicketreservations() as $ticketreservation) {
-//                $em->remove($ticketreservation);
-//            }
-//            $em->flush();
-//        }
-//
-//        // Check event sale status
-//        foreach ($this->getUser()->getCartelements() as $cartelement) {
-//            if (!$cartelement->getEventticket()->isOnSale()) {
-//                $em->remove($cartelement);
-//                $em->flush();
-////                $this->addFlash('notice', $translator->trans('Your cart has been automatically updated because one or more events are no longer on sale'));
-////                return $this->redirectToRoute("dashboard_attendee_cart");
-//            }
-//            if (!$cartelement->getEventticket()->isOnSale()) {
-//                $em->remove($cartelement);
-//                $em->flush();
-////                $this->addFlash('notice', $translator->trans('Your cart has been automatically updated because one or more events are no longer on sale'));
-////                return $this->redirectToRoute("dashboard_attendee_cart");
-//            }
-//            if ($cartelement->getEventticket()->getTicketsLeftCount() > 0 && $cartelement->getQuantity() > $cartelement->getEventticket()->getTicketsLeftCount()) {
-//                $cartelement->setQuantity($cartelement->getEventticket()->getTicketsLeftCount());
-//                $em->persist($cartelement);
-//                $em->flush();
-////                $this->addFlash('notice', $translator->trans('Your cart has been automatically updated because one or more event\'s quotas has changed'));
-////                return $this->redirectToRoute("dashboard_attendee_cart");
-//            }
-//        }
-//        if ($request->getMethod() == "POST") {
-//            if (count($request->request->all()) == 0) {
-//                $this->addFlash('notice', $translator->trans('No tickets selected to add to cart'));
-//            } else {
-//                foreach ($request->request->all() as $ticketreference => $ticketquantity) {
-//                    $cartelement = $this->getUser()->getCartelementByEventTicketReference($ticketreference);
-//                    if ($cartelement) {
-//                        $cartelement->setQuantity($ticketquantity);
-//                        $em->persist($cartelement);
-////                        $this->addFlash('error', $translator->trans('The event ticket can not be found'));
-////                        return $this->render('Dashboard/Attendee/Cart/cart.html.twig');
-//                    }
-//
-//                }
-//                $em->flush();
-////                $this->addFlash('success', $translator->trans('Your cart has been updated'));
-//            }
-//        }
-//
-//        // previous code ends
-//
-//
-//        if ($this->isGranted("ROLE_ATTENDEE")) {
-//            $paymentGateways = $services->getPaymentGateways(array())->getQuery()->getResult();
-//            $form = $this->createForm(CheckoutType::class, null, array('validation_groups' => 'attendee'));
-//        } else {
-//            $form = $this->createForm(CheckoutType::class, null, array('validation_groups' => 'pos'));
-//        }
-//
-//        $this->addFlash('error', $translator->trans('adsadadsaddaa'));
-//        $form->handleRequest($request);
-//
-//        if ($form->isSubmitted()) {
-//
-//            $order = $services->getOrders(array('status' => 0, 'reference' => $form->getData()['orderReference']))->getQuery()->getOneOrNullResult();
-//
-//            if ($form->isValid()) {
-//                $storage = $this->get('payum')->getStorage(Payment::class);
-//
-//                $orderTotalAmount = $order->getOrderElementsPriceSum(true);
-//
-//                if ($orderTotalAmount == 0) {
-//                    $paymentGateway = $em->getRepository(PaymentGateway::class)->findOneBySlug("free");
-//                    $gatewayFactoryName = "offline";
-//                }
-//
-//// Sets the choosen payment gateway
-//                $order->setPaymentGateway($paymentGateway);
-//                $em->persist($order);
-//
-//// Sets the amount to be paid
-//                $orderamount = (int)bcmul($orderTotalAmount, 100);
-//
-//                $payment = $storage->create();
-//                $payment->setOrder($order);
-//                $payment->setNumber($services->generateReference(20));
-//                $payment->setCurrencyCode($services->getSetting("currency_ccy"));
-//                $payment->setTotalAmount($orderamount); // 1.23 USD = 123
-//                $payment->setDescription($translator->trans("Payment of tickets purchased on %website_name%", array('%website_name%' => $services->getSetting("website_name"))));
-//                $payment->setClientId($this->getUser()->getId());
-//                if ($form->getData()['firstname'] != null && $form->getData()['firstname'] != "") {
-//                    $payment->setFirstname($form->getData()['firstname']);
-//                }
-//                if ($form->getData()['lastname'] != null && $form->getData()['lastname'] != "") {
-//                    $payment->setLastname($form->getData()['lastname']);
-//                }
-//                if ($this->isGranted("ROLE_ATTENDEE")) {
-//                    $payment->setClientEmail($form->getData()['email']);
-//                    $payment->setCountry($form->getData()['country']);
-//                    $payment->setState($form->getData()['state']);
-//                    $payment->setCity($form->getData()['city']);
-//                    $payment->setPostalcode($form->getData()['postalcode']);
-//                    $payment->setStreet($form->getData()['street']);
-//                    $payment->setStreet2($form->getData()['street2']);
-//                }
-//
-//                $storage->update($payment);
-//                $order->setPayment($payment);
-//                $em->flush();
-//
-//                if ($this->isGranted("ROLE_ATTENDEE")) {
-//                    if ($request->request->get('payment_gateway') == "offline") {
-//                        $this->addFlash('success', $translator->trans('Successful'));
-//                        return $this->redirectToRoute("dashboard_attendee_order_details", ['reference' => $payment->getOrder()->getReference()]);
-//                    }
-//
-//                    $captureToken = $this->get('payum')->getTokenFactory()->createCaptureToken(
-//                        $gatewayFactoryName, $payment, 'dashboard_attendee_checkout_done'
-//                    );
-//                } else {
-//                    $captureToken = $this->get('payum')->getTokenFactory()->createCaptureToken(
-//                        $gatewayFactoryName, $payment, 'dashboard_pointofsale_checkout_done'
-//                    );
-//                }
-//
-//                return $this->redirect($captureToken->getTargetUrl());
-//            }
-//
-//            $this->addFlash('error', $translator->trans('The form contains invalid data'));
-//
-//            return $this->render('Dashboard/Attendee/Order/checkout.html.twig', [
-//                'form' => $form->createView(),
-//                'paymentGateways' => $paymentGateways,
-//                'order' => $order
-//            ]);
-//        }
-//
-//        return $this->redirectToRoute("dashboard_index");
-
     /**
      * @Route("/attendee/bookevent/{reference}", name="dashboard_attendee_bookevent")
      */
-    public function bookevent(Request $request, TranslatorInterface $translator, AppServices $services, EventTicketRepository $eventTicketRepository, RouterInterface $router)
+    public function bookevent(Request $request, AppServices $services, EventTicketRepository $eventTicketRepository, RouterInterface $router)
     {
         $em = $this->getDoctrine()->getManager();
         $reference = $request->request->get('reference');
@@ -177,7 +35,7 @@ class CartController extends Controller
         $eventticket = $eventTicketRepository->findByEventTicketId($event->getId());
 
         if (!$event) {
-            $this->addFlash('error', $translator->trans('The event can not be found'));
+            $this->addFlash('error', 'The event can not be found');
             return $this->redirectToRoute("dashboard_index"); // Redirect to the dashboard or appropriate route
         }
 
@@ -234,7 +92,7 @@ class CartController extends Controller
     /**
      * @Route("/attendee/cart/{id}/remove", name="dashboard_attendee_cart_remove")
      */
-    public function remove($id, TranslatorInterface $translator, AppServices $services)
+    public function remove($id, AppServices $services)
     {
         $em = $this->getDoctrine()->getManager();
         $cartelement = $em->getRepository(CartElement::class)->find($id);
@@ -263,7 +121,7 @@ class CartController extends Controller
      * @Route("attendee/cart/add", name="dashboard_attendee_cart_add")
      * @Route("pointofsale/cart/add", name="dashboard_pointofsale_cart_add")
      */
-    public function add(Request $request, TranslatorInterface $translator, AppServices $services)
+    public function add(Request $request, AppServices $services)
     {
 
         $em = $this->getDoctrine()->getManager();
@@ -301,5 +159,4 @@ class CartController extends Controller
 
         return $this->redirectToRoute("dashboard_pointofsale_checkout");
     }
-
 }

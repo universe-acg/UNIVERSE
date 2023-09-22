@@ -1,28 +1,32 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Controller\Dashboard\Administrator;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Knp\Component\Pager\PaginatorInterface;
-use App\Service\AppServices;
 use App\Entity\Audience;
 use App\Form\AudienceType;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use App\Service\AppServices;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
-class AudienceController extends Controller {
+class AudienceController extends Controller
+{
 
     /**
      * @Route("/manage-audiences", name="audience", methods="GET")
      */
-    public function index(Request $request, PaginatorInterface $paginator, AppServices $services) {
+    public function index(Request $request, PaginatorInterface $paginator, AppServices $services)
+    {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
 
         $audiences = $paginator->paginate($services->getAudiences(array('keyword' => $keyword, 'hidden' => 'all', 'sort' => 'a.createdAt', 'order' => 'DESC')), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
 
         return $this->render('Dashboard/Administrator/Audience/index.html.twig', [
-                    'audiences' => $audiences,
+            'audiences' => $audiences,
         ]);
     }
 
@@ -30,7 +34,8 @@ class AudienceController extends Controller {
      * @Route("/manage-audiences/add", name="audience_add", methods="GET|POST")
      * @Route("/manage-audiences/{slug}/edit", name="audience_edit", methods="GET|POST")
      */
-    public function addedit(Request $request, AppServices $services, TranslatorInterface $translator, $slug = null) {
+    public function addedit(Request $request, AppServices $services, $slug = null)
+    {
         $em = $this->getDoctrine()->getManager();
 
         if (!$slug) {
@@ -61,8 +66,8 @@ class AudienceController extends Controller {
             }
         }
         return $this->render('Dashboard/Administrator/Audience/add-edit.html.twig', array(
-                    "audience" => $audience,
-                    "form" => $form->createView(),
+            "audience" => $audience,
+            "form" => $form->createView(),
         ));
     }
 
@@ -70,7 +75,8 @@ class AudienceController extends Controller {
      * @Route("/manage-audiences/{slug}/disable", name="audience_disable", methods="GET")
      * @Route("/manage-audiences/{slug}/delete", name="audience_delete", methods="GET")
      */
-    public function delete(AppServices $services, TranslatorInterface $translator, $slug) {
+    public function delete(AppServices $services, $slug)
+    {
 
         $audience = $services->getAudiences(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$audience) {
@@ -98,7 +104,8 @@ class AudienceController extends Controller {
     /**
      * @Route("/manage-audiences/{slug}/restore", name="audience_restore", methods="GET")
      */
-    public function restore($slug, Request $request, TranslatorInterface $translator, AppServices $services) {
+    public function restore($slug, Request $request, AppServices $services)
+    {
 
         $audience = $services->getAudiences(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$audience) {
@@ -118,7 +125,8 @@ class AudienceController extends Controller {
      * @Route("/manage-audiences/{slug}/show", name="audience_show", methods="GET")
      * @Route("/manage-audiences/{slug}/hide", name="audience_hide", methods="GET")
      */
-    public function showhide(AppServices $services, TranslatorInterface $translator, $slug) {
+    public function showhide(AppServices $services, $slug)
+    {
 
         $audience = $services->getAudiences(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$audience) {

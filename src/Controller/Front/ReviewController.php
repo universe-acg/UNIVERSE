@@ -11,7 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ReviewController extends Controller
 {
@@ -19,7 +18,7 @@ class ReviewController extends Controller
     /**
      * @Route("/event/{slug}/reviews", name="event_reviews")
      */
-    public function eventreviews($slug, Request $request, PaginatorInterface $paginator, AppServices $services, TranslatorInterface $translator): Response
+    public function eventreviews($slug, Request $request, PaginatorInterface $paginator, AppServices $services): Response
     {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
 

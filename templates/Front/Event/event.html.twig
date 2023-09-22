@@ -262,28 +262,28 @@
                                     </div>
                                 </div>
                             {% endif %}
-                            <div class="mt-5">
-                                <div id="disqus_thread"></div>
-                                <script>
-                                    /**
-                                     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-                                     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
-                                    var disqus_config = function () {
-                                        this.page.url = "{{ app.request.uri }}";  // Replace PAGE_URL with your page's canonical URL variable
-                                        this.page.identifier = "{{ event.slug }}"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-                                        this.language = "{{ app.request.locale|lower }}";
-                                    };
-                                    (function () { // DON'T EDIT BELOW THIS LINE
-                                        var d = document, s = d.createElement('script');
-                                        s.src = 'https://{{ services.getSetting("disqus_subdomain") }}.disqus.com/embed.js';
-                                        s.setAttribute('data-timestamp', +new Date());
-                                        (d.head || d.body).appendChild(s);
-                                    })();
-                                </script>
-                                <noscript>Please enable JavaScript to view the <a
-                                            href="https://disqus.com/?ref_noscript">comments powered by
-                                        Disqus.</a></noscript>
-                            </div>
+                            {#                            <div class="mt-5"> #}
+                            {#                                <div id="disqus_thread"></div> #}
+                            {#                                <script> #}
+                            {#                                    /** #}
+                            {#                                     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS. #}
+                            {#                                     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/ #}
+                            {#                                    var disqus_config = function () { #}
+                            {#                                        this.page.url = "{{ app.request.uri }}";  // Replace PAGE_URL with your page's canonical URL variable #}
+                            {#                                        this.page.identifier = "{{ event.slug }}"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable #}
+                            {#                                        this.language = "{{ app.request.locale|lower }}"; #}
+                            {#                                    }; #}
+                            {#                                    (function () { // DON'T EDIT BELOW THIS LINE #}
+                            {#                                        var d = document, s = d.createElement('script'); #}
+                            {#                                        s.src = 'https://{{ services.getSetting("disqus_subdomain") }}.disqus.com/embed.js'; #}
+                            {#                                        s.setAttribute('data-timestamp', +new Date()); #}
+                            {#                                        (d.head || d.body).appendChild(s); #}
+                            {#                                    })(); #}
+                            {#                                </script> #}
+                            {#                                <noscript>Please enable JavaScript to view the <a #}
+                            {#                                            href="https://disqus.com/?ref_noscript">comments powered by #}
+                            {#                                        Disqus.</a></noscript> #}
+                            {#                            </div> #}
                             {% if false %}
                                 {#                            {% if event.enablereviews %} #}
                                 <hr class="mb-5">
@@ -406,7 +406,7 @@
                                 {#                                            {% if reviewscount > 8 %} #}
                                 {#                                                <a href="{{ path('event_reviews') }}" #}
                                 {#                                                   class="btn btn-outline-primary mx-auto"><i #}
-                                {#                                                            class="far fa-star-half-full"></i> {{ "See all %reviewscount% reviews"|trans({'%reviewscount%': reviewscount}) }} #}
+                                {#                                                            class="far fa-star-half-full"></i> {{ "See all %reviewscount% reviews"{'%reviewscount%': reviewscount} }} #}
                                 {#                                                </a> #}
                                 {#                                            {% endif %} #}
                                 {#                                        </div> #}
@@ -454,9 +454,12 @@
                                     <div id="event-dates-calendar" class="mt-5"
                                          data-event-dates="{{ eventDatesCalendar|json_encode() }}"></div>
                                     {% if is_granted('ROLE_ATTENDEE') %}
-                                        <button id="add-to-cart-button" type="button"
-                                                class="btn btn-primary btn-block mt-3 mb-3"><i
-                                                    class="fas fa-cart-plus"></i> {{ "Book" }}</button>
+                                        {#                                        <button id="add-to-cart-button" type="button" #}
+                                        {#                                                class="btn btn-primary btn-block"><i #}
+                                        {#                                                    class="fas fa-ticket-alt"></i> {{ "Book a ticket" }}</button> #}
+                                        {#                                        <br> #}
+                                        {#                                                class="btn btn-primary btn-block mt-3 mb-3"><i #}
+                                        {#                                                    class="fas fa-cart-plus"></i> {{ "Book" }}</button> #}
                                     {% endif %}
 
                                 {% endif %}
@@ -558,7 +561,7 @@
                                                                     </div>
                                                                     <div class="modal-footer">
                                                                         <button type="button" class="btn btn-primary"
-                                                                                data-dismiss="modal">{{ "Close" }}</button>
+                                                                                data-dismiss="modal">{{ "Book" }}</button>
                                                                     </div>
 
                                                                 </div>
@@ -636,25 +639,25 @@
                                                     <div class="table-responsive">
                                                         <table class="table table-hover table-condensed">
                                                             <tbody>
-                                                                {% for ticket in eventDate.tickets %}
-                                                                    {% if ticket.active %}
-                                                                        <tr class="bg-gray">
-                                                                            <td class="border-top-white"
-                                                                                style="width: 75%;">
-                                                                                {{ ticket.name }}
-                                                                            </td>
-                                                                            <td class="border-top-white text-right">
-                                                                                {% if not ticket.isOnSale %}
-                                                                                    <span class="badge badge-{{ ticket.stringifyStatusClass }}">{{ ticket.stringifyStatus }}</span>
-                                                                                {% else %}
-                                                                                    {{ ticket.free ? "Available" : ((services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '') ~ ticket.getSalePrice() ~ (services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '')) }}
-                                                                                    {% if ticket.promotionalprice and not ticket.free %}
-                                                                                        <del class="price-old">{{ (services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '') ~ ticket.getPrice() ~ (services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '') }}</del>
-                                                                                    {% endif %}
+                                                            {% for ticket in eventDate.tickets %}
+                                                                {% if ticket.active %}
+                                                                    <tr class="bg-gray">
+                                                                        <td class="border-top-white"
+                                                                            style="width: 75%;">
+                                                                            {{ ticket.name }}
+                                                                        </td>
+                                                                        <td class="border-top-white text-right">
+                                                                            {% if not ticket.isOnSale %}
+                                                                                <span class="badge badge-{{ ticket.stringifyStatusClass }}">{{ ticket.stringifyStatus }}</span>
+                                                                            {% else %}
+                                                                                {{ ticket.free ? "Available" : ((services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '') ~ ticket.getSalePrice() ~ (services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '')) }}
+                                                                                {% if ticket.promotionalprice and not ticket.free %}
+                                                                                    <del class="price-old">{{ (services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '') ~ ticket.getPrice() ~ (services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '') }}</del>
                                                                                 {% endif %}
-                                                                        </tr>
-                                                                    {% endif %}
-                                                                {% endfor %}
+                                                                            {% endif %}
+                                                                    </tr>
+                                                                {% endif %}
+                                                            {% endfor %}
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -664,13 +667,13 @@
                                                                class="btn btn-primary btn-block mb-2 buy-tickets-modal-button"
                                                                data-toggle="modal"
                                                                data-target="#buy-tickets-modal-eventDate-{{ eventDate.reference }}"><i
-                                                                        class="fas fa-ticket-alt"></i> {{ "Tickets" }}
+                                                                        class="fas fa-ticket-alt"></i> {{ "Book" }}
                                                             </a>
                                                             {% include "Dashboard/Attendee/Cart/add-to-cart-modal.html.twig" with { eventdate: eventDate } %}
                                                         {% else %}
                                                             <a href="{{ path('fos_user_security_login')~'?_target_path='~app.request.getPathInfo }}"
                                                                class="btn btn-primary btn-block"><i
-                                                                        class="fas fa-ticket-alt"></i> {{ "Tickets" }}
+                                                                        class="fas fa-ticket-alt"></i> {{ "Book" }}
                                                             </a>
                                                         {% endif %}
                                                     {% endif %}
@@ -785,7 +788,7 @@
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-primary"
-                                                                    data-dismiss="modal">{{ "Close" }}</button>
+                                                                    data-dismiss="modal">{{ "Book" }}</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -834,7 +837,7 @@
             {% if othereventsbythisorganizer|length > 0 %}
                 <div class="row">
                     <div class="col-12">
-                        <h3 class="mt-5 mb-4 text-center">{{ "Other events by %organizername%"|trans({'%organizername%' : event.organizer.name}) }}</h3>
+                        <h3 class="mt-5 mb-4 text-center">{{ "Other events by %organizername%" {'%organizername%' : event.organizer.name} }}</h3>
                         <div class="owl-init owl-carousel" data-margin="15" data-items="4" data-dots="false"
                              data-nav="true" data-autoplay="true" data-loop="false">
                             {% for event in othereventsbythisorganizer %}
@@ -873,59 +876,4 @@
 
 {% block javascripts %}
     {{ encore_entry_script_tags('event') }}
-
-    {#    <script> #}
-    {#        // Opens the respective event date pop up #}
-    {#        $(document).on("click", ".buy-tickets-modal-button", function () { #}
-    {#            var eventDateReference = $(this).find(".cld-title > a").attr("href"); #}
-    {#            var eventDateHour = $(this).find(".cld-title > a").text(); #}
-    {#            alert("as123daasdaads"); #}
-    {#            if (eventDateReference.indexOf("|") == -1) { #}
-    {#                $('.event-eventDate-wrapper').hide() #}
-    {#                $("#eventDate-" + eventDateReference + "-wrapper").show(); #}
-    {#                $('#buy-tickets-modal-eventDate-' + eventDateReference).modal('show'); #}
-    {#            } else { #}
-    {#                var eventDateHoursDialogContent = ""; #}
-    {#                var eventDatesReferences = eventDateReference.split("|"); #}
-    {#                var eventDatesHours = eventDateHour.split(", "); #}
-    {#                for (var i = 0; i < eventDatesReferences.length; i++) { #}
-    {#                    eventDateHoursDialogContent += '<div>' + #}
-    {#                        '<b class="float-left">@ ' + eventDatesHours[i] + '</b>' + #}
-    {#                        '<button class="eventDate-hours-modal-tickets-button float-right btn btn-primary btn-sm" data-eventDate-reference="' + eventDatesReferences[i] + '" data-dismiss="modal">' + Translator.trans("Tickets") + '</button>' + #}
-    {#                        '<div class="clearfix"></div>' + #}
-    {#                        '</div>'; #}
-    {#                    if (i != eventDatesReferences.length - 1) { #}
-    {#                        eventDateHoursDialogContent += "<hr>"; #}
-    {#                    } #}
-    {#                } #}
-    {#                bootbox.dialog({ #}
-    {#                    title: Translator.trans("There are multiple hours at this date"), #}
-    {#                    message: eventDateHoursDialogContent, #}
-    {#                    size: 'medium', #}
-    {#                    onEscape: true, #}
-    {#                    backdrop: true, #}
-    {#                    className: ' modal-dialog-centered modal-dialog-scrollable', #}
-    {#                    buttons: { #}
-    {#                        fee: { #}
-    {#                            label: '<i class="far fa-window-close"></i> ' + Translator.trans("Close"), #}
-    {#                            className: 'btn btn-outline-primary', #}
-    {#                            callback: function () { #}
-
-    {#                            } #}
-    {#                        } #}
-    {#                    }, #}
-    {#                    onShown: function (e) { #}
-    {#                        $(document).on("click", ".eventDate-hours-modal-tickets-button", function () { #}
-    {#                            var eventDateReference = $(this).data("eventdate-reference"); #}
-    {#                            $('.event-eventDate-wrapper').hide() #}
-    {#                            $("#eventDate-" + eventDateReference + "-wrapper").show(); #}
-    {#                            setTimeout(function () { #}
-    {#                                $("#buy-tickets-modal-eventDate-" + eventDateReference).modal('show'); #}
-    {#                            }, 250); #}
-    {#                        }); #}
-    {#                    } #}
-    {#                }); #}
-    {#            } #}
-    {#        }); #}
-    {#    </script> #}
 {% endblock %}

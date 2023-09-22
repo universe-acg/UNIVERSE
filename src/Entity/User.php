@@ -32,7 +32,6 @@ class User extends BaseUser implements UserInterface
      * @ORM\Column(type="integer")
      */
     protected $id;
-
     /**
      * @Assert\Valid()
      */
@@ -59,6 +58,11 @@ class User extends BaseUser implements UserInterface
      * @ORM\Column(name="google_access_token", type="string", length=255, nullable=true)
      */
     protected $google_access_token;
+    /**
+     * @ORM\Column(type="boolean")
+     * @Assert\NotNull
+     */
+    private $isbusinessweek = true;
     /**
      * @ORM\OneToOne(targetEntity="Organizer", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
@@ -223,6 +227,38 @@ class User extends BaseUser implements UserInterface
         $this->following = new ArrayCollection();
         $this->cartelements = new ArrayCollection();
         $this->ticketreservations = new ArrayCollection();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIsbusinessweek(): bool
+    {
+        return $this->isbusinessweek;
+    }
+
+    /**
+     * @param bool $isbusinessweek
+     */
+    public function setIsbusinessweek(bool $isbusinessweek): void
+    {
+        $this->isbusinessweek = $isbusinessweek;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTranslations()
+    {
+        return $this->translations;
+    }
+
+    /**
+     * @param mixed $translations
+     */
+    public function setTranslations($translations): void
+    {
+        $this->translations = $translations;
     }
 
     public function getId()

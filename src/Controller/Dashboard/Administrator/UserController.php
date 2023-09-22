@@ -10,7 +10,6 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserController extends Controller
 {
@@ -41,7 +40,7 @@ class UserController extends Controller
      * @Route("/manage-users/{slug}/delete-permanently", name="user_delete_permanently", methods="GET")
      * @Route("/manage-users/{slug}/delete", name="user_delete", methods="GET")
      */
-    public function delete(AppServices $services, TranslatorInterface $translator, $slug)
+    public function delete(AppServices $services, $slug)
     {
         $user = $services->getUsers(array('slug' => $slug, 'enabled' => 'all'))->getQuery()->getOneOrNullResult();
 
@@ -99,7 +98,7 @@ class UserController extends Controller
     /**
      * @Route("/manage-users/{slug}/restore", name="user_restore", methods="GET")
      */
-    public function restore($slug, Request $request, TranslatorInterface $translator, AppServices $services)
+    public function restore($slug, Request $request, AppServices $services)
     {
 
         $user = $services->getUsers(array('slug' => $slug, 'enabled' => 'all'))->getQuery()->getOneOrNullResult();
@@ -121,7 +120,7 @@ class UserController extends Controller
      * @Route("/manage-users/{slug}/enable", name="user_enable", methods="GET")
      * @Route("/manage-users/{slug}/disable", name="user_disable", methods="GET")
      */
-    public function enabledisable(AppServices $services, TranslatorInterface $translator, $slug)
+    public function enabledisable(AppServices $services, $slug)
     {
 
         $user = $services->getUsers(array('slug' => $slug, 'enabled' => 'all'))->getQuery()->getOneOrNullResult();
@@ -165,7 +164,7 @@ class UserController extends Controller
     /**
      * @Route("/administrator/manage-users/{slug}/more-information", name="user_information", methods="GET")
      */
-    public function details(AppServices $services, TranslatorInterface $translator, $slug)
+    public function details(AppServices $services, $slug)
     {
 
         $user = $services->getUsers(array("slug" => $slug, "enabled" => "all"))->getQuery()->getOneOrNullResult();
@@ -180,7 +179,7 @@ class UserController extends Controller
     /**
      * @Route("/administrator/manage-users/{slug}/empty-cart", name="user_empty_cart", methods="GET")
      */
-    public function emptyCart(AppServices $services, TranslatorInterface $translator, $slug)
+    public function emptyCart(AppServices $services, $slug)
     {
 
         $user = $services->getUsers(array("slug" => $slug, "enabled" => "all"))->getQuery()->getOneOrNullResult();

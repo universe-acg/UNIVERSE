@@ -14,7 +14,6 @@ use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PointOfSaleController extends Controller
 {
@@ -41,7 +40,7 @@ class PointOfSaleController extends Controller
      * @throws Exception
      * @throws InvalidArgumentException
      */
-    public function addedit(Request $request, AppServices $services, TranslatorInterface $translator, $slug = null)
+    public function addedit(Request $request, AppServices $services, $slug = null)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -121,7 +120,7 @@ class PointOfSaleController extends Controller
      * @Route("/my-points-of-sale/{slug}/delete-permanently", name="pointofsale_delete_permanently", methods="GET")
      * @Route("/my-points-of-sale/{slug}/delete", name="pointofsale_delete", methods="GET")
      */
-    public function delete(AppServices $services, TranslatorInterface $translator, $slug)
+    public function delete(AppServices $services, $slug)
     {
 
         $pointofsale = $services->getUsers(array("role" => "pointofsale", "createdbyorganizerslug" => $this->getUser()->getOrganizer()->getSlug(), "enabled" => "all", "slug" => $slug))->getQuery()->getOneOrNullResult();
@@ -144,7 +143,7 @@ class PointOfSaleController extends Controller
      * @Route("/my-points-of-sale/{slug}/enable", name="pointofsale_enable", methods="GET")
      * @Route("/my-points-of-sale/{slug}/disable", name="pointofsale_disable", methods="GET")
      */
-    public function enabledisable(AppServices $services, TranslatorInterface $translator, $slug)
+    public function enabledisable(AppServices $services, $slug)
     {
 
         $pointofsale = $services->getUsers(array("role" => "pointofsale", "createdbyorganizerslug" => $this->getUser()->getOrganizer()->getSlug(), "enabled" => "all", "slug" => $slug))->getQuery()->getOneOrNullResult();

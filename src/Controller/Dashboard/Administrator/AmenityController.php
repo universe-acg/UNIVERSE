@@ -1,28 +1,32 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Controller\Dashboard\Administrator;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Knp\Component\Pager\PaginatorInterface;
-use App\Service\AppServices;
 use App\Entity\Amenity;
 use App\Form\AmenityType;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use App\Service\AppServices;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
-class AmenityController extends Controller {
+class AmenityController extends Controller
+{
 
     /**
      * @Route("/manage-amenities", name="amenity", methods="GET")
      */
-    public function index(Request $request, PaginatorInterface $paginator, AppServices $services) {
+    public function index(Request $request, PaginatorInterface $paginator, AppServices $services)
+    {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
 
         $amenities = $paginator->paginate($services->getAmenities(array('keyword' => $keyword, 'hidden' => 'all', 'sort' => 'a.createdAt', 'order' => 'DESC')), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
 
         return $this->render('Dashboard/Administrator/Amenity/index.html.twig', [
-                    'amenities' => $amenities,
+            'amenities' => $amenities,
         ]);
     }
 
@@ -30,7 +34,8 @@ class AmenityController extends Controller {
      * @Route("/manage-amenities/add", name="amenity_add", methods="GET|POST")
      * @Route("/manage-amenities/{slug}/edit", name="amenity_edit", methods="GET|POST")
      */
-    public function addedit(Request $request, AppServices $services, TranslatorInterface $translator, $slug = null) {
+    public function addedit(Request $request, AppServices $services, $slug = null)
+    {
         $em = $this->getDoctrine()->getManager();
 
         if (!$slug) {
@@ -61,8 +66,8 @@ class AmenityController extends Controller {
             }
         }
         return $this->render('Dashboard/Administrator/Amenity/add-edit.html.twig', array(
-                    "amenity" => $amenity,
-                    "form" => $form->createView(),
+            "amenity" => $amenity,
+            "form" => $form->createView(),
         ));
     }
 
@@ -70,7 +75,8 @@ class AmenityController extends Controller {
      * @Route("/manage-amenities/{slug}/disable", name="amenity_disable", methods="GET")
      * @Route("/manage-amenities/{slug}/delete", name="amenity_delete", methods="GET")
      */
-    public function delete(AppServices $services, TranslatorInterface $translator, $slug) {
+    public function delete(AppServices $services, $slug)
+    {
 
         $amenity = $services->getAmenities(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$amenity) {
@@ -98,7 +104,8 @@ class AmenityController extends Controller {
     /**
      * @Route("/manage-amenities/{slug}/restore", name="amenity_restore", methods="GET")
      */
-    public function restore($slug, Request $request, TranslatorInterface $translator, AppServices $services) {
+    public function restore($slug, Request $request, AppServices $services)
+    {
 
         $amenity = $services->getAmenities(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$amenity) {
@@ -118,7 +125,8 @@ class AmenityController extends Controller {
      * @Route("/manage-amenities/{slug}/show", name="amenity_show", methods="GET")
      * @Route("/manage-amenities/{slug}/hide", name="amenity_hide", methods="GET")
      */
-    public function showhide(AppServices $services, TranslatorInterface $translator, $slug) {
+    public function showhide(AppServices $services, $slug)
+    {
 
         $amenity = $services->getAmenities(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$amenity) {

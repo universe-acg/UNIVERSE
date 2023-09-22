@@ -11,7 +11,6 @@ use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MainController extends Controller
 {
@@ -19,7 +18,7 @@ class MainController extends Controller
     /**
      * @Route(name="index")
      */
-    public function index(AppServices $services, TranslatorInterface $translator): Response
+    public function index(AppServices $services): Response
     {
 
         // Tickets Sales By Date Line Chart
@@ -31,10 +30,10 @@ class MainController extends Controller
             $ordersQuantityByDate[$i][1] = DateTime::createFromFormat('Y-m-j', $ordersQuantityByDate[$i][1]);
             $ordersQuantityByDate[$i] = array_reverse($ordersQuantityByDate[$i]);
         }
-        array_unshift($ordersQuantityByDate, [['label' => $translator->trans("Date"), 'type' => 'date'], ['label' => $translator->trans("Tickets offered"), 'type' => 'number']]);
+        array_unshift($ordersQuantityByDate, [['label' => "Date", 'type' => 'date'], ['label' => "Tickets offered", 'type' => 'number']]);
         $ticketsSalesByDateLineChart = new LineChart();
         $ticketsSalesByDateLineChart->getData()->setArrayToDataTable($ordersQuantityByDate);
-        $ticketsSalesByDateLineChart->getOptions()->setTitle($translator->trans("Tickets this month"));
+        $ticketsSalesByDateLineChart->getOptions()->setTitle("Tickets this month");
         $ticketsSalesByDateLineChart->getOptions()->setCurveType('function');
         $ticketsSalesByDateLineChart->getOptions()->setLineWidth(2);
         $ticketsSalesByDateLineChart->getOptions()->getLegend()->setPosition('none');

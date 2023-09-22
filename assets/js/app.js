@@ -458,38 +458,54 @@ $(document).ready(function () {
         e.preventDefault();
         var $thisElement = $(this);
 
-        if (typeof $(this).attr('href') !== typeof undefined && $(this).attr('href') !== false) {
-            if ($(this).attr('href').indexOf('/delete') >= 0 || $(this).attr('href').indexOf('/disable') >= 0 || $(this).attr('href').indexOf('/featured') >= 0 || $(this).attr('href').indexOf('/notfeatured') >= 0 || $(this).attr('href').indexOf('/hide') >= 0) {
-                return false;
-            }
-        }
-        if (typeof $(this).attr('data-target') !== typeof undefined && $(this).attr('data-target') !== false) {
-            if ($(this).attr('data-target').indexOf('/delete') >= 0 || $(this).attr('data-target').indexOf('/cancel') >= 0) {
-                return false;
+        // Check if the element has a data-target attribute
+        if (typeof $thisElement.attr('data-target') !== typeof undefined && $thisElement.attr('data-target') !== false) {
+            // Get the value of the data-target attribute
+            var dataTarget = $thisElement.attr('data-target');
+
+            // Check if the data-target attribute contains '/delete-permanently'
+            if (dataTarget.indexOf('/delete-permanently') >= 0) {
+                var $confirmDialog = $.confirm({
+                    title: Translator.trans('Confirmation required', {}, 'javascript'),
+                    buttons: {
+                        confirm: {
+                            text: Translator.trans('Confirm', {}, 'javascript'),
+                            btnClass: 'btn-primary btn-sm',
+                            keys: ['enter'],
+                            action: function () {
+                                location.href = $thisElement.data('target');
+                            }
+                        },
+                        cancel: {
+                            text: Translator.trans('Cancel', {}, 'javascript'),
+                            btnClass: 'btn-default btn-sm',
+                            keys: ['esc'],
+                            action: function () {
+                                $confirmDialog.close();
+                            }
+                        }
+                    }
+                });
+                return;
             }
         }
 
-        var $confirmDialog = $.confirm({
-            title: Translator.trans('Confirmation required', {}, 'javascript'),
-            buttons: {
-                confirm: {
-                    text: Translator.trans('Confirm', {}, 'javascript'),
-                    btnClass: 'btn-primary btn-sm',
-                    keys: ['enter'],
-                    action: function () {
-                        location.href = $thisElement.data('target');
-                    }
-                },
-                cancel: {
-                    text: Translator.trans('Cancel', {}, 'javascript'),
-                    btnClass: 'btn-default btn-sm',
-                    keys: ['esc'],
-                    action: function () {
-                        $confirmDialog.close();
-                    }
-                }
+        // Check if the element has an href attribute
+        if (typeof $thisElement.attr('href') !== typeof undefined && $thisElement.attr('href') !== false) {
+            // Get the value of the href attribute
+            var hrefValue = $thisElement.attr('href');
+
+            // Check if the href attribute contains '/delete', '/disable', etc.
+            if (
+                hrefValue.indexOf('/delete') >= 0 ||
+                hrefValue.indexOf('/disable') >= 0 ||
+                hrefValue.indexOf('/featured') >= 0 ||
+                hrefValue.indexOf('/notfeatured') >= 0 ||
+                hrefValue.indexOf('/hide') >= 0
+            ) {
+                return false;
             }
-        });
+        }
     });
     $(document).on('click', '.ajax-loading', function (e) {
         e.preventDefault();
@@ -698,7 +714,7 @@ $(document).ready(function () {
                 allow_duplicate: false,
                 allow_up: true,
                 allow_down: true,
-                // add: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-add-button"><i class="fas fa-plus-square"></i> ' + Translator.trans('Add a new event date', {}, 'javascript') + '</a>',
+                add: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-add-button"><i class="fas fa-plus-square"></i> ' + Translator.trans('Add a new event date', {}, 'javascript') + '</a>',
                 remove: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-remove-button"><i class="fas fa-minus-square"></i> ' + Translator.trans('Remove this event date', {}, 'javascript') + '</a>',
                 duplicate: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-duplicate-button"><i class="fas fa-clone"></i> ' + Translator.trans('Duplicate this event date', {}, 'javascript') + '</a>',
                 up: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-up-button"><i class="fas fa-caret-square-up"></i> ' + Translator.trans('Move up', {}, 'javascript') + '</a>',
@@ -714,7 +730,7 @@ $(document).ready(function () {
                     allow_up: true,
                     allow_down: true,
                     position_field_selector: '.event-date-ticket-position',
-                    // add: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-add-button"><i class="fas fa-plus-square"></i> ' + Translator.trans('Add a new ticket', {}, 'javascript') + '</a>',
+                    add: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-add-button"><i class="fas fa-plus-square"></i> ' + Translator.trans('Add a new ticket', {}, 'javascript') + '</a>',
                     remove: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-remove-button"><i class="fas fa-minus-square"></i> ' + Translator.trans('Remove this ticket', {}, 'javascript') + '</a>',
                     duplicate: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-duplicate-button"><i class="fas fa-clone"></i> ' + Translator.trans('Duplicate this ticket', {}, 'javascript') + '</a>',
                     up: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-up-button"><i class="fas fa-caret-square-up"></i> ' + Translator.trans('Move up', {}, 'javascript') + '</a>',
@@ -1197,8 +1213,8 @@ $(document).ready(function () {
         var $thisButton = $(this);
         var $orderCancelDialog = $.confirm({
             title: Translator.trans('Confirmation required', {}, 'javascript'),
-            content: $thisButton.data('confirmation-text') +
-                '<textarea id="order-cancel-note" rows="5" class="form-control mt-3" placeholder="' + Translator.trans('Note', {}, 'javascript') + '"></textarea>',
+            // content: $thisButton.data('confirmation-text') +
+            //     '<textarea id="order-cancel-note" rows="5" class="form-control mt-3" placeholder="' + Translator.trans('Note', {}, 'javascript') + '"></textarea>',
             buttons: {
                 confirm: {
                     text: Translator.trans('Confirm', {}, 'javascript'),
@@ -1331,6 +1347,10 @@ $(document).ready(function () {
             $(document).on("click", ".cld-number.eventday", function () {
                 var eventDateReference = $(this).find(".cld-title > a").attr("href");
                 var eventDateHour = $(this).find(".cld-title > a").text();
+
+                console.dir(eventDateReference);
+                console.dir(eventDateHour);
+
                 if (eventDateReference.indexOf("|") == -1) {
                     $('.event-eventDate-wrapper').hide()
                     $("#eventDate-" + eventDateReference + "-wrapper").show();
@@ -1339,10 +1359,21 @@ $(document).ready(function () {
                     var eventDateHoursDialogContent = "";
                     var eventDatesReferences = eventDateReference.split("|");
                     var eventDatesHours = eventDateHour.split(", ");
+                    // for (var i = 0; i < eventDatesReferences.length; i++) {
+                    //     eventDateHoursDialogContent += '<div>' +
+                    //         '<b class="float-left">Starts at: ' + eventDatesHours[i] + '</b>' +
+                    //         '<button class="eventDate-hours-modal-tickets-button float-right btn btn-primary btn-sm" data-eventDate-reference="' + eventDatesReferences[i] + '" data-dismiss="modal">' + Translator.trans("Tickets") + '</button>' +
+                    //         '<div class="clearfix"></div>' +
+                    //         '</div>';
+                    //     if (i != eventDatesReferences.length - 1) {
+                    //         eventDateHoursDialogContent += "<hr>";
+                    //     }
+                    // }
                     for (var i = 0; i < eventDatesReferences.length; i++) {
+                        var eventName = $('#add-to-calendar-link').data('title'); // Get the event.name value
                         eventDateHoursDialogContent += '<div>' +
-                            '<b class="float-left">@ ' + eventDatesHours[i] + '</b>' +
-                            '<button class="eventDate-hours-modal-tickets-button float-right btn btn-primary btn-sm" data-eventDate-reference="' + eventDatesReferences[i] + '" data-dismiss="modal">' + Translator.trans("Tickets") + '</button>' +
+                            '<b class="float-left">' + eventName + ' @ ' + eventDatesHours[i] + ' </b>' +
+                            '<button class="eventDate-hours-modal-tickets-button float-right btn btn-primary btn-sm" data-eventDate-reference="' + eventDatesReferences[i] + '" data-dismiss="modal">' + Translator.trans("Book") + '</button>' +
                             '<div class="clearfix"></div>' +
                             '</div>';
                         if (i != eventDatesReferences.length - 1) {
@@ -1350,7 +1381,7 @@ $(document).ready(function () {
                         }
                     }
                     bootbox.dialog({
-                        title: Translator.trans("There are multiple hours at this date"),
+                        title: Translator.trans("There are multiple events at this date"),
                         message: eventDateHoursDialogContent,
                         size: 'medium',
                         onEscape: true,
@@ -1358,7 +1389,7 @@ $(document).ready(function () {
                         className: ' modal-dialog-centered modal-dialog-scrollable',
                         buttons: {
                             fee: {
-                                label: '<i class="far fa-window-close"></i> ' + Translator.trans("Close"),
+                                label: '<i class="far fa-window-close"></i> ' + Translator.trans("Book"),
                                 className: 'btn btn-outline-primary',
                                 callback: function () {
 

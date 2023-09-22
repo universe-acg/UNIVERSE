@@ -17,7 +17,16 @@
         {
             parent::__construct($registry, Event::class);
         }
-
+        
+        
+        public function findBySlug($slug)
+        {
+            return $this->createQueryBuilder('e')
+                ->andWhere('e.slug = :slug')
+                ->setParameter('slug', $slug)
+                ->getQuery()
+                ->getOneOrNullResult();
+        }
 //        public function getEvents($category, $venue, $country, $location, $organizer, $keyword, $slug, $freeonly, $onlineonly, $pricemin, $pricemax, $audience, $startdate, $startdatemin, $startdatemax, $published, $elapsed, $organizerEnabled, $addedtofavoritesby, $onsalebypos, $canbescannedby, $isOnHomepageSlider, $otherthan, $sort, $order, $limit, $count): QueryBuilder
 //        {
 //            $qb = $this->createQueryBuilder("e");
@@ -181,21 +190,31 @@
             return $qb;
         }
         
+        public function findEventsByCommonValue($commonValue)
+        {
+            return $this->createQueryBuilder('e')
+                ->andWhere('e.commonvalue = :commonValue')
+                ->setParameter('commonValue', $commonValue)
+                ->getQuery()
+                ->getResult();
+        }
+        
         public function getEventsByOrganizerId($organizerId): QueryBuilder
         {
-            $qb = $this->createQueryBuilder("e")
+            return $this->createQueryBuilder("e")
                 ->join("e.organizer", "organizer")
                 ->andWhere("organizer.id = :organizerId")
                 ->setParameter("organizerId", $organizerId);
-            
-            return $qb;
         }
         
         public function getAllEventsQueryBuilder(): QueryBuilder
         {
-            $qb = $this->createQueryBuilder("e")
+            return $this->createQueryBuilder("e")
                 ->select("DISTINCT e");
-            
-            return $qb;
+        }
+        
+        public function findOneBySlug($slug)
+        {
+            return $this->findOneBy(['slug' => $slug]);
         }
     }

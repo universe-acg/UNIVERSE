@@ -279,18 +279,15 @@ class Organizer
      * @Assert\NotNull
      */
     private $showfollowers = true;
-
     /**
      * @ORM\Column(type="boolean")
      * @Assert\NotNull
      */
     private $showreviews = true;
-
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $showEventDateStatsOnScannerApp;
-
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */

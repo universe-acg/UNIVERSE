@@ -54,18 +54,18 @@ services:
   # add more service definitions when explicit configuration is needed
   # please note that last definitions always *replace* previous ones
 
-  JMS\TranslationBundle\Controller\TranslateController:
-    public: true
-    arguments:
-      $configFactory: '@jms_translation.config_factory'
-      $loader: '@jms_translation.loader_manager'
-
-
-  JMS\TranslationBundle\Controller\ApiController:
-    public: true
-    arguments:
-      $configFactory: '@jms_translation.config_factory'
-      $updater: '@jms_translation.updater'
+  #  JMS\TranslationBundle\Controller\TranslateController:
+  #    public: true
+  #    arguments:
+  #      $configFactory: '@jms_translation.config_factory'
+  #      $loader: '@jms_translation.loader_manager'
+  #
+  #
+  #  JMS\TranslationBundle\Controller\ApiController:
+  #    public: true
+  #    arguments:
+  #      $configFactory: '@jms_translation.config_factory'
+  #      $updater: '@jms_translation.updater'
 
   stof_doctrine_extensions.listener.sluggable:
     class: "%stof_doctrine_extensions.listener.sluggable.class%"
@@ -74,7 +74,7 @@ services:
       - { name: doctrine.event_subscriber, connection: default }
     calls:
       - [ setAnnotationReader, [ '@annotation_reader' ] ]
-      - [ setTransliterator, [ [ App\Service\Slugger, transliterate ] ] ]
+      #      - [ setTransliterator, [ [ App\Service\Slugger, transliterate ] ] ]
       - [ setUrlizer, [ [ App\Service\Slugger, urlize ] ] ]
 
   app.form.registration:

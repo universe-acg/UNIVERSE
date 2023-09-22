@@ -71,8 +71,8 @@ security:
     - { path: ^(.*?)/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
     #        - { path: ^(.*?)/dashboard, role: IS_AUTHENTICATED_REMEMBERED }
     - { path: ^(.*?)/dashboard/administrator, role: ROLE_ADMINISTRATOR }
-    - { path: ^(.*?)/_trans/, role: ROLE_ADMINISTRATOR }
-    - { path: ^(.*?)/_console, role: ROLE_ADMINISTRATOR }
+    #    - { path: ^(.*?)/_trans/, role: ROLE_ADMINISTRATOR }
+    #    - { path: ^(.*?)/_console, role: ROLE_ADMINISTRATOR }
     - { path: ^(.*?)/dashboard/organizer, role: ROLE_ORGANIZER }
     - { path: ^(.*?)/dashboard/attendee, role: ROLE_ATTENDEE }
     - { path: ^(.*?)/dashboard/scanner, role: ROLE_SCANNER }

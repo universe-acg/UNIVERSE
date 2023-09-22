@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ScannerController extends Controller
 {
@@ -23,7 +22,7 @@ class ScannerController extends Controller
      * @Route("/login", name="api_scanner_login")
      * @throws InvalidDatabaseException
      */
-    public function login(Request $request, AppServices $services, UserPasswordEncoderInterface $passwordEncoder, Packages $assetsManager, TranslatorInterface $translator): Response
+    public function login(Request $request, AppServices $services, UserPasswordEncoderInterface $passwordEncoder, Packages $assetsManager): Response
     {
 
         $username = $request->query->get('username');
@@ -99,7 +98,7 @@ class ScannerController extends Controller
     /**
      * @Route("/scanner/get-event-date-attendees/{reference}", name="api_scanner_get_event_date_attendees")
      */
-    public function getEventDateAttendees($reference, Request $request, AppServices $services, TranslatorInterface $translator): Response
+    public function getEventDateAttendees($reference, Request $request, AppServices $services): Response
     {
 
         $eventDate = $services->getEventDates(array("organizer" => $this->getUser()->getScanner()->getOrganizer()->getSlug(), "reference" => $reference))->getQuery()->getOneOrNullResult();
@@ -131,7 +130,7 @@ class ScannerController extends Controller
     /**
      * @Route("/scanner/event-date/{eventDateReference}/grant-access/{ticketReference}", name="api_scanner_grant_access")
      */
-    public function grantAccess($eventDateReference, $ticketReference, Request $request, AppServices $services, TranslatorInterface $translator): Response
+    public function grantAccess($eventDateReference, $ticketReference, Request $request, AppServices $services): Response
     {
 
         $eventDate = $services->getEventDates(array("organizer" => $this->getUser()->getScanner()->getOrganizer()->getSlug(), "reference" => $eventDateReference))->getQuery()->getOneOrNullResult();

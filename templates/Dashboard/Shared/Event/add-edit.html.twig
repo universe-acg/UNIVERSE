@@ -49,6 +49,42 @@
     <script>
         // Assuming you're using jQuery for simplicity
         $(document).ready(function () {
+            // Get references to the "Yes" option and the repeat option div
+            $('#event_repeat_days').attr('style', 'display: block'); // Change the style to make it visible
+            var $repeatYesOption = $('#event_isrepeat');
+
+            // Listen for changes to the "Yes" option
+            $('#event_isrepeat_1').change(function () {
+                if ($(this).is(':checked')) { // Use $(this) to refer to the changed checkbox
+                    $('#event_repeat_days').attr('style', 'display: block !important'); // Change the style to make it visible
+                }
+            });
+
+            $('#event_isrepeat_0').change(function () {
+                if ($(this).is(':checked')) { // Use $(this) to refer to the changed checkbox
+                    $('#event_repeat_days').attr('style', 'display: none !important'); // Change the style to hide it
+                }
+            });
+
+            if ($('#event_isrepeat_0').is(':checked')) {
+                $('#event_repeat_days').attr('style', 'display: none'); // Change the style to make it visible
+            } else {
+                $('#event_repeat_days').attr('style', 'display: block'); // Change the style to make it visible
+            }
+
+            var $repeatDaysField = $('#event_repeat_days');
+
+            $repeatDaysField.on('input', function () {
+                var inputValue = $(this).val();
+                var isValid = /^[1-9]|1\d|2\d|3[0-1]$/.test(inputValue);
+
+                if (!isValid) {
+                    // Clear the input and display a message
+                    $(this).val('');
+                    alert('Please enter a number from 1 to 31.');
+                }
+            });
+
             const $editableDiv = $('.note-editable ');
 
             $('#event_userEvents').change(function () {

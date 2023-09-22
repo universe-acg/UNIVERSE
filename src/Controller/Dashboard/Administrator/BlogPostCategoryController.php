@@ -1,28 +1,32 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Controller\Dashboard\Administrator;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Knp\Component\Pager\PaginatorInterface;
-use App\Service\AppServices;
 use App\Entity\BlogPostCategory;
 use App\Form\BlogPostCategoryType;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use App\Service\AppServices;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
-class BlogPostCategoryController extends Controller {
+class BlogPostCategoryController extends Controller
+{
 
     /**
      * @Route("/manage-blog-post-categories", name="blog_post_category", methods="GET")
      */
-    public function index(Request $request, PaginatorInterface $paginator, AppServices $services) {
+    public function index(Request $request, PaginatorInterface $paginator, AppServices $services)
+    {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
 
         $blogpostcategories = $paginator->paginate($services->getBlogPostCategories(array('keyword' => $keyword, 'hidden' => 'all', 'order' => 'b.createdAt', 'sort' => 'DESC')), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
 
         return $this->render('Dashboard/Administrator/BlogPostCategory/index.html.twig', [
-                    'blogpostcategories' => $blogpostcategories,
+            'blogpostcategories' => $blogpostcategories,
         ]);
     }
 
@@ -30,7 +34,8 @@ class BlogPostCategoryController extends Controller {
      * @Route("/manage-blog-post-categories/add", name="blog_post_category_add", methods="GET|POST")
      * @Route("/manage-blog-post-categories/{slug}/edit", name="blog_post_category_edit", methods="GET|POST")
      */
-    public function addedit(Request $request, AppServices $services, TranslatorInterface $translator, $slug = null) {
+    public function addedit(Request $request, AppServices $services, $slug = null)
+    {
         $em = $this->getDoctrine()->getManager();
 
         if (!$slug) {
@@ -61,8 +66,8 @@ class BlogPostCategoryController extends Controller {
             }
         }
         return $this->render('Dashboard/Administrator/BlogPostCategory/add-edit.html.twig', array(
-                    "blogpostcategory" => $blogpostcategory,
-                    "form" => $form->createView(),
+            "blogpostcategory" => $blogpostcategory,
+            "form" => $form->createView(),
         ));
     }
 
@@ -70,7 +75,8 @@ class BlogPostCategoryController extends Controller {
      * @Route("/manage-blog-post-categories/{slug}/disable", name="blog_post_category_disable", methods="GET")
      * @Route("/manage-blog-post-categories/{slug}/delete", name="blog_post_category_delete", methods="GET")
      */
-    public function delete(AppServices $services, TranslatorInterface $translator, $slug) {
+    public function delete(AppServices $services, $slug)
+    {
 
         $blogpostcategory = $services->getBlogPostCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$blogpostcategory) {
@@ -98,7 +104,8 @@ class BlogPostCategoryController extends Controller {
     /**
      * @Route("/manage-blog-post-categories/{slug}/restore", name="blog_post_category_restore", methods="GET")
      */
-    public function restore($slug, Request $request, TranslatorInterface $translator, AppServices $services) {
+    public function restore($slug, Request $request, AppServices $services)
+    {
 
         $blogpostcategory = $services->getBlogPostCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$blogpostcategory) {
@@ -118,7 +125,8 @@ class BlogPostCategoryController extends Controller {
      * @Route("/manage-blog-post-categories/{slug}/show", name="blog_post_category_show", methods="GET")
      * @Route("/manage-blog-post-categories/{slug}/hide", name="blog_post_category_hide", methods="GET")
      */
-    public function showhide(AppServices $services, TranslatorInterface $translator, $slug) {
+    public function showhide(AppServices $services, $slug)
+    {
 
         $blogpostcategory = $services->getBlogPostCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$blogpostcategory) {

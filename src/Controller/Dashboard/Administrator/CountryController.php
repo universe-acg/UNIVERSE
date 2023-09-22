@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CountryController extends Controller
 {
@@ -37,7 +36,7 @@ class CountryController extends Controller
      * @Route("/manage-countries/add", name="country_add", methods="GET|POST")
      * @Route("/manage-countries/{slug}/edit", name="country_edit", methods="GET|POST")
      */
-    public function addedit(Request $request, AppServices $services, TranslatorInterface $translator, $slug = null): Response
+    public function addedit(Request $request, AppServices $services, $slug = null): Response
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -78,7 +77,7 @@ class CountryController extends Controller
      * @Route("/manage-countries/{slug}/disable", name="country_disable", methods="GET")
      * @Route("/manage-countries/{slug}/delete", name="country_delete", methods="GET")
      */
-    public function delete(AppServices $services, TranslatorInterface $translator, $slug): RedirectResponse
+    public function delete(AppServices $services, $slug): RedirectResponse
     {
 
         $country = $services->getCountries(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
@@ -107,7 +106,7 @@ class CountryController extends Controller
     /**
      * @Route("/manage-countries/{slug}/restore", name="country_restore", methods="GET")
      */
-    public function restore($slug, Request $request, TranslatorInterface $translator, AppServices $services): RedirectResponse
+    public function restore($slug, Request $request, AppServices $services): RedirectResponse
     {
 
         $country = $services->getCountries(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
@@ -128,7 +127,7 @@ class CountryController extends Controller
      * @Route("/manage-countries/{slug}/show", name="country_show", methods="GET")
      * @Route("/manage-countries/{slug}/hide", name="country_hide", methods="GET")
      */
-    public function showhide(AppServices $services, TranslatorInterface $translator, $slug): RedirectResponse
+    public function showhide(AppServices $services, $slug): RedirectResponse
     {
 
         $country = $services->getCountries(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();

@@ -1,29 +1,34 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Controller\Dashboard\Administrator;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Console\Output\NullOutput;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\Annotation\Route;
 
-class ConsoleController extends Controller {
+class ConsoleController extends Controller
+{
 
     /**
      * @Route("/console", name="console", methods="GET")
      */
-    public function index() {
+    public function index()
+    {
         return $this->render('Dashboard/Administrator/Console/index.html.twig');
     }
 
     /**
      * @Route("/console/execute-command/{command}/{optionKey}/{optionValue}", name="console_execute_command", methods="GET")
      */
-    public function executeCommand($command, $optionKey, $optionValue, KernelInterface $kernel, TranslatorInterface $translator) {
+    public function executeCommand($command, $optionKey, $optionValue, KernelInterface $kernel)
+    {
 
         $application = new Application($kernel);
         $application->setAutoExit(false);

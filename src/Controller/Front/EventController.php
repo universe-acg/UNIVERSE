@@ -12,7 +12,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class EventController extends AbstractController
 {
@@ -22,7 +21,7 @@ class EventController extends AbstractController
      * @throws InvalidDatabaseException
      */
 //        public function events(Request $request, PaginatorInterface $paginator, AppServices $services): Response
-    public function events(Request $request, PaginatorInterface $paginator, AppServices $services, TranslatorInterface $translator): Response
+    public function events(Request $request, PaginatorInterface $paginator, AppServices $services): Response
     {
 
 //        $localony = $request->query->get('localonly') == "" ? "all" : $request->query->get('localonly');
@@ -42,7 +41,7 @@ class EventController extends AbstractController
         if ($categorySlug != "all") {
             $category = $services->getCategories(array("slug" => $categorySlug))->getQuery()->getOneOrNullresult();
             if (!$category) {
-                $this->addFlash('error', $translator->trans('The category can not be found'));
+                $this->addFlash('error', 'The category can not be found');
                 return $this->redirectToRoute('events');
             }
         }
@@ -73,7 +72,7 @@ class EventController extends AbstractController
     /**
      * @Route("/event/{slug}", name="event")
      */
-    public function event($slug, AppServices $services, TranslatorInterface $translator): Response
+    public function event($slug, AppServices $services): Response
     {
 
         if ($this->isGranted("ROLE_ADMINISTRATOR")) {
@@ -88,7 +87,7 @@ class EventController extends AbstractController
         }
 
         if (!$event) {
-            $this->addFlash('error', $translator->trans('The event not be found'));
+            $this->addFlash('error', 'The event not be found');
             return $this->redirectToRoute('events');
         }
         $event->viewed();

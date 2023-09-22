@@ -1,22 +1,26 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Controller\Dashboard\Administrator;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Routing\Annotation\Route;
-use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\HttpFoundation\Request;
-use App\Service\AppServices;
 use App\Entity\Currency;
 use App\Form\CurrencyType;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use App\Service\AppServices;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
-class CurrencyController extends Controller {
+class CurrencyController extends Controller
+{
 
     /**
      * @Route("/settings/payment/manage-currencies", name="currency", methods="GET")
      */
-    public function index(Request $request, PaginatorInterface $paginator, AppServices $services) {
+    public function index(Request $request, PaginatorInterface $paginator, AppServices $services)
+    {
 
         $ccy = ($request->query->get('ccy')) == "" ? "all" : $request->query->get('ccy');
         $symbol = ($request->query->get('symbol')) == "" ? "all" : $request->query->get('symbol');
@@ -24,7 +28,7 @@ class CurrencyController extends Controller {
         $currencies = $paginator->paginate($services->getCurrencies(array('ccy' => $ccy, 'symbol' => $symbol)), $request->query->getInt('page', 1), 20, array('wrap-queries' => true));
 
         return $this->render('Dashboard/Administrator/Currency/index.html.twig', [
-                    'currencies' => $currencies,
+            'currencies' => $currencies,
         ]);
     }
 
@@ -32,7 +36,8 @@ class CurrencyController extends Controller {
      * @Route("/settings/payment/manage-currencies/add", name="currency_add", methods="GET|POST")
      * @Route("/settings/payment/manage-currencies/{ccy}/edit", name="currency_edit", methods="GET|POST")
      */
-    public function addedit(Request $request, AppServices $services, TranslatorInterface $translator, $ccy = null) {
+    public function addedit(Request $request, AppServices $services, $ccy = null)
+    {
         $em = $this->getDoctrine()->getManager();
 
         if (!$ccy) {
@@ -63,15 +68,16 @@ class CurrencyController extends Controller {
             }
         }
         return $this->render('Dashboard/Administrator/Currency/add-edit.html.twig', array(
-                    "currency" => $currency,
-                    "form" => $form->createView(),
+            "currency" => $currency,
+            "form" => $form->createView(),
         ));
     }
 
     /**
      * @Route("/settings/payment/manage-currencies/{ccy}/delete", name="currency_delete", methods="GET")
      */
-    public function delete(AppServices $services, TranslatorInterface $translator, $ccy) {
+    public function delete(AppServices $services, $ccy)
+    {
 
         $currency = $services->getCurrencies(array('ccy' => $ccy))->getQuery()->getOneOrNullResult();
         if (!$currency) {

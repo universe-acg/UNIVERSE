@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FollowingController extends Controller
 {
@@ -32,7 +31,7 @@ class FollowingController extends Controller
      * @Route("/en/dashboard/attendee/following/add/{slug}", name="app_dashboard_attendee_following_add", condition="request.isXmlHttpRequest()")
      * @Route("/en/dashboard/attendee/following/remove/{slug}", name="app_dashboard_attendee_following_remove", condition="request.isXmlHttpRequest()")
      */
-    public function addRemove($slug, AppServices $services, TranslatorInterface $translator, Request $request, RequestStack $requestStack)
+    public function addRemove($slug, AppServices $services, Request $request, RequestStack $requestStack)
     {
         $user = $services->getUsers(array("organizerslug" => $slug))->getQuery()->getOneOrNullResult();
 

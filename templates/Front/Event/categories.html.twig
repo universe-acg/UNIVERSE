@@ -2,7 +2,7 @@
 
 {% set pagetitle = 'Event categories' %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 
@@ -12,7 +12,7 @@
     <section class="section-content padding-y bg-white">
         <div class="{{ services.getSetting("app_layout") }}">
             <div class="row">
-                {% for category in services.getCategories({"sort": "translations.name", "order": "DESC"}).getQuery().getResult() %}
+                {% for category in services.getCategories({"sort": "name", "order": "DESC"}).getQuery().getResult() %}
                     <div class="col-sm-6 col-md-4">
                         {% include "Global/category-card.html.twig" with {category: category} %}
                     </div>

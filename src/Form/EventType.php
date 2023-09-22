@@ -13,6 +13,7 @@
     use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
     use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+    use Symfony\Component\Form\Extension\Core\Type\NumberType;
     use Symfony\Component\Form\Extension\Core\Type\SubmitType;
     use Symfony\Component\Form\Extension\Core\Type\TextareaType;
     use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -220,7 +221,30 @@
                     'help' => 'Add other images that represent your event to be displayed as a gallery',
                     'error_bubbling' => false,
                 ))
-                ->add('eventdates', CollectionType::class, array(
+                ->add('isrepeat', ChoiceType::class, [
+                    'required' => true,
+                    'multiple' => false,
+                    'expanded' => true,
+                    'label' => 'Will this event repeat like weekly, monthly, etc.?',
+                    'choices' => ['No' => false, 'Yes' => true],
+                    'label_attr' => ['class' => 'radio-custom radio-inline'],
+                    'help' => 'If this event will repeat weekly or monthly, or during some other time frame, please mark it as so',
+                    'attr' => [
+                        // Add an id to the "Yes" option
+                        'id' => 'repeat-yes',
+                    ],
+                ])
+                ->add('repeat_days', NumberType::class, [
+                    'label' => false, // Set the label to an empty string to hide it
+                    'required' => false,
+                    'attr' => [
+                        'id' => 'repeat-days',
+                        'pattern' => '^(0?[1-9]|[12][0-9]|3[0-1])$', // Regular expression for numbers from 1 to 31
+                        'title' => 'Please enter a number from 1 to 31', // Hint for the user
+                        'placeholder' => 'Enter number of days, for how often to repeat', // Add the placeholder text here
+                    ],
+                ])
+                ->add('eventdates', CollectionType::class, [
                     'label' => 'Event dates',
                     'entry_type' => EventDateType::class,
                     'allow_add' => true,
@@ -230,10 +254,10 @@
                     'required' => true,
                     'by_reference' => false,
                     'error_bubbling' => false,
-                    'attr' => array(
+                    'attr' => [
                         'class' => 'form-collection eventdates-collection manual-init',
-                    ),
-                ))
+                    ],
+                ])
                 ->add('save', SubmitType::class, [
                     'label' => 'Save',
                     'attr' => ['class' => 'btn btn-primary'],
