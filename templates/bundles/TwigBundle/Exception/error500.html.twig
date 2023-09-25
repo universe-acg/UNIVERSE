@@ -1,7 +1,7 @@
 {% set pagetitle = '500 - ' ~ 'Error' %}
 
 <!DOCTYPE html>
-<html lang="{{ app.request.get('_locale') }}">
+<html>
 <head>
     <title>{{ pagetitle }} | {{ services.getSetting("website_name") }}</title>
     <link rel="shortcut icon" href="{{ absolute_url(asset(services.getAppLayoutSettings.getFaviconPath)) }}"/>

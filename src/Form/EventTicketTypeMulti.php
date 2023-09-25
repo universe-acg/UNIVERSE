@@ -10,7 +10,6 @@ use App\Service\AppServices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -41,15 +40,15 @@ class EventTicketTypeMulti extends AbstractType
                 'purify_html' => true,
                 'required' => true,
                 'label' => 'Ticket name',
-                'help' => 'General admission'
+                'help' => 'Add name of ticket of your choice, speaker, or title of the event here'
             ])
-            ->add('description', TextareaType::class, [
-                'purify_html' => true,
-                'required' => false,
-                'disabled' => false,
-                'label' => 'Ticket description',
-                'help' => 'Tell your attendees more about this ticket type'
-            ])
+//            ->add('description', TextareaType::class, [
+//                'purify_html' => true,
+//                'required' => false,
+//                'disabled' => false,
+//                'label' => 'Ticket description',
+//                'help' => 'Tell your attendees more about this ticket type'
+//            ])
 //            ->add('free', ChoiceType::class, [
 //                'required' => false,
 //                'multiple' => false,

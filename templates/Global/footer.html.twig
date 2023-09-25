@@ -12,7 +12,7 @@
                                     {% set link = menuElement.customLink %}
                                 {% endif %}
                                 {% if menuElement.link %}
-                                    {% set link = services.changeLinkLocale(app.request.locale, menuElement.link) %}
+                                    {% set link =  menuElement.link %}
                                 {% endif %}
                                 <a href="{{ link }}">
                                     {% if menuElement.icon %}
@@ -36,7 +36,7 @@
                                     {% set link = menuElement.customLink %}
                                 {% endif %}
                                 {% if menuElement.link %}
-                                    {% set link = services.changeLinkLocale(app.request.locale, menuElement.link) %}
+                                    {% set link =  menuElement.link %}
                                 {% endif %}
                                 <a href="{{ link }}">
                                     {% if menuElement.icon %}
@@ -59,7 +59,7 @@
                                 {% set link = menuElement.customLink %}
                             {% endif %}
                             {% if menuElement.link %}
-                                {% set link = services.changeLinkLocale(app.request.locale, menuElement.link) %}
+                                {% set link =  menuElement.link %}
                             {% endif %}
                             {% if link == "footer_categories_section" %}
                                 {% for category in services.getCategories({ "featured": true, "limit": 4 }).getQuery().getResult() %}
@@ -129,29 +129,6 @@
 
                         <div class="clearfix"></div>
 
-
-                        {% if app.request.get('_route') and locales|split('|')|length > 2 %}
-                            <h5 class="title mt-4 display-inline-block"><i class="fas fa-globe"></i> {{ "Language" }}
-                            </h5>
-                            <div class="dropdown display-inline-block ml-5">
-                                <a href="javascript:void(0)" data-toggle="dropdown" class="text-dark">
-                                    {{ app.request.locale|getLangName }} <span
-                                            class="flag flag-{{ app.request.locale|getLangFlag }} ml-2"></span>&nbsp;<i
-                                            class="fas fa-caret-down"></i>
-                                </a>
-                                <div class="dropdown-menu">
-                                    {% for locale in locales|split('|') if locale != "" and locale != app.request.locale %}
-                                        <a class="dropdown-item"
-                                           href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale' : locale})) }}">
-                                            {{ locale|getLangName }}
-                                            <span class="flag flag-{{ locale|getLangFlag }} float-right mr-2"></span>
-                                        </a>
-                                    {% endfor %}
-                                </div>
-                            </div>
-
-                        {% endif %}
-
                     </article>
                 </aside>
             </div>
@@ -160,17 +137,17 @@
         <section class="footer-bottom row">
             <div class="col-sm-12">
                 <p class="text-center text-dark">
-                    <a href="https://universeacg.xyz/en/page/legal-notice" class="text-dark">{{ "Legal Notice" }}</a>
+                    <a href="https://universeacg.xyz/page/legal-notice" class="text-dark">{{ "Legal Notice" }}</a>
                     <span class="text-gray">|</span>
-                    <a href="https://universeacg.xyz/en/page/privacy-policy"
+                    <a href="https://universeacg.xyz/page/privacy-policy"
                        class="text-dark">{{ "Privacy policy" }}</a>
                     <span class="text-gray">|</span>
-                    <a href="https://universeacg.xyz/en/page/cookie-policy" class="text-dark">{{ "Cookie policy" }}</a>
+                    <a href="https://universeacg.xyz/page/cookie-policy" class="text-dark">{{ "Cookie policy" }}</a>
                     <span class="text-gray">|</span>
-                    <a href="https://universeacg.xyz/en/page/community-guidelines"
+                    <a href="https://universeacg.xyz/page/community-guidelines"
                        class="text-dark">{{ "Community Guidelines" }}</a>
                     <span class="text-gray">|</span>
-                    <a href="https://universeacg.xyz/en/page/about-us" class="text-dark">{{ "About us" }}</a>
+                    <a href="https://universeacg.xyz/page/about-us" class="text-dark">{{ "About us" }}</a>
                     <span class="text-gray">|</span>
                     {#                    {% if services.getSetting('show_terms_of_service_page') == "yes" %} #}
                     {#                        <a href="{{ path('page', { slug : services.getSetting('terms_of_service_page_slug') }) }}" class="text-dark">{{ "Terms of service" }}</a> #}

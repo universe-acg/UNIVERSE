@@ -23,7 +23,7 @@ class BlogPostCategoryController extends Controller
     {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
 
-        $blogpostcategories = $paginator->paginate($services->getBlogPostCategories(array('keyword' => $keyword, 'hidden' => 'all', 'order' => 'b.createdAt', 'sort' => 'DESC')), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
+        $blogpostcategories = $paginator->paginate($services->getBlogPostCategories(array('keyword' => $keyword, 'hidden' => 'all', 'order' => 'createdAt', 'sort' => 'DESC')), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
 
         return $this->render('Dashboard/Administrator/BlogPostCategory/index.html.twig', [
             'blogpostcategories' => $blogpostcategories,
@@ -43,7 +43,7 @@ class BlogPostCategoryController extends Controller
         } else {
             $blogpostcategory = $services->getBlogPostCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
             if (!$blogpostcategory) {
-                $this->addFlash('error', $translator->trans('The blog post category can not be found'));
+                $this->addFlash('error', 'The blog post category can not be found');
                 return $services->redirectToReferer('blog_post_category');
             }
         }
@@ -56,14 +56,14 @@ class BlogPostCategoryController extends Controller
                 $em->persist($blogpostcategory);
                 $em->flush();
                 if (!$slug) {
-                    $this->addFlash('success', $translator->trans('The blog post category has been successfully created'));
+                    $this->addFlash('success', 'The blog post category has been successfully created');
                 } else {
-                    $this->addFlash('success', $translator->trans('The blog post category has been successfully updated'));
+                    $this->addFlash('success', 'The blog post category has been successfully updated');
                 }
                 return $this->redirectToRoute("dashboard_administrator_blog_post_category");
-            } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
             }
+
+            $this->addFlash('error', 'The form contains invalid data');
         }
         return $this->render('Dashboard/Administrator/BlogPostCategory/add-edit.html.twig', array(
             "blogpostcategory" => $blogpostcategory,
@@ -80,17 +80,17 @@ class BlogPostCategoryController extends Controller
 
         $blogpostcategory = $services->getBlogPostCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$blogpostcategory) {
-            $this->addFlash('error', $translator->trans('The blog post category can not be found'));
+            $this->addFlash('error', 'The blog post category can not be found');
             return $services->redirectToReferer('blog_post_category');
         }
         if (count($blogpostcategory->getBlogposts()) > 0) {
-            $this->addFlash('error', $translator->trans('The blog post category can not be deleted because it is linked with one or more blog posts'));
+            $this->addFlash('error', 'The blog post category can not be deleted because it is linked with one or more blog posts');
             return $services->redirectToReferer('blog_post_category');
         }
         if ($blogpostcategory->getDeletedAt() !== null) {
-            $this->addFlash('error', $translator->trans('The blog post category has been deleted'));
+            $this->addFlash('error', 'The blog post category has been deleted');
         } else {
-            $this->addFlash('notice', $translator->trans('The blog post category has been disabled'));
+            $this->addFlash('notice', 'The blog post category has been disabled');
         }
         $em = $this->getDoctrine()->getManager();
         $blogpostcategory->setHidden(true);
@@ -109,14 +109,14 @@ class BlogPostCategoryController extends Controller
 
         $blogpostcategory = $services->getBlogPostCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$blogpostcategory) {
-            $this->addFlash('error', $translator->trans('The blog post category can not be found'));
+            $this->addFlash('error', 'The blog post category can not be found');
             return $services->redirectToReferer('blog_post_category');
         }
         $blogpostcategory->setDeletedAt(null);
         $em = $this->getDoctrine()->getManager();
         $em->persist($blogpostcategory);
         $em->flush();
-        $this->addFlash('success', $translator->trans('The blog post category has been succesfully restored'));
+        $this->addFlash('success', 'The blog post category has been succesfully restored');
 
         return $services->redirectToReferer('blog_post_category');
     }
@@ -130,15 +130,15 @@ class BlogPostCategoryController extends Controller
 
         $blogpostcategory = $services->getBlogPostCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$blogpostcategory) {
-            $this->addFlash('error', $translator->trans('The blog post category can not be found'));
+            $this->addFlash('error', 'The blog post category can not be found');
             return $services->redirectToReferer('blog_post_category');
         }
         if ($blogpostcategory->getHidden() === true) {
             $blogpostcategory->setHidden(false);
-            $this->addFlash('success', $translator->trans('The blog post category is visible'));
+            $this->addFlash('success', 'The blog post category is visible');
         } else {
             $blogpostcategory->setHidden(true);
-            $this->addFlash('error', $translator->trans('The blog post category is hidden'));
+            $this->addFlash('error', 'The blog post category is hidden');
         }
         $em = $this->getDoctrine()->getManager();
         $em->persist($blogpostcategory);

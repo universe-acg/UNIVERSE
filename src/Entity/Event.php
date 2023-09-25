@@ -27,20 +27,19 @@ class Event
 {
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=false)
+     * @ORM\Column(type="string", length=255, nullable=false)
      * @Assert\NotBlank
-     * @Assert\Length(min = 10, max = 100)
+     * @Assert\Length(min = 10)
      */
     protected $name;
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Assert\NotBlank
-     * @Assert\Length(min = 10)
      */
     protected $description;
     /**
      * @Gedmo\Slug(fields={"name"}, updatable=false)
-     * @ORM\Column(length=150, unique=true)
+     * @ORM\Column(length=255, unique=true)
      */
     protected $slug;
     /**
@@ -141,7 +140,7 @@ class Event
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(max = 50)
      */
     private $phonenumber;
@@ -190,21 +189,21 @@ class Event
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=500, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(max = 500)
      */
     private $artists;
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=500, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(max = 500)
      */
     private $tags;
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=5, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(max = 5)
      */
     private $year;
@@ -222,7 +221,7 @@ class Event
      */
     private $imageFile;
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $imageName;
     /**
@@ -232,7 +231,7 @@ class Event
      */
     private $imageSize;
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $imageMimeType;
 
@@ -241,7 +240,7 @@ class Event
      */
     private $commonvalue;
     /**
-     * @ORM\Column(type="string", length=1000, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $imageOriginalName;
     /**
@@ -667,7 +666,7 @@ class Event
                 $count++;
             }
         }
-        return $count >= 2 ? true : false;
+        return $count >= 2;
     }
 
     public function isOnSale()
@@ -686,20 +685,6 @@ class Event
             }
         }
         return true;
-    }
-
-    public function getCheapestTicket()
-    {
-        if (!$this->hasAnEventDateOnSale()) {
-            return null;
-        }
-        $cheapestticket = $this->getFirstOnSaleEventDate()->getCheapestTicket();
-        foreach ($this->eventdates as $eventdate) {
-            if ($eventdate->isOnSale() && $eventdate->getCheapestTicket()->getSalePrice() < $cheapestticket->getSalePrice()) {
-                $cheapestticket = $eventdate->getCheapestTicket();
-            }
-        }
-        return $cheapestticket;
     }
 
     public function getFirstOnSaleEventDate()

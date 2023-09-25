@@ -286,60 +286,7 @@
                                     </div>
                                 </article>
                             {% endif %}
-                            {% if services.getSetting("show_ticket_price_filter") == "yes" %}
-                                <article class="card-group-item">
-                                    <header class="card-header">
-                                        <a href="#" data-toggle="collapse" data-target="#filter-price">
-                                            <i class="icon-action fa fa-chevron-down"></i>
-                                            <h6 class="title">{{ "Ticket price" }}</h6>
-                                        </a>
-                                    </header>
-                                    <div class="filter-content collapse show" id="filter-price">
-                                        <div class="card-body">
 
-                                            <div class="custom-control custom-checkbox form-check-input ml-0 mb-4">
-                                                <input type="checkbox" class="custom-control-input"
-                                                       id="free-events-only" name="freeonly" value="1">
-                                                <label class="custom-control-label" for="free-events-only">
-                                                    {#                                                    {{ "Free events only" }} #}
-                                                </label>
-                                            </div>
-
-                                            <div class="events-price-range-slider-wrapper">
-                                                <div class="range-slider mb-3" data-min="0" data-max="10000"
-                                                     data-start-left="{{ app.request.get('pricemin') ?? "0" }}"
-                                                     data-start-right="{{ app.request.get('pricemax') ?? "10000" }}"></div>
-                                                <div class="row ranger-slider-inputs">
-                                                    <div class="col-12 col-sm-6">
-                                                        <label for="pricemin">{{ "Min" }}</label>
-                                                        <div class="input-group">
-                                                            <div class="input-group-prepend">
-                                                                <span class="input-group-text">{{ services.getSetting('currency_symbol') }}</span>
-                                                            </div>
-                                                            <input id="pricemin" name="pricemin" type="text"
-                                                                   class="form-control range-slider-min-input"
-                                                                   value="{{ app.request.get('pricemin') }}"
-                                                                   placeholder="{{ "Min" }}">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-sm-6">
-                                                        <label for="pricemax">{{ "Max" }}</label>
-                                                        <div class="input-group">
-                                                            <div class="input-group-prepend">
-                                                                <span class="input-group-text">{{ services.getSetting('currency_symbol') }}</span>
-                                                            </div>
-                                                            <input id="pricemax" name="pricemax" type="text"
-                                                                   class="form-control range-slider-max-input"
-                                                                   value="{{ app.request.get('pricemax') }}"
-                                                                   placeholder="{{ "Max" }}">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
-                            {% endif %}
                             {% if services.getSetting("show_audience_filter") == "yes" %}
                                 <article class="card-group-item">
                                     <header class="card-header">

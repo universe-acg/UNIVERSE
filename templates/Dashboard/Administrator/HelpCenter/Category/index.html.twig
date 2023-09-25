@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    {% set navigation = [{ "dashboard_index": ('Dashboard' | trans), "current":(pagetitle) }] %}
+    {% set navigation = [{ "dashboard_index": ('Dashboard' ), "current":(pagetitle) }] %}
     {% include "Global/navigation.html.twig" with navigation %}
 
     <section class="section-content padding-y bg-white">
@@ -47,8 +47,8 @@
                                     <select id="sortable-select"
                                             class="form-control display-inline-block bg-white select2 ml-3"
                                             data-placeholder="{{ "Select an option" }}" style="width: 100%;">
-                                        {{ knp_pagination_sortable(categories, "Creation date" ~ ' (' ~ "desc" ~ ')', "c.createdAt", {"direction": "desc", "criteria": "c.createdAt"}) }}
-                                        {{ knp_pagination_sortable(categories, "Creation date" ~ ' (' ~ "asc" ~ ')', "c.createdAt", {"direction": "asc", "criteria": "c.createdAt"}) }}
+                                        {{ knp_pagination_sortable(categories, "Creation date" ~ ' (' ~ "desc" ~ ')', "createdAt", {"direction": "desc", "criteria": "c.createdAt"}) }}
+                                        {{ knp_pagination_sortable(categories, "Creation date" ~ ' (' ~ "asc" ~ ')', "createdAt", {"direction": "asc", "criteria": "c.createdAt"}) }}
                                     </select>
                                 </label>
                                 <a href="{{ path('dashboard_administrator_help_center_category_add') }}"

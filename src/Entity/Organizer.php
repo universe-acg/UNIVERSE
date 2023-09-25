@@ -27,7 +27,7 @@ class Organizer
 
     /**
      * @Gedmo\Slug(fields={"name"}, updatable=true)
-     * @ORM\Column(length=35, unique=true)
+     * @ORM\Column(length=255, unique=true)
      */
     protected $slug;
     /**
@@ -82,14 +82,14 @@ class Organizer
      */
     private $paymentGateways;
     /**
-     * @ORM\Column(type="string", length=25)
+     * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
-     * @Assert\Length(min = 2, max = 25)
+     * @Assert\Length(min = 2)
      */
     private $name;
+
     /**
      * @ORM\Column(type="string", length=1000, nullable=true)
-     * @Assert\Length(max = 1000)
      */
     private $description;
 
@@ -100,49 +100,47 @@ class Organizer
     private $country;
 
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
-     * @Assert\Length(max = 50)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $website;
 
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
-     * @Assert\Length(max = 50)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
-     * @Assert\Length(min = 1, max = 50)
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(min = 1)
      */
     private $phone;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(max = 100)
      */
     private $facebook;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(max = 100)
      */
     private $twitter;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(max = 100)
      */
     private $instagram;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(max = 100)
      */
     private $googleplus;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(max = 100)
      */
     private $linkedin;
@@ -175,7 +173,7 @@ class Organizer
     private $logoFile;
 
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $logoName;
 
@@ -187,12 +185,12 @@ class Organizer
     private $logoSize;
 
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $logoMimeType;
 
     /**
-     * @ORM\Column(type="string", length=1000, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $logoOriginalName;
 
@@ -215,7 +213,7 @@ class Organizer
     private $coverFile;
 
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $coverName;
 
@@ -227,12 +225,12 @@ class Organizer
     private $coverSize;
 
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $coverMimeType;
 
     /**
-     * @ORM\Column(type="string", length=1000, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $coverOriginalName;
 

@@ -24,7 +24,7 @@ class HelpCenterCategoryController extends Controller
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
         $hidden = ($request->query->get('hidden')) == "" ? "all" : $request->query->get('hidden');
 
-        $categories = $paginator->paginate($services->getHelpCenterCategories(array('keyword' => $keyword, 'hidden' => $hidden, 'order' => 'c.createdAt', 'sort' => 'DESC')), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
+        $categories = $paginator->paginate($services->getHelpCenterCategories(array('keyword' => $keyword, 'hidden' => $hidden, 'order' => 'createdAt', 'sort' => 'DESC')), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
 
         return $this->render('Dashboard/Administrator/HelpCenter/Category/index.html.twig', [
             'categories' => $categories,
@@ -44,7 +44,7 @@ class HelpCenterCategoryController extends Controller
         } else {
             $category = $services->getHelpCenterCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
             if (!$category) {
-                $this->addFlash('error', $translator->trans('The category can not be found'));
+                $this->addFlash('error', 'The category can not be found');
                 return $services->redirectToReferer('help_center_category');
             }
         }
@@ -57,13 +57,13 @@ class HelpCenterCategoryController extends Controller
                 $em->persist($category);
                 $em->flush();
                 if (!$slug) {
-                    $this->addFlash('success', $translator->trans('The category has been successfully created'));
+                    $this->addFlash('success', 'The category has been successfully created');
                 } else {
-                    $this->addFlash('success', $translator->trans('The category has been successfully updated'));
+                    $this->addFlash('success', 'The category has been successfully updated');
                 }
                 return $this->redirectToRoute('dashboard_administrator_help_center_category');
             } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+                $this->addFlash('error', 'The form contains invalid data');
             }
         }
         return $this->render('Dashboard/Administrator/HelpCenter/Category/add-edit.html.twig', array(
@@ -81,17 +81,17 @@ class HelpCenterCategoryController extends Controller
 
         $category = $services->getHelpCenterCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$category) {
-            $this->addFlash('error', $translator->trans('The category can not be found'));
+            $this->addFlash('error', 'The category can not be found');
             return $services->redirectToReferer('help_center_category');
         }
         if (count($category->getArticles()) > 0) {
-            $this->addFlash('error', $translator->trans('The category can not be deleted because it is linked with one or more help center articles'));
+            $this->addFlash('error', 'The category can not be deleted because it is linked with one or more help center articles');
             return $services->redirectToReferer('help_center_category');
         }
         if ($category->getDeletedAt() !== null) {
-            $this->addFlash('error', $translator->trans('The category has been deleted'));
+            $this->addFlash('error', 'The category has been deleted');
         } else {
-            $this->addFlash('notice', $translator->trans('The category has been disabled'));
+            $this->addFlash('notice', 'The category has been disabled');
         }
         $em = $this->getDoctrine()->getManager();
         $category->setHidden(true);
@@ -110,14 +110,14 @@ class HelpCenterCategoryController extends Controller
 
         $category = $services->getHelpCenterCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$category) {
-            $this->addFlash('error', $translator->trans('The category can not be found'));
+            $this->addFlash('error', 'The category can not be found');
             return $services->redirectToReferer('help_center_category');
         }
         $category->setDeletedAt(null);
         $em = $this->getDoctrine()->getManager();
         $em->persist($category);
         $em->flush();
-        $this->addFlash('success', $translator->trans('The category has been succesfully restored'));
+        $this->addFlash('success', 'The category has been succesfully restored');
 
         return $services->redirectToReferer('help_center_category');
     }
@@ -131,15 +131,15 @@ class HelpCenterCategoryController extends Controller
 
         $category = $services->getHelpCenterCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$category) {
-            $this->addFlash('error', $translator->trans('The category can not be found'));
+            $this->addFlash('error', 'The category can not be found');
             return $services->redirectToReferer('help_center_category');
         }
         if ($category->getHidden() === true) {
             $category->setHidden(false);
-            $this->addFlash('success', $translator->trans('The category is visible'));
+            $this->addFlash('success', 'The category is visible');
         } else {
             $category->setHidden(true);
-            $this->addFlash('error', $translator->trans('The category is hidden'));
+            $this->addFlash('error', 'The category is hidden');
         }
         $em = $this->getDoctrine()->getManager();
         $em->persist($category);

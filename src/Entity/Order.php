@@ -50,13 +50,13 @@ class Order
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=15)
+     * @ORM\Column(type="string", length=255)
      */
     private $reference;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=1000, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $note;
 
@@ -81,13 +81,13 @@ class Order
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=10)
+     * @ORM\Column(type="string", length=255)
      */
     private $currencyCcy;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=10)
+     * @ORM\Column(type="string", length=255)
      */
     private $currencySymbol;
 
@@ -271,6 +271,22 @@ class Order
         $this->reference = $reference;
 
         return $this;
+    }
+
+    public function getStatusStringified()
+    {
+        $localstatus = $this->getStatus();
+
+        if ($localstatus == 1) {
+            return "Not Attendeed";
+        }
+
+        if ($localstatus == 2) {
+            return "Attendeed";
+        }
+
+// Handle other status values if needed
+        return "unknown"; // or any other appropriate handling
     }
 
     public function getStatus()

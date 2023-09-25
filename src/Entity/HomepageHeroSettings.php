@@ -23,7 +23,10 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  */
 class HomepageHeroSettings
 {
-
+    /**
+     * @ORM\Column(length=255, unique=true)
+     */
+    protected $title;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -31,20 +34,22 @@ class HomepageHeroSettings
      */
     private $id;
     /**
-     * @ORM\Column(type="string", length=15, nullable=false)
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
     private $content;
-
     /**
      * @ORM\OneToMany(targetEntity="Event", mappedBy="isonhomepageslider", cascade={"persist"})
      */
     private $events;
-
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
+     */
+    private $paragraph;
     /**
      * @ORM\OneToMany(targetEntity="User", mappedBy="isorganizeronhomepageslider")
      */
     private $organizers;
-
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      *
@@ -57,39 +62,32 @@ class HomepageHeroSettings
      * @var File
      */
     private $customBackgroundFile;
-
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $customBackgroundName;
-
     /**
      * @ORM\Column(type="integer", nullable=true)
      *
      * @var integer
      */
     private $customBackgroundSize;
-
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $customBackgroundMimeType;
-
     /**
-     * @ORM\Column(type="string", length=1000, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $customBackgroundOriginalName;
-
     /**
      * @ORM\Column(type="simple_array", nullable=true)
      */
     private $customBackgroundDimensions;
-
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $show_search_box;
-
     /**
      * @var DateTime $updatedAt
      *
@@ -102,6 +100,38 @@ class HomepageHeroSettings
     {
         $this->events = new ArrayCollection();
         $this->organizers = new ArrayCollection();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param mixed $title
+     */
+    public function setTitle($title): void
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParagraph()
+    {
+        return $this->paragraph;
+    }
+
+    /**
+     * @param mixed $paragraph
+     */
+    public function setParagraph($paragraph): void
+    {
+        $this->paragraph = $paragraph;
     }
 
     public function clearEvents()

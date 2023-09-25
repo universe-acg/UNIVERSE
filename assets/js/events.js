@@ -1,3 +1,7 @@
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
+
 // css & scss
 
 require('@fullcalendar/core/main.min.css');
@@ -6,13 +10,13 @@ require('@fullcalendar/timegrid/main.min.css');
 
 // js
 
-import { Calendar } from '@fullcalendar/core';
+import {Calendar} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
-require('@fullcalendar/core/locales-all.min.js');
-
 import 'marker-clusterer/marker-clusterer.js';
 import Handlebars from 'handlebars/dist/handlebars.min.js';
+
+// require('@fullcalendar/core/locales-all.min.js');
 
 // snazzy-info-window must be loader after Google Maps is completely loader
 if ($('#events-map').length && $('#events-map').data('events').length) {
@@ -21,6 +25,7 @@ if ($('#events-map').length && $('#events-map').data('events').length) {
             drawMap($('#events-map').data('events'));
         });
     }
+
     global.initMap = initMap;
 }
 
@@ -75,9 +80,9 @@ function drawMap(events) {
                 link: event.link,
                 bgImg: event.image,
                 body:
-                        '<p class="text-muted"><small>' + event.address + '</small></p>' +
-                        '<p class="text-muted"><small>' + event.date + '</small></p>' +
-                        '<p class="text-muted"><small>' + ($('body').data('currency-position') == 'left' ? $('body').data('currency-symbol') : '') + event.price + ($('body').data('currency-position') == 'right' ? $('body').data('currency-symbol') : '') + '</small></p>'
+                    '<p class="text-muted"><small>' + event.address + '</small></p>' +
+                    '<p class="text-muted"><small>' + event.date + '</small></p>' +
+                    '<p class="text-muted"><small>' + ($('body').data('currency-position') == 'left' ? $('body').data('currency-symbol') : '') + event.price + ($('body').data('currency-position') == 'right' ? $('body').data('currency-symbol') : '') + '</small></p>'
             }),
             callbacks: {
                 open: function () {
@@ -107,7 +112,7 @@ function drawMap(events) {
         return marker;
     });
     new MarkerClusterer(map, markers,
-            {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+        {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 }
 
 $(document).ready(function () {
@@ -135,8 +140,7 @@ $(document).ready(function () {
     }
     if (getURLParameter('category')) {
         $('select#category option').each(function () {
-            if ($(this).val() == getURLParameter('category'))
-            {
+            if ($(this).val() == getURLParameter('category')) {
                 $(this).prop('selected', true).trigger('change');
             }
         });
@@ -144,8 +148,7 @@ $(document).ready(function () {
     $('#filter-location-container').hide();
     if (getURLParameter('country')) {
         $('#country option').each(function () {
-            if ($(this).val() == getURLParameter('country'))
-            {
+            if ($(this).val() == getURLParameter('country')) {
                 $(this).prop('selected', true).trigger('change');
                 $('#filter-location-container').show();
             }
@@ -231,10 +234,10 @@ $(document).ready(function () {
                 right: 'dayGridMonth,timeGridWeek,timeGridDay'
             },
             buttonText: {
-                today: Translator.trans("Today", {}, 'javascript'),
-                day: Translator.trans("Day", {}, 'javascript'),
-                week: Translator.trans("Week", {}, 'javascript'),
-                month: Translator.trans("Month", {}, 'javascript')
+                today: "Today",
+                day: "Day",
+                week: "Week",
+                month: "Month"
             },
             events: $('#events-calendar').data('events')
         });

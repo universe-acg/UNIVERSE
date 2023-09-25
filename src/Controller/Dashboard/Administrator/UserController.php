@@ -5,6 +5,9 @@
 
 namespace App\Controller\Dashboard\Administrator;
 
+use App\Form\EditAdminRegistrationOrganizerType;
+use App\Form\EditAdminRegistrationTypeAttendee;
+use App\Repository\UserRepository;
 use App\Service\AppServices;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -13,6 +16,57 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends Controller
 {
+
+    /**
+     * @Route("/administrator/edit/user/{id}", name="user", methods="GET")
+     */
+    public function edituser(Request $request, $id, UserRepository $userRepository)
+    {
+        $user = $userRepository->find($id);
+
+        if ($user->hasRole("ROLE_ORGANIZER")) {
+            $form = $this->createForm(EditAdminRegistrationOrganizerType::class, $user, [
+                'user' => $user,
+            ]);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted()) {
+                if ($form->isValid()) {
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($user);
+                    $em->flush();
+                    $this->addFlash('success', 'Account has been updated');
+                } else {
+                    $this->addFlash('error', 'The form contains invalid data');
+                }
+            }
+
+            return $this->render('Dashboard/Administrator/User/Registration/edit-admin-register-organizer.html.twig', array(
+                'form' => $form->createView(),
+            ));
+        }
+
+        $form = $this->createForm(EditAdminRegistrationTypeAttendee::class, $user, [
+            'user' => $user,
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($user);
+                $em->flush();
+                $this->addFlash('success', 'Account has been updated');
+            } else {
+                $this->addFlash('error', 'The form contains invalid data');
+            }
+        }
+
+        return $this->render('Dashboard/Administrator/User/Registration/edit-admin-register-attendee.html.twig', array(
+            'form' => $form->createView(),
+        ));
+    }
+
 
     /**
      * @Route("/manage-users", name="user", methods="GET")
@@ -45,7 +99,7 @@ class UserController extends Controller
         $user = $services->getUsers(array('slug' => $slug, 'enabled' => 'all'))->getQuery()->getOneOrNullResult();
 
         if (!$user) {
-            $this->addFlash('error', $translator->trans('The user can not be found'));
+            $this->addFlash('error', 'The user can not be found');
             return $services->redirectToReferer('user');
         }
 
@@ -83,9 +137,9 @@ class UserController extends Controller
         }
 
         if ($user->getDeletedAt() !== null) {
-            $this->addFlash('error', $translator->trans('The user has been permanently deleted'));
+            $this->addFlash('error', 'The user has been permanently deleted');
         } else {
-            $this->addFlash('notice', $translator->trans('The user has been deleted'));
+            $this->addFlash('notice', 'The user has been deleted');
         }
 
 // Remove the user entity itself
@@ -103,7 +157,7 @@ class UserController extends Controller
 
         $user = $services->getUsers(array('slug' => $slug, 'enabled' => 'all'))->getQuery()->getOneOrNullResult();
         if (!$user) {
-            $this->addFlash('error', $translator->trans('The user can not be found'));
+            $this->addFlash('error', 'The user can not be found');
             return $services->redirectToReferer('user');
         }
         $user->setDeletedAt(null);
@@ -111,7 +165,7 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->persist($user);
         $em->flush();
-        $this->addFlash('success', $translator->trans('The user has been succesfully restored'));
+        $this->addFlash('success', 'The user has been succesfully restored');
 
         return $services->redirectToReferer('user');
     }
@@ -125,7 +179,7 @@ class UserController extends Controller
 
         $user = $services->getUsers(array('slug' => $slug, 'enabled' => 'all'))->getQuery()->getOneOrNullResult();
         if (!$user) {
-            $this->addFlash('error', $translator->trans('The user can not be found'));
+            $this->addFlash('error', 'The user can not be found');
             return $services->redirectToReferer('page');
         }
         $em = $this->getDoctrine()->getManager();
@@ -141,7 +195,7 @@ class UserController extends Controller
                     $em->persist($pos->getUser());
                 }
             }
-            $this->addFlash('notice', $translator->trans('The user has been disabled'));
+            $this->addFlash('notice', 'The user has been disabled');
         } else {
             $user->setEnabled(true);
             if ($user->hasRole("ROLE_ORGANIZER")) {
@@ -154,7 +208,7 @@ class UserController extends Controller
                     $em->persist($pos->getUser());
                 }
             }
-            $this->addFlash('success', $translator->trans('The user has been enabled'));
+            $this->addFlash('success', 'The user has been enabled');
         }
         $em->persist($user);
         $em->flush();
@@ -169,7 +223,7 @@ class UserController extends Controller
 
         $user = $services->getUsers(array("slug" => $slug, "enabled" => "all"))->getQuery()->getOneOrNullResult();
         if (!$user) {
-            return new Response($translator->trans('The user can not be found'));
+            return new Response('The user can not be found');
         }
         return $this->render('Dashboard/Administrator/User/information.html.twig', [
             'user' => $user,
@@ -184,11 +238,11 @@ class UserController extends Controller
 
         $user = $services->getUsers(array("slug" => $slug, "enabled" => "all"))->getQuery()->getOneOrNullResult();
         if (!$user) {
-            $this->addFlash('error', $translator->trans('The user can not be found'));
+            $this->addFlash('error', 'The user can not be found');
             return $services->redirectToReferer('page');
         }
         $services->emptyCart($user);
-        $this->addFlash('notice', $translator->trans('The user cart has been emptied'));
+        $this->addFlash('notice', 'The user cart has been emptied');
         return $services->redirectToReferer('page');
     }
 

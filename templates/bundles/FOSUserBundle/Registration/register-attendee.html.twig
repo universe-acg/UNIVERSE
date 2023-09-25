@@ -2,7 +2,7 @@
 
 {% trans_default_domain 'FOSUserBundle' %}
 
-{% set pagetitle = 'Sign up'|trans({}, 'messages') %}
+{% set pagetitle = 'Sign up' %}
 
 {% block title %}{{ pagetitle }}{% endblock %}
 
@@ -70,20 +70,20 @@
                     {% endif %}
                     <div class="mb-3 text-sm text-center">
                         {% if services.getSetting('show_terms_of_service_page') == "yes" %}
-                            <span class="text-muted">{{ "By clicking the Sign Up button, I agree to" | trans({}, 'messages') }}</span>
+                            <span class="text-muted">{{ "By clicking the Sign Up button, I agree to" }}</span>
                             <a href="{{ path('page', { slug : services.getSetting('terms_of_service_page_slug') }) }}">{{ "Terms of service" }}</a>
                         {% endif %}
                         {% if services.getSetting('show_privacy_policy_page') == "yes" %}
-                            <span class="text-muted">{{ "and" | trans({}, 'messages') }}</span>
+                            <span class="text-muted">{{ "and" }}</span>
                             <a href="{{ path('page', { slug : services.getSetting('privacy_policy_page_slug') }) }}">{{ "Privacy policy" }}</a>
                         {% endif %}
                     </div>
                     <div class="form-group">
                         <button type="submit"
-                                class="btn btn-primary btn-block">{{ "Create Account" | trans({}, 'messages') }}</button>
+                                class="btn btn-primary btn-block">{{ "Create Account" }}</button>
                     </div>
-                    <p class="text-center">{{ "Already have an account?" | trans({}, 'messages') }} <a
-                                href="{{ path('fos_user_security_login') }}">{{ "Sign in" | trans({}, 'messages') }}</a>
+                    <p class="text-center">{{ "Already have an account?" }} <a
+                                href="{{ path('fos_user_security_login') }}">{{ "Sign in" }}</a>
                     </p>
                     {{ form_widget(form._token) }}
                     {{ form_end(form, {'render_rest': false}) }}

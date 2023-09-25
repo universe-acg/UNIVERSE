@@ -20,7 +20,6 @@ use App\Entity\HelpCenterCategory;
 use App\Entity\Language;
 use App\Entity\Menu;
 use App\Entity\Order;
-use App\Entity\OrderElement;
 use App\Entity\OrderTicket;
 use App\Entity\Page;
 use App\Entity\Payment;
@@ -28,7 +27,6 @@ use App\Entity\PaymentGateway;
 use App\Entity\PayoutRequest;
 use App\Entity\Review;
 use App\Entity\Settings;
-use App\Entity\User;
 use App\Entity\Venue;
 use App\Entity\VenueType;
 use DateTime;
@@ -60,7 +58,6 @@ use Twig_Environment;
 
 class AppServices
 {
-
     private $em;
     private $authChecker;
     private $requestStack;
@@ -69,7 +66,6 @@ class AppServices
     private $router;
     private $security;
     private $mailer;
-    private $translator;
     private $params;
     private $templating;
     private $urlMatcherInterface;
@@ -84,7 +80,6 @@ class AppServices
         $this->router = $router;
         $this->security = $security;
         $this->mailer = $mailer;
-        $this->translator = $translator;
         $this->params = $params;
         $this->templating = $templating;
         $this->urlMatcherInterface = $urlMatcherInterface;
@@ -205,79 +200,7 @@ class AppServices
 
     // Updates the .env key with the choosen value
 
-    /**
-     * @throws InvalidArgumentException
-     * @throws Exception
-     */
-    public function transformCartIntoOrder(User $user): Order
-    {
-        $order = new Order();
-        $order->setUser($user);
-        $order->setReference($this->generateReference(15));
-        $order->setStatus(0);
-        foreach ($user->getCartelements() as $cartelement) {
-            // Creates as many order elements as cart elements
-            $orderelement = new OrderElement();
-            $orderelement->setOrder($order);
-            $orderelement->setEventticket($cartelement->getEventticket());
-            $orderelement->setUnitprice($cartelement->getEventticket()->getSalePrice());
-            $orderelement->setQuantity($cartelement->getQuantity());
-            $order->addOrderelement($orderelement);
-        }
-        if ($user->hasRole("ROLE_ATTENDEE")) {
-            $order->setTicketFee($this->getSetting("ticket_fee_online"));
-            $order->setTicketPricePercentageCut($this->getSetting("online_ticket_price_percentage_cut"));
-        } else if ($user->hasRole("ROLE_POINTOFSALE")) {
-            $order->setTicketFee($this->getSetting("ticket_fee_pos"));
-            $order->setTicketPricePercentageCut($this->getSetting("pos_ticket_price_percentage_cut"));
-        }
-        $order->setCurrencyCcy($this->getSetting("currency_ccy"));
-        $order->setCurrencySymbol($this->getSetting("currency_symbol"));
-        return $order;
-    }
-
     // Gets the value with the entered key from the .env file
-
-    /**
-     * @throws Exception
-     */
-    public function generateReference($length): string
-    {
-        $reference = implode('', [
-            bin2hex(random_bytes(2)),
-            bin2hex(random_bytes(2)),
-            bin2hex(chr((ord(random_bytes(1)) & 0x0F) | 0x40)) . bin2hex(random_bytes(1)),
-            bin2hex(chr((ord(random_bytes(1)) & 0x3F) | 0x80)) . bin2hex(random_bytes(1)),
-            bin2hex(random_bytes(2))
-        ]);
-
-        return strlen($reference) > $length ? substr($reference, 0, $length) : $reference;
-    }
-
-    // Removes all the specified user cart elements
-
-    /**
-     * @throws InvalidArgumentException
-     */
-    public function getSetting($key)
-    {
-
-        $settingcache = $this->cache->getItem('settings_' . $key);
-        if ($settingcache->isHit()) {
-            return $settingcache->get();
-        }
-        $setting = $this->em->getRepository(Settings::class)->findOneByKey($key);
-
-        if (!$setting) {
-            return null;
-        }
-
-        $settingcache->set($setting->getValue());
-        $this->cache->save($settingcache);
-        return ($setting ? ($setting->getValue()) : (null));
-    }
-
-    // Transforms the specified user cart into an order based on the application's logic
 
     /**
      * @param $orderReference
@@ -306,7 +229,7 @@ class AppServices
         }
     }
 
-    // Handles all the operations needed after a successful payment processing
+    // Removes all the specified user cart elements
 
     public function getOrders($criterias)
     {
@@ -339,7 +262,6 @@ class AppServices
         return $this->em->getRepository(Order::class)->getOrders($status, $user, $organizer, $event, $eventDate, $eventTicket, $reference, $upcomingtickets, $datefrom, $dateto, $paymentgateway, $sort, $order, $limit, $count, $ordersQuantityByDateStat, $sumOrderElements);
     }
 
-    // Sends the tickets to the attendee
 
     public function disableSofDeleteFilterForAdmin($entityManager, $authChecker)
     {
@@ -349,7 +271,25 @@ class AppServices
 //            }
     }
 
-    // Handles all the operations needed after a failed payment processing
+    // Handles all the operations needed after a successful payment processing
+
+    /**
+     * @throws Exception
+     */
+    public function generateReference($length): string
+    {
+        $reference = implode('', [
+            bin2hex(random_bytes(2)),
+            bin2hex(random_bytes(2)),
+            bin2hex(chr((ord(random_bytes(1)) & 0x0F) | 0x40)) . bin2hex(random_bytes(1)),
+            bin2hex(chr((ord(random_bytes(1)) & 0x3F) | 0x80)) . bin2hex(random_bytes(1)),
+            bin2hex(random_bytes(2))
+        ]);
+
+        return strlen($reference) > $length ? substr($reference, 0, $length) : $reference;
+    }
+
+    // Sends the tickets to the attendee
 
     /**
      * @throws SyntaxError
@@ -370,7 +310,7 @@ class AppServices
         $dompdf->render();
         $ticketsPdfFile = $dompdf->output();
 
-        $email = (new Swift_Message($this->translator->trans('Your tickets from') . ' ' . $this->getSetting('website_name')))
+        $email = (new Swift_Message('Your tickets from' . ' ' . $this->getSetting('website_name')))
             ->setFrom($this->getSetting('no_reply_email'))
             ->setTo($emailTo)
             ->setBody(
@@ -379,6 +319,29 @@ class AppServices
 
         $this->mailer->send($email);
         return 1;
+    }
+
+    // Handles all the operations needed after a failed payment processing
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function getSetting($key)
+    {
+
+        $settingcache = $this->cache->getItem('settings_' . $key);
+        if ($settingcache->isHit()) {
+            return $settingcache->get();
+        }
+        $setting = $this->em->getRepository(Settings::class)->findOneByKey($key);
+
+        if (!$setting) {
+            return null;
+        }
+
+        $settingcache->set($setting->getValue());
+        $this->cache->save($settingcache);
+        return ($setting ? ($setting->getValue()) : (null));
     }
 
     // Handles all the operations needed after a canceled payment processing
@@ -603,7 +566,7 @@ class AppServices
      */
     public function sendPayoutProcessedEmail($payoutRequest, $emailTo): int
     {
-        $email = (new Swift_Message($this->translator->trans('Your payout request has been processed')))
+        $email = (new Swift_Message('Your payout request has been processed'))
             ->setFrom($this->getSetting('no_reply_email'))
             ->setTo($emailTo)
             ->setBody(
@@ -635,78 +598,71 @@ class AppServices
      */
     public function getLinks(): array
     {
-
         $linksArray = array();
 
         // Add static pages urls
         $staticPages = $this->getPages(array())->getQuery()->getResult();
         $staticPagesArray = array();
-        $staticPagesArray[$this->translator->trans('Homepage')] = $this->router->generate('homepage', ['_locale' => 'en']);
+        $staticPagesArray['Homepage'] = $this->router->generate('homepage');
         foreach ($staticPages as $staticPage) {
-            $staticPagesArray[$staticPage->getTitle()] = $this->router->generate('page', ['slug' => $staticPage->getSlug(), '_locale' => 'en']);
+            $staticPagesArray[$staticPage->getTitle()] = $this->router->generate('page', ['slug' => $staticPage->getSlug()]);
         }
-        $staticPagesArray[$this->translator->trans('Contact')] = $this->router->generate('contact', ['_locale' => 'en']);
+        $staticPagesArray['Contact'] = $this->router->generate('contact');
         $linksArray["Static Pages"] = $staticPagesArray;
 
         // Add authentification pages urls
         $authentificationPagesArray = array();
-        $authentificationPagesArray[$this->translator->trans('Login')] = $this->router->generate('fos_user_security_login', ['_locale' => 'en']);
-        $authentificationPagesArray[$this->translator->trans('Password Resetting')] = $this->router->generate('fos_user_resetting_request', ['_locale' => 'en']);
-        $authentificationPagesArray[$this->translator->trans('Attendee Registration')] = $this->router->generate('fos_user_registration_register_attendee', ['_locale' => 'en']);
-        $authentificationPagesArray[$this->translator->trans('Organizer Registration')] = $this->router->generate('fos_user_registration_register_organizer', ['_locale' => 'en']);
+        $authentificationPagesArray['Login'] = $this->router->generate('fos_user_security_login');
+        $authentificationPagesArray['Password Resetting'] = $this->router->generate('fos_user_resetting_request');
+        $authentificationPagesArray['Attendee Registration'] = $this->router->generate('fos_user_registration_register_attendee');
+        $authentificationPagesArray['Organizer Registration'] = $this->router->generate('fos_user_registration_register_organizer');
         $linksArray["Authentification Pages"] = $authentificationPagesArray;
 
         // Add dashboard pages urls
         $dashboardPagesArray = array();
-        $dashboardPagesArray[$this->translator->trans('Attendee tickets')] = $this->router->generate('dashboard_attendee_orders', ['_locale' => 'en']);
-        $dashboardPagesArray[$this->translator->trans('Create event')] = $this->router->generate('dashboard_organizer_event_add', ['_locale' => 'en']);
+        $dashboardPagesArray['Attendee tickets'] = $this->router->generate('dashboard_attendee_orders');
+        $dashboardPagesArray['Create event'] = $this->router->generate('dashboard_organizer_event_add');
         $linksArray["Dashboard Pages"] = $dashboardPagesArray;
 
         // Add Category pages urls
         $categoryPagesArray = array();
-        $categoryPagesArray[$this->translator->trans('Categories page')] = $this->router->generate('categories', ['_locale' => 'en']);
-        $categoryPagesArray[$this->translator->trans('No link, display featured categories dropdown on hover (header menu only)')] = 'categories_dropdown';
-        $categoryPagesArray[$this->translator->trans('Display top 4 featured categories (footer section menu only)')] = 'footer_categories_section';
+        $categoryPagesArray['Categories page'] = $this->router->generate('categories');
+        $categoryPagesArray['No link, display featured categories dropdown on hover (header menu only)'] = 'categories_dropdown';
+        $categoryPagesArray['Display top 4 featured categories (footer section menu only)'] = 'footer_categories_section';
         $categories = $this->getCategories(array())->getQuery()->getResult();
         foreach ($categories as $category) {
-            $categoryPagesArray[$this->translator->trans('Category') . ' - ' . $category->getName()] = $this->router->generate('events', ['category' => $category->getSlug(), '_locale' => 'en']);
+            $categoryPagesArray['Category' . ' - ' . $category->getName()] = $this->router->generate('events', ['category' => $category->getSlug()]);
         }
         $linksArray["Event Categories"] = $categoryPagesArray;
 
         // Add Blog post pages urls
         $blogPagesArray = array();
-        $blogPagesArray[$this->translator->trans('Blog page')] = $this->router->generate('blog', ['_locale' => 'en']);
+        $blogPagesArray['Blog page'] = $this->router->generate('blog');
         $blogPosts = $this->getBlogPosts(array())->getQuery()->getResult();
         foreach ($blogPosts as $blogPost) {
-            $blogPagesArray[$this->translator->trans('Blog post') . ' - ' . $blogPost->getName()] = $this->router->generate('blog_article', ['slug' => $blogPost->getSlug(), '_locale' => 'en']);
+            $blogPagesArray['Blog post' . ' - ' . $blogPost->getName()] = $this->router->generate('blog_article', ['slug' => $blogPost->getSlug()]);
         }
         $linksArray["Blog Pages"] = $blogPagesArray;
 
         // Add event pages urls
         $eventPagesArray = array();
-        $eventPagesArray[$this->translator->trans('Events page')] = $this->router->generate('events', ['_locale' => 'en']);
+        $eventPagesArray['Events page'] = $this->router->generate('events');
         $events = $this->getEvents(array())->getQuery()->getResult();
         foreach ($events as $event) {
-            $eventPagesArray[$this->translator->trans('Event') . ' - ' . $event->getName()] = $this->router->generate('event', ['slug' => $event->getSlug(), '_locale' => 'en']);
+            $eventPagesArray['Event' . ' - ' . $event->getName()] = $this->router->generate('event', ['slug' => $event->getSlug()]);
         }
         $linksArray["Events Pages"] = $eventPagesArray;
 
-        // Add creators page url
-        $creatorsPagesArray = array();
-        $creatorsPagesArray[$this->translator->trans('Creators page')] = $this->router->generate('creators', ['_locale' => 'en']);
-        $linksArray["Creators Pages"] = $creatorsPagesArray;
-
-
         // Add help center pages urls
         $helpCenterPagesArray = array();
-        $helpCenterPagesArray[$this->translator->trans('Help Center page')] = $this->router->generate('help_center', ['_locale' => 'en']);
+        $helpCenterPagesArray['Help Center page'] = $this->router->generate('help_center');
         $helpCenterCategories = $this->getHelpCenterCategories(array())->getQuery()->getResult();
         $helpCenterArticles = $this->getHelpCenterArticles(array())->getQuery()->getResult();
         foreach ($helpCenterCategories as $helpCenterCategory) {
-            $helpCenterPagesArray[$this->translator->trans('Help Center Category') . ' - ' . $helpCenterCategory->getName()] = $this->router->generate('help_center_category', ['slug' => $helpCenterCategory->getSlug(), '_locale' => 'en']);
+            $helpCenterPagesArray['Help Center Category' . ' - ' . $helpCenterCategory->getName()] = $this->router->generate('help_center_category', ['slug' => $helpCenterCategory->getSlug()]);
         }
         foreach ($helpCenterArticles as $helpCenterArticle) {
-            $helpCenterPagesArray[$this->translator->trans('Help Center Article') . ' - ' . $helpCenterArticle->getTitle()] = $this->router->generate('help_center_article', ['slug' => $helpCenterArticle->getSlug(), '_locale' => 'en']);
+            $helpCenterPagesArray['Help Center Article' . ' - ' . $helpCenterArticle->getTitle()] = $this->router->generate('help_center_article', ['slug' => $helpCenterArticle->getSlug()]);
         }
         $linksArray["Help Center Pages"] = $helpCenterPagesArray;
 
@@ -714,16 +670,16 @@ class AppServices
         $organizersPagesArray = array();
         $organizers = $this->getUsers(array("role" => "organizer"))->getQuery()->getResult();
         foreach ($organizers as $organizer) {
-            $organizersPagesArray[$this->translator->trans('Organizer Profile') . ' - ' . $organizer->getOrganizer()->getName()] = $this->router->generate('organizer', ['slug' => $organizer->getOrganizer()->getSlug(), '_locale' => 'en']);
+            $organizersPagesArray['Organizer Profile' . ' - ' . $organizer->getOrganizer()->getName()] = $this->router->generate('organizer', ['slug' => $organizer->getOrganizer()->getSlug()]);
         }
         $linksArray["Organizers Pages"] = $organizersPagesArray;
 
         // Add venues pages urls
         $venuesPagesArray = array();
-        $venuesPagesArray[$this->translator->trans('Venues page')] = $this->router->generate('venues', ['_locale' => 'en']);
+        $venuesPagesArray['Venues page'] = $this->router->generate('venues');
         $venues = $this->getVenues(array())->getQuery()->getResult();
         foreach ($venues as $venue) {
-            $venuesPagesArray[$this->translator->trans('Venue') . ' - ' . $venue->getName()] = $this->router->generate('venue', ['slug' => $venue->getSlug(), '_locale' => 'en']);
+            $venuesPagesArray['Venue' . ' - ' . $venue->getName()] = $this->router->generate('venue', ['slug' => $venue->getSlug()]);
         }
         $linksArray["Venues Pages"] = $venuesPagesArray;
 
@@ -752,7 +708,7 @@ class AppServices
         $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
         $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "all";
         $order = array_key_exists('order', $criterias) ? $criterias['order'] : "ASC";
-        $this->em->getRepository(Category::class)->getCategories($hidden, $keyword, $slug, $featured, $limit, $sort, $order);
+        return $this->em->getRepository(Category::class)->getCategories($hidden, $keyword, $slug, $featured, $limit, $sort, $order);
     }
 
     // Returns the event dates after applying the specified search criterias
@@ -767,8 +723,8 @@ class AppServices
         $category = array_key_exists('category', $criterias) ? $criterias['category'] : "all";
         $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
         $otherthan = array_key_exists('otherthan', $criterias) ? $criterias['otherthan'] : "all";
-        $sort = array_key_exists('order', $criterias) ? $criterias['order'] : "createdAt";
-        $order = array_key_exists('order', $criterias) ? $criterias['order'] : "DESC";
+        $sort = array_key_exists('order', $criterias) ? $criterias['order'] : "name";
+        $order = array_key_exists('order', $criterias) ? $criterias['sort'] : "DESC";
 
         return $this->em->getRepository(BlogPost::class)->getBlogPosts($selecttags, $hidden, $keyword, $slug, $category, $limit, $sort, $order, $otherthan);
     }
@@ -934,6 +890,8 @@ class AppServices
         $order = array_key_exists('order', $criterias) ? $criterias['order'] : "name";
         $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "ASC";
 
+        $order = "articlescount";
+
         return $this->em->getRepository(HelpCenterCategory::class)->getHelpCenterCategories($parent, $hidden, $keyword, $slug, $limit, $order, $sort);
     }
 
@@ -941,19 +899,34 @@ class AppServices
 
     public function getHelpCenterArticles($criterias)
     {
+        // Disable soft delete filter if necessary
         $this->disableSofDeleteFilterForAdmin($this->em, $this->authChecker);
-        $selecttags = array_key_exists('selecttags', $criterias) ? $criterias['selecttags'] : false;
-        $hidden = array_key_exists('hidden', $criterias) ? $criterias['hidden'] : false;
-        $featured = array_key_exists('featured', $criterias) ? $criterias['featured'] : "all";
-        $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
-        $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
-        $category = array_key_exists('category', $criterias) ? $criterias['category'] : "all";
-        $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
-        $otherthan = array_key_exists('otherthan', $criterias) ? $criterias['otherthan'] : "all";
-        $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "createdAt";
-        $order = array_key_exists('order', $criterias) ? $criterias['order'] : "DESC";
 
-        return $this->em->getRepository(HelpCenterArticle::class)->getHelpCenterArticles($selecttags, $hidden, $featured, $keyword, $slug, $category, $limit, $sort, $order, $otherthan);
+        // Extract criteria parameters from the input array
+        $selecttags = $criterias['selecttags'] ?? false;
+        $hidden = $criterias['hidden'] ?? false;
+        $featured = $criterias['featured'] ?? "all";
+        $keyword = $criterias['keyword'] ?? "all";
+        $slug = $criterias['slug'] ?? "all";
+        $category = $criterias['category'] ?? "all";
+        $limit = $criterias['limit'] ?? "all";
+        $otherthan = $criterias['otherthan'] ?? "all";
+        $sort = $criterias['sort'] ?? "DESC";
+        $order = $criterias['order'] ?? "createdAt";
+
+        // Call the repository method to fetch Help Center articles
+        return $this->em->getRepository(HelpCenterArticle::class)->getHelpCenterArticles(
+            $selecttags,
+            $hidden,
+            $featured,
+            $keyword,
+            $slug,
+            $category,
+            $limit,
+            $sort,
+            $order,
+            $otherthan
+        );
     }
 
     // Returns the layout settings entity to be used in the twig templates
@@ -979,11 +952,9 @@ class AppServices
         $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
         $isOnHomepageSlider = array_key_exists('isOnHomepageSlider', $criterias) ? $criterias['isOnHomepageSlider'] : "all";
         $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
-        $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "u.createdAt";
-        $order = array_key_exists('order', $criterias) ? $criterias['order'] : "DESC";
         $count = array_key_exists('count', $criterias) ? $criterias['count'] : false;
 
-        return $this->em->getRepository("App\Entity\User")->getUsers($role, $keyword, $createdbyorganizerslug, $organizername, $organizerslug, $username, $email, $firstname, $lastname, $enabled, $countryslug, $slug, $followedby, $hasboughtticketforEvent, $hasboughtticketforOrganizer, $apiKey, $isOnHomepageSlider, $limit, $sort, $order, $count);
+        return $this->em->getRepository("App\Entity\User")->getUsers($role, $keyword, $createdbyorganizerslug, $organizername, $organizerslug, $username, $email, $firstname, $lastname, $enabled, $countryslug, $slug, $followedby, $hasboughtticketforEvent, $hasboughtticketforOrganizer, $apiKey, $isOnHomepageSlider, $limit, $count);
     }
 
     // Returns the menus (header and footer)
@@ -1032,13 +1003,13 @@ class AppServices
         if ($link == "categories_dropdown" || $link == "footer_categories_section") {
             return $link;
         }
-        if (str_contains($link, "/en/")) {
-            return str_replace("/en/", "/" . $newLocale . "/", $link);
-        }
-
-        if ($this->endsWith($link, "/en")) {
-            return str_replace("/en", "/" . $newLocale, $link);
-        }
+//        if (str_contains($link, "/")) {
+//            return str_replace("/", "/" . $newLocale . "/", $link);
+//        }
+////
+//        if ($this->endsWith($link, "/en")) {
+//            return str_replace("/en", "/" . $newLocale, $link);
+//        }
         return 'x';
     }
 

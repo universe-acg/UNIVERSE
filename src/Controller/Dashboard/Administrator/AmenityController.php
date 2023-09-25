@@ -23,7 +23,7 @@ class AmenityController extends Controller
     {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
 
-        $amenities = $paginator->paginate($services->getAmenities(array('keyword' => $keyword, 'hidden' => 'all', 'sort' => 'a.createdAt', 'order' => 'DESC')), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
+        $amenities = $paginator->paginate($services->getAmenities(array('keyword' => $keyword, 'hidden' => 'all', 'sort' => 'createdAt', 'order' => 'DESC')), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
 
         return $this->render('Dashboard/Administrator/Amenity/index.html.twig', [
             'amenities' => $amenities,
@@ -43,7 +43,7 @@ class AmenityController extends Controller
         } else {
             $amenity = $services->getAmenities(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
             if (!$amenity) {
-                $this->addFlash('error', $translator->trans('The amenity can not be found'));
+                $this->addFlash('error', 'The amenity can not be found');
                 return $services->redirectToReferer('amenity');
             }
         }
@@ -56,13 +56,13 @@ class AmenityController extends Controller
                 $em->persist($amenity);
                 $em->flush();
                 if (!$slug) {
-                    $this->addFlash('success', $translator->trans('The amenity has been successfully created'));
+                    $this->addFlash('success', 'The amenity has been successfully created');
                 } else {
-                    $this->addFlash('success', $translator->trans('The amenity has been successfully updated'));
+                    $this->addFlash('success', 'The amenity has been successfully updated');
                 }
                 return $this->redirectToRoute('dashboard_administrator_amenity');
             } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+                $this->addFlash('error', 'The form contains invalid data');
             }
         }
         return $this->render('Dashboard/Administrator/Amenity/add-edit.html.twig', array(
@@ -80,17 +80,17 @@ class AmenityController extends Controller
 
         $amenity = $services->getAmenities(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$amenity) {
-            $this->addFlash('error', $translator->trans('The amenity can not be found'));
+            $this->addFlash('error', 'The amenity can not be found');
             return $services->redirectToReferer('amenity');
         }
         if (count($amenity->getVenues()) > 0) {
-            $this->addFlash('error', $translator->trans('The amenity can not be deleted because it is linked with one or more venues'));
+            $this->addFlash('error', 'The amenity can not be deleted because it is linked with one or more venues');
             return $services->redirectToReferer('amenity');
         }
         if ($amenity->getDeletedAt() !== null) {
-            $this->addFlash('error', $translator->trans('The amenity has been deleted'));
+            $this->addFlash('error', 'The amenity has been deleted');
         } else {
-            $this->addFlash('notice', $translator->trans('The amenity has been disabled'));
+            $this->addFlash('notice', 'The amenity has been disabled');
         }
         $em = $this->getDoctrine()->getManager();
         $amenity->setHidden(true);
@@ -109,14 +109,14 @@ class AmenityController extends Controller
 
         $amenity = $services->getAmenities(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$amenity) {
-            $this->addFlash('error', $translator->trans('The amenity can not be found'));
+            $this->addFlash('error', 'The amenity can not be found');
             return $services->redirectToReferer('amenity');
         }
         $amenity->setDeletedAt(null);
         $em = $this->getDoctrine()->getManager();
         $em->persist($amenity);
         $em->flush();
-        $this->addFlash('success', $translator->trans('The amenity has been succesfully restored'));
+        $this->addFlash('success', 'The amenity has been succesfully restored');
 
         return $services->redirectToReferer('amenity');
     }
@@ -130,15 +130,15 @@ class AmenityController extends Controller
 
         $amenity = $services->getAmenities(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$amenity) {
-            $this->addFlash('error', $translator->trans('The amenity can not be found'));
+            $this->addFlash('error', 'The amenity can not be found');
             return $services->redirectToReferer('amenity');
         }
         if ($amenity->getHidden() === true) {
             $amenity->setHidden(false);
-            $this->addFlash('success', $translator->trans('The amenity is visible'));
+            $this->addFlash('success', 'The amenity is visible');
         } else {
             $amenity->setHidden(true);
-            $this->addFlash('error', $translator->trans('The amenity is hidden'));
+            $this->addFlash('error', 'The amenity is hidden');
         }
         $em = $this->getDoctrine()->getManager();
         $em->persist($amenity);

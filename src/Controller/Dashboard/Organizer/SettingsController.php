@@ -65,9 +65,9 @@ class SettingsController extends Controller
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($this->getUser()->getOrganizer());
                 $em->flush();
-                $this->addFlash('success', $translator->trans('The settings have been updated'));
+                $this->addFlash('success', 'The settings have been updated');
             } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+                $this->addFlash('error', 'The form contains invalid data');
             }
         } else {
             $form->get('showEventDateStatsOnScannerApp')->setData($this->getUser()->getOrganizer()->getShowEventDateStatsOnScannerApp());
@@ -99,11 +99,11 @@ class SettingsController extends Controller
         if (!$slug) {
             $factoryName = $request->query->get("factoryName");
             if ($factoryName != "paypal_rest" && $factoryName != "stripe_checkout") {
-                $this->addFlash('error', $translator->trans('The payout method can not be found'));
+                $this->addFlash('error', 'The payout method can not be found');
                 return $this->redirectToRoute("dashboard_organizer_settings_payouts");
             }
             if (($factoryName == "paypal_rest" && $services->getSetting("organizer_payout_paypal_enabled") == "no") || ($factoryName == "stripe_checkout" && $services->getSetting("organizer_payout_stripe_enabled") == "no")) {
-                $this->addFlash('error', $translator->trans('This payout method is currently disabled'));
+                $this->addFlash('error', 'This payout method is currently disabled');
                 return $this->redirectToRoute("dashboard_organizer_settings_payouts");
             }
             $paymentgateway = new PaymentGateway();
@@ -111,7 +111,7 @@ class SettingsController extends Controller
         } else {
             $paymentgateway = $services->getPaymentGateways(array('organizer' => $this->getUser()->getOrganizer()->getSlug(), 'slug' => $slug))->getQuery()->getOneOrNullResult();
             if (!$paymentgateway) {
-                $this->addFlash('error', $translator->trans('The payout method can not be found'));
+                $this->addFlash('error', 'The payout method can not be found');
                 return $this->redirectToRoute("dashboard_organizer_settings_payouts");
             }
             $form = $this->createForm(OrganizerPayoutPaymentGatewayType::class, $paymentgateway);
@@ -137,13 +137,13 @@ class SettingsController extends Controller
                 $em->persist($paymentgateway);
                 $em->flush();
                 if (!$slug) {
-                    $this->addFlash('success', $translator->trans('The payout method has been successfully created'));
+                    $this->addFlash('success', 'The payout method has been successfully created');
                 } else {
-                    $this->addFlash('success', $translator->trans('The payout method has been successfully updated'));
+                    $this->addFlash('success', 'The payout method has been successfully updated');
                 }
                 return $this->redirectToRoute("dashboard_organizer_settings_payouts");
             } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+                $this->addFlash('error', 'The form contains invalid data');
             }
         }
 
@@ -161,14 +161,14 @@ class SettingsController extends Controller
 
         $paymentgateway = $services->getPaymentGateways(array('organizer' => $this->getUser()->getOrganizer()->getSlug(), 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$paymentgateway) {
-            $this->addFlash('error', $translator->trans('The payout method can not be found'));
+            $this->addFlash('error', 'The payout method can not be found');
             return $this->redirectToRoute("dashboard_organizer_settings_payouts");
         }
         $em = $this->getDoctrine()->getManager();
         $paymentgateway->setEnabled(false);
         $em->persist($paymentgateway);
         $em->flush();
-        $this->addFlash('notice', $translator->trans('The payout method is unset'));
+        $this->addFlash('notice', 'The payout method is unset');
         return $this->redirectToRoute("dashboard_organizer_settings_payouts");
     }
 

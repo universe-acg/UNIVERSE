@@ -56,7 +56,7 @@ class ReviewController extends Controller
     {
         $event = $services->getEvents(array("slug" => $slug, "elapsed" => "all"))->getQuery()->getOneOrNullResult();
         if (!$event) {
-            $this->addFlash('error', $translator->trans('The event not be found'));
+            $this->addFlash('error', 'the event could not be found');
             return $services->redirectToReferer("events");
         }
         $em = $this->getDoctrine()->getManager();
@@ -69,10 +69,10 @@ class ReviewController extends Controller
                 $review->setEvent($event);
                 $em->persist($review);
                 $em->flush();
-                $this->addFlash('success', $translator->trans('Your review has been successfully saved'));
+                $this->addFlash('success', 'Your review has been successfully saved');
                 return $this->redirect($router->generate('event', ['slug' => $event->getSlug()]) . '#reviews');
             } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+                $this->addFlash('error', 'The form contains invalid data');
             }
         }
         return $this->render('Dashboard/Shared/Review/add.html.twig', array(
@@ -90,15 +90,15 @@ class ReviewController extends Controller
 
         $review = $services->getReviews(array('slug' => $slug, 'visible' => 'all'))->getQuery()->getOneOrNullResult();
         if (!$review) {
-            $this->addFlash('error', $translator->trans('The review can not be found'));
+            $this->addFlash('error', 'The review can not be found');
             return $services->redirectToReferer('review');
         }
         if ($review->getVisible()) {
             $review->setVisible(false);
-            $this->addFlash('notice', $translator->trans('The review has been hidden'));
+            $this->addFlash('notice', 'The review has been hidden');
         } else {
             $review->setVisible(true);
-            $this->addFlash('success', $translator->trans('The review has been enabled'));
+            $this->addFlash('success', 'The review has been enabled');
         }
         $em = $this->getDoctrine()->getManager();
         $em->persist($review);
@@ -115,13 +115,13 @@ class ReviewController extends Controller
 
         $review = $services->getReviews(array('slug' => $slug, 'visible' => 'all'))->getQuery()->getOneOrNullResult();
         if (!$review) {
-            $this->addFlash('error', $translator->trans('The review can not be found'));
+            $this->addFlash('error', 'The review can not be found');
             return $services->redirectToReferer('review');
         }
         if ($review->getDeletedAt() !== null) {
-            $this->addFlash('error', $translator->trans('The review has been deleted permanently'));
+            $this->addFlash('error', 'The review has been deleted permanently');
         } else {
-            $this->addFlash('notice', $translator->trans('The review has been deleted'));
+            $this->addFlash('notice', 'The review has been deleted');
         }
         $em = $this->getDoctrine()->getManager();
         $review->setVisible(false);
@@ -140,14 +140,14 @@ class ReviewController extends Controller
 
         $review = $services->getReviews(array('slug' => $slug, 'visible' => 'all'))->getQuery()->getOneOrNullResult();
         if (!$review) {
-            $this->addFlash('error', $translator->trans('The review can not be found'));
+            $this->addFlash('error', 'The review can not be found');
             return $services->redirectToReferer('review');
         }
         $review->setDeletedAt(null);
         $em = $this->getDoctrine()->getManager();
         $em->persist($review);
         $em->flush();
-        $this->addFlash('success', $translator->trans('The review has been succesfully restored'));
+        $this->addFlash('success', 'The review has been succesfully restored');
 
         return $services->redirectToReferer('review');
     }

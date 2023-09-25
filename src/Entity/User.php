@@ -32,13 +32,10 @@ class User extends BaseUser implements UserInterface
      * @ORM\Column(type="integer")
      */
     protected $id;
-    /**
-     * @Assert\Valid()
-     */
-    protected $translations;
+
     /**
      * @Gedmo\Slug(fields={"username"}, updatable=true)
-     * @ORM\Column(length=30, unique=true)
+     * @ORM\Column(length=255, unique=true)
      */
     protected $slug;
     /**
@@ -108,39 +105,39 @@ class User extends BaseUser implements UserInterface
      */
     private $ticketreservations;
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $gender;
     /**
-     * @ORM\Column(type="string", length=20, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank
-     * @Assert\Length(min = 2, max = 20)
+     * @Assert\Length(min = 2)
      */
     private $firstname;
     /**
-     * @ORM\Column(type="string", length=20, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank
-     * @Assert\Length(min = 2, max = 20)
+     * @Assert\Length(min = 2)
      */
     private $lastname;
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $street;
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $street2;
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $city;
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $state;
     /**
-     * @ORM\Column(type="string", length=15, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $postalcode;
     /**
@@ -149,8 +146,8 @@ class User extends BaseUser implements UserInterface
      */
     private $country;
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
-     * @Assert\Length(min = 1, max = 50)
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(min = 1)
      */
     private $phone;
     /**
@@ -170,7 +167,7 @@ class User extends BaseUser implements UserInterface
      */
     private $avatarFile;
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $avatarName;
     /**
@@ -180,11 +177,11 @@ class User extends BaseUser implements UserInterface
      */
     private $avatarSize;
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $avatarMimeType;
     /**
-     * @ORM\Column(type="string", length=1000, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $avatarOriginalName;
     /**
@@ -192,7 +189,7 @@ class User extends BaseUser implements UserInterface
      */
     private $avatarDimensions;
     /**
-     * @ORM\Column(type="string", length=1000, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $facebookProfilePicture;
     /**
@@ -245,21 +242,6 @@ class User extends BaseUser implements UserInterface
         $this->isbusinessweek = $isbusinessweek;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getTranslations()
-    {
-        return $this->translations;
-    }
-
-    /**
-     * @param mixed $translations
-     */
-    public function setTranslations($translations): void
-    {
-        $this->translations = $translations;
-    }
 
     public function getId()
     {

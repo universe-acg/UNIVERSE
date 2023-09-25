@@ -17,10 +17,8 @@ use Twig_Environment;
 
 class MaintenanceModeSubscriber implements EventSubscriberInterface
 {
-
     private $params;
     private $security;
-    private $translator;
     private $templating;
     private $services;
 
@@ -28,7 +26,6 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface
     {
         $this->params = $params;
         $this->security = $security;
-        $this->translator = $translator;
         $this->templating = $templating;
         $this->services = $services;
     }

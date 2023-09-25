@@ -2,7 +2,7 @@
 
 {% trans_default_domain 'FOSUserBundle' %}
 
-{% set pagetitle = 'Sign in'|trans({}, 'messages') %}
+{% set pagetitle = 'Sign in' %}
 
 {% block title %}{{ pagetitle }}{% endblock %}
 
@@ -75,11 +75,11 @@
                                         class="btn btn-primary btn-block">{{ pagetitle }}</button>
                             </div>
                             <p class="text-center"><a
-                                        href="{{ path('fos_user_resetting_request') }}">{{ 'Forgot your password?'|trans({}, 'messages') }}</a>
+                                        href="{{ path('fos_user_resetting_request') }}">{{ 'Forgot your password?' }}</a>
                             </p>
-                            <p class="text-center">{{ 'Not a member yet ?'|trans({}, 'messages') }} <a
+                            <p class="text-center">{{ 'Not a member yet ?' }} <a
                                         href="{{ path('fos_user_registration_register_attendee') }}"
-                                        class="text-primary _600">{{ 'Sign up'|trans({}, 'messages') }}</a></p>
+                                        class="text-primary _600">{{ 'Sign up' }}</a></p>
                         </form>
 
                     </div>

@@ -19,7 +19,6 @@ class MainController extends AbstractController
      */
     public function homepage(): Response
     {
-
         $herosettings = $this->getDoctrine()->getManager()->getRepository(HomepageHeroSettings::class)->find(1);
         $entityManager = $this->getDoctrine()->getManager();
 

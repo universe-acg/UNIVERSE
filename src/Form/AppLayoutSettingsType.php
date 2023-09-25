@@ -16,7 +16,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Count;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class AppLayoutSettingsType extends AbstractType
@@ -35,8 +34,6 @@ class AppLayoutSettingsType extends AbstractType
     {
 
         $pages = [];
-        $availableLocales = array_values(array_filter(explode("|", $this->params->get('available_locales'))));
-        $availableLocales = array_combine(array_values($availableLocales), array_values($availableLocales));
         foreach ($this->services->getPages(array())->getQuery()->getResult() as $page) {
             $pages[$page->getTitle()] = $page->getSlug();
         }
@@ -112,7 +109,7 @@ class AppLayoutSettingsType extends AbstractType
                 'label' => 'Alternative date and time format',
                 'constraints' => array(// new NotBlank()
                 ),
-                'help' => 'Used in some specific cases, follow this link for a list of supported characters: https://www.php.net/manual/en/datetime.format.php . Please make sure to keep the double quotes " " around the format string'
+                'help' => 'Used in some specific cases, follow this link for a list of supported characters: https://www.php.net/manual/datetime.format.php . Please make sure to keep the double quotes " " around the format string'
             ])
             ->add('date_format_date_only', TextType::class, [
                 'purify_html' => true,
@@ -121,7 +118,7 @@ class AppLayoutSettingsType extends AbstractType
                 'label' => 'Date only format',
                 'constraints' => array(// new NotBlank()
                 ),
-                'help' => 'Used in some specific cases, follow this link for a list of supported characters: https://www.php.net/manual/en/datetime.format.php . Please make sure to keep the double quotes " " around the format string'
+                'help' => 'Used in some specific cases, follow this link for a list of supported characters: https://www.php.net/manual/datetime.format.php . Please make sure to keep the double quotes " " around the format string'
             ])
             ->add('date_timezone', TimezoneType::class, [
                 'mapped' => false,
@@ -131,28 +128,6 @@ class AppLayoutSettingsType extends AbstractType
                 'attr' => ['class' => 'select2', 'data-sort-options' => '1'],
                 'label' => 'Timezone',
                 'constraints' => array(// new NotBlank()
-                )
-            ])
-            ->add('default_locale', ChoiceType::class, [
-                'mapped' => false,
-                'required' => true,
-                'multiple' => false,
-                'expanded' => false,
-                'choices' => $availableLocales,
-                'attr' => ['class' => 'select2', 'data-sort-options' => '1'],
-                'label' => 'Default language',
-                'constraints' => array(// new NotBlank()
-                )
-            ])
-            ->add('app_locales', ChoiceType::class, [
-                'mapped' => false,
-                'required' => true,
-                'multiple' => true,
-                'expanded' => true,
-                'choices' => $availableLocales,
-                'label' => 'Available languages',
-                'constraints' => array(
-                    new Count(['min' => 0]),
                 )
             ])
             ->add('website_name', TextType::class, [
@@ -369,8 +344,7 @@ class AppLayoutSettingsType extends AbstractType
                 'image_uri' => false,
                 'imagine_pattern' => 'scale',
                 'label' => 'Logo',
-                'help' => 'Please choose a 200x50 image size to ensure compatibility with the website design',
-                'translation_domain' => 'messages'
+                'help' => 'Please choose a 200x50 image size to ensure compatibility with the website design'
             ])
             ->add('faviconFile', VichImageType::class, [
                 'required' => false,
@@ -380,8 +354,7 @@ class AppLayoutSettingsType extends AbstractType
                 'image_uri' => false,
                 'imagine_pattern' => 'scale',
                 'label' => 'Favicon',
-                'help' => 'We recommend a 48x48 image size',
-                'translation_domain' => 'messages'
+                'help' => 'We recommend a 48x48 image size'
             ])
             ->add('ogImageFile', VichImageType::class, [
                 'required' => false,
@@ -391,8 +364,7 @@ class AppLayoutSettingsType extends AbstractType
                 'image_uri' => false,
                 'imagine_pattern' => 'scale',
                 'label' => 'Social media share image',
-                'help' => 'Please choose a 200x200 minimum image size as it is required by Facebook',
-                'translation_domain' => 'messages'
+                'help' => 'Please choose a 200x200 minimum image size as it is required by Facebook'
             ])
             ->add('show_back_to_top_button', ChoiceType::class, [
                 'mapped' => false,

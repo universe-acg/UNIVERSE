@@ -3,11 +3,9 @@
 {% if is_granted("ROLE_ADMINISTRATOR") %}
     {% set pagetitle = 'Manage event participation' %}
 {% elseif is_granted("ROLE_ORGANIZER") %}
-    {% set pagetitle = 'Attendees' %}
+    {% set pagetitle = 'Attendees of event: ' ~ title %}
 {% elseif is_granted("ROLE_ATTENDEE") %}
     {% set pagetitle = 'My tickets' %}
-{% elseif is_granted("ROLE_POINTOFSALE") %}
-    {% set pagetitle = 'My orders' %}
 {% endif %}
 {% block title %}{{ pagetitle }}{% endblock %}
 
@@ -24,21 +22,15 @@
                 </aside>
                 <div class="col-lg-9 mt-4 mt-lg-0">
 
-                    {% if not is_granted('ROLE_ATTENDEE') %}
-
-                        <div class="box shadow-none bg-gray mb-4">
-                            <div class="row">
-                                <h4></h4>
-                            </div>
-                        </div>
-
-                    {% endif %}
-
                     <div class="row">
-                        <div class="col-2">
-                            <a href="{{ path('generate_attendees_pdf') }}" class="text-dark">
+                        <div class="col-4 d-flex justify-content-start align-items-center">
+                            <a href="{{ path('generate_attendees_pdf') }}" class="text-dark mr-2">
                                 <button type="submit"
                                         class="btn btn-primary btn-md">{{ "Print to PDF" }}</button>
+                            </a>
+                            <a href="{{ path('generate_attendees_excel') }}" class="text-dark pull-right">
+                                <button type="submit"
+                                        class="btn btn-primary btn-md">{{ "Print to Excel" }}</button>
                             </a>
                         </div>
                         <br>

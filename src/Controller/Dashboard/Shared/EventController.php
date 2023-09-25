@@ -12,7 +12,6 @@ use App\Form\EventTypeMulti;
 use App\Repository\CategoryRepository;
 use App\Repository\EventRepository;
 use App\Service\AppServices;
-use DateInterval;
 use Exception;
 use Knp\Component\Pager\PaginatorInterface;
 use MaxMind\Db\Reader\InvalidDatabaseException;
@@ -21,7 +20,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class EventController extends Controller
 {
@@ -80,10 +78,8 @@ class EventController extends Controller
 //            EventRepository               $eventRepository,
 //            Request                       $request,
 //            AppServices                   $services,
-//            TranslatorInterface           $translator,
 //                                          $slug = null,
 //            AuthorizationCheckerInterface $authChecker,
-//            CategoryTranslationRepository $categoryTranslationRepository,
 //            CategoryRepository            $categoryRepository
 //        )
 //        {
@@ -92,11 +88,11 @@ class EventController extends Controller
 //            $organizerCategory = $organizer->getCategory();
 //
 //            $categoryName = $this->mapCategoryName($organizerCategory);
-//            $category = $this->getCategoryByName($categoryName, $categoryTranslationRepository, $categoryRepository);
+//            $category = $this->getCategoryByName($categoryName, $categoryRepository);
 //
 //            $eventChoices = $this->getEventChoices($eventRepository, $organizer, $authChecker);
 //
-//            $event = $this->initializeEvent($slug, $services, $eventRepository, $translator, $eventChoices);
+//            $event = $this->initializeEvent($slug, $services, $eventRepository,  $eventChoices);
 //
 //            $form = $this->createForm(EventType::class, $event, [
 //                'validation_groups' => ['create', 'Default'],
@@ -137,13 +133,13 @@ class EventController extends Controller
 //                        // Persist and flush the new event to the database
 //                        $em->persist($newEvent);
 //                        $em->flush();
-//                        $this->processFormSubmission($event, $em, $services, $authChecker, $translator, $category, $slug);
+//                        $this->processFormSubmission($event, $em, $services, $authChecker,  $category, $slug);
 //                    }
 //                    return $this->redirectToRouteAfterSubmission($authChecker);
 //                }
 //
 //                $event->setSlug($this->generateUniqueSlug($event->getName())); // Implement logic to generate unique slugs
-//                $this->processFormSubmission($event, $em, $services, $authChecker, $translator, $category, $slug);
+//                $this->processFormSubmission($event, $em, $services, $authChecker,  $category, $slug);
 //
 //                return $this->redirectToRouteAfterSubmission($authChecker);
 //            }
@@ -160,7 +156,6 @@ class EventController extends Controller
         EventRepository               $eventRepository,
         Request                       $request,
         AppServices                   $services,
-        TranslatorInterface           $translator,
                                       $slug = null,
         AuthorizationCheckerInterface $authChecker,
         CategoryRepository            $categoryRepository
@@ -178,7 +173,7 @@ class EventController extends Controller
             $eventChoices = $eventRepository->getAllEvents()->getQuery()->getResult();
         }
 
-        $event = $this->initializeEvent($slug, $services, $eventRepository, $translator, $eventChoices);
+        $event = $this->initializeEvent($slug, $services, $eventRepository, $eventChoices);
 
         if ($event == null) {
             return $services->redirectToReferer('event');
@@ -205,57 +200,57 @@ class EventController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
 //            $isRepeat = $form->get('isrepeat')->getData();
-            if ($form->has('isrepeat') && $form->get('isrepeat')->getData()) {
-                $newstartdate = $event->getEventdates()[0]->getStartdate();
-                $newenddate = $event->getEventdates()[0]->getEnddate();
-                $interval = $newstartdate->diff($newenddate);
-                $days = $interval->days;
-                $repeatDays = $form->get('repeat_days')->getData();
-                $eventrepeatsxtimes = $days / $repeatDays;
-                ++$eventrepeatsxtimes;
-                $tempstartdate = $newstartdate;
-
-                $eventrepeatsxtimes = (int)floor($eventrepeatsxtimes);
-
-                for ($i = 0; $i < $eventrepeatsxtimes; $i++) {
-//                    $newEvent = $this->initializeEvent($slug, $services, $eventRepository, $translator, $eventChoices);
-                    $newEvent = new Event();
-
-                    $newEvent->setCommonvalue($commonValue);
-                    $newEvent->setOrganizer($this->getUser()->getOrganizer());
-                    // Adjust the start date of the new event based on the repetition
-//                        $newEvent->setEventdates($event->getEventdates());
-                    foreach ($event->getEventdates() as $originalEventdate) {
-                        // Clone the event date
-                        $newEventdate = clone $originalEventdate;
-
-                        // Set the cloned event date's start date (if needed, adjust other properties as well)
-                        $newEventdate->setStartdate($tempstartdate);
-
-                        // Add the cloned event date to the new event
-                        $newEvent->addEventdate($newEventdate);
-                    }
-
-
-                    $newrepslug = $this->generateUniqueSlug($event->getName());
-                    $newEvent->setCategory($category);
-                    $newEvent->setSlug($newrepslug); // Implement logic to generate unique slugs
-                    $newEvent->setOrganizer($this->getUser()->getOrganizer());
-                    $this->processFormSubmission($newEvent, $em, $services, $authChecker, $translator, $category, $newrepslug);
-//                     Convert $repeatDays to an integer before adding it to $tempstartdate
-                    $tempstartdate->add(new DateInterval("P" . intval($repeatDays) . "D"));
-                }
-
-                $newslug = $this->generateUniqueSlug($event->getName());
-                $event->setCommonvalue($commonValue);
-                $event->setCategory($category);
-                $event->setSlug($newslug); // Implement logic to generate unique slugs
-                $event->setOrganizer($this->getUser()->getOrganizer());
-                $em->persist($event);
-                $em->flush();
-                $this->processFormSubmission($event, $em, $services, $authChecker, $translator, $category, $newslug);
-                return $this->redirectToRouteAfterSubmission($authChecker);
-            }
+//            if ($form->has('isrepeat') && $form->get('isrepeat')->getData()) {
+//                $newstartdate = $event->getEventdates()[0]->getStartdate();
+//                $newenddate = $event->getEventdates()[0]->getEnddate();
+//                $interval = $newstartdate->diff($newenddate);
+//                $days = $interval->days;
+//                $repeatDays = $form->get('repeat_days')->getData();
+//                $eventrepeatsxtimes = $days / $repeatDays;
+//                ++$eventrepeatsxtimes;
+//                $tempstartdate = $newstartdate;
+//
+//                $eventrepeatsxtimes = (int)floor($eventrepeatsxtimes);
+//
+//                for ($i = 0; $i < $eventrepeatsxtimes; $i++) {
+////                    $newEvent = $this->initializeEvent($slug, $services, $eventRepository,  $eventChoices);
+//                    $newEvent = new Event();
+//
+//                    $newEvent->setCommonvalue($commonValue);
+//                    $newEvent->setOrganizer($this->getUser()->getOrganizer());
+//                    // Adjust the start date of the new event based on the repetition
+////                        $newEvent->setEventdates($event->getEventdates());
+//                    foreach ($event->getEventdates() as $originalEventdate) {
+//                        // Clone the event date
+//                        $newEventdate = clone $originalEventdate;
+//
+//                        // Set the cloned event date's start date (if needed, adjust other properties as well)
+//                        $newEventdate->setStartdate($tempstartdate);
+//
+//                        // Add the cloned event date to the new event
+//                        $newEvent->addEventdate($newEventdate);
+//                    }
+//
+//
+//                    $newrepslug = $this->generateUniqueSlug($event->getName());
+//                    $newEvent->setCategory($category);
+//                    $newEvent->setSlug($newrepslug); // Implement logic to generate unique slugs
+//                    $newEvent->setOrganizer($this->getUser()->getOrganizer());
+//                    $this->processFormSubmission($newEvent, $em, $services, $authChecker, $category, $newrepslug);
+////                     Convert $repeatDays to an integer before adding it to $tempstartdate
+//                    $tempstartdate->add(new DateInterval("P" . intval($repeatDays) . "D"));
+//                }
+//
+//                $newslug = $this->generateUniqueSlug($event->getName());
+//                $event->setCommonvalue($commonValue);
+//                $event->setCategory($category);
+//                $event->setSlug($newslug); // Implement logic to generate unique slugs
+//                $event->setOrganizer($this->getUser()->getOrganizer());
+//                $em->persist($event);
+//                $em->flush();
+//                $this->processFormSubmission($event, $em, $services, $authChecker, $category, $newslug);
+//                return $this->redirectToRouteAfterSubmission($authChecker);
+//            }
 
             $event->setOrganizer($this->getUser()->getOrganizer());
             $newnewslug = $this->generateUniqueSlug($event->getName());
@@ -263,7 +258,7 @@ class EventController extends Controller
             $event->setCategory($category);
             $em->persist($event);
             $em->flush();
-            $this->processFormSubmission($event, $em, $services, $authChecker, $translator, $category, $newnewslug);
+            $this->processFormSubmission($event, $em, $services, $authChecker, $category, $newnewslug);
             return $this->redirectToRouteAfterSubmission($authChecker);
         }
 
@@ -308,7 +303,7 @@ class EventController extends Controller
         return $eventChoices;
     }
 
-    private function initializeEvent($slug, $services, $eventRepository, $translator, $eventChoices)
+    private function initializeEvent($slug, $services, $eventRepository, $eventChoices)
     {
         if (!$slug) {
             // If no slug is provided, create a new event
@@ -317,7 +312,7 @@ class EventController extends Controller
             $event = $this->getEventBySlug($slug);
 
             if (!$event) {
-                $this->addFlash('error', $translator->trans('The event can not be found'));
+                $this->addFlash('error', 'The event can not be found');
                 return null;
             }
         }
@@ -387,7 +382,7 @@ class EventController extends Controller
 
     // Helper method to initialize the event
 
-    private function processFormSubmission($event, $em, $services, $authChecker, $translator, $category, $slug)
+    private function processFormSubmission($event, $em, $services, $authChecker, $category, $slug)
     {
         // Save event images
         foreach ($event->getImages() as $image) {
@@ -414,9 +409,9 @@ class EventController extends Controller
         if (!$slug) {
             $event->setOrganizer($this->getUser()->getOrganizer());
             $event->setReference($services->generateReference(10));
-            $this->addFlash('success', $translator->trans('The event has been successfully created'));
+            $this->addFlash('success', 'The event has been successfully created');
         } else {
-            $this->addFlash('success', $translator->trans('The event has been successfully updated'));
+            $this->addFlash('success', 'The event has been successfully updated');
         }
 
         // Set the event category
@@ -465,7 +460,6 @@ class EventController extends Controller
         EventRepository               $eventRepository,
         Request                       $request,
         AppServices                   $services,
-        TranslatorInterface           $translator,
                                       $slug = null,
         AuthorizationCheckerInterface $authChecker,
         CategoryRepository            $categoryRepository
@@ -483,7 +477,7 @@ class EventController extends Controller
             $eventChoices = $eventRepository->getAllEvents()->getQuery()->getResult();
         }
 
-        $event = $this->initializeEvent($slug, $services, $eventRepository, $translator, $eventChoices);
+        $event = $this->initializeEvent($slug, $services, $eventRepository, $eventChoices);
 
         if ($event == null) {
             return $services->redirectToReferer('event');
@@ -507,11 +501,11 @@ class EventController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             // if common value is not empty update all others too
             $event->setOrganizer($this->getUser()->getOrganizer());
-            $event->setSlug($this->generateUniqueSlug($event->getName())); // Implement logic to generate unique slugs
+//            $event->setSlug($this->generateUniqueSlug($event->getName())); // Implement logic to generate unique slugs
             $event->setOrganizer($this->getUser()->getOrganizer());
             $em->persist($event);
             $em->flush();
-            $this->processFormSubmission($event, $em, $services, $authChecker, $translator, $category, $slug);
+            $this->processFormSubmission($event, $em, $services, $authChecker, $category, $slug);
 
             return $this->redirectToRouteAfterSubmission($authChecker);
         }
@@ -525,7 +519,7 @@ class EventController extends Controller
 //         * @throws InvalidDatabaseException
 //         * @throws Exception
 //         */
-//        public function addedit(EventRepository $eventRepository, Request $request, AppServices $services, $slug = null, AuthorizationCheckerInterface $authChecker, CategoryTranslationRepository $categoryTranslationRepository, CategoryRepository $categoryRepository)
+//        public function addedit(EventRepository $eventRepository, Request $request, AppServices $services, $slug = null, AuthorizationCheckerInterface $authChecker, CategoryRepository $categoryRepository)
 //        {
 //            // get organizers/users category
 //            $userscategory = $this->getUser()->getOrganizer()->getCategory();
@@ -567,7 +561,7 @@ class EventController extends Controller
 //            } else {
 //                $event = $services->getEvents(array('published' => 'all', "elapsed" => "all", 'slug' => $slug, 'organizer' => $organizer, "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();
 //                if (!$event) {
-//                    $this->addFlash('error', $translator->trans('The event can not be found'));
+//                    $this->addFlash('error', 'The event can not be found'));
 //                    return $services->redirectToReferer('event');
 //                }
 //
@@ -601,9 +595,9 @@ class EventController extends Controller
 //                    if (!$slug) {
 //                        $event->setOrganizer($this->getUser()->getOrganizer());
 //                        $event->setReference($services->generateReference(10));
-//                        $this->addFlash('success', $translator->trans('The event has been successfully created'));
+//                        $this->addFlash('success', 'The event has been successfully created'));
 //                    } else {
-//                        $this->addFlash('success', $translator->trans('The event has been successfully updated'));
+//                        $this->addFlash('success', 'The event has been successfully updated'));
 //                    }
 //
 //                    $event->setCategory($category);
@@ -617,7 +611,7 @@ class EventController extends Controller
 //                        return $this->redirectToRoute("dashboard_administrator_event");
 //                    }
 //                } else {
-//                    $this->addFlash('error', $translator->trans('The form contains invalid data'));
+//                    $this->addFlash('error', 'The form contains invalid data'));
 //                }
 //            }
 //            return $this->render('Dashboard/Shared/Event/add-edit.html.twig', array(
@@ -647,7 +641,7 @@ class EventController extends Controller
         // Delete all events with the same common value
         foreach ($eventsWithSameCommonValue as $eventToDelete) {
             if ($event->getOrderElementsQuantitySum() > 0) {
-                $this->addFlash('error', $translator->trans('One or more events can not be deleted because they have one or more tickets'));
+                $this->addFlash('error', 'One or more events can not be deleted because they have one or more tickets');
                 return $services->redirectToReferer('event');
             }
 
@@ -656,7 +650,7 @@ class EventController extends Controller
         $em->remove($event);
         $em->flush();
 
-        $this->addFlash('notice', $translator->trans('The event(s) has/have been deleted'));
+        $this->addFlash('notice', 'The event(s) has/have been deleted');
         return $services->redirectToReferer('event');
     }
 
@@ -684,7 +678,7 @@ class EventController extends Controller
 
         foreach ($eventsWithSameCommonValue as $eventToDelete) {
             if ($event->getOrderElementsQuantitySum() > 0) {
-                $this->addFlash('error', $translator->trans('One or more events can not be deleted because they have one or more tickets'));
+                $this->addFlash('error', 'One or more events can not be deleted because they have one or more tickets');
                 return $services->redirectToReferer('event');
             }
 
@@ -693,7 +687,7 @@ class EventController extends Controller
         $em->remove($event);
         $em->flush();
 
-        $this->addFlash('notice', $translator->trans('The event(s) has/have been deleted'));
+        $this->addFlash('notice', 'The event(s) has/have been deleted');
         return $services->redirectToReferer('event');
     }
 
@@ -720,13 +714,45 @@ class EventController extends Controller
         // Delete all events with the same common value
         foreach ($eventsWithSameCommonValue as $eventToDelete) {
             if ($event->getOrderElementsQuantitySum() > 0) {
-                $this->addFlash('error', $translator->trans('One or more events can not be deleted because they have one or more tickets'));
+                $this->addFlash('error', 'One or more events can not be deleted because they have one or more tickets');
                 return $services->redirectToReferer('event');
             }
             $em->remove($eventToDelete);
         }
 
-        $this->addFlash('notice', $translator->trans('The event(s) has/have been deleted'));
+        $this->addFlash('notice', 'The event(s) has/have been deleted');
+        return $services->redirectToReferer('event');
+    }
+
+    /**
+     * @Route("/administrator/my-events/{slug}/delete-permanently-admin", name="dashboard_organizer_event_delete_permanently_admin", methods="GET")
+     * @throws InvalidDatabaseException
+     */
+    public function deleteforadmin(Request $request, AppServices $services, $slug, AuthorizationCheckerInterface $authChecker)
+    {
+        $organizer = "all";
+        if ($authChecker->isGranted('ROLE_ORGANIZER')) {
+            $organizer = $this->getUser()->getOrganizer()->getSlug();
+        }
+
+        $event = $services->getEvents(array("slug" => $slug, "published" => "all", "elapsed" => "all", "organizer" => $organizer, "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();
+        if (!$event) {
+            $this->addFlash('error', 'The event can not be found');
+            return $services->redirectToReferer('event');
+        }
+
+        if ($event->getOrderElementsQuantitySum() > 0) {
+            $this->addFlash('error', 'The event can not be deleted because it has one or more tickets');
+            return $services->redirectToReferer('event');
+        }
+        if ($event->getDeletedAt() !== null) {
+            $this->addFlash('error', 'The event has been deleted permanently');
+        } else {
+            $this->addFlash('notice', 'The event has been deleted');
+        }
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($event);
+        $em->flush();
         return $services->redirectToReferer('event');
     }
 
@@ -746,18 +772,18 @@ class EventController extends Controller
 
         $event = $services->getEvents(array("slug" => $slug, "published" => "all", "elapsed" => "all", "organizer" => $organizer, "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();
         if (!$event) {
-            $this->addFlash('error', $translator->trans('The event can not be found'));
+            $this->addFlash('error', 'The event can not be found');
             return $services->redirectToReferer('event');
         }
 
         if ($event->getOrderElementsQuantitySum() > 0) {
-            $this->addFlash('error', $translator->trans('The event can not be deleted because it has one or more tickets'));
+            $this->addFlash('error', 'The event can not be deleted because it has one or more tickets');
             return $services->redirectToReferer('event');
         }
         if ($event->getDeletedAt() !== null) {
-            $this->addFlash('error', $translator->trans('The event has been deleted permanently'));
+            $this->addFlash('error', 'The event has been deleted permanently');
         } else {
-            $this->addFlash('notice', $translator->trans('The event has been deleted'));
+            $this->addFlash('notice', 'The event has been deleted');
         }
         $em = $this->getDoctrine()->getManager();
         $em->remove($event);
@@ -774,14 +800,14 @@ class EventController extends Controller
 
         $event = $services->getEvents(array("slug" => $slug, "published" => "all", "elapsed" => "all", "organizer" => "all", "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();
         if (!$event) {
-            $this->addFlash('error', $translator->trans('The event can not be found'));
+            $this->addFlash('error', 'The event can not be found');
             return $services->redirectToReferer('event');
         }
         $event->setDeletedAt(null);
         $em = $this->getDoctrine()->getManager();
         $em->persist($event);
         $em->flush();
-        $this->addFlash('success', $translator->trans('The event has been succesfully restored'));
+        $this->addFlash('success', 'The event has been succesfully restored');
 
         return $services->redirectToReferer('event');
     }
@@ -801,15 +827,15 @@ class EventController extends Controller
 
         $event = $services->getEvents(array("slug" => $slug, "published" => "all", "elapsed" => "all", "organizer" => $organizer, "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();
         if (!$event) {
-            $this->addFlash('error', $translator->trans('The event can not be found'));
+            $this->addFlash('error', 'The event can not be found');
             return $services->redirectToReferer('event');
         }
         if ($event->getPublished() === true) {
             $event->setPublished(false);
-            $this->addFlash('notice', $translator->trans('The event has been unpublished and will not be included in the search results'));
+            $this->addFlash('notice', 'The event has been unpublished and will not be included in the search results');
         } else {
             $event->setPublished(true);
-            $this->addFlash('success', $translator->trans('The event has been published and will show up in the search results'));
+            $this->addFlash('success', 'The event has been published and will show up in the search results');
         }
         $em = $this->getDoctrine()->getManager();
         $em->persist($event);
@@ -832,7 +858,7 @@ class EventController extends Controller
 
         $event = $services->getEvents(array("slug" => $slug, "published" => "all", "elapsed" => "all", "organizer" => $organizer, "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();
         if (!$event) {
-            return new Response($translator->trans('The event can not be found'));
+            return new Response('The event can not be found');
         }
         return $this->render('Dashboard/Shared/Event/details.html.twig', [
             'event' => $event,

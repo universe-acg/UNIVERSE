@@ -1,4 +1,7 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Repository;
 
@@ -6,19 +9,33 @@ use App\Entity\HelpCenterArticle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class HelpCenterArticleRepository extends ServiceEntityRepository {
+class HelpCenterArticleRepository extends ServiceEntityRepository
+{
 
-    public function __construct(ManagerRegistry $registry) {
+    public function __construct(ManagerRegistry $registry)
+    {
         parent::__construct($registry, HelpCenterArticle::class);
     }
+//
+//    public function findPopularArticles($limit)
+//    {
+//        return $this->createQueryBuilder('a')
+//            ->select('a, COUNT(v.id) as viewCount')
+//            ->leftJoin('a.views', 'v')
+//            ->groupBy('a')
+//            ->orderBy('viewCount', 'DESC')
+//            ->setMaxResults($limit)
+//            ->getQuery()
+//            ->getResult();
+//    }
 
-    public function getHelpCenterArticles($selecttags, $hidden, $featured, $keyword, $slug, $category, $limit, $sort, $order, $otherthan) {
+    public function getHelpCenterArticles($selecttags, $hidden, $featured, $keyword, $slug, $category, $limit, $sort, $order, $otherthan)
+    {
         $qb = $this->createQueryBuilder("a");
-        if ($keyword !== "all" || $slug !== "all" || $otherthan !== "all" || $selecttags) {
-            $qb->join("a.translations", "translations");
-        }
+
         if (!$selecttags) {
             $qb->select("a");
+
             if ($hidden !== "all") {
                 $qb->andWhere("a.hidden = :hidden")->setParameter("hidden", $hidden);
             }
@@ -26,27 +43,30 @@ class HelpCenterArticleRepository extends ServiceEntityRepository {
                 $qb->andWhere("a.featured = :featured")->setParameter("featured", $featured);
             }
             if ($keyword !== "all") {
-                $qb->andWhere("translations.title LIKE :keyword or :keyword LIKE translations.title or :keyword LIKE translations.content or translations.content LIKE :keyword or :keyword LIKE translations.tags or translations.tags LIKE :keyword")->setParameter("keyword", "%" . $keyword . "%");
+                $qb->andWhere($qb->expr()->orX(
+                    $qb->expr()->like('a.title', ':keyword'),
+                    $qb->expr()->like('a.content', ':keyword'),
+                    $qb->expr()->like('a.tags', ':keyword')
+                ))->setParameter("keyword", "%" . $keyword . "%");
             }
             if ($slug !== "all") {
-                $qb->andWhere("translations.slug = :slug")->setParameter("slug", $slug);
+                $qb->andWhere("a.slug = :slug")->setParameter("slug", $slug);
             }
             if ($category !== "all") {
                 $qb->leftJoin("a.category", "category");
-                $qb->leftJoin("category.translations", "categorytranslations");
-                $qb->andWhere("categorytranslations.slug = :category")->setParameter("category", $category);
+                $qb->andWhere("category.slug = :category")->setParameter("category", $category);
             }
             if ($limit !== "all") {
                 $qb->setMaxResults($limit);
             }
             if ($otherthan !== "all") {
-                $qb->andWhere("translations.slug != :otherthan")->setParameter("otherthan", $otherthan);
+                $qb->andWhere("a.slug != :otherthan")->setParameter("otherthan", $otherthan);
             }
-            $qb->orderBy("a." . $sort, $order);
+            $qb->orderBy("a." . $order, $sort);
         } else {
-            $qb->select("SUBSTRING_INDEX(GROUP_CONCAT(translations.tags SEPARATOR ','), ',', 8)");
+            $qb->select("SUBSTRING_INDEX(GROUP_CONCAT(a.tags SEPARATOR ','), ',', 8)");
         }
+
         return $qb;
     }
-
 }

@@ -54,15 +54,15 @@ class EventTicket
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=10)
+     * @ORM\Column(type="string", length=255)
      */
     private $reference;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(groups={"create", "update"})
-     * @Assert\Length(min = 2, max = 50, groups={"create", "update"})
+     * @Assert\Length(min = 2, groups={"create", "update"})
      */
     private $name;
 
@@ -332,8 +332,18 @@ class EventTicket
             return "Event date is disabled";
         }
 
-        if ($this->eventdate->getStartdate() < new Datetime) {
-            return "Event already started/ended";
+        $currentDateTime = new DateTime();
+
+        if ($currentDateTime < $this->eventdate->getStartdate()) {
+            return "Event has not started yet";
+        }
+
+        if ($currentDateTime >= $this->eventdate->getStartdate() && $currentDateTime <= $this->eventdate->getEnddate()) {
+            return "Event has started";
+        }
+
+        if ($currentDateTime > $this->eventdate->getEnddate()) {
+            return "Event has ended";
         }
 
         if (!$this->active) {

@@ -10,7 +10,7 @@
         <meta name="keywords"
               content="{{ blogpost.name }}, {{ blogpost.category.name }}, {% for tag in blogpost.tags|split(',') %}{{ tag }}{{ not loop.last ? ', ' : '' }}{% endfor %}"/>
     {% else %}
-        <meta name="keywords" content="{{ services.getSetting("website_keywords_" ~ app.request.get('_locale')) }}"/>
+        <meta name="keywords" content="{{ services.getSetting("website_keywords_" ) }}"/>
     {% endif %}
     <meta property="og:title" content="{{ blogpost.name }}"/>
     <meta property="og:image"
@@ -67,13 +67,8 @@
                                             <li class="mb-2">
                                                 <a href="{{ path('blog', {category: blogpostcategory.slug}) }}"
                                                    class="font-weight-semibold">
-                                                    {% if app.request.locale != 'ar' %}
-                                                        <i class="fas fa-angle-right ml-1 mr-1 pr-2"></i>
-                                                    {% endif %}
+                                                    <i class="fas fa-angle-right ml-1 mr-1 pr-2"></i>
                                                     {{ blogpostcategory.name }}
-                                                    {% if app.request.locale == 'ar' %}
-                                                        <i class="fas fa-angle-left ml-1 mr-1 pl-2"></i>
-                                                    {% endif %}
                                                     <span class="float-right form-check-label">
                                                         <span class="badge badge-primary">{{ blogpostcategory.blogposts|length }}</span>
                                                     </span>
@@ -157,7 +152,7 @@
                                 </small>
                                 {% if blogpost.user %}
                                     <small class="text-muted "><a
-                                                href={{ "/en/organizer/" ~ blogpost.user.slug }} class="text-dark"><i
+                                                href={{ "/organizer/" ~ blogpost.user.username }} class="text-dark"><i
                                                     class="fas fa-user"></i> {{ blogpost.user.username }}</a></small>
                                 {% endif %}
                                 {% if blogpost.readtime %}
@@ -183,62 +178,29 @@
                                 </div>
                             </div>
 
-                            {% set blog_comments_enabled = services.getSetting("blog_comments_enabled") %}
-                            {% if blog_comments_enabled != "no" %}
-                                <div class="mt-5">
-                                    {% if blog_comments_enabled == "native" %}
-                                        {% include '@FOSComment/Thread/async.html.twig' with {'id':blogpost.slug} %}
-                                    {% elseif blog_comments_enabled == "facebook" and services.getSetting("facebook_app_id") %}
-                                        <div id="fb-root"></div>
-                                        <script async defer crossorigin="anonymous"
-                                                src="https://connect.facebook.net/{{ app.request.locale|lower~'_'~app.request.locale|upper }}/sdk.js#xfbml=1&version=v4.0&appId={{ services.getSetting("facebook_app_id") }}&autoLogAppEvents=1"></script>
-                                        <div class="fb-comments" data-href="{{ app.request.uri }}" data-width="100%"
-                                             data-numposts="5"></div>
-                                    {% elseif blog_comments_enabled == "disqus" and services.getSetting("disqus_subdomain") %}
-                                        <div id="disqus_thread"></div>
-                                        <script>
-                                            /**
-                                             *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-                                             *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
-                                            var disqus_config = function () {
-                                                this.page.url = "{{ app.request.uri }}";  // Replace PAGE_URL with your page's canonical URL variable
-                                                this.page.identifier = "{{ blogpost.slug }}"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-                                                this.language = "{{ app.request.locale|lower }}";
-                                            };
-                                            (function () { // DON'T EDIT BELOW THIS LINE
-                                                var d = document, s = d.createElement('script');
-                                                s.src = 'https://{{ services.getSetting("disqus_subdomain") }}.disqus.com/embed.js';
-                                                s.setAttribute('data-timestamp', +new Date());
-                                                (d.head || d.body).appendChild(s);
-                                            })();
-                                        </script>
-                                        <noscript>Please enable JavaScript to view the <a
-                                                    href="https://disqus.com/?ref_noscript">comments powered by
-                                                Disqus.</a></noscript>
-                                    {% endif %}
+                            <div class="mt-5">
+                                {% include '@FOSComment/Thread/async.html.twig' with {'id':blogpost.slug} %}
+                            </div>
+
+                            {% set similarblogposts = services.getBlogPosts({"limit": 8, "category": blogpost.category.slug, "otherthan": blogpost.id}).getQuery().getResult() %}
+                            {% if similarblogposts|length %}
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h3 class="mt-5 mb-4 text-center">{{ "Related posts" }}</h3>
+                                        <div class="owl-init owl-carousel" data-margin="15" data-items="4"
+                                             data-dots="false"
+                                             data-nav="true" data-autoplay="false">
+                                            {% for similarblogpost in similarblogposts %}
+                                                {% include "Global/blog-card.html.twig" with { blogpost: similarblogpost, thumbnailsize: [250, 250] } %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
                                 </div>
                             {% endif %}
-
                         </div>
                     </div>
                 </div>
             </div>
-
-            {% set similarblogposts = services.getBlogPosts({"limit": 8, "category": blogpost.category.slug, "otherthan": blogpost.id}).getQuery().getResult() %}
-            {% if similarblogposts|length %}
-                <div class="row">
-                    <div class="col-12">
-                        <h3 class="mt-5 mb-4 text-center">{{ "Related posts" }}</h3>
-                        <div class="owl-init owl-carousel" data-margin="15" data-items="4" data-dots="false"
-                             data-nav="true" data-autoplay="false">
-                            {% for similarblogpost in similarblogposts %}
-                                {% include "Global/blog-card.html.twig" with { blogpost: similarblogpost, thumbnailsize: [241, 241] } %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-
         </div>
     </section>
 

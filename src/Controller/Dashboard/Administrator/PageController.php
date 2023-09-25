@@ -44,7 +44,7 @@ class PageController extends Controller
         } else {
             $page = $services->getPages(array('slug' => $slug))->getQuery()->getOneOrNullResult();
             if (!$page) {
-                $this->addFlash('error', $translator->trans('The page can not be found'));
+                $this->addFlash('error', 'The page can not be found');
                 return $services->redirectToReferer('page');
             }
         }
@@ -57,14 +57,14 @@ class PageController extends Controller
                 $em->persist($page);
                 $em->flush();
                 if (!$slug) {
-                    $this->addFlash('success', $translator->trans('The page has been successfully created'));
+                    $this->addFlash('success', 'The page has been successfully created');
                 } else {
-                    $this->addFlash('success', $translator->trans('The page has been successfully updated'));
+                    $this->addFlash('success', 'The page has been successfully updated');
                 }
                 return $this->redirectToRoute('dashboard_administrator_page');
             }
 
-            $this->addFlash('error', $translator->trans('The form contains invalid data'));
+            $this->addFlash('error', 'The form contains invalid data');
         }
         return $this->render('Dashboard/Administrator/Page/add-edit.html.twig', array(
             "page" => $page,
@@ -80,10 +80,10 @@ class PageController extends Controller
 
         $page = $services->getPages(array('slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$page) {
-            $this->addFlash('error', $translator->trans('The page can not be found'));
+            $this->addFlash('error', 'The page can not be found');
             return $services->redirectToReferer('page');
         }
-        $this->addFlash('error', $translator->trans('The page has been deleted'));
+        $this->addFlash('error', 'The page has been deleted');
         $em = $this->getDoctrine()->getManager();
         $em->remove($page);
         $em->flush();

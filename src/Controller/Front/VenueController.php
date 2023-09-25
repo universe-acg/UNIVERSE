@@ -33,7 +33,7 @@ class VenueController extends AbstractController
         $venues = $paginator->paginate($services->getVenues(array('directory' => true, 'keyword' => $keyword, 'country' => $country, 'venuetypes' => $venuetypes, 'minseatedguests' => $minseatedguests, 'maxseatedguests' => $maxseatedguests, 'minstandingguests' => $minstandingguests, 'maxstandingguests' => $maxstandingguests)), $request->query->getInt('page', 1), 8);
         return $this->render('Front/Venue/venues.html.twig', [
             'venues' => $venues
-        ]);git
+        ]);
     }
 
     /**

@@ -86,20 +86,14 @@ class EventController extends Controller
             if ((!"all" && !$event->hasAnEventDateOnSale())) {
                 continue;
             }
-            $venue = $translator->trans("Online");
-            if ($event->getFirstOnSaleEventDate() && $event->getFirstOnSaleEventDate()->getVenue()) {
-                $venue = $event->getFirstOnSaleEventDate()->getVenue()->getName() . ": " . $event->getFirstOnSaleEventDate()->getVenue()->stringifyAddress();
-            }
-            $date = $translator->trans("No active events");
-            if ($event->getFirstOnSaleEventDate() && $event->getFirstOnSaleEventDate()->getStartdate()) {
-                $date = date($this->getParameter("date_format_simple"), $event->getFirstOnSaleEventDate()->getStartdate()->getTimestamp());
-            }
+            $venue = "Online";
+            $date = date($this->getParameter("date_format_simple"), $event->getFirstOnSaleEventDate()->getStartdate()->getTimestamp());
 
             $result = array(
                 'id' => $event->getSlug(),
                 'text' => $event->getName(),
                 'image' => $assetsManager->getUrl($event->getImagePath()),
-                'link' => $this->generateUrl("event", ['slug' => $event->getSlug(), '_locale' => $request->getLocale()]),
+                'link' => $this->generateUrl("event", ['slug' => $event->getSlug()]),
                 'date' => $date,
                 'venue' => $venue);
             array_push($results, $result);

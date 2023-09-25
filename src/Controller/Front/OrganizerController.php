@@ -5,6 +5,7 @@
 
 namespace App\Controller\Front;
 
+use App\Repository\UserRepository;
 use App\Service\AppServices;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,18 +19,18 @@ class OrganizerController extends AbstractController
     /**
      * @Route("/organizer/{slug}", name="organizer")
      */
-    public function organizer($slug, Request $request, AppServices $services): Response
+    public function organizer($slug, Request $request, AppServices $services, UserRepository $userRepository): Response
     {
+        // $user = $services->getUsers(array('slug' => $slug))->getQuery()->getOneOrNullResult();
+        $user = $userRepository->getByUsername($slug);
 
-        $user = $services->getUsers(array('organizerslug' => $slug))->getQuery()->getOneOrNullResult();
-        if (!$user) {
-            $this->addFlash('error', $translator->trans('The creator could not be found'));
+        if (!$user || !$user->getOrganizer()) {
+            $this->addFlash('error', 'The creator could not be found');
             return $services->redirectToReferer("events");
         }
 
         $em = $this->getDoctrine()->getManager();
         $user->getOrganizer()->viewed();
-        $em->persist($user->getOrganizer());
         $em->flush();
 
         return $this->render('Front/Organizer/profile.html.twig', ['organizer' => $user->getOrganizer()]

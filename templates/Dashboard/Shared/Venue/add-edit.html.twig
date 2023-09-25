@@ -11,9 +11,9 @@
 {% block content %}
 
     {% if is_granted('ROLE_ADMINISTRATOR') %}
-        {% set navigation = [{ "dashboard_index": ('Dashboard' | trans),  "dashboard_administrator_venue": ('Manage venues' | trans), "current":(pagetitle) }] %}
+        {% set navigation = [{ "dashboard_index": ('Dashboard' ),  "dashboard_administrator_venue": ('Manage venues' ), "current":(pagetitle) }] %}
     {% elseif is_granted('ROLE_ORGANIZER') %}
-        {% set navigation = [{ "dashboard_index": ('Dashboard' | trans),  "dashboard_organizer_venue": ('my venues' | trans), "current":(pagetitle) }] %}
+        {% set navigation = [{ "dashboard_index": ('Dashboard' ),  "dashboard_organizer_venue": ('my venues' ), "current":(pagetitle) }] %}
     {% endif %}
     {% include "Global/navigation.html.twig" with navigation %}
 
@@ -28,7 +28,6 @@
                         <div class="card-body">
                             {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
                             {{ form_errors(form) }}
-                            {{ form_row(form.translations) }}
                             {{ form_row(form.type) }}
                             {{ form_row(form.amenities) }}
                             {#                            {{ form_row(form.seatedguests) }} #}

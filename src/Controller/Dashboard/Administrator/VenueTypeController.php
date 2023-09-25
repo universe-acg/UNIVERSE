@@ -43,7 +43,7 @@ class VenueTypeController extends Controller
         } else {
             $venuetype = $services->getVenuesTypes(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
             if (!$venuetype) {
-                $this->addFlash('error', $translator->trans('The venue type can not be found'));
+                $this->addFlash('error', 'The venue type can not be found');
                 return $services->redirectToReferer('venuetype');
             }
         }
@@ -56,13 +56,13 @@ class VenueTypeController extends Controller
             $em->persist($venuetype);
             $em->flush();
             if (!$slug) {
-                $this->addFlash('success', $translator->trans('The venue type has been successfully created'));
+                $this->addFlash('success', 'The venue type has been successfully created');
             } else {
-                $this->addFlash('success', $translator->trans('The venue type has been successfully updated'));
+                $this->addFlash('success', 'The venue type has been successfully updated');
             }
             return $this->redirectToRoute('dashboard_administrator_venuetype');
 //            } else {
-//                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+//                $this->addFlash('error', 'The form contains invalid data'));
 //            }
         }
         return $this->render('Dashboard/Administrator/VenueType/add-edit.html.twig', array(
@@ -80,17 +80,17 @@ class VenueTypeController extends Controller
 
         $venuetype = $services->getVenuesTypes(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$venuetype) {
-            $this->addFlash('error', $translator->trans('The venue type can not be found'));
+            $this->addFlash('error', 'The venue type can not be found');
             return $services->redirectToReferer('venuetype');
         }
         if (count($venuetype->getVenues()) > 0) {
-            $this->addFlash('error', $translator->trans('The venue type can not be deleted because it is linked with one or more venues'));
+            $this->addFlash('error', 'The venue type can not be deleted because it is linked with one or more venues');
             return $services->redirectToReferer('venuetype');
         }
         if ($venuetype->getDeletedAt() !== null) {
-            $this->addFlash('error', $translator->trans('The venue type has been deleted'));
+            $this->addFlash('error', 'The venue type has been deleted');
         } else {
-            $this->addFlash('notice', $translator->trans('The venue type has been disabled'));
+            $this->addFlash('notice', 'The venue type has been disabled');
         }
         $em = $this->getDoctrine()->getManager();
         $venuetype->setHidden(true);
@@ -109,14 +109,14 @@ class VenueTypeController extends Controller
 
         $venuetype = $services->getVenuesTypes(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$venuetype) {
-            $this->addFlash('error', $translator->trans('The venue type can not be found'));
+            $this->addFlash('error', 'The venue type can not be found');
             return $services->redirectToReferer('venuetype');
         }
         $venuetype->setDeletedAt(null);
         $em = $this->getDoctrine()->getManager();
         $em->persist($venuetype);
         $em->flush();
-        $this->addFlash('success', $translator->trans('The venue type has been succesfully restored'));
+        $this->addFlash('success', 'The venue type has been succesfully restored');
 
         return $services->redirectToReferer('venuetype');
     }
@@ -130,15 +130,15 @@ class VenueTypeController extends Controller
 
         $venuetype = $services->getVenuesTypes(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$venuetype) {
-            $this->addFlash('error', $translator->trans('The venue type can not be found'));
+            $this->addFlash('error', 'The venue type can not be found');
             return $services->redirectToReferer('venuetype');
         }
         if ($venuetype->getHidden() === true) {
             $venuetype->setHidden(false);
-            $this->addFlash('success', $translator->trans('The venue type is visible'));
+            $this->addFlash('success', 'The venue type is visible');
         } else {
             $venuetype->setHidden(true);
-            $this->addFlash('error', $translator->trans('The venue type is hidden'));
+            $this->addFlash('error', 'The venue type is hidden');
         }
         $em = $this->getDoctrine()->getManager();
         $em->persist($venuetype);

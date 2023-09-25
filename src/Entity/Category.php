@@ -31,10 +31,11 @@ class Category
      * @ORM\Column(length=255, unique=true)
      */
     protected $slug;
+
     /**
-     * @ORM\Column(type="string", length=25)
+     * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
-     * @Assert\Length(min = 2, max = 25)
+     * @Assert\Length(min = 2)
      */
     private $name;
 
@@ -53,9 +54,9 @@ class Category
      */
     private $organizers;
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
-     * @Assert\Length(min = 1, max = 50)
+     * @Assert\Length(min = 1)
      */
     private $icon;
     /**
@@ -71,7 +72,7 @@ class Category
      */
     private $imageFile;
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $imageName;
     /**
@@ -81,11 +82,11 @@ class Category
      */
     private $imageSize;
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $imageMimeType;
     /**
-     * @ORM\Column(type="string", length=1000, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $imageOriginalName;
     /**

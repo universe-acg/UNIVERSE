@@ -29,7 +29,7 @@ class HelpCenterController extends AbstractController
     {
         $category = $services->getHelpCenterCategories(array("slug" => $slug))->getQuery()->getOneOrNullResult();
         if (!$category) {
-            $this->addFlash('error', $translator->trans('The category not be found'));
+            $this->addFlash('error', 'The category not be found');
             return $this->redirectToRoute('help_center');
         }
         return $this->render('Front/HelpCenter/category.html.twig', ["category" => $category]);
@@ -42,7 +42,7 @@ class HelpCenterController extends AbstractController
     {
         $article = $services->getHelpCenterArticles(array("slug" => $slug))->getQuery()->getOneOrNullResult();
         if (!$article) {
-            $this->addFlash('error', $translator->trans('The article not be found'));
+            $this->addFlash('error', 'The article not be found');
             return $this->redirectToRoute('help_center');
         }
         $article->viewed();

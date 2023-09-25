@@ -1,10 +1,5 @@
 {% set runtimeConfig = {"thumbnail": {"size": [500, 250] }} %}
-
-{% if eventDate is defined %}
-    {% set displayedEventDate = eventDate %}
-{% else %}
-    {% set displayedEventDate = event.getFirstOnSaleEventDate %}
-{% endif %}
+{% set displayedEventDate = event.getFirstOnSaleEventDate %}
 
 {% if customLink is defined %}
     {% set link = customLink %}
@@ -57,16 +52,6 @@
                 <a href="{{ link }}" class="text-dark">{{ event.name }}</a>
             </h5>
 
-            <div class="text-black-50 small">
-                {% if displayedEventDate %}
-                    {#                    {% if displayedEventDate.venue %} #}
-                    {#                        {{ displayedEventDate.venue.name }}: {{ displayedEventDate.venue.city ~ ', ' ~ displayedEventDate.venue.country.name }} #}
-                    {#                    {% else %} #}
-                    {#                        {{ "Online" }} #}
-                    {#                    {% endif %} #}
-                {% endif %}
-                &nbsp;
-            </div>
             {% if displayedEventDate.startdate %}
                 {% set currentDate = "now"|date('F j, Y H:i', 'Europe/Athens') %}
                 {% if displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') <= currentDate %}

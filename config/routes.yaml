@@ -1,5 +1,9 @@
 # Installer routes
 
+homepage:
+  path: /
+  controller: 'App\Controller\Front\MainController::homepage'
+
 app_installer:
   resource: '../src/Controller/Installer'
   prefix: /install
@@ -7,166 +11,211 @@ app_installer:
   trailing_slash_on_root: false
 
 fos_user_change_email:
-  path: /en/dashboard/change-email
+  path: /dashboard/change-email
   controller: 'App\Controller\Api\EmailChangeController::changeEmail'
 
 fos_user_change_username:
-  path: /en/dashboard/change-username
+  path: /dashboard/change-username
   controller: 'App\Controller\Api\UsernameChangeController::changeUsername'
 
 registration_register_attendee_admin:
-  path: /en/dashboard/administrator/signup/attendee
+  path: /dashboard/administrator/signup/attendee
   controller: 'App\Controller\Dashboard\Administrator\AdminRegistrationController::registerAttendeeAction'
 
+dashboard_administrator_attendees:
+  path: /administrator/manage-attendees/{event}
+  controller: 'App\Controller\Dashboard\Shared\OrderController::attendeesAdmin'
+
+dashboard_administrator_attendees_details:
+  path: /administrator/manage-attendees-details/{eventid}/
+  controller: 'App\Controller\Dashboard\Shared\OrderController::attendeesAdminDetails'
+
+dashboard_organizer_attendees_details:
+  path: /organizer/manage-attendees-details/{orderid}/{userslug}
+  controller: 'App\Controller\Dashboard\Shared\OrderController::attendeesAdminDetailsasOrganizer'
+
 generate_attendees_pdf:
-  path: /en/dashboard/generate-attendees-pdf
+  path: /dashboard/generate-attendees-pdf
   controller: 'App\Controller\Dashboard\Shared\PdfController::generatePdf'
+
+generate_attendees_excel:
+  path: /dashboard/generate-attendees-excel
+  controller: 'App\Controller\Dashboard\Shared\PdfController::generateExecl'
 
 get_event_details:
   path: '/get-event-details/{eventId}'
   controller: 'App\Controller\Api\EventController::getEventDetails'
   methods: [ 'GET' ]
 
+fos_comment_delete:
+  path: '/delete-comment/{id}'
+  controller: App\Controller\Front\CommentController::deleteComment
+  requirements:
+    _format: json  # Restrict the route to respond to JSON requests
+
+dashboard_organizer_blog_post_edit:
+  path: '/manage-blog-posts/{slug}/edit'
+  controller: App\Controller\Dashboard\Organizer\BlogPostController::addedit
+
+dashboard_organizer_event_delete_permanently_admin:
+  path: '/administrator/my-events/{slug}/delete-permanently-admin'
+  controller: App\Controller\Dashboard\Shared\EventController::deleteforadmin
+
+dashboard_organizer_profile_admin:
+  path: '/profile/{id}'
+  controller: 'App\Controller\Dashboard\Organizer\AccountController::editOrganizerAsAdmin'
+  methods: [ 'GET', 'POST' ]
+
+dashboard_edit_user:
+  path: '/administrator/edit/user/{id}'
+  controller: 'App\Controller\Dashboard\Administrator\UserController::edituser'
+  methods: [ 'GET', 'POST' ]
+
+attendee_attendeed_x_events:
+  path: '/attendee/statistics/{attendeeid}'
+  controller: 'App\Controller\Dashboard\Organizer\AccountController::editOrganizerAsAdmin'
+  methods: [ 'GET' ]
+
+#admin_statistics:
+#  path: '/admin/statistics/{attendeeid}'
+#  controller: 'App\Controller\Dashboard\Organizer\AccountController::editOrganizerAsAdmin'
+#  methods: [ 'GET' ]
+#
+#admin_statistics:
+#  path: '/admin/statistics/'
+#  controller: 'App\Controller\Dashboard\Organizer\AccountController::editOrganizerAsAdmin'
+#  methods: [ 'GET' ]
+
+organizer_statistics:
+  path: '/profile/'
+  controller: 'App\Controller\Dashboard\Organizer\AccountController::editOrganizerAsAdmin'
+  methods: [ 'GET' ]
+
 registration_register_organizer_admin:
-  path: /en/dashboard/administrator/signup/organizer
+  path: /dashboard/administrator/signup/organizer
   controller: 'App\Controller\Dashboard\Administrator\AdminRegistrationController::registerOrganizerAction'
 
 blog_post_category_add:
-  path: /en/dashboard/organizer/manage-blog-post-categories/add
+  path: /dashboard/organizer/manage-blog-post-categories/add
   controller: 'App\Controller\Dashboard\Organizer\BlogPostCategoryController::addedit'
   methods: [ 'GET', 'POST' ]
 
 blog_post_organizer:
-  path: /en/dashboard/organizer/manage-blog-posts-organizer/
+  path: /dashboard/organizer/manage-blog-posts-organizer/
   controller: 'App\Controller\Dashboard\Organizer\BlogPostController::index'
   methods: [ 'GET', 'POST' ]
 
 # Dashboard routes
 dashboard_attendee_following:
-  path: /{_locale}/dashboard/attendee/following
+  path: /dashboard/attendee/following
   controller: 'App\Controller\Dashboard\Attendee\FollowingController::index'
   methods: [ 'GET' ]
-  requirements:
-    _locale: '%locales%'
+
   trailing_slash_on_root: false
 
 dashboard_attendee_bookevent:
-  path: /en/dashboard/attendee/bookevent/{reference}
+  path: /dashboard/attendee/bookevent/{reference}
   controller: 'App\Controller\Dashboard\Shared\CartController::bookevent'
   methods: [ GET ]
-  requirements:
-    _locale: '%locales%'
+  
   trailing_slash_on_root: false
 
 app_dashboard_attendee_following_add:
-  path: /en/dashboard/attendee/following/add/{slug}
+  path: /dashboard/attendee/following/add/{slug}
   controller: 'App\Controller\Dashboard\Attendee\FollowingController::addRemove'
   methods: [ 'GET' ]
   condition: 'request.isXmlHttpRequest()'
-  requirements:
-    _locale: '%locales%'
+  
   trailing_slash_on_root: false
 
 app_dashboard_attendee_following_remove:
-  path: /en/dashboard/attendee/following/remove/{slug}
+  path: /dashboard/attendee/following/remove/{slug}
   controller: 'App\Controller\Dashboard\Attendee\FollowingController::addRemove'
   methods: [ 'GET' ]
   condition: 'request.isXmlHttpRequest()'
-  requirements:
-    _locale: '%locales%'
+  
   trailing_slash_on_root: false
 
 # Dashboard routes
 favorites_add:
-  path: /en/dashboard/attendee/my-favorites/add/{slug}
+  path: /dashboard/attendee/my-favorites/add/{slug}
   controller: 'App\Controller\Dashboard\Attendee\FavoritesController::addRemove'
   methods: [ 'GET' ]
   condition: 'request.isXmlHttpRequest()'
-  requirements:
-    _locale: '%locales%'
+  
   trailing_slash_on_root: false
 
 favorites_remove:
-  path: /en/dashboard/attendee/my-favorites/remove/{slug}
+  path: /dashboard/attendee/my-favorites/remove/{slug}
   controller: 'App\Controller\Dashboard\Attendee\FavoritesController::addRemove'
   methods: [ 'GET' ]
   condition: 'request.isXmlHttpRequest()'
-  requirements:
-    _locale: '%locales%'
+  
   trailing_slash_on_root: false
 
 app_dashboard_main:
   resource: '../src/Controller/Dashboard/Main'
-  prefix: /{_locale}/dashboard
+  prefix: /dashboard
   name_prefix: 'dashboard_'
-  requirements:
-    _locale: '%locales%'
+  
   trailing_slash_on_root: false
 
 app_dashboard_admin:
   resource: '../src/Controller/Dashboard/Administrator'
-  prefix: /{_locale}/dashboard/administrator
+  prefix: /dashboard/administrator
   name_prefix: 'dashboard_administrator_'
-  requirements:
-    _locale: '%locales%'
+  
   trailing_slash_on_root: false
 
 app_dashboard_organizer:
   resource: '../src/Controller/Dashboard/Organizer'
-  prefix: /{_locale}/dashboard/organizer
+  prefix: /dashboard/organizer
   name_prefix: 'dashboard_organizer_'
-  requirements:
-    _locale: '%locales%'
+  
   trailing_slash_on_root: false
 
 # Change the shared controller name prefixes manually
 app_dashboard_shared:
   resource: '../src/Controller/Dashboard/Shared'
-  prefix: /{_locale}/dashboard
-  requirements:
-    _locale: '%locales%'
+  prefix: /dashboard
+  
   trailing_slash_on_root: false
 
 app_dashboard_attendee:
   resource: '../src/Controller/Dashboard/Attendee'
-  prefix: /{_locale}/dashboard/attendee
+  prefix: /dashboard/attendee
   name_prefix: 'dashboard_attendee_'
-  requirements:
-    _locale: '%locales%'
+  
   trailing_slash_on_root: false
 
 app_dashboard_point_of_sale:
   resource: '../src/Controller/Dashboard/PointOfSale'
-  prefix: /{_locale}/dashboard/pointofsale
+  prefix: /dashboard/pointofsale
   name_prefix: 'dashboard_pointofsale_'
-  requirements:
-    _locale: '%locales%'
+  
   trailing_slash_on_root: false
 
 app_dashboard_scanner:
   resource: '../src/Controller/Dashboard/Scanner'
-  prefix: /{_locale}/dashboard/scanner
+  prefix: /dashboard/scanner
   name_prefix: 'dashboard_scanner_'
-  requirements:
-    _locale: '%locales%'
+  
   trailing_slash_on_root: false
 
 # Front routes
 
 app_front:
   resource: '../src/Controller/Front'
-  prefix: /{_locale}/
-  requirements:
-    _locale: '%locales%'
+  prefix: /
+  
   trailing_slash_on_root: false
 
 # Api routes
 
 app_api:
   resource: '../src/Controller/Api'
-  prefix: /{_locale}/api/
-  requirements:
-    _locale: '%locales%'
+  prefix: /api/
+  
   trailing_slash_on_root: false
 
 # Bundles routes
@@ -174,14 +223,13 @@ app_api:
 JMSTranslationBundle_ui:
   resource: "@JMSTranslationBundle/Controller/"
   type: annotation
-  prefix: /_trans
+  prefix: /
 
 fos_user:
   resource: 'routes/fos_user/'
   type: directory
-  prefix: /{_locale}/
-  requirements:
-    _locale: '%locales%'
+  prefix: /
+  
   trailing_slash_on_root: false
 
 fos_js_routing:

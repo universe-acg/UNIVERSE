@@ -24,7 +24,7 @@ class CategoryController extends Controller
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
         $featured = ($request->query->get('featured')) == "" ? "all" : $request->query->get('featured');
 
-        $categories = $paginator->paginate($services->getCategories(array('keyword' => $keyword, 'hidden' => 'all', 'featured' => $featured, 'sort' => 'c.createdAt', 'order' => 'DESC')), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
+        $categories = $paginator->paginate($services->getCategories(array('keyword' => $keyword, 'hidden' => 'all', 'featured' => $featured, 'sort' => 'createdAt', 'order' => 'DESC')), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
 
         return $this->render('Dashboard/Administrator/Category/index.html.twig', [
             'categories' => $categories,
@@ -44,7 +44,7 @@ class CategoryController extends Controller
         } else {
             $category = $services->getCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
             if (!$category) {
-                $this->addFlash('error', $translator->trans('The category can not be found'));
+                $this->addFlash('error', 'The category can not be found');
                 return $services->redirectToReferer('category');
             }
         }
@@ -57,13 +57,14 @@ class CategoryController extends Controller
                 $em->persist($category);
                 $em->flush();
                 if (!$slug) {
-                    $this->addFlash('success', $translator->trans('The category has been successfully created'));
+                    $this->addFlash('success', 'The category has been successfully created');
                 } else {
-                    $this->addFlash('success', $translator->trans('The category has been successfully updated'));
+                    $this->addFlash('success', 'The category has been successfully updated');
                 }
                 return $this->redirectToRoute('dashboard_administrator_category');
             } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+                $formErrors = $form->getErrors(true, false);
+                $this->addFlash('error', 'The form contains invalid data');
             }
         }
         return $this->render('Dashboard/Administrator/Category/add-edit.html.twig', array(
@@ -81,17 +82,17 @@ class CategoryController extends Controller
 
         $category = $services->getCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$category) {
-            $this->addFlash('error', $translator->trans('The category can not be found'));
+            $this->addFlash('error', 'The category can not be found');
             return $services->redirectToReferer('category');
         }
         if (count($category->getEvents()) > 0) {
-            $this->addFlash('error', $translator->trans('The category can not be deleted because it is linked with one or more events'));
+            $this->addFlash('error', 'The category can not be deleted because it is linked with one or more events');
             return $services->redirectToReferer('category');
         }
         if ($category->getDeletedAt() !== null) {
-            $this->addFlash('error', $translator->trans('The category has been deleted'));
+            $this->addFlash('error', 'The category has been deleted');
         } else {
-            $this->addFlash('notice', $translator->trans('The category has been disabled'));
+            $this->addFlash('notice', 'The category has been disabled');
         }
         $em = $this->getDoctrine()->getManager();
         $category->setFeatured(false);
@@ -111,14 +112,14 @@ class CategoryController extends Controller
 
         $category = $services->getCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$category) {
-            $this->addFlash('error', $translator->trans('The category can not be found'));
+            $this->addFlash('error', 'The category can not be found');
             return $services->redirectToReferer('category');
         }
         $category->setDeletedAt(null);
         $em = $this->getDoctrine()->getManager();
         $em->persist($category);
         $em->flush();
-        $this->addFlash('success', $translator->trans('The category has been succesfully restored'));
+        $this->addFlash('success', 'The category has been succesfully restored');
 
         return $services->redirectToReferer('category');
     }
@@ -132,16 +133,16 @@ class CategoryController extends Controller
 
         $category = $services->getCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$category) {
-            $this->addFlash('error', $translator->trans('The category can not be found'));
+            $this->addFlash('error', 'The category can not be found');
             return $services->redirectToReferer('category');
         }
         if ($category->getHidden() === true) {
             $category->setHidden(false);
-            $this->addFlash('success', $translator->trans('The category is visible'));
+            $this->addFlash('success', 'The category is visible');
         } else {
             $category->setFeatured(false);
             $category->setHidden(true);
-            $this->addFlash('error', $translator->trans('The category is hidden'));
+            $this->addFlash('error', 'The category is hidden');
         }
         $em = $this->getDoctrine()->getManager();
         $em->persist($category);
@@ -158,16 +159,16 @@ class CategoryController extends Controller
 
         $category = $services->getCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$category) {
-            $this->addFlash('error', $translator->trans('The category can not be found'));
+            $this->addFlash('error', 'The category can not be found');
             return $services->redirectToReferer('category');
         }
         if ($category->getFeatured() === true) {
             $category->setFeatured(false);
             $category->setFeaturedorder(null);
-            $this->addFlash('error', $translator->trans('The category is not featured anymore and is removed from the homepage categories'));
+            $this->addFlash('error', 'The category is not featured anymore and is removed from the homepage categories');
         } else {
             $category->setFeatured(true);
-            $this->addFlash('success', $translator->trans('The category is featured and is shown in the homepage categories'));
+            $this->addFlash('success', 'The category is featured and is shown in the homepage categories');
         }
         $em = $this->getDoctrine()->getManager();
         $em->persist($category);

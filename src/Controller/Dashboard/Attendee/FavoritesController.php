@@ -41,19 +41,19 @@ class FavoritesController extends Controller
 
         $event = $services->getEvents(array("slug" => $slug))->getQuery()->getOneOrNullResult();
         if (!$event) {
-            return new JsonResponse(['error' => $translator->trans('The event can not be found')]);
+            return new JsonResponse(['error' => 'The event can not be found']);
         }
         $em = $this->getDoctrine()->getManager();
         if ($event->isAddedToFavoritesBy($this->getUser())) {
             $this->getUser()->removeFavorite($event);
             $em->persist($this->getUser());
             $em->flush();
-            return new JsonResponse(['success' => $translator->trans('The event has been removed from your favorites')]);
+            return new JsonResponse(['success' => 'The event has been removed from your favorites']);
         }
 
         $this->getUser()->addFavorite($event);
         $em->persist($this->getUser());
         $em->flush();
-        return new JsonResponse(['success' => $translator->trans('The event has been added to your favorites')]);
+        return new JsonResponse(['success' => 'The event has been added to your favorites']);
     }
 }

@@ -5,239 +5,24 @@
 
 namespace App\Controller\Dashboard\Administrator;
 
-use App\Entity\Currency;
-use App\Entity\PaymentGateway;
+use App\Entity\HomepageHeroSettings;
 use App\Form\AppLayoutSettingsType;
 use App\Form\HomepageHeroSettingsType;
 use App\Form\MenuType;
-use App\Form\PaymentGatewayType;
 use App\Service\AppServices;
 use Exception;
 use Swift_Mailer;
 use Swift_Message;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig_Environment;
 
 class SettingsController extends Controller
 {
-
-    /**
-     * @Route("/settings/payment", name="settings_payment", methods="GET|POST")
-     */
-    public function payment(Request $request, AppServices $services)
-    {
-
-        $form = $this->createFormBuilder()
-            ->add('currency', EntityType::class, [
-                'required' => false,
-                'multiple' => false,
-                'expanded' => false,
-                'class' => Currency::class,
-                'choice_label' => 'ccy',
-                'label' => 'Currency',
-                'attr' => ['class' => 'select2'],
-                'constraints' => array(// new NotBlank()
-                ),
-            ])
-            ->add('position', ChoiceType::class, [
-                'required' => false,
-                'multiple' => false,
-                'expanded' => true,
-                'label' => 'Currency symbol position',
-                'choices' => ['Left' => 'left', 'Right' => 'right'],
-                'label_attr' => ['class' => 'radio-custom radio-inline'],
-//                    'constraints' => array(
-//                        new NotNull()
-//                    ),
-            ])
-            ->add('ticket_fee_online', TextType::class, [
-                'required' => false,
-                'label' => 'Ticket fee (Online)',
-                'help' => 'This fee will be added to the ticket sale price which are bought online, put 0 to disable additional fees for tickets which are bought online, does not apply for free tickets, will be applied to future orders',
-                'attr' => ['class' => 'touchspin-decimal', 'data-min' => 0, "data-max" => 1000000],
-            ])
-            ->add('ticket_fee_pos', TextType::class, [
-                'required' => false,
-                'label' => 'Ticket fee (Point Of Sale)',
-                'help' => 'This fee will be added to the ticket sale price which are bought from a point of sale, put 0 to disable additional fees for tickets which are bought from a point of sale, does not apply for free tickets, will be applied to future orders',
-                'attr' => ['class' => 'touchspin-decimal', 'data-min' => 0, "data-max" => 1000000],
-            ])
-            ->add('online_ticket_price_percentage_cut', TextType::class, [
-                'required' => false,
-                'label' => 'Ticket price percentage cut (Online)',
-                'help' => 'This percentage will be deducted from each ticket offered online, upon organizer payout request, this percentage will be taken from each ticket offered online, will be applied to future orders',
-                'attr' => ['class' => 'touchspin-integer', 'data-min' => 0, "data-max" => 100],
-            ])
-            ->add('pos_ticket_price_percentage_cut', TextType::class, [
-                'required' => false,
-                'label' => 'Ticket price percentage cut (Point of sale)',
-                'help' => 'This percentage will be deducted from each ticket offered on a point of sale, upon organizer payout request, this percentage will be taken from each ticket offered on a point of sale, will be applied to future orders',
-                'attr' => ['class' => 'touchspin-integer', 'data-min' => 0, "data-max" => 100],
-            ])
-            ->add('organizer_payout_paypal_enabled', ChoiceType::class, [
-                'required' => false,
-                'multiple' => false,
-                'expanded' => true,
-                'label' => 'Allow Paypal as a payout method for the organizers to receive their revenue',
-                'choices' => ['Yes' => 'yes', 'No' => 'no'],
-                'label_attr' => ['class' => 'radio-custom radio-inline'],
-//                    'constraints' => array(
-//                        new NotNull()
-//                    ),
-            ])
-            ->add('organizer_payout_stripe_enabled', ChoiceType::class, [
-                'required' => false,
-                'multiple' => false,
-                'expanded' => true,
-                'label' => 'Allow Stripe as a payout method for the organizers to receive their revenue',
-                'choices' => ['Yes' => 'yes', 'No' => 'no'],
-                'label_attr' => ['class' => 'radio-custom radio-inline'],
-//                    'constraints' => array(
-//                        new NotNull()
-//                    ),
-            ])
-            ->add('save', SubmitType::class, [
-                'label' => 'Save',
-                'attr' => ['class' => 'btn btn-primary'],
-            ])
-            ->getForm();
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                $settings = $form->getData();
-                $services->setSetting("currency_ccy", $settings['currency']->getCcy());
-                $services->setSetting("currency_symbol", $settings['currency']->getSymbol());
-                $services->setSetting("currency_position", $settings['position']);
-                $services->setSetting("ticket_fee_online", $settings['ticket_fee_online']);
-                $services->setSetting("ticket_fee_pos", $settings['ticket_fee_pos']);
-                $services->setSetting("organizer_payout_paypal_enabled", $settings['organizer_payout_paypal_enabled']);
-                $services->setSetting("organizer_payout_stripe_enabled", $settings['organizer_payout_stripe_enabled']);
-                $services->setSetting("online_ticket_price_percentage_cut", $settings['online_ticket_price_percentage_cut']);
-                $services->setSetting("pos_ticket_price_percentage_cut", $settings['pos_ticket_price_percentage_cut']);
-                $this->addFlash('success', $translator->trans('The settings have been updated'));
-            } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
-            }
-        } else {
-            $form->get('currency')->setData($this->getDoctrine()->getManager()->getRepository("App\Entity\Currency")->findOneByCcy($services->getSetting("currency_ccy")));
-            $form->get('position')->setData($services->getSetting("currency_position"));
-            $form->get('ticket_fee_online')->setData($services->getSetting("ticket_fee_online"));
-            $form->get('ticket_fee_pos')->setData($services->getSetting("ticket_fee_pos"));
-            $form->get('organizer_payout_paypal_enabled')->setData($services->getSetting("organizer_payout_paypal_enabled"));
-            $form->get('organizer_payout_stripe_enabled')->setData($services->getSetting("organizer_payout_stripe_enabled"));
-            $form->get('online_ticket_price_percentage_cut')->setData($services->getSetting("online_ticket_price_percentage_cut"));
-            $form->get('pos_ticket_price_percentage_cut')->setData($services->getSetting("pos_ticket_price_percentage_cut"));
-        }
-
-        return $this->render('Dashboard/Administrator/Settings/payment.html.twig', [
-            'form' => $form->createView()
-        ]);
-    }
-
-    /**
-     * @Route("/settings/checkout", name="settings_checkout", methods="GET|POST")
-     */
-    public function checkout(Request $request, AppServices $services)
-    {
-
-        $form = $this->createFormBuilder()
-            ->add('checkout_timeleft', TextType::class, [
-                'required' => false,
-                'label' => 'Timeleft',
-                'constraints' => array(// new NotBlank()
-                ),
-                'attr' => ['class' => 'touchspin-integer', 'data-min' => 100, 'data-max' => 3600],
-                'help' => 'Number of seconds before the reserved tickets are released if the order is still Awaiting'
-            ])
-            ->add('show_tickets_left_on_cart_modal', ChoiceType::class, [
-                'required' => false,
-                'multiple' => false,
-                'expanded' => true,
-                'label' => 'Show tickets left count on cart modal',
-                'choices' => ['Yes' => 'yes', 'No' => 'no'],
-                'label_attr' => ['class' => 'radio-custom radio-inline'],
-//                    'constraints' => array(
-//                        new NotNull()
-//                    ),
-            ])
-            ->add('save', SubmitType::class, [
-                'label' => 'Save',
-                'attr' => ['class' => 'btn btn-primary'],
-            ])
-            ->getForm();
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                $settings = $form->getData();
-                $services->setSetting("checkout_timeleft", $settings['checkout_timeleft']);
-                $services->setSetting("show_tickets_left_on_cart_modal", $settings['show_tickets_left_on_cart_modal']);
-                $this->addFlash('success', $translator->trans('The settings have been updated'));
-            } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
-            }
-        } else {
-            $form->get('checkout_timeleft')->setData($services->getSetting("checkout_timeleft"));
-            $form->get('show_tickets_left_on_cart_modal')->setData($services->getSetting("show_tickets_left_on_cart_modal"));
-        }
-
-        return $this->render('Dashboard/Administrator/Settings/checkout.html.twig', array(
-            "form" => $form->createView(),
-        ));
-    }
-
-    /**
-     * @Route("/settings/payment/gateways/add", name="settings_payment_gateways_add", methods="GET|POST")
-     * @Route("/settings/payment/gateways/{slug}/edit", name="settings_payment_gateways_edit", methods="GET|POST")
-     */
-    public function paymentgatewaysaddedit(Request $request, AppServices $services, $slug = null)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        if (!$slug) {
-            $paymentgateway = new PaymentGateway();
-            $form = $this->createForm(PaymentGatewayType::class, $paymentgateway, array('validation_groups' => 'create'));
-        } else {
-            $paymentgateway = $services->getPaymentGateways(array('enabled' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
-            $form = $this->createForm(PaymentGatewayType::class, $paymentgateway, array('validation_groups' => 'update'));
-            if (!$paymentgateway) {
-                $this->addFlash('error', $translator->trans('The payment gateway can not be found'));
-                return $this->redirectToRoute("dashboard_administrator_settings_payment");
-            }
-        }
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted()) {
-            $paymentgateway->setGatewayName($paymentgateway->getFactoryName());
-            if ($form->isValid()) {
-                $em->persist($paymentgateway);
-                $em->flush();
-                if (!$slug) {
-                    $this->addFlash('success', $translator->trans('The payment gateway has been successfully created'));
-                } else {
-                    $this->addFlash('success', $translator->trans('The payment gateway has been successfully updated'));
-                }
-                return $this->redirectToRoute("dashboard_administrator_settings_payment");
-            } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
-            }
-        }
-        return $this->render('Dashboard/Administrator/Settings/payment-gateway-add-edit.html.twig', array(
-            "paymentgateway" => $paymentgateway,
-            "form" => $form->createView(),
-        ));
-    }
 
     /**
      * @Route("/settings/newsletter", name="settings_newsletter", methods="GET|POST")
@@ -285,9 +70,9 @@ class SettingsController extends Controller
                 $services->updateEnv("NEWSLETTER_ENABLED", $settings['newsletter_enabled']);
                 $services->updateEnv("MAILCHIMP_API_KEY", $settings['mailchimp_api_key']);
                 $services->updateEnv("MAILCHIMP_LIST_ID", $settings['mailchimp_list_id']);
-                $this->addFlash('success', $translator->trans('The settings have been updated'));
+                $this->addFlash('success', 'The settings have been updated');
             } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+                $this->addFlash('error', 'The form contains invalid data');
             }
         } else {
             $form->get('newsletter_enabled')->setData($services->getSetting("newsletter_enabled"));
@@ -307,10 +92,10 @@ class SettingsController extends Controller
     {
 
         $em = $this->getDoctrine()->getManager();
-        $homepageherosettings = $em->getRepository("App\Entity\HomepageHeroSettings")->find(1);
+        $homepageherosettings = $em->getRepository(HomepageHeroSettings::class)->find(1);
         if (!$homepageherosettings) {
             $services->redirectToReferer("index");
-            $this->addFlash('error', $translator->trans('The homepage settings could not be loaded'));
+            $this->addFlash('error', 'The homepage settings could not be loaded');
         }
         $form = $this->createForm(HomepageHeroSettingsType::class, $homepageherosettings);
         $form->handleRequest($request);
@@ -349,10 +134,10 @@ class SettingsController extends Controller
                 $services->setSetting("homepage_blogposts_number", $settings['homepage_blogposts_number']);
                 $services->setSetting("homepage_show_call_to_action", $settings['homepage_show_call_to_action']);
 
-                $this->addFlash('success', $translator->trans('The settings have been updated'));
+                $this->addFlash('success', 'The settings have been updated');
                 return $this->redirectToRoute('dashboard_administrator_settings_homepage');
             } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+                $this->addFlash('error', 'The form contains invalid data');
             }
         } else {
 
@@ -379,7 +164,7 @@ class SettingsController extends Controller
         $appLayoutSettings = $em->getRepository("App\Entity\AppLayoutSettings")->find(1);
         if (!$appLayoutSettings) {
             $services->redirectToReferer("index");
-            $this->addFlash('error', $translator->trans('The layout settings could not be loaded'));
+            $this->addFlash('error', 'The layout settings could not be loaded');
         }
         $form = $this->createForm(AppLayoutSettingsType::class, $appLayoutSettings);
         $form->handleRequest($request);
@@ -387,13 +172,6 @@ class SettingsController extends Controller
         if ($form->isSubmitted()) {
 
             $settings = $request->request->all()['app_layout_settings'];
-            if (!array_key_exists('app_locales', $settings)) {
-                $form->get('app_locales')->addError(new FormError($translator->trans('You must specify at least one language')));
-            } else {
-                if (!in_array($settings['default_locale'], $settings['app_locales'])) {
-                    $form->get('default_locale')->addError(new FormError($translator->trans('The default locale must be selected in the available languages')));
-                }
-            }
 
             if ($form->isValid()) {
                 $em->persist($appLayoutSettings);
@@ -405,24 +183,12 @@ class SettingsController extends Controller
                 $services->setSetting("date_format_date_only", $settings['date_format_date_only']);
                 $services->setSetting("date_timezone", $settings['date_timezone']);
                 $services->setSetting("date_timezone", $settings['date_timezone']);
-                $services->setSetting("default_locale", $settings['default_locale']);
-                $services->setSetting("app_locales", in_array('app_locales', $settings) ? $settings['app_locales'] : '');
                 $services->setSetting("website_name", $settings['website_name']);
                 $services->setSetting("website_slug", $settings['website_slug']);
                 $services->setSetting("website_url", $settings['website_url']);
                 $services->setSetting("website_root_url", $settings['website_root_url']);
                 $services->setSetting("website_description_en", $settings['website_description_en']);
-                $services->setSetting("website_description_fr", $settings['website_description_fr']);
-                $services->setSetting("website_description_es", $settings['website_description_es']);
-                $services->setSetting("website_description_ar", $settings['website_description_ar']);
-                $services->setSetting("website_description_de", $settings['website_description_de']);
-                $services->setSetting("website_description_pt", $settings['website_description_pt']);
                 $services->setSetting("website_keywords_en", $settings['website_keywords_en']);
-                $services->setSetting("website_keywords_fr", $settings['website_keywords_fr']);
-                $services->setSetting("website_keywords_es", $settings['website_keywords_es']);
-                $services->setSetting("website_keywords_ar", $settings['website_keywords_ar']);
-                $services->setSetting("website_keywords_de", $settings['website_keywords_de']);
-                $services->setSetting("website_keywords_pt", $settings['website_keywords_pt']);
                 $services->setSetting("contact_phone", $settings['contact_phone']);
                 $services->setSetting("contact_email", $settings['contact_email']);
                 $services->setSetting("contact_address", $settings['contact_address']);
@@ -454,12 +220,10 @@ class SettingsController extends Controller
                 $services->updateEnv("DATE_FORMAT_SIMPLE", $settings['date_format_simple']);
                 $services->updateEnv("DATE_FORMAT_DATE_ONLY", $settings['date_format_date_only']);
                 $services->updateEnv("DATE_TIMEZONE", $settings['date_timezone']);
-                $services->updateEnv("DEFAULT_LOCALE", $settings['default_locale']);
-                $services->updateEnv("APP_LOCALES", implode("|", $settings['app_locales']) . "|");
 
-                $this->addFlash('success', $translator->trans('The settings have been updated'));
+                $this->addFlash('success', 'The settings have been updated');
             } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+                $this->addFlash('error', 'The form contains invalid data');
             }
         } else {
             $form->get('app_environment')->setData($services->getEnv("APP_ENV"));
@@ -470,26 +234,13 @@ class SettingsController extends Controller
             $form->get('date_format_simple')->setData($services->getEnv("DATE_FORMAT_SIMPLE"));
             $form->get('date_format_date_only')->setData($services->getEnv("DATE_FORMAT_DATE_ONLY"));
             $form->get('date_timezone')->setData($services->getEnv("DATE_TIMEZONE"));
-            $form->get('default_locale')->setData($services->getEnv("DEFAULT_LOCALE"));
-            $form->get('app_locales')->setData(array_filter(explode("|", $services->getEnv("APP_LOCALES"))));
-
             $form->get('maintenance_mode_custom_message')->setData($services->getSetting("maintenance_mode_custom_message"));
             $form->get('website_name')->setData($services->getSetting("website_name"));
             $form->get('website_slug')->setData($services->getSetting("website_slug"));
             $form->get('website_url')->setData($services->getSetting("website_url"));
             $form->get('website_root_url')->setData($services->getSetting("website_root_url"));
             $form->get('website_description_en')->setData($services->getSetting("website_description_en"));
-            $form->get('website_description_fr')->setData($services->getSetting("website_description_fr"));
-            $form->get('website_description_es')->setData($services->getSetting("website_description_es"));
-            $form->get('website_description_ar')->setData($services->getSetting("website_description_ar"));
-            $form->get('website_description_de')->setData($services->getSetting("website_description_de"));
-            $form->get('website_description_pt')->setData($services->getSetting("website_description_pt"));
             $form->get('website_keywords_en')->setData($services->getSetting("website_keywords_en"));
-            $form->get('website_keywords_fr')->setData($services->getSetting("website_keywords_fr"));
-            $form->get('website_keywords_es')->setData($services->getSetting("website_keywords_es"));
-            $form->get('website_keywords_ar')->setData($services->getSetting("website_keywords_ar"));
-            $form->get('website_keywords_de')->setData($services->getSetting("website_keywords_de"));
-            $form->get('website_keywords_pt')->setData($services->getSetting("website_keywords_pt"));
             $form->get('contact_phone')->setData($services->getSetting("contact_phone"));
             $form->get('contact_email')->setData($services->getSetting("contact_email"));
             $form->get('contact_address')->setData($services->getSetting("contact_address"));
@@ -637,11 +388,10 @@ class SettingsController extends Controller
                 $services->setSetting("show_category_filter", $settings['show_category_filter']);
                 $services->setSetting("show_location_filter", $settings['show_location_filter']);
                 $services->setSetting("show_date_filter", $settings['show_date_filter']);
-                $services->setSetting("show_ticket_price_filter", $settings['show_ticket_price_filter']);
                 $services->setSetting("show_audience_filter", $settings['show_audience_filter']);
-                $this->addFlash('success', $translator->trans('The settings have been updated'));
+                $this->addFlash('success', 'The settings have been updated');
             } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+                $this->addFlash('error', 'The form contains invalid data');
             }
         } else {
             $form->get('events_per_page')->setData($services->getSetting("events_per_page"));
@@ -651,7 +401,6 @@ class SettingsController extends Controller
             $form->get('show_category_filter')->setData($services->getSetting("show_category_filter"));
             $form->get('show_location_filter')->setData($services->getSetting("show_location_filter"));
             $form->get('show_date_filter')->setData($services->getSetting("show_date_filter"));
-            $form->get('show_ticket_price_filter')->setData($services->getSetting("show_ticket_price_filter"));
             $form->get('show_audience_filter')->setData($services->getSetting("show_audience_filter"));
         }
 
@@ -703,9 +452,9 @@ class SettingsController extends Controller
                 $services->setSetting("venue_comments_enabled", $settings['venue_comments_enabled']);
                 $services->setSetting("facebook_app_id", $settings['facebook_app_id']);
                 $services->setSetting("disqus_subdomain", $settings['disqus_subdomain']);
-                $this->addFlash('success', $translator->trans('The settings have been updated'));
+                $this->addFlash('success', 'The settings have been updated');
             } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+                $this->addFlash('error', 'The form contains invalid data');
             }
         } else {
             $form->get('venue_comments_enabled')->setData($services->getSetting("venue_comments_enabled"));
@@ -767,9 +516,9 @@ class SettingsController extends Controller
                 $services->setSetting("blog_comments_enabled", $settings['blog_comments_enabled']);
                 $services->setSetting("facebook_app_id", $settings['facebook_app_id']);
                 $services->setSetting("disqus_subdomain", $settings['disqus_subdomain']);
-                $this->addFlash('success', $translator->trans('The settings have been updated'));
+                $this->addFlash('success', 'The settings have been updated');
             } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+                $this->addFlash('error', 'The form contains invalid data');
             }
         } else {
             $form->get('blog_posts_per_page')->setData($services->getSetting("blog_posts_per_page"));
@@ -790,7 +539,7 @@ class SettingsController extends Controller
     {
 
         if ($services->getEnv("DEMO_MODE") == "1") {
-            $this->addFlash('error', $translator->trans('This feature is disabled in demo mode', [], 'javascript'));
+            $this->addFlash('error', 'This feature is disabled in demo mode', [], 'javascript');
             return $this->redirectToRoute("dashboard_index");
         }
 
@@ -878,24 +627,24 @@ class SettingsController extends Controller
                 $services->setSetting("no_reply_email", $settings['no_reply_email']);
 
                 $dsnUrl = $settings['mail_server_transport'] . "://";
-                if (strlen($settings['mail_server_username'])) {
+                if ($settings['mail_server_username'] != '') {
 //                        $dsnUrl .= rawurlencode($settings['mail_server_username']);
                     $dsnUrl .= $settings['mail_server_username'];
                 }
-                if (strlen($settings['mail_server_password'])) {
+                if ($settings['mail_server_password'] != '') {
                     $dsnUrl .= ":" . rawurlencode($settings['mail_server_password']);
                 }
-                if (strlen($settings['mail_server_host'])) {
+                if ($settings['mail_server_host'] != '') {
                     $dsnUrl .= "@" . $settings['mail_server_host'];
                 }
-                if (strlen($settings['mail_server_port'])) {
+                if ($settings['mail_server_port'] != '') {
                     $dsnUrl .= ":" . $settings['mail_server_port'];
                 }
-                if (strlen($settings['mail_server_encryption'])) {
+                if ($settings['mail_server_encryption'] != '') {
                     $dsnUrl .= "/?encryption=" . $settings['mail_server_encryption'];
                 }
                 if ($settings['mail_server_transport'] == 'gmail') {
-                    if (strlen($settings['mail_server_encryption'])) {
+                    if ($settings['mail_server_encryption'] != '') {
                         $dsnUrl .= "&auth_mode=oauth";
                     } else {
                         $dsnUrl .= "?auth_mode=oauth";
@@ -903,9 +652,9 @@ class SettingsController extends Controller
                 }
                 $services->updateEnv("MAILER_URL", $dsnUrl);
 
-                $this->addFlash('success', $translator->trans('The settings have been updated'));
+                $this->addFlash('success', 'The settings have been updated');
             } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+                $this->addFlash('error', 'The form contains invalid data');
             }
         } else {
             $form->get('mail_server_transport')->setData($services->getSetting("mail_server_transport"));
@@ -930,20 +679,21 @@ class SettingsController extends Controller
     public function mailServerTest(Request $request, AppServices $services, Swift_Mailer $mailer, Twig_Environment $templating)
     {
 
-        $email = new Swift_Message($translator->trans("Mail server test email"));
+        $email = new Swift_Message("Mail server test email");
         $email->setFrom($services->getSetting('no_reply_email'), $services->getSetting('website_name'))
             ->setTo($request->query->get('email'))
             ->setBody($templating->render('Dashboard/Administrator/Settings/mail-server-test-email.html.twig'), 'text/html');
         try {
             $result = $mailer->send($email);
             if ($result == 0) {
-                $this->addFlash('danger', $translator->trans("The email could not be sent"));
+                $this->addFlash('danger', "The email could not be sent");
             } else {
-                $this->addFlash('success', $translator->trans("The test email has been sent, please check the inbox") . " " . $request->request->get('email'));
+                $this->addFlash('success', "The test email has been sent, please check the inbox" . " " . $request->request->get('email'));
             }
         } catch (Exception $e) {
-            $this->addFlash('danger', $translator->trans("The email could not be sent"));
+            $this->addFlash('danger', "The email could not be sent");
         }
+
         return $this->redirectToRoute('dashboard_administrator_settings_mail_server');
     }
 
@@ -991,9 +741,9 @@ class SettingsController extends Controller
                 $services->updateEnv("EWZ_RECAPTCHA_SITE_KEY", $settings['google_recaptcha_site_key']);
                 $services->updateEnv("EWZ_RECAPTCHA_SECRET", $settings['google_recaptcha_secret_key']);
 
-                $this->addFlash('success', $translator->trans('The settings have been updated'));
+                $this->addFlash('success', 'The settings have been updated');
             } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+                $this->addFlash('error', 'The form contains invalid data');
             }
         } else {
             $form->get('google_recaptcha_enabled')->setData($services->getSetting("google_recaptcha_enabled"));
@@ -1031,9 +781,9 @@ class SettingsController extends Controller
                 $settings = $form->getData();
                 $services->updateEnv("GOOGLE_MAPS_API_KEY", $settings['google_maps_api_key']);
 
-                $this->addFlash('success', $translator->trans('The settings have been updated'));
+                $this->addFlash('success', 'The settings have been updated');
             } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+                $this->addFlash('error', 'The form contains invalid data');
             }
         } else {
             $form->get('google_maps_api_key')->setData($services->getEnv("GOOGLE_MAPS_API_KEY"));
@@ -1112,9 +862,9 @@ class SettingsController extends Controller
                 $services->updateEnv("GOOGLE_ID", $settings['social_login_google_id']);
                 $services->updateEnv("GOOGLE_SECRET", $settings['social_login_google_secret']);
 
-                $this->addFlash('success', $translator->trans('The settings have been updated'));
+                $this->addFlash('success', 'The settings have been updated');
             } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+                $this->addFlash('error', 'The form contains invalid data');
             }
         } else {
             $form->get('social_login_facebook_enabled')->setData($services->getSetting("social_login_facebook_enabled"));
@@ -1154,7 +904,7 @@ class SettingsController extends Controller
         $menu = $services->getMenus(array("slug" => $slug))->getQuery()->getOneOrNullResult();
 
         if (!$menu) {
-            $this->addFlash('error', $translator->trans('The menu can not be found'));
+            $this->addFlash('error', 'The menu can not be found');
             return $this->redirectToRoute('dashboard_administrator_settings_menus');
         }
 
@@ -1168,11 +918,11 @@ class SettingsController extends Controller
                 }
                 $em->persist($menu);
                 $em->flush();
-                $this->addFlash('success', $translator->trans('The menu has been successfully updated'));
+                $this->addFlash('success', 'The menu has been successfully updated');
                 return $this->redirectToRoute('dashboard_administrator_settings_menus');
-            } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
             }
+
+            $this->addFlash('error', 'The form contains invalid data');
         }
 
         return $this->render('Dashboard/Administrator/Settings/menu-edit.html.twig', [

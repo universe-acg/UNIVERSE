@@ -80,7 +80,7 @@ class EventDate
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=10)
+     * @ORM\Column(type="string", length=255)
      */
     private $reference;
 
@@ -94,6 +94,8 @@ class EventDate
      * @ORM\Column(type="string", length=255)
      */
     private $title;
+
+
     /**
      * @var DateTime
      * @ORM\Column(type="datetime", nullable=true)
@@ -265,10 +267,8 @@ class EventDate
 
     public function isOnSale(): bool
     {
-        return (
-            $this->event->getOrganizer()->getUser()->isEnabled()
-            && $this->active && $this->event->getPublished() && (!$this->isSoldOut())
-        );
+        return $this->event->getOrganizer()->getUser()->isEnabled()
+            && $this->active && $this->event->getPublished();
     }
 
     public function canBeScannedBy($scanner): bool

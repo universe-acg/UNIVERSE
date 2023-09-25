@@ -8,86 +8,94 @@
                     {% include "Dashboard/sidebar.html.twig" %}
                 </aside>
                 <div class="col-xl-4 col-12">
-                    <h3>Create an organizer</h3>
+                    <h3>Create creator</h3>
                     <br>
                     {{ form_start(form, {'method': 'post', 'attr': {'novalidate': 'novalidate'}}) }}
                     {{ form_errors(form) }}
 
-                    <div class="form-group input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text border-0"> <i class="far fa-id-card"></i> </span>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text border-0"> <i class="far fa-id-card"></i> </span>
+                            </div>
+                            {{ form_widget(form.organizer.name, {'attr': {'placeholder': 'Enter organizer name'}}) }}
                         </div>
-                        {{ form_widget(form.organizer.name) }}
                         {{ form_errors(form.organizer.name) }}
+                        <small class="form-text text-muted">Please enter organizer name.</small>
                     </div>
 
-                    <div class="form-group input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text border-0"> <i class="fas fa-users"></i> </span>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text border-0"> <i class="fas fa-users"></i> </span>
+                            </div>
+                            {{ form_widget(form.organizer.category, {'attr': {'placeholder': 'Enter organizer category'}}) }}
                         </div>
-                        {{ form_widget(form.organizer.category) }}
                         {{ form_errors(form.organizer.category) }}
+                        <small class="form-text text-muted">Please enter organizer category.</small>
                     </div>
 
-                    <div class="form-group input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text border-0"> <i class="fas fa-user"></i> </span>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text border-0"> <i class="fas fa-user"></i> </span>
+                            </div>
+                            {{ form_widget(form.firstname, {'attr': {'placeholder': 'Enter your first name'}}) }}
                         </div>
-                        {{ form_widget(form.firstname) }}
                         {{ form_errors(form.firstname) }}
+                        <small class="form-text text-muted">Please enter your first name.</small>
                     </div>
-                    <div class="form-group input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text border-0"> <i class="fas fa-user"></i> </span>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text border-0"> <i class="fas fa-user"></i> </span>
+                            </div>
+                            {{ form_widget(form.lastname, {'attr': {'placeholder': 'Enter your last name'}}) }}
                         </div>
-                        {{ form_widget(form.lastname) }}
                         {{ form_errors(form.lastname) }}
+                        <small class="form-text text-muted">Please enter your last name.</small>
                     </div>
-                    <div class="form-group input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text border-0"> <i class="fas fa-user-tag"></i> </span>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text border-0"> <i class="fas fa-user-tag"></i> </span>
+                            </div>
+                            {{ form_widget(form.username, {'attr': {'placeholder': 'Choose a username'}}) }}
                         </div>
-                        {{ form_widget(form.username) }}
                         {{ form_errors(form.username) }}
+                        <small class="form-text text-muted">Please choose a username.</small>
                     </div>
-                    <div class="form-group input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text border-0"> <i class="fas fa-envelope"></i> </span>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text border-0"> <i class="fas fa-envelope"></i> </span>
+                            </div>
+                            {{ form_widget(form.email, {'attr': {'placeholder': 'Enter your email address'}}) }}
                         </div>
-                        {{ form_widget(form.email) }}
                         {{ form_errors(form.email) }}
+                        <small class="form-text text-muted">Please enter your email address.</small>
                     </div>
                     <p>Is this a multi-ticket user?</p>
-                    <div class="form-group input-group">
-                        <div class="input-group-prepend mr-3">
-                            <span class="input-group-text border-0"> <i class="fas fa-user"></i> </span>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend mr-3">
+                                <span class="input-group-text border-0"> <i class="fas fa-user"></i> </span>
+                            </div>
+                            {{ form_widget(form.isbusinessweek) }}
                         </div>
-                        {{ form_widget(form.isbusinessweek) }}
                         {{ form_errors(form.isbusinessweek) }}
-                    </div>
-                    <div class="form-group input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text border-0"> <i class="fas fa-user-lock"></i> </span>
-                        </div>
-                        {{ form_widget(form.plainPassword.first) }}
-                        {{ form_errors(form.plainPassword.first) }}
-                    </div>
-                    <div class="form-group input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text border-0"> <i class="fas fa-user-lock"></i> </span>
-                        </div>
-                        {{ form_widget(form.plainPassword.second) }}
-                        {{ form_errors(form.plainPassword.second) }}
+                        <small class="form-text text-muted">Please indicate if this is a multi-ticket user.</small>
                     </div>
                     <div class="form-group">
                         <button type="submit"
-                                class="btn btn-primary btn-block">{{ "Create Account" }}</button>
+                                class="btn btn-primary btn-block">Create
+                        </button>
                     </div>
+
                     {{ form_widget(form._token) }}
                     {{ form_end(form, {'render_rest': false}) }}
                 </div>
             </div>
-        </div>
         </div>
     </section>
 {% endblock %}

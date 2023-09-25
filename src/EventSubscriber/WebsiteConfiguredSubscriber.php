@@ -19,7 +19,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class WebsiteConfiguredSubscriber implements EventSubscriberInterface
 {
-
     private $params;
     private $router;
     private $kernelInterface;

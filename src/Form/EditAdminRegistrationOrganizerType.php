@@ -1,0 +1,85 @@
+<?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
+
+namespace App\Form;
+
+use App\Entity\User;
+use FOS\UserBundle\Form\Type\RegistrationFormType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class EditAdminRegistrationOrganizerType extends AbstractType
+{
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('firstname', TextType::class, [
+                'purify_html' => true,
+                'required' => true,
+                'attr' => array(
+                    'placeholder' => 'First name'
+                ),
+                'data' => $options['user'] ? $options['user']->getFirstname() : ''
+            ])
+            ->add('lastname', TextType::class, [
+                'purify_html' => true,
+                'required' => true,
+                'attr' => array(
+                    'placeholder' => 'Last name'
+                ),
+                'data' => $options['user'] ? $options['user']->getLastname() : ''
+            ])
+            ->add('username', TextType::class, [
+                'purify_html' => true,
+                'required' => true,
+                'attr' => array(
+                    'placeholder' => 'Username'
+                ),
+                'data' => $options['user'] ? $options['user']->getUsername() : ''
+            ])
+            ->add('email', EmailType::class, [
+                'purify_html' => true,
+                'required' => true,
+                'attr' => [
+                    'placeholder' => 'Email',
+                ],
+                'data' => $options['user'] ? $options['user']->getEmail() : ''
+            ])
+            ->add('isbusinessweek', ChoiceType::class, [
+                'label' => 'Are you a multi-ticket user?',
+                'required' => true,
+                'choices' => [
+                    'Yes' => true,
+                    'No' => false,
+                ],
+                'expanded' => true, // Display as radio buttons
+                'data' => $options['user'] ? $options['user']->isIsbusinessweek() : false
+            ])
+            ->add('organizer', OrganizerRegistrationType::class);
+    }
+
+    public function getParent()
+    {
+        return RegistrationFormType::class;
+    }
+
+    public function getBlockPrefix()
+    {
+        return 'app_user_registration';
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'data_class' => User::class, // Set the entity class for your user
+            'user' => null, // Pass the user object when creating the form
+        ]);
+    }
+}

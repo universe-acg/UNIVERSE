@@ -129,7 +129,7 @@
                                 {%- endif -%} #}
                                 <label for="{{ form.vars.id }}" {% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}>
                                     {%- if attr.placeholder is defined -%}
-                                        {{- translation_domain is same as(false) ? attr.placeholder : attr.placeholder|trans({}, translation_domain) -}}
+                                        {{- translation_domain is same as(false) ? attr.placeholder : attr.placeholder -}}
                                     {%- endif -%}
                                 </label>
                                 </{{ element|default('div') }}>
@@ -270,7 +270,7 @@
 
                                                                                         {{ widget|raw }}
                                                                                         <label{% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}>
-                                                                                            {{- label is not same as(false) ? (translation_domain is same as(false) ? label : label|trans({}, translation_domain)) -}}
+                                                                                            {{- label is not same as(false) ? (translation_domain is same as(false) ? label : label) -}}
                                                                                             {{- form_errors(form) -}}
                                                                                         </label>
                                                                                     {%- endif -%}
@@ -298,13 +298,13 @@
 
                                                                                         {% block form_errors -%}
                                                                                             {%- if errors|length > 0 -%}
-                                                                                                {#                                                                                                <span class="{% if form is not rootform %}invalid-feedback{% else %}alert alert-danger{% endif %} d-block"> #}
-                                                                                                {#                                                                                                {%- for error in errors -%} #}
-                                                                                                {#                                                                                                    <span class="d-block"> #}
-                                                                                                {#                                                                                                    <span class="form-error-message">{{ error.message }}</span> #}
-                                                                                                {#                                                                                                </span> #}
-                                                                                                {#                                                                                                {%- endfor -%} #}
-                                                                                                {#                                                                                            </span> #}
+                                                                                                <span class="{% if form is not rootform %}invalid-feedback{% else %}alert alert-danger{% endif %} d-block">
+                                                                                                                                                                                                {%- for error in errors -%}
+                                                                                                                                                                                                    <span class="d-block">
+                                                                                                                                                                                                    <span class="form-error-message">{{ error.message }}</span>
+                                                                                                                                                                                                </span>
+                                                                                                                                                                                                {%- endfor -%}
+                                                                                                                                                                                            </span>
                                                                                             {%- endif %}
                                                                                         {%- endblock form_errors %}
 

@@ -1,4 +1,7 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Repository;
 
@@ -12,38 +15,34 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Thread[]    findAll()
  * @method Thread[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ThreadRepository extends ServiceEntityRepository {
+class ThreadRepository extends ServiceEntityRepository
+{
 
-    public function __construct(ManagerRegistry $registry) {
+    public function __construct(ManagerRegistry $registry)
+    {
         parent::__construct($registry, Thread::class);
     }
 
-    // /**
-    //  * @return Thread[] Returns an array of Thread objects
-    //  */
-    /*
-      public function findByExampleField($value)
-      {
-      return $this->createQueryBuilder('t')
-      ->andWhere('t.exampleField = :val')
-      ->setParameter('val', $value)
-      ->orderBy('t.id', 'ASC')
-      ->setMaxResults(10)
-      ->getQuery()
-      ->getResult()
-      ;
-      }
-     */
 
-    /*
-      public function findOneBySomeField($value): ?Thread
-      {
-      return $this->createQueryBuilder('t')
-      ->andWhere('t.exampleField = :val')
-      ->setParameter('val', $value)
-      ->getQuery()
-      ->getOneOrNullResult()
-      ;
-      }
-     */
+    public function findByExampleField($value)
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.exampleField = :val')
+            ->setParameter('val', $value)
+            ->orderBy('t.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    public function findOneBySomeField($value): ?Thread
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.exampleField = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 }

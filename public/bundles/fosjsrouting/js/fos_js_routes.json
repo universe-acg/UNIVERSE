@@ -6,20 +6,8 @@
         [
           "text",
           "\/dashboard\/attendee\/bookevent"
-        ],
-        [
-          "variable",
-          "\/",
-          "en",
-          "_locale"
         ]
       ],
-      "defaults": {
-        "_locale": []
-      },
-      "requirements": {
-        "_locale": "en"
-      },
       "hosttokens": [],
       "methods": [],
       "schemes": []
@@ -29,61 +17,15 @@
         [
           "text",
           "\/api\/get-events"
-        ],
-        [
-          "variable",
-          "\/",
-          "en",
-          "_locale"
         ]
       ],
-      "defaults": {
-        "_locale": []
-      },
-      "requirements": {
-        "_locale": "en"
-      },
       "hosttokens": [],
       "methods": [],
       "schemes": []
     },
-    "bazinga_jstranslation_js": {
-      "tokens": [
-        [
-          "variable",
-          ".",
-          "js|json",
-          "_format"
-        ],
-        [
-          "variable",
-          "\/",
-          "[\\w]+",
-          "domain"
-        ],
-        [
-          "text",
-          "\/translations"
-        ]
-      ],
-      "defaults": {
-        "domain": "messages",
-        "_format": "js"
-      },
-      "requirements": {
-        "_format": "js|json",
-        "domain": "[\\w]+"
-      },
-      "hosttokens": [],
-      "methods": [
-        "GET"
-      ],
-      "schemes": []
-    }
-  },
-  "prefix": "",
-  "host": "127.0.0.1:8000",
-  "port": "",
-  "scheme": "http",
-  "locale": []
+    "prefix": "",
+    "host": "127.0.0.1:8000",
+    "port": "",
+    "scheme": "http"
+  }
 }

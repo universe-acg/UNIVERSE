@@ -16,37 +16,40 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class AdminRegistrationOrganizerType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('firstname', TextType::class, [
-                'purify_html' => true,
                 'required' => true,
-                'attr' => array(
-                    'placeholder' => 'First name'
-                )
+                'label' => 'First Name',
+                'attr' => [
+                    'placeholder' => 'Enter your first name',
+                ],
+                'help' => 'Please enter your first name.',
             ])
             ->add('lastname', TextType::class, [
-                'purify_html' => true,
                 'required' => true,
-                'attr' => array(
-                    'placeholder' => 'Last name'
-                )
+                'label' => 'Last Name',
+                'attr' => [
+                    'placeholder' => 'Enter your last name',
+                ],
+                'help' => 'Please enter your last name.',
             ])
             ->add('username', TextType::class, [
-                'purify_html' => true,
                 'required' => true,
-                'attr' => array(
-                    'placeholder' => 'Username'
-                )
+                'label' => 'Username',
+                'attr' => [
+                    'placeholder' => 'Choose a username',
+                ],
+                'help' => 'Choose a unique username.',
             ])
             ->add('email', EmailType::class, [
-                'purify_html' => true,
                 'required' => true,
+                'label' => 'Email',
                 'attr' => [
-                    'placeholder' => 'Email',
+                    'placeholder' => 'Enter your email address',
                 ],
+                'help' => 'Please enter your email address for communication.',
             ])
             ->add('isbusinessweek', ChoiceType::class, [
                 'label' => 'Are you a multi-ticket user?',
@@ -57,21 +60,29 @@ class AdminRegistrationOrganizerType extends AbstractType
                 ],
                 'expanded' => true, // Display as radio buttons
                 'data' => false, // Set the default value based on the user's status
+                'attr' => [
+                    'help' => 'Select "Yes" if you are a multi-ticket user, otherwise select "No".',
+                ],
             ])
-            ->add('plainPassword', RepeatedType::class, array(
+            ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'options' => array(
-                    'purify_html' => true,
+                'options' => [
                     'translation_domain' => 'FOSUserBundle',
-                    'attr' => array(
-                        'placeholder' => 'Password',
-                        'autocomplete' => 'new-password',
-                    ),
-                ),
-                'first_options' => array('attr' => array('placeholder' => 'form.password')),
-                'second_options' => array('attr' => array('placeholder' => 'form.password_confirmation')),
-                'invalid_message' => 'fos_user.password.mismatch',
-            ))
+                ],
+                'invalid_message' => 'Passwords do not match.',
+                'first_options' => [
+                    'attr' => [
+                        'placeholder' => 'Enter your password',
+                    ],
+                    'help' => 'Please enter your password.',
+                ],
+                'second_options' => [
+                    'attr' => [
+                        'placeholder' => 'Confirm your password',
+                    ],
+                    'help' => 'Please confirm your password.',
+                ],
+            ])
             ->add('organizer', OrganizerRegistrationType::class);
     }
 

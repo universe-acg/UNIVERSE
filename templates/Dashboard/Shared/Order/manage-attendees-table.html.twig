@@ -14,27 +14,7 @@
 
         {% for order in orders %}
             {% if true %}
-
                 <tr>
-                {#                <td class="text-center text-muted text-sm"> #}
-                {#                    {% if is_granted("ROLE_ADMINISTRATOR") %} #}
-                {#                        <a href="{{ path('dashboard_administrator_order_details', { reference : order.reference }) }}"> #}
-                {#                            {{ order.reference }} #}
-                {#                        </a> #}
-                {#                    {% elseif is_granted("ROLE_ORGANIZER") %} #}
-                {#                        <a href="{{ path('dashboard_organizer_order_details', { reference : order.reference }) }}"> #}
-                {#                            {{ order.reference }} #}
-                {#                        </a> #}
-                {#                    {% elseif is_granted("ROLE_POINTOFSALE") %} #}
-                {#                        <a href="{{ path('dashboard_pointofsale_order_details', { reference : order.reference }) }}"> #}
-                {#                            {{ order.reference }} #}
-                {#                        </a> #}
-                {#                    {% elseif is_granted("ROLE_ATTENDEE") %} #}
-                {#                        <a href="{{ path('dashboard_attendee_order_details', { reference : order.reference }) }}"> #}
-                {#                            {{ order.reference }} #}
-                {#                        </a> #}
-                {#                    {% endif %} #}
-                {#                </td> #}
                 {% if not is_granted("ROLE_POINTOFSALE") and not is_granted("ROLE_ATTENDEE") %}
                     <td class="text-sm">
                         {% if is_granted('ROLE_ADMINISTRATOR') %}
@@ -71,6 +51,12 @@
                        class="dropdown-item" target="_blank"><i
                                 class="dropdown-icon fas fa-ticket-alt fa-fw text-muted"></i> {{ "Print" }}
                     </a>
+                    {% if true %}
+                        <a href="{{ path('dashboard_organizer_attendees_details', {orderid: order.id, userslug: order.user.slug}) }}"
+                           class="dropdown-item">
+                            <i class="dropdown-icon fas fa-ticket-alt fa-fw text-muted"></i> {{ 'Attendance Details' }}
+                        </a>
+                    {% endif %}
                 {% endif %}
             {% endif %}
             </div>

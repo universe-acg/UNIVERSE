@@ -28,8 +28,7 @@ class LanguageFixtures extends Fixture implements FixtureGroupInterface
         foreach ($languages_en as $code => $languagename) {
             $language = new Language();
             $language->setCode($code);
-            $language->translate('en')->setName($languagename);
-            $language->mergeNewTranslations();
+            $language->setName($languagename);
             $manager->persist($language);
         }
 

@@ -28,7 +28,7 @@ class BlogPostCategoryController extends Controller
         } else {
             $blogpost = $services->getBlogPosts(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
             if (!$blogpost) {
-                $this->addFlash('error', $translator->trans('The blog post can not be found'));
+                $this->addFlash('error', 'The blog post can not be found');
                 return $services->redirectToReferer('blog_post');
             }
         }
@@ -41,14 +41,14 @@ class BlogPostCategoryController extends Controller
                 $em->persist($blogpost);
                 $em->flush();
                 if (!$slug) {
-                    $this->addFlash('success', $translator->trans('The blog post has been successfully created'));
+                    $this->addFlash('success', 'The blog post has been successfully created');
                 } else {
-                    $this->addFlash('success', $translator->trans('The blog post has been successfully updated'));
+                    $this->addFlash('success', 'The blog post has been successfully updated');
                 }
                 return $this->redirectToRoute("dashboard_organizer_index");
             }
 
-            $this->addFlash('error', $translator->trans('The form contains invalid data'));
+            $this->addFlash('error', 'The form contains invalid data');
         }
         return $this->render('Dashboard/Administrator/BlogPost/add-edit.html.twig', array(
             "blogpost" => $blogpost,

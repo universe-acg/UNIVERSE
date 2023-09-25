@@ -1,22 +1,22 @@
 {% trans_default_domain 'FOSCommentBundle' %}
 
 {#
+This file is part of the FOSCommentBundle package.
 
- This file is part of the FOSCommentBundle package.
+(c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
 
- (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
-
- This source file is subject to the MIT license that is bundled
- with this source code in the file LICENSE.
-
+This source file is subject to the MIT license that is bundled
+with this source code in the file LICENSE.
 #}
 
 {% block fos_comment_comment %}
-    <div id="fos_comment_{{ comment.id }}" class="fos_comment_comment_show comment mt-3 mb-3 comment-depth-{{ depth }} fos_comment_comment_depth_{{ depth }}" {% if parent is defined and parent is not null %}data-parent="{{ parent.id }}"{% endif %}>
+    <div id="fos_comment_{{ comment.id }}"
+         class="fos_comment_comment_show comment mt-3 mb-3 comment-depth-{{ depth }} fos_comment_comment_depth_{{ depth }}"
+         {% if parent is defined and parent is not null %}data-parent="{{ parent.id }}"{% endif %}>
 
-        {% include "Global/user-avatar.html.twig" with { user: comment.author, showusernametooltip: true } %}
-
-        <div class="fos_comment_comment_metas display-inline">
+        <div
+                style="display: flex; justify-content: center; justify-items: center; align-items: center;"
+                class="fos_comment_comment_metas display-inline">
 
             {% block fos_comment_comment_metas %}
                 {% block fos_comment_comment_metas_authorline %}
@@ -24,43 +24,49 @@
                         {% if comment is fos_comment_in_state(constant('FOS\\CommentBundle\\Model\\CommentInterface::STATE_DELETED')) %}
                             {% trans from 'FOSCommentBundle' %}fos_comment_comment_deleted{% endtrans %}
                         {% else %}
-                            {{ comment.authorName }}
+                            {% include "Global/user-avatar.html.twig" with { user: comment.author, showusernametooltip: true } %}
+                            {#                            {{ comment.authorName }} #}
                         {% endif %}
                     </h6>
-                    <small class="text-muted display-inline ml-3">
-                        {{ comment.createdAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}
-                    </small>
                 {% endblock fos_comment_comment_metas_authorline %}
 
                 {% block fos_comment_comment_metas_edit %}
                     {% if fos_comment_can_edit_comment(comment) %}
-                        <button data-container="#fos_comment_comment_body_{{ comment.id }}" data-url="{{ url("fos_comment_edit_thread_comment", {"id": comment.thread.id, "commentId": comment.id}) }}" class="fos_comment_comment_edit_show_form btn btn-sm btn-link display-inline ml-3"><i class="far fa-edit"></i> {% trans from 'FOSCommentBundle' %}fos_comment_comment_edit{% endtrans %}</button>
+                        <button data-container="#fos_comment_comment_body_{{ comment.id }}"
+                                data-url="{{ url("fos_comment_edit_thread_comment", {"id": comment.thread.id, "commentId": comment.id}) }}"
+                                class="fos_comment_comment_edit_show_form btn btn-sm btn-link display-inline ml-3"><i
+                                    class="far fa-edit"></i> {% trans from 'FOSCommentBundle' %}fos_comment_comment_edit{% endtrans %}
+                        </button>
                     {% endif %}
                 {% endblock fos_comment_comment_metas_edit %}
 
                 {% block fos_comment_comment_metas_delete %}
-                    {% if fos_comment_can_delete_comment(comment) %}
-                        {% if comment is fos_comment_in_state(constant('FOS\\CommentBundle\\Model\\CommentInterface::STATE_DELETED')) %}
-                            {# undelete #}
-                            <button data-url="{{ url("fos_comment_remove_thread_comment", {"id": comment.thread.id, "commentId": comment.id, "value": constant('FOS\\CommentBundle\\Model\\CommentInterface::STATE_VISIBLE') }) }}" class="fos_comment_comment_remove btn btn-sm text-success btn-link display-inline ml-3"><i class="fas fa-comment"></i> {% trans from 'FOSCommentBundle' %}fos_comment_comment_undelete{% endtrans %}</button>
-                        {% else %}
-                            {# delete #}
-                            <button data-url="{{ url("fos_comment_remove_thread_comment", {"id": comment.thread.id, "commentId": comment.id, "value":  constant('FOS\\CommentBundle\\Model\\CommentInterface::STATE_DELETED')}) }}" class="fos_comment_comment_remove btn btn-sm text-danger display-inline ml-3"><i class="fas fa-comment-slash"></i> {% trans from 'FOSCommentBundle' %}fos_comment_comment_delete{% endtrans %}</button>
-                        {% endif %}
+                    {% if  is_granted('ROLE_USER') and app.user.username == comment.author.username %}
+                        <a href="#" class="delete-comment-btn btn btn-sm text-danger display-inline ml-3"
+                           data-comment-id="{{ comment.id }}">
+                            <i class="fas fa-comment-slash"></i>
+                        </a>
                     {% endif %}
                 {% endblock fos_comment_comment_metas_delete %}
 
                 {% block fos_comment_comment_metas_voting %}
                     {% if fos_comment_can_vote(comment) %}
                         <div class="fos_comment_comment_voting display-inline">
-                            <button data-url="{{ url("fos_comment_new_thread_comment_votes", {"id": comment.thread.id, "commentId": comment.id, "value": 1}) }}" class="fos_comment_comment_vote btn btn-sm btn-link display-inline ml-3"><i class="fas fa-thumbs-up"></i></button>
-                            <button data-url="{{ url("fos_comment_new_thread_comment_votes", {"id": comment.thread.id, "commentId": comment.id, "value": -1}) }}" class="fos_comment_comment_vote btn btn-sm btn-link display-inline ml-3"><i class="fas fa-thumbs-down"></i></button>
-                                {% if comment.score > 0 %}
-                                <span class="fos_comment_comment_score badge badge-success display-inline ml-3" id="fos_comment_score_{{ comment.id }}">{{ comment.score }}</span>
+                            <button data-url="{{ url("fos_comment_new_thread_comment_votes", {"id": comment.thread.id, "commentId": comment.id, "value": 1}) }}"
+                                    class="fos_comment_comment_vote btn btn-sm btn-link display-inline ml-3"><i
+                                        class="fas fa-thumbs-up"></i></button>
+                            <button data-url="{{ url("fos_comment_new_thread_comment_votes", {"id": comment.thread.id, "commentId": comment.id, "value": -1}) }}"
+                                    class="fos_comment_comment_vote btn btn-sm btn-link display-inline ml-3"><i
+                                        class="fas fa-thumbs-down"></i></button>
+                            {% if comment.score > 0 %}
+                                <span class="fos_comment_comment_score badge badge-success display-inline ml-3"
+                                      id="fos_comment_score_{{ comment.id }}">{{ comment.score }}</span>
                             {% elseif comment.score < 0 %}
-                                <span class="fos_comment_comment_score badge badge-danger display-inline ml-3" id="fos_comment_score_{{ comment.id }}">{{ comment.score }}</span>
+                                <span class="fos_comment_comment_score badge badge-danger display-inline ml-3"
+                                      id="fos_comment_score_{{ comment.id }}">{{ comment.score }}</span>
                             {% else %}
-                                <span class="fos_comment_comment_score badge badge-info display-inline ml-3" id="fos_comment_score_{{ comment.id }}">{{ comment.score }}</span>
+                                <span class="fos_comment_comment_score badge badge-info display-inline ml-3"
+                                      id="fos_comment_score_{{ comment.id }}">{{ comment.score }}</span>
                             {% endif %}
                         </div>
                     {% endif %}
@@ -84,13 +90,19 @@
                 {% endif %}
             {% endblock fos_comment_comment_body %}
         </div>
-
+        <small class="text-muted display-inline ml-3">
+            {{ comment.createdAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format ~ ' a') }}
+        </small>
         {% block fos_comment_comment_children %}
             {% if view is not same as('flat') %}
                 {% if fos_comment_can_comment(comment) %}
                     <div class="fos_comment_comment_reply mt-3 mb-3">
                         {% block fos_comment_comment_reply %}
-                            <button data-url="{{ url('fos_comment_new_thread_comments', {"id": comment.thread.id}) }}" data-name="{{ comment.authorName }}" data-parent-id="{{ comment.id }}" class="fos_comment_comment_reply_show_form btn btn-sm btn-link"><i class="fas fa-reply"></i> {% trans from 'FOSCommentBundle' %}fos_comment_comment_show_reply{% endtrans %}</button>
+                            <button data-url="{{ url('fos_comment_new_thread_comments', {"id": comment.thread.id}) }}"
+                                    data-name="{{ comment.authorName }}" data-parent-id="{{ comment.id }}"
+                                    class="fos_comment_comment_reply_show_form btn btn-sm btn-link"><i
+                                        class="fas fa-reply"></i> {% trans from 'FOSCommentBundle' %}fos_comment_comment_show_reply{% endtrans %}
+                            </button>
                         {% endblock fos_comment_comment_reply %}
                     </div>
                 {% endif %}
@@ -107,4 +119,26 @@
         {% endblock fos_comment_comment_children %}
 
     </div>
+    <script>
+        $(document).ready(function () {
+            $('.delete-comment-btn').on('click', function (event) {
+                event.preventDefault();
+                // Get the comment ID from the data attribute
+                var commentId = $(this).data('comment-id');
+                var commentBlock = $('#fos_comment_' + commentId);
+                console.log(commentBlock);
+                // Make an AJAX request to delete the comment
+                $.ajax({
+                    type: 'POST', // You can use 'DELETE' if your API supports it
+                    url: 'https://universeacg.xyz/delete-comment/' + commentId, // Replace with your actual API endpoint
+                    success: function (data) {
+                        commentBlock.remove();
+                    },
+                    error: function (error) {
+                        // Handle errors here
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock fos_comment_comment %}

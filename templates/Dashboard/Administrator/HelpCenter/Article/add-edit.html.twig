@@ -8,7 +8,7 @@
 
 {% block content %}
 
-    {% set navigation = [{ "dashboard_index": ('Dashboard' | trans),  "dashboard_administrator_help_center_article": ('Manage help center articles' | trans), "current":(pagetitle) }] %}
+    {% set navigation = [{ "dashboard_index": ('Dashboard' ),  "dashboard_administrator_help_center_article": ('Manage help center articles' ), "current":(pagetitle) }] %}
     {% include "Global/navigation.html.twig" with navigation %}
 
     <section class="section-content padding-y bg-white">

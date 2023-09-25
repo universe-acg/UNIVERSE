@@ -1,6 +1,6 @@
 {% extends "Global/layout.html.twig" %}
 
-{% block title %}{{ services.getSetting("website_description_" ~ (app.request.get('_locale') ? app.request.get('_locale') : app.request.defaultLocale)) }}{% endblock %}
+ {% block title %}{{ services.getSetting("website_description_" ~ "en") }}{% endblock %}
 
 {% block content %}
 
@@ -18,22 +18,13 @@
                                     <div class="col-md-12">
 
                                         <h2 class="text-light mb-4">{{ event.name }}</h2>
-
                                         {% if event.getFirstOnSaleEventDate %}
-                                            {#                                            <h5 class="text-light mb-2"><i class="fas fa-map-marker-alt fa-fw"></i> #}
-                                            {#                                                {% if event.getFirstOnSaleEventDate.venue %} #}
-                                            {#                                                    {{ event.getFirstOnSaleEventDate.venue.name }}: {{ event.getFirstOnSaleEventDate.venue.city ~ ', ' ~ event.getFirstOnSaleEventDate.venue.country.name }} #}
-                                            {#                                                {% else %} #}
-                                            {#                                                    {{ "Online" }} #}
-                                            {#                                                {% endif %} #}
-                                            {#                                            </h5> #}
                                             {% if event.getFirstOnSaleEventDate.startdate %}
-                                                <h5 class="text-light mb-4"><i
-                                                            class="fas fa-clock fa-fw"></i> {{ event.getFirstOnSaleEventDate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}
+                                                <h5 class="text-light mb-4"><i class="fas fa-clock fa-fw"></i>
+                                                    {{ event.getFirstOnSaleEventDate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format ~ ' a') }}
                                                 </h5>
                                             {% endif %}
                                         {% endif %}
-
                                         <a href="{{ path('event', { slug : event.slug }) }}"
                                            class="btn btn-light btn-lg"><i
                                                     class="fas fa-ticket-alt fa-fw"></i> {{ "Book event" }}</a>
@@ -236,7 +227,7 @@
                 <div class="row-sm"
                      style="display: flex; justify-content: center; align-content: center; align-items: center; margin: auto">
                     {% for category in services.getCategories({ "featured": true, "limit": services.getSetting('homepage_categories_number') }).getQuery().getResult() %}
-                        <div class="col-md-4 col-sm-3">
+                        <div class="col-md-3 col-sm-3">
                             {% include "Global/category-card.html.twig" %}
                         </div>
                     {% endfor %}

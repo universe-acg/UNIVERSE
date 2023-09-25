@@ -5,6 +5,10 @@
 
 namespace App\Controller\Dashboard\Shared;
 
+use App\Repository\EventDateRepository;
+use App\Repository\EventRepository;
+use App\Repository\OrderRepository;
+use App\Repository\UserRepository;
 use App\Service\AppServices;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -17,9 +21,7 @@ use Payum\Core\Request\GetHumanStatus;
 use Swift_Mailer;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Asset\Packages;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\UrlHelper;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Twig_Environment;
@@ -103,9 +105,8 @@ class OrderController extends Controller
     /**
      * @Route("/organizer/manage-attendees", name="dashboard_organizer_attendees")
      */
-    public function attendees(Request $request, AppServices $services, PaginatorInterface $paginator, AuthorizationCheckerInterface $authChecker)
+    public function attendees(Request $request, AppServices $services, PaginatorInterface $paginator, AuthorizationCheckerInterface $authChecker, OrderRepository $orderRepository, EventRepository $eventRepository)
     {
-
 //$upcomingtickets = ($request->query->get('upcomingtickets')) == "" ? 1 : intval($request->query->get('upcomingtickets'));
         $reference = ($request->query->get('reference')) == "" ? "all" : $request->query->get('reference');
         $event = ($request->query->get('event')) == "" ? "all" : $request->query->get('event');
@@ -115,7 +116,43 @@ class OrderController extends Controller
         $organizer = ($request->query->get('organizer')) == "" ? "all" : $request->query->get('organizer');
         $datefrom = ($request->query->get('datefrom')) == "" ? "all" : $request->query->get('datefrom');
         $dateto = ($request->query->get('dateto')) == "" ? "all" : $request->query->get('dateto');
-        $status = ($request->query->get('status')) == "" ? "all" : $request->query->get('status');
+        $status = 1;
+        $paymentgateway = ($request->query->get('paymentgateway')) == "" ? "all" : $request->query->get('paymentgateway');
+
+        $authChecker->isGranted("ROLE_ATTENDEE") ? $status = "all" : $upcomingtickets = "all";
+
+        $ordersQuery = $services->getOrders(array("reference" => $reference, "event" => $event, "eventdate" => $eventdate, "eventticket" => $eventticket, "user" => $user, "organizer" => $organizer, "datefrom" => $datefrom, "dateto" => $dateto, "status" => $status, "paymentgateway" => $paymentgateway))->getQuery();
+
+// Export current orders query results into Excel / Csv
+
+        $ordersPagination = $paginator->paginate($ordersQuery, $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
+
+        $fullevent = $eventRepository->findBySlug($event);
+        $eventname = $fullevent->getName();
+        $ismultiticketevent = $fullevent->getOrganizer()->getUser()->isIsbusinessweek() ?: false;
+
+        return $this->render('Dashboard/Shared/Order/attendees.html.twig', [
+            'orders' => $ordersPagination,
+            'title' => $eventname,
+            'ismultiticketevent' => $ismultiticketevent
+        ]);
+    }
+
+    /**
+     * @Route("/administrator/manage-attendees", name="dashboard_administrator_attendees")
+     */
+    public function attendeesAdmin(Request $request, AppServices $services, PaginatorInterface $paginator, AuthorizationCheckerInterface $authChecker)
+    {
+//$upcomingtickets = ($request->query->get('upcomingtickets')) == "" ? 1 : intval($request->query->get('upcomingtickets'));
+        $reference = ($request->query->get('reference')) == "" ? "all" : $request->query->get('reference');
+        $event = ($request->query->get('event')) == "" ? "all" : $request->query->get('event');
+        $eventdate = ($request->query->get('eventdate')) == "" ? "all" : $request->query->get('eventdate');
+        $eventticket = ($request->query->get('eventticket')) == "" ? "all" : $request->query->get('eventticket');
+        $user = ($request->query->get('user')) == "" ? "all" : $request->query->get('user');
+        $organizer = ($request->query->get('organizer')) == "" ? "all" : $request->query->get('organizer');
+        $datefrom = ($request->query->get('datefrom')) == "" ? "all" : $request->query->get('datefrom');
+        $dateto = ($request->query->get('dateto')) == "" ? "all" : $request->query->get('dateto');
+        $status = 1;
         $paymentgateway = ($request->query->get('paymentgateway')) == "" ? "all" : $request->query->get('paymentgateway');
 
         $authChecker->isGranted("ROLE_ATTENDEE") ? $status = "all" : $upcomingtickets = "all";
@@ -127,6 +164,33 @@ class OrderController extends Controller
         $ordersPagination = $paginator->paginate($ordersQuery, $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
 
         return $this->render('Dashboard/Shared/Order/attendees.html.twig', [
+            'orders' => $ordersPagination,
+        ]);
+    }
+
+    /**
+     * @Route("/administrator/manage-attendees-details/{eventid}", name="dashboard_administrator_attendees_details")
+     */
+    public function attendeesAdminDetails(Request $request, AppServices $services, PaginatorInterface $paginator, AuthorizationCheckerInterface $authChecker)
+    {
+        return $this->render('Dashboard/Shared/Order/attendees-details.html.twig', [
+            'orders' => $ordersPagination,
+        ]);
+    }
+
+
+    /**
+     * @Route("/organizer/manage-attendees-details/{orderid}/{userslug}", name="dashboard_organizer_attendees_details")
+     */
+    public function attendeesAdminDetailsasOrganizer($orderid, $userslug, OrderRepository $orderRepository, EventRepository $eventRepository, UserRepository $userRepository)
+    {
+        $order = $orderRepository->find($orderid);
+        $user = $userRepository->getBySlug($userslug);
+//        dump($eventRepository->findById($order->getOrderelements()[0]->getEventticket()->getEventdate()->getEvent()->getId()));
+        dump($user);
+        die();
+
+        return $this->render('Dashboard/Shared/Order/attendees-details.html.twig', [
             'orders' => $ordersPagination,
         ]);
     }
@@ -185,7 +249,7 @@ class OrderController extends Controller
 
         $services->handleCanceledPayment($order->getReference(), $request->query->get('note'));
 
-        $this->addFlash('error', 'The ticket has been canceled');
+        $this->addFlash('notice', 'The ticket has been canceled');
 
         return $services->redirectToReferer('orders');
     }
@@ -327,7 +391,7 @@ class OrderController extends Controller
     /**
      * @Route("/print-tickets/{reference}", name="dashboard_tickets_print")
      */
-    public function printTickets($reference, Request $request, AppServices $services, UrlHelper $urlHelper, Packages $assetsManager)
+    public function printTickets($reference, Request $request, AppServices $services, EventDateRepository $eventDateRepository)
     {
         $order = $services->getOrders(array("reference" => $reference))->getQuery()->getOneOrNullResult();
         $eventlink = $request->query->get('link');
@@ -338,6 +402,7 @@ class OrderController extends Controller
         }
 
         $eventDateTicketReference = $request->query->get('event', 'all');
+        $startdate = $eventDateRepository->findById($order->getOrderelements()[0]->getEventticket()->getEventdate()->getId())->getStartDate();
 
         $pdfOptions = new Options();
         $pdfOptions->set('defaultFont', 'Arial');
@@ -356,6 +421,7 @@ class OrderController extends Controller
 
         $html = $this->renderView('Dashboard/Shared/Order/ticket-pdf.html.twig', [
             'order' => $order,
+            'startdate' => $startdate,
             'eventDateTicketReference' => $eventDateTicketReference,
             'qrCodeImage' => $qrCodeBase64,
         ]);

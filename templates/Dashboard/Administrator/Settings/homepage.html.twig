@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    {% set navigation = [{ "dashboard_index": ('Dashboard' | trans), "current":(pagetitle) }] %}
+    {% set navigation = [{ "dashboard_index": ('Dashboard' ), "current":(pagetitle) }] %}
     {% include "Global/navigation.html.twig" with navigation %}
 
     <section class="section-content padding-y bg-white">
@@ -29,7 +29,6 @@
                             </div>
                             <div id="custom">
                                 {{ form_row(form.customBackgroundFile) }}
-                                {{ form_row(form.translations) }}
                                 {{ form_row(form.show_search_box) }}
                             </div>
                             {{ form_end(form) }}

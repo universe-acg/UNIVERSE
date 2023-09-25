@@ -10,7 +10,7 @@
     {#        <meta name="keywords" #}
     {#              content="{{ event.name }}, {{ event.category.name }}, {% for tag in event.tags|split(',') %}{{ tag }}{{ not loop.last ? ', ' : '' }}{% endfor %}"/> #}
     {#    {% else %} #}
-    {#        <meta name="keywords" content="{{ services.getSetting("website_keywords_" ~ app.request.get('_locale')) }}"/> #}
+    {#        <meta name="keywords" content="{{ services.getSetting("website_keywords_" ) }}"/> #}
     {#    {% endif %} #}
     {#    <meta property="og:title" content="{{ event.name }}"/> #}
     {#    <meta property="og:image" #}
@@ -325,8 +325,8 @@
                                                 {% endif %}
                                             {% endif %}
                                         {% else %}
-                                            <a href="{{ path('fos_user_security_login')~'?_target_path='~app.request.getPathInfo }}"
-                                               class="btn btn-outline-primary"><i
+                                            <a href="{{ path('fos_user_security_login') ~ '?_target_path=' ~ app.request.getPathInfo }}">
+                                                class="btn btn-outline-primary"><i
                                                         class="far fa-star"></i> {{ "Add your review" }}</a>
                                         {% endif %}
                                     </div>
@@ -453,15 +453,6 @@
 
                                     <div id="event-dates-calendar" class="mt-5"
                                          data-event-dates="{{ eventDatesCalendar|json_encode() }}"></div>
-                                    {% if is_granted('ROLE_ATTENDEE') %}
-                                        {#                                        <button id="add-to-cart-button" type="button" #}
-                                        {#                                                class="btn btn-primary btn-block"><i #}
-                                        {#                                                    class="fas fa-ticket-alt"></i> {{ "Book a ticket" }}</button> #}
-                                        {#                                        <br> #}
-                                        {#                                                class="btn btn-primary btn-block mt-3 mb-3"><i #}
-                                        {#                                                    class="fas fa-cart-plus"></i> {{ "Book" }}</button> #}
-                                    {% endif %}
-
                                 {% endif %}
 
 
@@ -671,9 +662,9 @@
                                                             </a>
                                                             {% include "Dashboard/Attendee/Cart/add-to-cart-modal.html.twig" with { eventdate: eventDate } %}
                                                         {% else %}
-                                                            <a href="{{ path('fos_user_security_login')~'?_target_path='~app.request.getPathInfo }}"
-                                                               class="btn btn-primary btn-block"><i
-                                                                        class="fas fa-ticket-alt"></i> {{ "Book" }}
+                                                            <a href="{{ path('fos_user_security_login') ~ '?_target_path=' ~ app.request.getPathInfo }}"
+                                                               class="btn btn-primary btn-block">
+                                                                <i class="fas fa-ticket-alt"></i> {{ "Book" }}
                                                             </a>
                                                         {% endif %}
                                                     {% endif %}
@@ -821,7 +812,6 @@
                                     {% endif %}
                                 {% endif %}
                             {% endif %}
-
                             {#                            {% if services.getSetting("newsletter_enabled") == "yes" and services.getSetting("mailchimp_api_key") and services.getSetting("mailchimp_list_id") %} #}
                             {#                                <div class="mt-5"> #}
                             {#                                    {% include "Global/newsletter-box.html.twig" %} #}
@@ -830,46 +820,44 @@
                         </div>
                     </div>
                 </div>
+                <div class="p-5">
+                    <div class="mt-5">
+                        {% include '@FOSComment/Thread/async.html.twig' with {'id':event.slug} %}
+                    </div>
 
+                    {% set similareventscriteria = {"category" : event.category.slug, "limit" : 8} %}
+                    {% set similarevents = services.getEvents(similareventscriteria).getQuery().getResult() %}
+                    {% if similarevents %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h3 class="mt-5 mb-4 text-center">{{ "Similar events" }}</h3>
+                                <div class="owl-init owl-carousel" data-margin="5" data-items="4" data-dots="false"
+                                     data-nav="true" data-autoplay="true" data-loop="false">
+                                    {% for event in similarevents %}
+                                        {% include "Global/similar-event-card.html.twig" with {event: event} %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
 
-            {% set othereventsbythisorganizer = services.getEvents({"organizer" : event.organizer.slug, "limit" : 8, "otherthan": event.slug}).getQuery().getResult() %}
-            {% if othereventsbythisorganizer|length > 0 %}
-                <div class="row">
-                    <div class="col-12">
-                        <h3 class="mt-5 mb-4 text-center">{{ "Other events by %organizername%" {'%organizername%' : event.organizer.name} }}</h3>
-                        <div class="owl-init owl-carousel" data-margin="15" data-items="4" data-dots="false"
-                             data-nav="true" data-autoplay="true" data-loop="false">
-                            {% for event in othereventsbythisorganizer %}
-                                {% include "Global/event-card.html.twig" with {event: event} %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-
-            {#            {% set similareventscriteria = {"category" : event.category.slug, "limit" : 8, "otherthan": event.slug} %} #}
-            {#            #}{#            {% if event.getFirstVenue %} #}
-            {#            #}{#                {% set similareventscriteria = similareventscriteria|merge({"country" : event.getFirstVenue.country.slug}) %} #}
-            {#            #}{#            {% endif %} #}
-            {#            {% set similarevents = services.getEvents(similareventscriteria).getQuery().getResult() %} #}
-
-            {#            {% if similarevents|length > 0 %} #}
+            {#            {% set othereventsbythisorganizer = services.getEvents({"organizer" : event.organizer.slug, "limit" : 8, "otherthan": event.slug}).getQuery().getResult() %} #}
+            {#            {% if othereventsbythisorganizer|length > 0 %} #}
             {#                <div class="row"> #}
             {#                    <div class="col-12"> #}
-            {#                        <h3 class="mt-5 mb-4 text-center">{{ "Similar events" }}</h3> #}
+            {#                        <h3 class="mt-5 mb-4 text-center">{{ "Other events by " ~ event.organizer.name }}</h3> #}
             {#                        <div class="owl-init owl-carousel" data-margin="15" data-items="4" data-dots="false" #}
             {#                             data-nav="true" data-autoplay="true" data-loop="false"> #}
-            {#                            {% for event in similarevents %} #}
+            {#                            {% for event in othereventsbythisorganizer %} #}
             {#                                {% include "Global/event-card.html.twig" with {event: event} %} #}
             {#                            {% endfor %} #}
             {#                        </div> #}
             {#                    </div> #}
             {#                </div> #}
             {#            {% endif %} #}
-
         </div>
-
     </section>
 
 {% endblock %}

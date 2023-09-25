@@ -1,12 +1,10 @@
 {#
+This file is part of the FOSCommentBundle package.
 
- This file is part of the FOSCommentBundle package.
+(c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
 
- (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
-
- This source file is subject to the MIT license that is bundled
- with this source code in the file LICENSE.
-
+This source file is subject to the MIT license that is bundled
+with this source code in the file LICENSE.
 #}
 
 {% trans_default_domain 'FOSCommentBundle' %}
@@ -22,7 +20,7 @@
     <div class="fos_comment_comment_form_holder mt-4 mb-4">
         {% block fos_comment_form_title %}
             {% if first %}
-                <h4 class="mb-4">{{ "fos_comment_comment_new_headline_first" }}</h4>
+                <h4 class="mb-4">{{ "Become the conversation starter ;) " }}</h4>
             {% elseif parent is not null %}
                 <h4 class="mb-4">{% trans with {"%name%": parent.authorName } from 'FOSCommentBundle' %}fos_comment_comment_reply_reply_to{% endtrans %}</h4>
             {% else %}
@@ -31,7 +29,9 @@
         {% endblock %}
 
         {% block fos_comment_comment_new_form %}
-            <form class="fos_comment_comment_new_form" action="{{ url('fos_comment_post_thread_comments', url_parameters) }}" data-parent="{{ parent.id|default() }}" method="POST">
+            <form class="fos_comment_comment_new_form"
+                  action="{{ url('fos_comment_post_thread_comments', url_parameters) }}"
+                  data-parent="{{ parent.id|default() }}" method="POST">
 
                 {% block fos_comment_form_fields %}
                     <div class="fos_comment_form_errors">
@@ -46,9 +46,13 @@
                 <div class="fos_comment_submit mt-3">
                     {% block fos_comment_form_submit %}
                         {% if parent is not null %}
-                            <button type="button" class="fos_comment_comment_reply_cancel btn btn-sm btn-link mt-2"><i class="far fa-window-close"></i> {% trans from 'FOSCommentBundle' %}fos_comment_comment_reply_cancel{% endtrans %}</button>
+                            <button type="button" class="fos_comment_comment_reply_cancel btn btn-sm btn-link mt-2"><i
+                                        class="far fa-window-close"></i> {% trans from 'FOSCommentBundle' %}fos_comment_comment_reply_cancel{% endtrans %}
+                            </button>
                         {% endif %}
-                        <button type="submit" class="btn btn-sm btn-link mt-2"><i class="far fa-comment-dots"></i> {% trans from 'FOSCommentBundle' %}fos_comment_comment_new_submit{% endtrans %}</button>
+                        <button type="submit" class="btn btn-sm btn-link mt-2"><i
+                                    class="far fa-comment-dots"></i> {% trans from 'FOSCommentBundle' %}Post{% endtrans %}
+                        </button>
                     {% endblock %}
                 </div>
 

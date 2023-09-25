@@ -24,7 +24,7 @@ class ReviewController extends Controller
 
         $event = $services->getEvents(array("slug" => $slug, "elapsed" => "all"))->getQuery()->getOneOrNullResult();
         if (!$event) {
-            $this->addFlash('error', $translator->trans('The event not be found'));
+            $this->addFlash('error', 'the event could not be found');
             return $services->redirectToReferer("events");
         }
 

@@ -23,7 +23,7 @@ class AudienceController extends Controller
     {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
 
-        $audiences = $paginator->paginate($services->getAudiences(array('keyword' => $keyword, 'hidden' => 'all', 'sort' => 'a.createdAt', 'order' => 'DESC')), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
+        $audiences = $paginator->paginate($services->getAudiences(array('keyword' => $keyword, 'hidden' => 'all', 'sort' => 'createdAt', 'order' => 'DESC')), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
 
         return $this->render('Dashboard/Administrator/Audience/index.html.twig', [
             'audiences' => $audiences,
@@ -43,7 +43,7 @@ class AudienceController extends Controller
         } else {
             $audience = $services->getAudiences(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
             if (!$audience) {
-                $this->addFlash('error', $translator->trans('The audience can not be found'));
+                $this->addFlash('error', 'The audience can not be found');
                 return $services->redirectToReferer('audience');
             }
         }
@@ -56,13 +56,13 @@ class AudienceController extends Controller
                 $em->persist($audience);
                 $em->flush();
                 if (!$slug) {
-                    $this->addFlash('success', $translator->trans('The audience has been successfully created'));
+                    $this->addFlash('success', 'The audience has been successfully created');
                 } else {
-                    $this->addFlash('success', $translator->trans('The audience has been successfully updated'));
+                    $this->addFlash('success', 'The audience has been successfully updated');
                 }
                 return $this->redirectToRoute('dashboard_administrator_audience');
             } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+                $this->addFlash('error', 'The form contains invalid data');
             }
         }
         return $this->render('Dashboard/Administrator/Audience/add-edit.html.twig', array(
@@ -80,17 +80,17 @@ class AudienceController extends Controller
 
         $audience = $services->getAudiences(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$audience) {
-            $this->addFlash('error', $translator->trans('The audience can not be found'));
+            $this->addFlash('error', 'The audience can not be found');
             return $services->redirectToReferer('audience');
         }
         if (count($audience->getEvents()) > 0) {
-            $this->addFlash('error', $translator->trans('The audience can not be deleted because it is linked with one or more events'));
+            $this->addFlash('error', 'The audience can not be deleted because it is linked with one or more events');
             return $services->redirectToReferer('audience');
         }
         if ($audience->getDeletedAt() !== null) {
-            $this->addFlash('error', $translator->trans('The audience has been deleted'));
+            $this->addFlash('error', 'The audience has been deleted');
         } else {
-            $this->addFlash('notice', $translator->trans('The audience has been disabled'));
+            $this->addFlash('notice', 'The audience has been disabled');
         }
         $em = $this->getDoctrine()->getManager();
         $audience->setHidden(true);
@@ -109,14 +109,14 @@ class AudienceController extends Controller
 
         $audience = $services->getAudiences(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$audience) {
-            $this->addFlash('error', $translator->trans('The audience can not be found'));
+            $this->addFlash('error', 'The audience can not be found');
             return $services->redirectToReferer('audience');
         }
         $audience->setDeletedAt(null);
         $em = $this->getDoctrine()->getManager();
         $em->persist($audience);
         $em->flush();
-        $this->addFlash('success', $translator->trans('The audience has been succesfully restored'));
+        $this->addFlash('success', 'The audience has been succesfully restored');
 
         return $services->redirectToReferer('audience');
     }
@@ -130,15 +130,15 @@ class AudienceController extends Controller
 
         $audience = $services->getAudiences(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$audience) {
-            $this->addFlash('error', $translator->trans('The audience can not be found'));
+            $this->addFlash('error', 'The audience can not be found');
             return $services->redirectToReferer('audience');
         }
         if ($audience->getHidden() === true) {
             $audience->setHidden(false);
-            $this->addFlash('success', $translator->trans('The audience is visible'));
+            $this->addFlash('success', 'The audience is visible');
         } else {
             $audience->setHidden(true);
-            $this->addFlash('error', $translator->trans('The audience is hidden'));
+            $this->addFlash('error', 'The audience is hidden');
         }
         $em = $this->getDoctrine()->getManager();
         $em->persist($audience);

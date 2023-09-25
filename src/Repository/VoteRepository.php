@@ -1,4 +1,7 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Repository;
 
@@ -12,38 +15,32 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Vote[]    findAll()
  * @method Vote[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class VoteRepository extends ServiceEntityRepository {
+class VoteRepository extends ServiceEntityRepository
+{
 
-    public function __construct(ManagerRegistry $registry) {
+    public function __construct(ManagerRegistry $registry)
+    {
         parent::__construct($registry, Vote::class);
     }
 
-    // /**
-    //  * @return Vote[] Returns an array of Vote objects
-    //  */
-    /*
-      public function findByExampleField($value)
-      {
-      return $this->createQueryBuilder('v')
-      ->andWhere('v.exampleField = :val')
-      ->setParameter('val', $value)
-      ->orderBy('v.id', 'ASC')
-      ->setMaxResults(10)
-      ->getQuery()
-      ->getResult()
-      ;
-      }
-     */
 
-    /*
-      public function findOneBySomeField($value): ?Vote
-      {
-      return $this->createQueryBuilder('v')
-      ->andWhere('v.exampleField = :val')
-      ->setParameter('val', $value)
-      ->getQuery()
-      ->getOneOrNullResult()
-      ;
-      }
-     */
+    public function findByExampleField($value)
+    {
+        return $this->createQueryBuilder('v')
+            ->andWhere('v.exampleField = :val')
+            ->setParameter('val', $value)
+            ->orderBy('v.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findOneBySomeField($value): ?Vote
+    {
+        return $this->createQueryBuilder('v')
+            ->andWhere('v.exampleField = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

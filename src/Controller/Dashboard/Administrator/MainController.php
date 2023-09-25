@@ -29,10 +29,10 @@ class MainController extends Controller
             $ordersQuantityByDate[$i][1] = DateTime::createFromFormat('Y-m-j', $ordersQuantityByDate[$i][1]);
             $ordersQuantityByDate[$i] = array_reverse($ordersQuantityByDate[$i]);
         }
-        array_unshift($ordersQuantityByDate, [['label' => $translator->trans("Date"), 'type' => 'date'], ['label' => $translator->trans("Tickets offered"), 'type' => 'number']]);
+        array_unshift($ordersQuantityByDate, [['label' => "Date", 'type' => 'date'], ['label' => "Tickets offered", 'type' => 'number']]);
         $ticketsSalesByDateLineChart = new LineChart();
         $ticketsSalesByDateLineChart->getData()->setArrayToDataTable($ordersQuantityByDate);
-        $ticketsSalesByDateLineChart->getOptions()->setTitle($translator->trans("Tickets this month"));
+        $ticketsSalesByDateLineChart->getOptions()->setTitle("Tickets this month");
         $ticketsSalesByDateLineChart->getOptions()->setCurveType('function');
         $ticketsSalesByDateLineChart->getOptions()->setLineWidth(2);
         $ticketsSalesByDateLineChart->getOptions()->getLegend()->setPosition('none');

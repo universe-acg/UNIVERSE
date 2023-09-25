@@ -32,7 +32,7 @@ class BlogPostController extends Controller
 
     /**
      * @Route("/manage-blog-posts/add", name="blog_post_add", methods="GET|POST")
-     * @Route("/manage-blog-posts/{slug}/edit", name="blog_post_edit", methods="GET|POST")
+     * @Route("/manage-blog-posts/{slug}/edit", name="dashboard_organizer_blog_post_edit", methods="GET|POST")
      */
     public function addedit(Request $request, AppServices $services, $slug = null)
     {
@@ -45,7 +45,7 @@ class BlogPostController extends Controller
         } else {
             $blogpost = $services->getBlogPosts(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
             if (!$blogpost) {
-                $this->addFlash('error', $translator->trans('The blog post can not be found'));
+                $this->addFlash('error', 'The blog post can not be found');
                 return $services->redirectToReferer('blog_post');
             }
         }
@@ -60,14 +60,14 @@ class BlogPostController extends Controller
                 if (!$slug) {
                     $user = $this->getUser();
                     $blogpost->setUser($user);
-                    $this->addFlash('success', $translator->trans('The blog post has been successfully created'));
+                    $this->addFlash('success', 'The blog post has been successfully created');
                 } else {
-                    $this->addFlash('success', $translator->trans('The blog post has been successfully updated'));
+                    $this->addFlash('success', 'The blog post has been successfully updated');
                 }
                 return $this->redirectToRoute("dashboard_administrator_blog_post");
-            } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
             }
+
+            $this->addFlash('error', 'The form contains invalid data');
         }
         return $this->render('Dashboard/Administrator/BlogPost/add-edit.html.twig', array(
             "blogpost" => $blogpost,
@@ -84,13 +84,13 @@ class BlogPostController extends Controller
 
         $blogpost = $services->getBlogPosts(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$blogpost) {
-            $this->addFlash('error', $translator->trans('The blog post can not be found'));
+            $this->addFlash('error', 'The blog post can not be found');
             return $services->redirectToReferer('blog_post');
         }
         if ($blogpost->getDeletedAt() !== null) {
-            $this->addFlash('error', $translator->trans('The blog post has been deleted'));
+            $this->addFlash('error', 'The blog post has been deleted');
         } else {
-            $this->addFlash('notice', $translator->trans('The blog post has been disabled'));
+            $this->addFlash('notice', 'The blog post has been disabled');
         }
         $em = $this->getDoctrine()->getManager();
         $blogpost->setHidden(true);
@@ -109,14 +109,14 @@ class BlogPostController extends Controller
 
         $blogpost = $services->getBlogPosts(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$blogpost) {
-            $this->addFlash('error', $translator->trans('The blog post can not be found'));
+            $this->addFlash('error', 'The blog post can not be found');
             return $services->redirectToReferer('blog_post');
         }
         $blogpost->setDeletedAt(null);
         $em = $this->getDoctrine()->getManager();
         $em->persist($blogpost);
         $em->flush();
-        $this->addFlash('success', $translator->trans('The blog post has been succesfully restored'));
+        $this->addFlash('success', 'The blog post has been succesfully restored');
 
         return $services->redirectToReferer('blog_post');
     }
@@ -130,15 +130,15 @@ class BlogPostController extends Controller
 
         $blogpost = $services->getBlogPosts(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$blogpost) {
-            $this->addFlash('error', $translator->trans('The blog post can not be found'));
+            $this->addFlash('error', 'The blog post can not be found');
             return $services->redirectToReferer('blog_post');
         }
         if ($blogpost->getHidden() === true) {
             $blogpost->setHidden(false);
-            $this->addFlash('success', $translator->trans('The blog post is visible'));
+            $this->addFlash('success', 'The blog post is visible');
         } else {
             $blogpost->setHidden(true);
-            $this->addFlash('error', $translator->trans('The blog post is hidden'));
+            $this->addFlash('error', 'The blog post is hidden');
         }
         $em = $this->getDoctrine()->getManager();
         $em->persist($blogpost);

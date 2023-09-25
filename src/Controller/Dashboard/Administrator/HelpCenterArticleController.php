@@ -23,7 +23,7 @@ class HelpCenterArticleController extends Controller
     {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
 
-        $articles = $paginator->paginate($services->getHelpCenterArticles(array('keyword' => $keyword, 'hidden' => 'all', 'sort' => 'updatedAt', 'order' => 'DESC')), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
+        $articles = $paginator->paginate($services->getHelpCenterArticles(array('keyword' => $keyword, 'hidden' => 'all', 'sort' => 'DESC', 'order' => 'updatedAt')), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
 
         return $this->render('Dashboard/Administrator/HelpCenter/Article/index.html.twig', [
             'articles' => $articles,
@@ -43,7 +43,7 @@ class HelpCenterArticleController extends Controller
         } else {
             $article = $services->getHelpCenterArticles(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
             if (!$article) {
-                $this->addFlash('error', $translator->trans('The article can not be found'));
+                $this->addFlash('error', 'The article can not be found');
                 return $services->redirectToReferer('help_center_article');
             }
         }
@@ -56,13 +56,13 @@ class HelpCenterArticleController extends Controller
                 $em->persist($article);
                 $em->flush();
                 if (!$slug) {
-                    $this->addFlash('success', $translator->trans('The article has been successfully created'));
+                    $this->addFlash('success', 'The article has been successfully created');
                 } else {
-                    $this->addFlash('success', $translator->trans('The article has been successfully updated'));
+                    $this->addFlash('success', 'The article has been successfully updated');
                 }
                 return $this->redirectToRoute("dashboard_administrator_help_center_article");
             } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+                $this->addFlash('error', 'The form contains invalid data');
             }
         }
         return $this->render('Dashboard/Administrator/HelpCenter/Article/add-edit.html.twig', array(
@@ -80,15 +80,15 @@ class HelpCenterArticleController extends Controller
 
         $article = $services->getHelpCenterArticles(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$article) {
-            $this->addFlash('error', $translator->trans('The article can not be found'));
+            $this->addFlash('error', 'The article can not be found');
             return $services->redirectToReferer('help_center_article');
         }
         if ($article->getFeatured() === true) {
             $article->setFeatured(false);
-            $this->addFlash('error', $translator->trans('The article is not featured anymore'));
+            $this->addFlash('error', 'The article is not featured anymore');
         } else {
             $article->setFeatured(true);
-            $this->addFlash('success', $translator->trans('The article is featured'));
+            $this->addFlash('success', 'The article is featured');
         }
         $em = $this->getDoctrine()->getManager();
         $em->persist($article);
@@ -105,13 +105,13 @@ class HelpCenterArticleController extends Controller
 
         $article = $services->getHelpCenterArticles(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$article) {
-            $this->addFlash('error', $translator->trans('The article can not be found'));
+            $this->addFlash('error', 'The article can not be found');
             return $services->redirectToReferer('help_center_article');
         }
         if ($article->getDeletedAt() !== null) {
-            $this->addFlash('error', $translator->trans('The article has been deleted'));
+            $this->addFlash('error', 'The article has been deleted');
         } else {
-            $this->addFlash('notice', $translator->trans('The article has been disabled'));
+            $this->addFlash('notice', 'The article has been disabled');
         }
         $em = $this->getDoctrine()->getManager();
         $article->setHidden(true);
@@ -130,14 +130,14 @@ class HelpCenterArticleController extends Controller
 
         $article = $services->getHelpCenterArticles(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$article) {
-            $this->addFlash('error', $translator->trans('The article can not be found'));
+            $this->addFlash('error', 'The article can not be found');
             return $services->redirectToReferer('help_center_article');
         }
         $article->setDeletedAt(null);
         $em = $this->getDoctrine()->getManager();
         $em->persist($article);
         $em->flush();
-        $this->addFlash('success', $translator->trans('The article has been succesfully restored'));
+        $this->addFlash('success', 'The article has been succesfully restored');
 
         return $services->redirectToReferer('help_center_article');
     }
@@ -151,15 +151,15 @@ class HelpCenterArticleController extends Controller
 
         $article = $services->getHelpCenterArticles(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
         if (!$article) {
-            $this->addFlash('error', $translator->trans('The article can not be found'));
+            $this->addFlash('error', 'The article can not be found');
             return $services->redirectToReferer('help_center_article');
         }
         if ($article->getHidden() === true) {
             $article->setHidden(false);
-            $this->addFlash('success', $translator->trans('The article is visible'));
+            $this->addFlash('success', 'The article is visible');
         } else {
             $article->setHidden(true);
-            $this->addFlash('error', $translator->trans('The article is hidden'));
+            $this->addFlash('error', 'The article is hidden');
         }
         $em = $this->getDoctrine()->getManager();
         $em->persist($article);

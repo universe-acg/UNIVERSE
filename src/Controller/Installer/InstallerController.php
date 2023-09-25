@@ -56,9 +56,8 @@ class InstallerController extends AbstractController
         $mediaFolderWritable = is_writable($kernel->getProjectDir() . '/public/media/');
         $uploadsFolderWritable = is_writable($kernel->getProjectDir() . '/public/uploads/');
         $sessionsFolderWritable = is_writable($kernel->getProjectDir() . '/sessions/');
-        $jsTranslationsFolderWritable = is_writable($kernel->getProjectDir() . '/assets/js/translations/');
         $envWritable = is_writable($kernel->getProjectDir() . '/.env');
-        $folderPermissions = $cacheFolderWritable && $logFolderWritable && $mediaFolderWritable && $uploadsFolderWritable && $sessionsFolderWritable && $jsTranslationsFolderWritable && $envWritable;
+        $folderPermissions = $cacheFolderWritable && $logFolderWritable && $mediaFolderWritable && $uploadsFolderWritable && $sessionsFolderWritable && $envWritable;
 
         return $this->render('Installer/install.html.twig', [
             "requirementsOk" => $requirementsOk,
@@ -90,7 +89,6 @@ class InstallerController extends AbstractController
             "mediaFolderWritable" => $mediaFolderWritable,
             "uploadsFolderWritable" => $uploadsFolderWritable,
             "sessionsFolderWritable" => $sessionsFolderWritable,
-            "jsTranslationsFolderWritable" => $jsTranslationsFolderWritable,
             "envWritable" => $envWritable,
         ]);
     }

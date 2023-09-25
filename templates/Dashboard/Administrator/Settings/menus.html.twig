@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    {% set navigation = [{ "dashboard_index": ('Dashboard' | trans), "current":(pagetitle) }] %}
+    {% set navigation = [{ "dashboard_index": ('Dashboard' ), "current":(pagetitle) }] %}
     {% include "Global/navigation.html.twig" with navigation %}
 
     <section class="section-content padding-y bg-white">
@@ -27,9 +27,9 @@
                                         <table class="table table-hover table-vcenter text-nowrap">
                                             <thead>
                                             <tr>
-                                                <th>{{ 'Name' | trans }}</th>
-                                                <th>{{ 'Header' | trans }}</th>
-                                                <th>{{ 'Elements' | trans }}</th>
+                                                <th>{{ 'Name' }}</th>
+                                                <th>{{ 'Header' }}</th>
+                                                <th>{{ 'Elements' }}</th>
                                                 <th class="text-center"><i class="fas fa-cog"></i></th>
                                             </tr>
                                             </thead>

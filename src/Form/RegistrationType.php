@@ -14,6 +14,9 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class RegistrationType extends AbstractType
 {
@@ -65,6 +68,19 @@ class RegistrationType extends AbstractType
                 'first_options' => array('attr' => array('placeholder' => 'form.password')),
                 'second_options' => array('attr' => array('placeholder' => 'form.password_confirmation')),
                 'invalid_message' => 'fos_user.password.mismatch',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please enter a password.',
+                    ]),
+                    new Length([
+                        'min' => 8, // Minimum password length
+                        'minMessage' => 'Your password should be at least {{ limit }} characters long.',
+                    ]),
+                    new Regex([
+                        'pattern' => '/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/',
+                        'message' => 'Your password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+                    ]),
+                ],
             ))
             ->add('organizer', OrganizerRegistrationType::class)
             ->add('recaptcha', EWZRecaptchaType::class, array(

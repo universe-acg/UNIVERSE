@@ -1,4 +1,7 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Repository;
 
@@ -6,25 +9,27 @@ use App\Entity\VenueType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class VenueTypeRepository extends ServiceEntityRepository {
+class VenueTypeRepository extends ServiceEntityRepository
+{
 
-    public function __construct(ManagerRegistry $registry) {
+    public function __construct(ManagerRegistry $registry)
+    {
         parent::__construct($registry, VenueType::class);
     }
 
-    public function getVenuesTypes($hidden, $keyword, $slug, $limit, $sort, $order, $hasvenues) {
+    public function getVenuesTypes($hidden, $keyword, $slug, $limit, $sort, $order, $hasvenues)
+    {
         $qb = $this->createQueryBuilder("v");
         $qb->select("v");
         $qb->addSelect("COUNT(v) as HIDDEN venuescount");
-        $qb->join("v.translations", "translations");
         if ($hidden !== "all") {
             $qb->andWhere("v.hidden = :hidden")->setParameter("hidden", $hidden);
         }
         if ($keyword !== "all") {
-            $qb->andWhere("translations.name LIKE :keyword or :keyword LIKE translations.name")->setParameter("keyword", "%" . $keyword . "%");
+            $qb->andWhere("v.name LIKE :keyword or :keyword LIKE v.name")->setParameter("keyword", "%" . $keyword . "%");
         }
         if ($slug !== "all") {
-            $qb->andWhere("translations.slug = :slug")->setParameter("slug", $slug);
+            $qb->andWhere("v.slug = :slug")->setParameter("slug", $slug);
         }
         if ($limit !== "all") {
             $qb->setMaxResults($limit);

@@ -1,4 +1,7 @@
 <?php
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
 
 namespace App\Repository;
 
@@ -12,38 +15,33 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method EventImage[]    findAll()
  * @method EventImage[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class EventImageRepository extends ServiceEntityRepository {
+class EventImageRepository extends ServiceEntityRepository
+{
 
-    public function __construct(ManagerRegistry $registry) {
+    public function __construct(ManagerRegistry $registry)
+    {
         parent::__construct($registry, EventImage::class);
     }
 
-    // /**
-    //  * @return EventImage[] Returns an array of EventImage objects
-    //  */
-    /*
-      public function findByExampleField($value)
-      {
-      return $this->createQueryBuilder('e')
-      ->andWhere('e.exampleField = :val')
-      ->setParameter('val', $value)
-      ->orderBy('e.id', 'ASC')
-      ->setMaxResults(10)
-      ->getQuery()
-      ->getResult()
-      ;
-      }
-     */
 
-    /*
-      public function findOneBySomeField($value): ?EventImage
-      {
-      return $this->createQueryBuilder('e')
-      ->andWhere('e.exampleField = :val')
-      ->setParameter('val', $value)
-      ->getQuery()
-      ->getOneOrNullResult()
-      ;
-      }
-     */
+    public function findByExampleField($value)
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.exampleField = :val')
+            ->setParameter('val', $value)
+            ->orderBy('e.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findOneBySomeField($value): ?EventImage
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.exampleField = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 }

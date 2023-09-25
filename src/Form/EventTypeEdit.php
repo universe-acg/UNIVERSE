@@ -203,8 +203,7 @@ class EventTypeEdit extends AbstractType
                 'image_uri' => false,
                 'imagine_pattern' => 'scale',
                 'label' => 'Main event image',
-                'help' => 'Choose the right image to represent your event (We recommend using at least a 1200x600px (2:1 ratio) image )',
-                'translation_domain' => 'messages'
+                'help' => 'Choose the right image to represent your event (We recommend using at least a 1200x600px (2:1 ratio) image )'
             ])
             ->add('images', CollectionType::class, array(
                 'label' => 'Images gallery',

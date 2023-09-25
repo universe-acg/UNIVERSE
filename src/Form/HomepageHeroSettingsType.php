@@ -77,12 +77,12 @@ class HomepageHeroSettingsType extends AbstractType
             ])
             ->add('title', TextType::class, [
                 'required' => false,
-                'label' => $options['title_label'],
+                'label' => 'title',
                 'purify_html' => true,
             ])
             ->add('paragraph', TextType::class, [
                 'required' => false,
-                'label' => $options['paragraph_label'],
+                'label' => 'paragraph',
                 'purify_html' => true,
             ])
             ->add('show_search_box', ChoiceType::class, [

@@ -29,7 +29,7 @@ security:
     scanner_api:
       logout: ~
       provider: scanner_api_provider
-      pattern: ^(.*?)/api/scanner/
+      pattern: /api/scanner/
       guard:
         authenticators:
           - App\Security\TokenAuthenticator
@@ -63,17 +63,17 @@ security:
       access_denied_handler: App\Security\AccessDeniedHandler
 
   access_control:
-    - { path: ^(.*?)/signin$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^(.*?)/signup/attendee, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^(.*?)/signup/attendee, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^(.*?)/admin/signup/attendee, role: ROLE_ADMINISTRATOR }
-    - { path: ^(.*?)/admin/signup/organizer, role: ROLE_ADMINISTRATOR }
-    - { path: ^(.*?)/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    #        - { path: ^(.*?)/dashboard, role: IS_AUTHENTICATED_REMEMBERED }
-    - { path: ^(.*?)/dashboard/administrator, role: ROLE_ADMINISTRATOR }
-    #    - { path: ^(.*?)/_trans/, role: ROLE_ADMINISTRATOR }
-    #    - { path: ^(.*?)/_console, role: ROLE_ADMINISTRATOR }
-    - { path: ^(.*?)/dashboard/organizer, role: ROLE_ORGANIZER }
-    - { path: ^(.*?)/dashboard/attendee, role: ROLE_ATTENDEE }
-    - { path: ^(.*?)/dashboard/scanner, role: ROLE_SCANNER }
-    - { path: ^(.*?)/dashboard/pointofsale, role: ROLE_POINTOFSALE }
+    - { path: /signin$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: /signup/attendee, role: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: /signup/attendee, role: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: /admin/signup/attendee, role: ROLE_ADMINISTRATOR }
+    - { path: /admin/signup/organizer, role: ROLE_ADMINISTRATOR }
+    - { path: /resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+    #        - { path: /dashboard, role: IS_AUTHENTICATED_REMEMBERED }
+    - { path: /dashboard/administrator, role: ROLE_ADMINISTRATOR }
+    #    - { path: /_trans/, role: ROLE_ADMINISTRATOR }
+    #    - { path: /_console, role: ROLE_ADMINISTRATOR }
+    - { path: /dashboard/organizer, role: ROLE_ORGANIZER }
+    - { path: /dashboard/attendee, role: ROLE_ATTENDEE }
+    - { path: /dashboard/scanner, role: ROLE_SCANNER }
+    - { path: /dashboard/pointofsale, role: ROLE_POINTOFSALE }

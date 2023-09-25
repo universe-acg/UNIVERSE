@@ -58,7 +58,7 @@ class VenueController extends Controller
         } else {
             $venue = $services->getVenues(array('organizer' => $organizer, 'hidden' => 'all', 'slug' => $slug, "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();
             if (!$venue) {
-                $this->addFlash('error', $translator->trans('The venue can not be found'));
+                $this->addFlash('error', 'The venue can not be found');
                 return $services->redirectToReferer('venue');
             }
         }
@@ -77,14 +77,14 @@ class VenueController extends Controller
             $em->persist($venue);
             $em->flush();
             if (!$slug) {
-                $this->addFlash('success', $translator->trans('The venue has been successfully created'));
+                $this->addFlash('success', 'The venue has been successfully created');
                 if ($this->isGranted("ROLE_ADMINISTRATOR")) {
                     return $this->redirectToRoute("dashboard_administrator_venue");
                 } else {
                     return $this->redirectToRoute("dashboard_organizer_venue");
                 }
             } else {
-                $this->addFlash('success', $translator->trans('The venue has been successfully updated'));
+                $this->addFlash('success', 'The venue has been successfully updated');
                 if ($this->isGranted("ROLE_ADMINISTRATOR")) {
                     return $this->redirectToRoute("dashboard_administrator_venue");
                 } else {
@@ -92,7 +92,7 @@ class VenueController extends Controller
                 }
             }
 //            } else {
-//                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+//                $this->addFlash('error', 'The form contains invalid data'));
 //            }
         }
         return $this->render('Dashboard/Shared/Venue/add-edit.html.twig', array(
@@ -117,17 +117,17 @@ class VenueController extends Controller
 
         $venue = $services->getVenues(array('organizer' => $organizer, 'hidden' => 'all', 'slug' => $slug, "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();
         if (!$venue) {
-            $this->addFlash('error', $translator->trans('The venue can not be found'));
+            $this->addFlash('error', 'The venue can not be found');
             return $services->redirectToReferer('venue');
         }
         if (count($venue->getEventdates()) > 0) {
-            $this->addFlash('error', $translator->trans('The venue can not be deleted because it is linked with one or more events'));
+            $this->addFlash('error', 'The venue can not be deleted because it is linked with one or more events');
             return $services->redirectToReferer('venue');
         }
         if ($venue->getDeletedAt() !== null) {
-            $this->addFlash('error', $translator->trans('The venue has been deleted'));
+            $this->addFlash('error', 'The venue has been deleted');
         } else {
-            $this->addFlash('notice', $translator->trans('The venue has been disabled'));
+            $this->addFlash('notice', 'The venue has been disabled');
         }
         $em = $this->getDoctrine()->getManager();
         $venue->setHidden(true);
@@ -147,14 +147,14 @@ class VenueController extends Controller
 
         $venue = $services->getVenues(array('organizer' => "all", 'hidden' => 'all', 'slug' => $slug, "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();
         if (!$venue) {
-            $this->addFlash('error', $translator->trans('The venue can not be found'));
+            $this->addFlash('error', 'The venue can not be found');
             return $services->redirectToReferer('venue');
         }
         $venue->setDeletedAt(null);
         $em = $this->getDoctrine()->getManager();
         $em->persist($venue);
         $em->flush();
-        $this->addFlash('success', $translator->trans('The venue has been succesfully restored'));
+        $this->addFlash('success', 'The venue has been succesfully restored');
 
         return $services->redirectToReferer('venue');
     }
@@ -176,16 +176,16 @@ class VenueController extends Controller
         $venue = $services->getVenues(array('organizer' => $organizer, 'hidden' => 'all', 'slug' => $slug, "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();
 
         if (!$venue) {
-            $this->addFlash('error', $translator->trans('The venue can not be found'));
+            $this->addFlash('error', 'The venue can not be found');
             return $services->redirectToReferer('venue');
         }
         if ($venue->getHidden() === true) {
             $venue->setHidden(false);
-            $this->addFlash('success', $translator->trans('The venue is visible'));
+            $this->addFlash('success', 'The venue is visible');
         } else {
             $venue->setHidden(true);
             $venue->setListedondirectory(false);
-            $this->addFlash('error', $translator->trans('The venue is hidden'));
+            $this->addFlash('error', 'The venue is hidden');
         }
         $em = $this->getDoctrine()->getManager();
         $em->persist($venue);
@@ -202,15 +202,15 @@ class VenueController extends Controller
 
         $venue = $services->getVenues(array('hidden' => 'all', 'slug' => $slug, "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();
         if (!$venue) {
-            $this->addFlash('error', $translator->trans('The venue can not be found'));
+            $this->addFlash('error', 'The venue can not be found');
             return $services->redirectToReferer('venue');
         }
         if ($venue->getListedondirectory() === true) {
             $venue->setListedondirectory(false);
-            $this->addFlash('info', $translator->trans('The venue is hidden from the public venues directory'));
+            $this->addFlash('info', 'The venue is hidden from the public venues directory');
         } else {
             $venue->setListedondirectory(true);
-            $this->addFlash('success', $translator->trans('The venue is listed on the public venues directory'));
+            $this->addFlash('success', 'The venue is listed on the public venues directory');
         }
         $em = $this->getDoctrine()->getManager();
         $em->persist($venue);

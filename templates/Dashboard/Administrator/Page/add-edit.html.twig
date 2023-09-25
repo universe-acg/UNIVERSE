@@ -9,7 +9,7 @@
 {% block content %}
 
 
-    {% set navigation = [{ "dashboard_index": ('Dashboard' | trans),  "dashboard_administrator_page": ('Manage pages' | trans), "current":(pagetitle) }] %}
+    {% set navigation = [{ "dashboard_index": ('Dashboard' ),  "dashboard_administrator_page": ('Manage pages' ), "current":(pagetitle) }] %}
     {% include "Global/navigation.html.twig" with navigation %}
 
     <section class="section-content padding-y bg-white">

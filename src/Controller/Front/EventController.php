@@ -87,13 +87,14 @@ class EventController extends AbstractController
         }
 
         if (!$event) {
-            $this->addFlash('error', 'The event not be found');
+            $this->addFlash('error', 'the event could not be found');
             return $this->redirectToRoute('events');
         }
         $event->viewed();
         $em = $this->getDoctrine()->getManager();
         $em->persist($event);
         $em->flush();
+
         return $this->render('Front/Event/event.html.twig', ["event" => $event]);
     }
 

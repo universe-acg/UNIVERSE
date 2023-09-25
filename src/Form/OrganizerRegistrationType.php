@@ -31,6 +31,7 @@ class OrganizerRegistrationType extends AbstractType
                     'Club' => 'Club',
                     'Office' => 'Office',
                     'Society' => 'Society',
+                    'Organization' => 'Organization'
                 ],
                 'placeholder' => 'Select a category',
             ]);

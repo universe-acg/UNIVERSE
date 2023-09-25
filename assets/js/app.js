@@ -48,7 +48,6 @@ import KnpPaginatorAjax from '../vendor/knppaginator-ajax/knppaginator-ajax.js';
 import caleandar from '../vendor/caleandar.js/caleandar.js';
 import bootbox from '../vendor/bootboxjs/bootbox.min';
 
-window.Translator = require('bazinga-translator');
 require('pace-progressbar');
 require('fontawesome-iconpicker');
 require('../vendor/owlcarousel/owl.carousel.min.js');
@@ -59,11 +58,6 @@ require('waypoints/lib/jquery.waypoints.min.js');
 require('../vendor/jquery.countdown/jquery.countdown.min.js');
 require('../vendor/counter-up/jquery.counterup.min.js');
 require('../vendor/circle-progress/circle-progress.min.js');
-require('../js/translations/config.js');
-require('../js/translations/en.js');
-// require('../js/translations/fr.js');
-// require('../js/translations/es.js');
-// require('../js/translations/ar.js');
 global.PhotoSwipe = require('../vendor/photoswipe/photoswipe.min.js');
 global.PhotoSwipeUI_Default = require('../vendor/photoswipe/photoswipe-ui-default.min.js');
 require('../vendor/jq-photoswipe/jqPhotoSwipe.min.js');
@@ -327,12 +321,12 @@ $(document).ready(function () {
             }).on('finish.countdown', function () {
                 $('#checkout_submit').prop('disabled', true);
                 $.confirm({
-                    title: Translator.trans("Time's up", {}, 'javascript'),
-                    content: Translator.trans("The tickets have been released", {}, 'javascript'),
+                    title: 'Time',
+                    content: 'The tickets have been released',
                     theme: 'supervan',
                     buttons: {
                         confirm: {
-                            text: Translator.trans('Return to cart', {}, 'javascript'),
+                            text: 'Return to cart',
                             btnClass: 'btn-primary btn-sm',
                             keys: ['enter'],
                             action: function () {
@@ -352,11 +346,11 @@ $(document).ready(function () {
             var $countdownto = $thiscountdown.data('count-down-to');
             $thiscountdown.countdown($countdownto, function (event) {
                 $(this).html(event.strftime(''
-                    + '<span>%w</span> ' + Translator.trans('weeks', {}, 'javascript') + ' '
-                    + '<span>%d</span> ' + Translator.trans('days', {}, 'javascript') + ' '
-                    + '<span>%H</span> ' + Translator.trans('hr', {}, 'javascript') + ' '
-                    + '<span>%M</span> ' + Translator.trans('min', {}, 'javascript') + ' '
-                    + '<span>%S</span> ' + Translator.trans('sec', {}, 'javascript') + ' '));
+                    + '<span>%w</span> ' + 'weeks' + ' '
+                    + '<span>%d</span> ' + 'days' + ' '
+                    + '<span>%H</span> ' + 'hr' + ' '
+                    + '<span>%M</span> ' + 'min' + ' '
+                    + '<span>%S</span> ' + 'sec' + ' '));
             });
         });
     }
@@ -398,9 +392,9 @@ $(document).ready(function () {
                 sticker: false,
                 stickerHover: true,
                 labels: {
-                    close: Translator.trans('Close', {}, 'javascript'),
-                    stick: Translator.trans('Stick', {}, 'javascript'),
-                    unstick: Translator.trans('Unstick', {}, 'javascript')
+                    close: 'Close',
+                    stick: 'Stick',
+                    unstick: 'Unstick'
                 }
             },
             Mobile: {
@@ -466,10 +460,10 @@ $(document).ready(function () {
             // Check if the data-target attribute contains '/delete-permanently'
             if (dataTarget.indexOf('/delete-permanently') >= 0) {
                 var $confirmDialog = $.confirm({
-                    title: Translator.trans('Confirmation required', {}, 'javascript'),
+                    title: 'Confirmation required',
                     buttons: {
                         confirm: {
-                            text: Translator.trans('Confirm', {}, 'javascript'),
+                            text: 'Confirm',
                             btnClass: 'btn-primary btn-sm',
                             keys: ['enter'],
                             action: function () {
@@ -477,7 +471,7 @@ $(document).ready(function () {
                             }
                         },
                         cancel: {
-                            text: Translator.trans('Cancel', {}, 'javascript'),
+                            text: 'Cancel',
                             btnClass: 'btn-default btn-sm',
                             keys: ['esc'],
                             action: function () {
@@ -523,7 +517,7 @@ $(document).ready(function () {
                 }).done(function (response) {
                     self.setContent(response);
                 }).fail(function () {
-                    self.setContent(Translator.trans('An error has occured', {}, 'javascript'));
+                    self.setContent('An error has occured');
                 });
             },
             onContentReady: function () {
@@ -538,7 +532,7 @@ $(document).ready(function () {
             },
             buttons: {
                 close: {
-                    text: Translator.trans('Close', {}, 'javascript'),
+                    text: 'Close',
                     btnClass: 'btn-default btn-sm',
                     keys: ['esc'],
                     action: function () {
@@ -562,14 +556,14 @@ $(document).ready(function () {
             $(this).select2({
                 theme: 'bootstrap4',
                 allowClear: true,
-                placeholder: Translator.trans('Select an option', {}, 'javascript'),
+                placeholder: 'Select an option',
                 sortResults: data => data.sort((a, b) => a.text.localeCompare(b.text)),
             });
         } else {
             $(this).select2({
                 theme: 'bootstrap4',
                 allowClear: true,
-                placeholder: Translator.trans('Select an option', {}, 'javascript'),
+                placeholder: 'Select an option',
             });
         }
     });
@@ -614,10 +608,10 @@ $(document).ready(function () {
                 allow_remove: true,
                 allow_up: true,
                 allow_down: true,
-                add: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm"><i class="fas fa-plus-square"></i> ' + Translator.trans('Add', {}, 'javascript') + '</a>',
-                remove: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm"><i class="fas fa-minus-square"></i> ' + Translator.trans('Remove', {}, 'javascript') + '</a>',
-                up: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm"><i class="fas fa-caret-square-up"></i> ' + Translator.trans('Move up', {}, 'javascript') + '</a>',
-                down: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm"><i class="fas fa-caret-square-down"></i> ' + Translator.trans('Move down', {}, 'javascript') + '</a>',
+                add: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm"><i class="fas fa-plus-square"></i> ' + 'Add' + '</a>',
+                remove: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm"><i class="fas fa-minus-square"></i> ' + 'Remove' + '</a>',
+                up: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm"><i class="fas fa-caret-square-up"></i> ' + 'Move up' + '</a>',
+                down: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm"><i class="fas fa-caret-square-down"></i> ' + 'Move down' + '</a>',
                 position_field_selector: '.form-collection-position'
             });
         });
@@ -664,9 +658,9 @@ $(document).ready(function () {
     // url_list: $thisAutocomplete.data('url-list'),
     // otherOptions: {
     // minimumInputLength: typeof $thisAutocomplete.data("minimum-input-length") !== 'undefined' ? $thisAutocomplete.data("minimum-input-length") : 3,
-    // formatNoMatches: Translator.trans('No results found', {}, 'javascript'),
-    // formatSearching: Translator.trans('Searching ...', {}, 'javascript'),
-    // formatInputTooShort: Translator.trans('Insert at least 3 characters', {}, 'javascript')
+    // formatNoMatches: 'No results found',
+    // formatSearching: 'Searching ...',
+    // formatInputTooShort: 'Insert at least 3 characters'
     // }
     // });
     // });
@@ -714,11 +708,11 @@ $(document).ready(function () {
                 allow_duplicate: false,
                 allow_up: true,
                 allow_down: true,
-                add: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-add-button"><i class="fas fa-plus-square"></i> ' + Translator.trans('Add a new event date', {}, 'javascript') + '</a>',
-                remove: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-remove-button"><i class="fas fa-minus-square"></i> ' + Translator.trans('Remove this event date', {}, 'javascript') + '</a>',
-                duplicate: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-duplicate-button"><i class="fas fa-clone"></i> ' + Translator.trans('Duplicate this event date', {}, 'javascript') + '</a>',
-                up: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-up-button"><i class="fas fa-caret-square-up"></i> ' + Translator.trans('Move up', {}, 'javascript') + '</a>',
-                down: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-down-button"><i class="fas fa-caret-square-down"></i> ' + Translator.trans('Move down', {}, 'javascript') + '</a>',
+                add: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-add-button"><i class="fas fa-plus-square"></i> ' + 'Add a new event date' + '</a>',
+                remove: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-remove-button"><i class="fas fa-minus-square"></i> ' + 'Remove this event date' + '</a>',
+                duplicate: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-duplicate-button"><i class="fas fa-clone"></i> ' + 'Duplicate this event date' + '</a>',
+                up: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-up-button"><i class="fas fa-caret-square-up"></i> ' + 'Move up' + '</a>',
+                down: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-down-button"><i class="fas fa-caret-square-down"></i> ' + 'Move down' + '</a>',
                 children: [{
                     min: 1,
                     selector: '.eventtickets-collection',
@@ -730,11 +724,11 @@ $(document).ready(function () {
                     allow_up: true,
                     allow_down: true,
                     position_field_selector: '.event-date-ticket-position',
-                    add: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-add-button"><i class="fas fa-plus-square"></i> ' + Translator.trans('Add a new ticket', {}, 'javascript') + '</a>',
-                    remove: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-remove-button"><i class="fas fa-minus-square"></i> ' + Translator.trans('Remove this ticket', {}, 'javascript') + '</a>',
-                    duplicate: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-duplicate-button"><i class="fas fa-clone"></i> ' + Translator.trans('Duplicate this ticket', {}, 'javascript') + '</a>',
-                    up: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-up-button"><i class="fas fa-caret-square-up"></i> ' + Translator.trans('Move up', {}, 'javascript') + '</a>',
-                    down: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-down-button"><i class="fas fa-caret-square-down"></i> ' + Translator.trans('Move down', {}, 'javascript') + '</a>',
+                    add: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-add-button"><i class="fas fa-plus-square"></i> ' + 'Add a new ticket' + '</a>',
+                    remove: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-remove-button"><i class="fas fa-minus-square"></i> ' + 'Remove this ticket' + '</a>',
+                    duplicate: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-duplicate-button"><i class="fas fa-clone"></i> ' + 'Duplicate this ticket' + '</a>',
+                    up: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-up-button"><i class="fas fa-caret-square-up"></i> ' + 'Move up' + '</a>',
+                    down: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-down-button"><i class="fas fa-caret-square-down"></i> ' + 'Move down' + '</a>',
                     after_add: function (eventticketscollection, eventticketelement) {
 
                         // Presets event date ticket radios
@@ -818,7 +812,7 @@ $(document).ready(function () {
                         $(this).select2({
                             theme: 'bootstrap4',
                             allowClear: true,
-                            placeholder: Translator.trans('Select an option', {}, 'javascript')
+                            placeholder: 'Select an option'
                         });
                     });
                 },
@@ -874,8 +868,8 @@ $(document).ready(function () {
                     showStackBarTop('error', '', response.error);
                 } else {
                     $thisButton.html('<i class="far fa-heart"></i>');
-                    $thisButton.attr("title", Translator.trans('An error has occured', {}, 'javascript')).tooltip("_fixTitle");
-                    showStackBarTop('error', '', Translator.trans('An error has occured', {}, 'javascript'));
+                    $thisButton.attr("title", 'An error has occured').tooltip("_fixTitle");
+                    showStackBarTop('error', '', 'An error has occured');
                 }
             }
         });
@@ -884,7 +878,7 @@ $(document).ready(function () {
     // Event favorites ajax add and remove
     $(document).on("click", ".bigbtn-event-favorites-add, .bigbtn-event-favorites-remove", function () {
         var $thisButton = $(this);
-        if ($thisButton.attr("data-action-done") == "1") {
+        if ($thisButton.attr("data-action-done") === "1") {
             $thisButton.unbind("click");
             return false;
         }
@@ -910,8 +904,8 @@ $(document).ready(function () {
                     showStackBarTop('error', '', response.error);
                 } else {
                     $thisButton.html('<i class="far fa-heart"></i>');
-                    $thisButton.attr("title", Translator.trans('An error has occured', {}, 'javascript')).tooltip("_fixTitle");
-                    showStackBarTop('error', '', Translator.trans('An error has occured', {}, 'javascript'));
+                    $thisButton.attr("title", 'An error has occured').tooltip("_fixTitle");
+                    showStackBarTop('error', '', 'An error has occured');
                 }
             }
         });
@@ -972,8 +966,8 @@ $(document).ready(function () {
         $('.readmore').each(function () {
             new Readmore($(this), {
                 speed: 200,
-                lessLink: '<a href="#">' + Translator.trans('Close', {}, 'javascript') + '</a>',
-                moreLink: '<a href="#">' + Translator.trans('Read more', {}, 'javascript') + '</a>',
+                lessLink: '<a href="#">' + 'Close' + '</a>',
+                moreLink: '<a href="#">' + 'Read more' + '</a>',
                 collapsedHeight: parseInt($(this).data('collapsed-height')),
                 heightMargin: parseInt($(this).data('height-margin')),
                 embedCSS: true,
@@ -1075,7 +1069,7 @@ $(document).ready(function () {
         }
 
         if (!isEmailValid($("#newsletter-email").val())) {
-            showStackBarTop('error', '', Translator.trans('Make sure to enter a valid email address', {}, 'javascript'));
+            showStackBarTop('error', '', 'Make sure to enter a valid email address');
             return false;
         }
 
@@ -1098,8 +1092,8 @@ $(document).ready(function () {
                     showStackBarTop('error', '', response.error);
                 } else {
                     $thisButton.html('<i class="fas fa-exclamation-circle"></i>');
-                    $thisButton.attr("title", Translator.trans('An error has occured', {}, 'javascript')).tooltip("_fixTitle");
-                    showStackBarTop('error', '', Translator.trans('An error has occured', {}, 'javascript'));
+                    $thisButton.attr("title", 'An error has occured').tooltip("_fixTitle");
+                    showStackBarTop('error', '', 'An error has occured');
                 }
             }
         });
@@ -1111,7 +1105,7 @@ $(document).ready(function () {
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         remote: {
-            url: location.protocol + '//' + location.host + Routing.generate('get_events', {'_locale': $('html').attr('lang')}, false) + "?q=%QUERY",
+            url: location.protocol + '//' + location.host + Routing.generate('get_events', 'en', false) + "?q=%QUERY",
             wildcard: '%QUERY'
         },
     });
@@ -1128,7 +1122,7 @@ $(document).ready(function () {
     // templates: {
     //     empty: [
     //         '<div class="dropdown-menu show">',
-    //         Translator.trans('No results found', {}, 'javascript'),
+    //         'No results found',
     //         '</div>'
     //     ].join('\n'),
     //     suggestion: Handlebars.compile($("#top-search-result-template").html())
@@ -1138,8 +1132,8 @@ $(document).ready(function () {
 // Initializes Ajax Pagination
     if ($('.ajax-pagination').length) {
         new KnpPaginatorAjax().init({
-            'loadMoreText': Translator.trans('Load more', {}, 'javascript'),
-            'loadingText': Translator.trans('Loading...', {}, 'javascript'),
+            'loadMoreText': 'Load more',
+            'loadingText': 'Loading...',
             'elementsSelector': '.ajax-pagination',
             'paginationSelector': 'ul.pagination'
         });
@@ -1150,12 +1144,12 @@ $(document).ready(function () {
 
         var $thisButton = $('#refund-request-button');
         var $refundRequestDialog = $.confirm({
-            title: Translator.trans('Confirmation required', {}, 'javascript'),
+            title: 'Confirmation required',
             content: $thisButton.data('confirmation-text') +
-                '<textarea id="refund-request-message" rows="5" class="form-control mt-3 refund-request-message" placeholder="' + Translator.trans('Message', {}, 'javascript') + '"></textarea>',
+                '<textarea id="refund-request-message" rows="5" class="form-control mt-3 refund-request-message" placeholder="' + 'Message' + '"></textarea>',
             buttons: {
                 confirm: {
-                    text: Translator.trans('Confirm', {}, 'javascript'),
+                    text: 'Confirm',
                     btnClass: 'btn-primary btn-sm',
                     keys: ['enter'],
                     action: function () {
@@ -1168,7 +1162,7 @@ $(document).ready(function () {
                     }
                 },
                 cancel: {
-                    text: Translator.trans('Cancel', {}, 'javascript'),
+                    text: 'Cancel',
                     btnClass: 'btn-default btn-sm',
                     keys: ['esc'],
                     action: function () {
@@ -1184,12 +1178,12 @@ $(document).ready(function () {
 
         var $thisButton = $('.refund-reply-button');
         var $refundReplyDialog = $.confirm({
-            title: Translator.trans('Confirmation required', {}, 'javascript'),
+            title: 'Confirmation required',
             content: $thisButton.data('confirmation-text') +
-                '<textarea id="refund-reply-message" rows="5" class="form-control mt-3 refund-reply-message" placeholder="' + Translator.trans('Message', {}, 'javascript') + '"></textarea>',
+                '<textarea id="refund-reply-message" rows="5" class="form-control mt-3 refund-reply-message" placeholder="' + 'Message' + '"></textarea>',
             buttons: {
                 confirm: {
-                    text: Translator.trans('Confirm', {}, 'javascript'),
+                    text: 'Confirm',
                     btnClass: 'btn-primary btn-sm',
                     keys: ['enter'],
                     action: function () {
@@ -1197,7 +1191,7 @@ $(document).ready(function () {
                     }
                 },
                 cancel: {
-                    text: Translator.trans('Cancel', {}, 'javascript'),
+                    text: 'Cancel',
                     btnClass: 'btn-default btn-sm',
                     keys: ['esc'],
                     action: function () {
@@ -1212,12 +1206,12 @@ $(document).ready(function () {
     $('.order-cancel-button').click(function () {
         var $thisButton = $(this);
         var $orderCancelDialog = $.confirm({
-            title: Translator.trans('Confirmation required', {}, 'javascript'),
+            title: 'Confirmation required',
             // content: $thisButton.data('confirmation-text') +
-            //     '<textarea id="order-cancel-note" rows="5" class="form-control mt-3" placeholder="' + Translator.trans('Note', {}, 'javascript') + '"></textarea>',
+            //     '<textarea id="order-cancel-note" rows="5" class="form-control mt-3" placeholder="' + 'Note' + '"></textarea>',
             buttons: {
                 confirm: {
-                    text: Translator.trans('Confirm', {}, 'javascript'),
+                    text: 'Confirm',
                     btnClass: 'btn-primary btn-sm',
                     keys: ['enter'],
                     action: function () {
@@ -1225,7 +1219,7 @@ $(document).ready(function () {
                     }
                 },
                 cancel: {
-                    text: Translator.trans('Cancel', {}, 'javascript'),
+                    text: 'Cancel',
                     btnClass: 'btn-default btn-sm',
                     keys: ['esc'],
                     action: function () {
@@ -1240,17 +1234,17 @@ $(document).ready(function () {
     $('.resend-confirmation-email-button').click(function () {
         var $thisButton = $(this);
         var $resendOrderConfirmationDialog = $.confirm({
-            title: Translator.trans('Confirmation required', {}, 'javascript'),
+            title: 'Confirmation required',
             content: $thisButton.data('confirmation-text') +
-                '<input id="order-confirmation-email-address" type="email" class="form-control mt-3" value="' + $thisButton.data("initial-email-address") + '" placeholder="' + Translator.trans('Email address', {}, 'javascript') + '">',
+                '<input id="order-confirmation-email-address" type="email" class="form-control mt-3" value="' + $thisButton.data("initial-email-address") + '" placeholder="' + 'Email address' + '">',
             buttons: {
                 confirm: {
-                    text: Translator.trans('Confirm', {}, 'javascript'),
+                    text: 'Confirm',
                     btnClass: 'btn-primary btn-sm',
                     keys: ['enter'],
                     action: function () {
                         if (!isEmailValid($('#order-confirmation-email-address').val())) {
-                            showStackBarTop('error', '', Translator.trans('Make sure to enter a valid email address', {}, 'javascript'));
+                            showStackBarTop('error', '', 'Make sure to enter a valid email address');
                             return false;
                         } else {
                             location.href = $thisButton.data('target') + "?email=" + $('#order-confirmation-email-address').val();
@@ -1258,7 +1252,7 @@ $(document).ready(function () {
                     }
                 },
                 cancel: {
-                    text: Translator.trans('Cancel', {}, 'javascript'),
+                    text: 'Cancel',
                     btnClass: 'btn-default btn-sm',
                     keys: ['esc'],
                     action: function () {
@@ -1278,7 +1272,7 @@ $(document).ready(function () {
             }
         });
         if (qte == 0) {
-            showStackBarTop('error', '', Translator.trans('Please select the tickets quantity for this order', {}, 'javascript'));
+            showStackBarTop('error', '', 'Please select the tickets quantity for this order');
         } else {
             $("#pos-order-form").submit();
         }
@@ -1290,13 +1284,13 @@ $(document).ready(function () {
         $('#add-to-cart-form .event-eventDate-wrapper:not(:first-child)').hide();
 
         // Initializes events passed from the template as a json array
-        var eventsDatesJsonArray = $('#event-dates-calendar').data("event-dates");
+        const eventsDatesJsonArray = $('#event-dates-calendar').data("event-dates");
         if (eventsDatesJsonArray.length) {
-            var eventArrayLength = eventsDatesJsonArray.length;
-            for (var i = 0; i < eventArrayLength; i++) {
+            let eventArrayLength = eventsDatesJsonArray.length;
+            for (let i = 0; i < eventArrayLength; i++) {
 
-                for (var j = 0; j < eventArrayLength; j++) {
-                    if (i != j && eventsDatesJsonArray[i].Date == eventsDatesJsonArray[j].Date) {
+                for (let j = 0; j < eventArrayLength; j++) {
+                    if (i !== j && eventsDatesJsonArray[i].Date === eventsDatesJsonArray[j].Date) {
                         eventsDatesJsonArray[i].Title += ", " + eventsDatesJsonArray[j].Title;
                         eventsDatesJsonArray[i].Link += "|" + eventsDatesJsonArray[j].Link;
                         eventsDatesJsonArray.splice(j, 1);
@@ -1304,14 +1298,14 @@ $(document).ready(function () {
                     }
                 }
 
-                var eventDateArray = eventsDatesJsonArray[i].Date.split("-");
+                const eventDateArray = eventsDatesJsonArray[i].Date.split("-");
                 eventsDatesJsonArray[i].Date = new Date(eventDateArray[0], eventDateArray[1] - 1, eventDateArray[2]);
             }
-            var settings = {
+            const settings = {
                 EventClick: '', //(function) a function that should instantiate on the click of any event. parameters passed in via data link attribute.
                 EventTargetWholeDay: false, //(bool) clicking on the whole date will trigger event action, as opposed to just clicking on the title.
                 DisabledDays: [], //(array of numbers) days of the week to be slightly transparent. ie: [1,6] to fade Sunday and Saturday.
-            }
+            };
             caleandar(document.getElementById('event-dates-calendar'), eventsDatesJsonArray, settings);
 
             // Hides the calendar back button if current month is displayed
@@ -1362,7 +1356,7 @@ $(document).ready(function () {
                     // for (var i = 0; i < eventDatesReferences.length; i++) {
                     //     eventDateHoursDialogContent += '<div>' +
                     //         '<b class="float-left">Starts at: ' + eventDatesHours[i] + '</b>' +
-                    //         '<button class="eventDate-hours-modal-tickets-button float-right btn btn-primary btn-sm" data-eventDate-reference="' + eventDatesReferences[i] + '" data-dismiss="modal">' + Translator.trans("Tickets") + '</button>' +
+                    //         '<button class="eventDate-hours-modal-tickets-button float-right btn btn-primary btn-sm" data-eventDate-reference="' + eventDatesReferences[i] + '" data-dismiss="modal">' + 'Tickets' + '</button>' +
                     //         '<div class="clearfix"></div>' +
                     //         '</div>';
                     //     if (i != eventDatesReferences.length - 1) {
@@ -1373,7 +1367,7 @@ $(document).ready(function () {
                         var eventName = $('#add-to-calendar-link').data('title'); // Get the event.name value
                         eventDateHoursDialogContent += '<div>' +
                             '<b class="float-left">' + eventName + ' @ ' + eventDatesHours[i] + ' </b>' +
-                            '<button class="eventDate-hours-modal-tickets-button float-right btn btn-primary btn-sm" data-eventDate-reference="' + eventDatesReferences[i] + '" data-dismiss="modal">' + Translator.trans("Book") + '</button>' +
+                            '<button class="eventDate-hours-modal-tickets-button float-right btn btn-primary btn-sm" data-eventDate-reference="' + eventDatesReferences[i] + '" data-dismiss="modal">' + 'Book' + '</button>' +
                             '<div class="clearfix"></div>' +
                             '</div>';
                         if (i != eventDatesReferences.length - 1) {
@@ -1381,7 +1375,7 @@ $(document).ready(function () {
                         }
                     }
                     bootbox.dialog({
-                        title: Translator.trans("There are multiple events at this date"),
+                        title: 'There are multiple events at this date',
                         message: eventDateHoursDialogContent,
                         size: 'medium',
                         onEscape: true,
@@ -1389,7 +1383,7 @@ $(document).ready(function () {
                         className: ' modal-dialog-centered modal-dialog-scrollable',
                         buttons: {
                             fee: {
-                                label: '<i class="far fa-window-close"></i> ' + Translator.trans("Book"),
+                                label: '<i class="far fa-window-close"></i> ' + 'Close',
                                 className: 'btn btn-outline-primary',
                                 callback: function () {
 
@@ -1413,34 +1407,6 @@ $(document).ready(function () {
         }
     }
 
-    // Payout request cancel Dialog
-    $('.payoutRequest-cancel-button').click(function () {
-        var $thisButton = $(this);
-        var $payoutRequestCancelDialog = $.confirm({
-            title: Translator.trans('Confirmation required', {}, 'javascript'),
-            content: $thisButton.data('confirmation-text') +
-                '<textarea id="payoutRequest-cancel-note" rows="5" class="form-control mt-3" placeholder="' + Translator.trans('Note', {}, 'javascript') + '"></textarea>',
-            buttons: {
-                confirm: {
-                    text: Translator.trans('Confirm', {}, 'javascript'),
-                    btnClass: 'btn-primary btn-sm',
-                    keys: ['enter'],
-                    action: function () {
-                        location.href = $thisButton.data('target') + "?note=" + $('#payoutRequest-cancel-note').val();
-                    }
-                },
-                cancel: {
-                    text: Translator.trans('Cancel', {}, 'javascript'),
-                    btnClass: 'btn-default btn-sm',
-                    keys: ['esc'],
-                    action: function () {
-                        $payoutRequestCancelDialog.close();
-                    }
-                }
-            }
-        });
-    });
-
 
     // Dashboard sidenav
     function openDashboardSideNav() {
@@ -1461,44 +1427,10 @@ $(document).ready(function () {
         $('body').materialScrollTop();
     }
 
-    // Juqery Cookie Bar
-    if (typeof $("body").data('cookie-bar-page-link') !== 'undefined') {
-        // $.cookieBar('addTranslation', 'fr', {
-        //     message: 'Nous utilisons des cookies pour fournir nos services. En utilisant ce site Web, vous acceptez cela.',
-        //     acceptText: 'D\'accord',
-        //     infoText: 'Plus d\'information'
-        // });
-        // $.cookieBar('addTranslation', 'es', {
-        //     message: 'Usamos cookies para brindar nuestros servicios. Al utilizar este sitio web, acepta esto.',
-        //     acceptText: 'Bueno',
-        //     infoText: 'Más información'
-        // });
-        // $.cookieBar('addTranslation', 'ar', {
-        //     message: 'نحن نستخدم ملفات تعريف الارتباط لتقديم خدماتنا. باستخدام هذا الموقع ، فإنك توافق على ذلك.',
-        //     acceptText: 'حسنا',
-        //     infoText: 'المزيد من المعلومات'
-        // });
-        // $.cookieBar('addTranslation', 'de', {
-        //     message: 'Wir verwenden Cookies, um unsere Dienste bereitzustellen. Durch die Nutzung dieser Website stimmen Sie dem zu.',
-        //     acceptText: 'OK',
-        //     infoText: 'Mehr Informationen'
-        // });
-        // $.cookieBar('addTranslation', 'pt', {
-        //     message: 'Usamos cookies para fornecer nossos serviços. Ao usar este site, você concorda com isso.',
-        //     acceptText: 'OK',
-        //     infoText: 'Mais Informações'
-        // });
-        // $.cookieBar({
-        //     style: 'bottom',
-        //     infoLink: $("body").data('cookie-bar-page-link'),
-        //     language: $("html").attr("lang")
-        // });
-    }
-
     // Disables payment related settings modifications on demo mode
     if (typeof $("body").data('demo-mode') !== 'undefined') {
         function disableFormSubmissionOnDemoMode(event) {
-            showStackBarTop('error', '', Translator.trans('This feature is disabled in demo mode', {}, 'javascript'));
+            showStackBarTop('error', '', 'This feature is disabled in demo mode');
             event.preventDefault();
             return false;
         }
@@ -1561,11 +1493,10 @@ $(document).ready(function () {
                     allow_duplicate: false,
                     allow_up: true,
                     allow_down: true,
-                    add: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm"><i class="fas fa-plus-square"></i> ' + Translator.trans('Add', {}, 'javascript') + '</a>',
-                    remove: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm"><i class="fas fa-minus-square"></i> ' + Translator.trans('Remove', {}, 'javascript') + '</a>',
-                    up: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm"><i class="fas fa-caret-square-up"></i> ' + Translator.trans('Move up', {}, 'javascript') + '</a>',
-                    down: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm"><i class="fas fa-caret-square-down"></i> ' + Translator.trans('Move down', {}
-                        , 'javascript') + '</a>',
+                    add: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm"><i class="fas fa-plus-square"></i> ' + 'Add' + '</a>',
+                    remove: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm"><i class="fas fa-minus-square"></i> ' + 'Remove' + '</a>',
+                    up: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm"><i class="fas fa-caret-square-up"></i> ' + 'Move up' + '</a>',
+                    down: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm"><i class="fas fa-caret-square-down"></i> ' + 'Move down' + '</a>',
                     position_field_selector: '.menuelement-position',
 
                     after_add: function (menuElementsCollection, menuElement) {
@@ -1574,18 +1505,18 @@ $(document).ready(function () {
                             inputSearch: true
                         });
                         menuElement.find('.select2').each(function () {
-                            if ($(this).data("sort-options") == "1") {
+                            if ($(this).data("sort-options") === "1") {
                                 $(this).select2({
                                     theme: 'bootstrap4',
                                     allowClear: true,
-                                    placeholder: Translator.trans('Select an option', {}, 'javascript'),
+                                    placeholder: 'Select an option',
                                     sortResults: data => data.sort((a, b) => a.text.localeCompare(b.text)),
                                 });
                             } else {
                                 $(this).select2({
                                     theme: 'bootstrap4',
                                     allowClear: true,
-                                    placeholder: Translator.trans('Select an option', {}, 'javascript'),
+                                    placeholder: 'Select an option',
                                 });
                             }
                         });
@@ -1602,17 +1533,17 @@ $(document).ready(function () {
     $('.send-test-email-button').click(function () {
         var $thisButton = $(this);
         var $sendTestEmailDialog = $.confirm({
-            title: Translator.trans('Mail server test email', {}, 'javascript'),
+            title: 'Mail server test email',
             content: $thisButton.data('confirmation-text') +
-                '<input id="mail-test-email-address" type="email" class="form-control mt-3" placeholder="' + Translator.trans('Email address', {}, 'javascript') + '">',
+                '<input id="mail-test-email-address" type="email" class="form-control mt-3" placeholder="' + 'Email address' + '">',
             buttons: {
                 confirm: {
-                    text: Translator.trans('Send', {}, 'javascript'),
+                    text: 'Send',
                     btnClass: 'btn-primary btn-sm',
                     keys: ['enter'],
                     action: function () {
                         if (!isEmailValid($('#mail-test-email-address').val())) {
-                            showStackBarTop('error', '', Translator.trans('Make sure to enter a valid email address', {}, 'javascript'));
+                            showStackBarTop('error', '', 'Make sure to enter a valid email address');
                             return false;
                         } else {
                             location.href = $thisButton.data('target') + "?email=" + $('#mail-test-email-address').val();
@@ -1620,7 +1551,7 @@ $(document).ready(function () {
                     }
                 },
                 cancel: {
-                    text: Translator.trans('Cancel', {}, 'javascript'),
+                    text: 'Cancel',
                     btnClass: 'btn-default btn-sm',
                     keys: ['esc'],
                     action: function () {

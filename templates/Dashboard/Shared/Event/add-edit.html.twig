@@ -10,7 +10,7 @@
 
 {% block content %}
 
-    {% set navigation = [{ "dashboard_index": ('Dashboard' | trans),  "dashboard_organizer_event": ('My events'), "current":(pagetitle) }] %}
+    {% set navigation = [{ "dashboard_index": ('Dashboard' ),  "dashboard_organizer_event": ('My events'), "current":(pagetitle) }] %}
     {% include "Global/navigation.html.twig" with navigation %}
 
     <section
@@ -92,7 +92,7 @@
                 // Make an AJAX request to fetch event details based on the selected event ID
                 $.ajax({
                     type: 'GET',
-                    url: '/en/api/get-event-details/' + eventId,
+                    url: '/api/get-event-details/' + eventId,
                     dataType: 'json',
                     success: function (data) {
                         // Populate the other form fields with data received from the server

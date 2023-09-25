@@ -1,18 +1,18 @@
 {% trans_default_domain 'FOSCommentBundle' %}
 
 {#
+This file is part of the FOSCommentBundle package.
 
- This file is part of the FOSCommentBundle package.
+(c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
 
- (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
-
- This source file is subject to the MIT license that is bundled
- with this source code in the file LICENSE.
-
+This source file is subject to the MIT license that is bundled
+with this source code in the file LICENSE.
 #}
 
 <div class="fos_comment_delete_form_holder mt-4 mb-4 text-right">
-    <form class="fos_comment_delete_form" action="{{ url('fos_comment_patch_thread_comment_state', {'id': id, 'commentId': commentId}) }}" data-fos-comment-thread-id="{{ id }}" method="POST">
+    <form class="fos_comment_delete_form"
+          action="{{ url('fos_comment_patch_thread_comment_state', {'id': id, 'commentId': commentId}) }}"
+          data-fos-comment-thread-id="{{ id }}" method="POST">
 
         {% block fos_comment_form_fields %}
             {{ form_errors(form) }}
@@ -22,7 +22,7 @@
 
         <div class="fos_comment_submit">
             {% block fos_comment_form_submit %}
-                <button type="submit"><i class="far fa-comments"></i> {{ 'fos_comment_comment_delete' | trans({}, 'FOSCommentBundle') }}</button>
+                <button type="submit"><i class="far fa-comments"></i> {{ 'fos_comment_comment_delete' }}</button>
             {% endblock %}
         </div>
 

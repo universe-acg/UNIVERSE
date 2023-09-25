@@ -22,7 +22,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class Provider implements FeedProviderInterface
 {
-
     protected $services;
     protected $router;
     protected $assets;

@@ -28,15 +28,15 @@ class FollowingController extends Controller
     }
 
     /**
-     * @Route("/en/dashboard/attendee/following/add/{slug}", name="app_dashboard_attendee_following_add", condition="request.isXmlHttpRequest()")
-     * @Route("/en/dashboard/attendee/following/remove/{slug}", name="app_dashboard_attendee_following_remove", condition="request.isXmlHttpRequest()")
+     * @Route("/dashboard/attendee/following/add/{slug}", name="app_dashboard_attendee_following_add", condition="request.isXmlHttpRequest()")
+     * @Route("/dashboard/attendee/following/remove/{slug}", name="app_dashboard_attendee_following_remove", condition="request.isXmlHttpRequest()")
      */
     public function addRemove($slug, AppServices $services, Request $request, RequestStack $requestStack)
     {
         $user = $services->getUsers(array("organizerslug" => $slug))->getQuery()->getOneOrNullResult();
 
         if (!$user) {
-            return new JsonResponse(['error' => $translator->trans('The organizer cannot be found')]);
+            return new JsonResponse(['error' => 'The organizer cannot be found']);
         }
 
         $em = $this->getDoctrine()->getManager();

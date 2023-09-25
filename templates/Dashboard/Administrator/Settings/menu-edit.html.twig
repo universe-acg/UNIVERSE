@@ -4,11 +4,11 @@
 
 {% set pagetitle = 'Edit the menu' ~ ' "' ~ menu.name ~ '"' %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 
-    {% set navigation = [{ "dashboard_index": ('Dashboard' | trans),  "dashboard_administrator_settings_menus": ('Menus settings' | trans), "current":(pagetitle) }] %}
+    {% set navigation = [{ "dashboard_index": ('Dashboard' ),  "dashboard_administrator_settings_menus": ('Menus settings' ), "current":(pagetitle) }] %}
     {% include "Global/navigation.html.twig" with navigation %}
 
     <section class="section-content padding-y bg-white">
@@ -37,7 +37,6 @@
     <script>
 
         $(document).ready(function () {
-
 
 
         });

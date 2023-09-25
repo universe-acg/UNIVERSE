@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+  locale: en
   is_website_configured: '%env(IS_WEBSITE_CONFIGURED)%'
   maintenance_mode: '%env(MAINTENANCE_MODE)%'
   # The above parameters are declared here to be catched by the related event subscriber
@@ -11,9 +12,6 @@ parameters:
   date_format_simple: '%env(DATE_FORMAT_SIMPLE)%'
   date_format_date_only: '%env(DATE_FORMAT_DATE_ONLY)%'
   date_timezone: '%env(DATE_TIMEZONE)%'
-  locale: '%env(DEFAULT_LOCALE)%'
-  locales: '%env(APP_LOCALES)%'
-  available_locales: en
   website_name: '%env(WEBSITE_NAME)%'
   no_reply_email: '%env(NO_REPLY_EMAIL)%'
   website_root_url: '%env(WEBSITE_ROOT_URL)%'
@@ -117,18 +115,6 @@ services:
   universe_mailchimp_fos_subscriber_provider:
     class: Welp\MailchimpBundle\Provider\FosSubscriberProvider
     arguments: [ "@fos_user.user_manager" ]
-
-  form.extension.type.gateway_config.crypted:
-    class: App\Form\Extension\CryptedGatewayConfigTypeExtension
-    arguments:
-      $cypher: '@payum.dynamic_gateways.cypher'
-    tags:
-      - { name: form.type_extension, extended-type: App\Form\PaymentGatewayConfigType }
-
-  App\Controller\Dashboard\Shared\PayoutRequestController:
-    class: App\Controller\Dashboard\Shared\PayoutRequestController
-    arguments:
-      $cypher: '@payum.dynamic_gateways.cypher'
 
   coresphere_console.controller:
     class: CoreSphere\ConsoleBundle\Controller\ConsoleController

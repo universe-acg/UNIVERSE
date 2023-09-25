@@ -1,3 +1,12 @@
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
+
+/*
+ Author: Jack Ducasse;
+ Version: 0.1.0;
+ (◠‿◠✿)
+ */
 var Calendar = function (model, options, date) {
     // Default Values
     this.Options = {
@@ -53,18 +62,18 @@ function createCalendar(calendar, element, adjuster) {
         }
     }
     var months = [
-        Translator.trans("January", {}, 'javascript'),
-        Translator.trans("February", {}, 'javascript'),
-        Translator.trans("March", {}, 'javascript'),
-        Translator.trans("April", {}, 'javascript'),
-        Translator.trans("May", {}, 'javascript'),
-        Translator.trans("June", {}, 'javascript'),
-        Translator.trans("July", {}, 'javascript'),
-        Translator.trans("August", {}, 'javascript'),
-        Translator.trans("September", {}, 'javascript'),
-        Translator.trans("October", {}, 'javascript'),
-        Translator.trans("November", {}, 'javascript'),
-        Translator.trans("December", {}, 'javascript')];
+        "January", {}, 'javascript',
+        "February", {}, 'javascript',
+        "March", {}, 'javascript',
+        "April", {}, 'javascript',
+        "May", {}, 'javascript',
+        "June", {}, 'javascript',
+        "July", {}, 'javascript',
+        "August", {}, 'javascript',
+        "September", {}, 'javascript',
+        "October", {}, 'javascript',
+        "November", {}, 'javascript',
+        "December", {}, 'javascript'];
 
     function AddSidebar() {
         var sidebar = document.createElement('div');
@@ -180,7 +189,7 @@ function createCalendar(calendar, element, adjuster) {
     function AddLabels() {
         var labels = document.createElement('ul');
         labels.className = 'cld-labels';
-        var labelsList = [Translator.trans("days.Sun", {}, 'javascript'), Translator.trans("days.Mon", {}, 'javascript'), Translator.trans("days.Tue", {}, 'javascript'), Translator.trans("days.Wed", {}, 'javascript'), Translator.trans("days.Thu", {}, 'javascript'), Translator.trans("days.Fri", {}, 'javascript'), Translator.trans("days.Sat", {}, 'javascript')];
+        var labelsList = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
         for (var i = 0; i < labelsList.length; i++) {
             var label = document.createElement('li');
             label.className += "cld-label";

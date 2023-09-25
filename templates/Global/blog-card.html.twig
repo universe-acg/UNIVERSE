@@ -8,7 +8,7 @@
     <div class="card-body">
         <p class="card-text">
             {% if blogpost.user %}
-                <small class="text-muted mr-3"><a href={{ "/en/organizer/" ~ blogpost.user.slug }} class="text-dark"><i
+                <small class="text-muted mr-3"><a href={{ "/organizer/" ~ blogpost.user.username }} class="text-dark"><i
                                 class="fas fa-user"></i> {{ blogpost.user.username }}</a></small>
             {% endif %}
             {% if blogpost.category %}

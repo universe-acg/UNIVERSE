@@ -4558,25 +4558,25 @@ CREATE TABLE IF NOT EXISTS `universe_menu_element` (
 
 INSERT INTO `universe_menu_element` (`id`, `menu_id`, `icon`, `link`, `position`, `custom_link`) VALUES
 (1, 1, 'fas fa-home', '/en', 0, NULL),
-(2, 1, 'fas fa-calendar', '/en/events', 1, NULL),
+(2, 1, 'fas fa-calendar', '/events', 1, NULL),
 (3, 1, 'fas fa-stream', 'categories_dropdown', 2, NULL),
-(4, 1, 'fas fa-compass', '/en/venues', 3, NULL),
-(5, 1, 'fas fa-question-circle', '/en/help-center', 4, NULL),
-(6, 1, 'fas fa-newspaper', '/en/blog', 5, NULL),
-(7, 1, 'fas fa-ticket-alt', '/en/dashboard/attendee/my-tickets', 6, NULL),
-(8, 1, 'fas fa-calendar-plus', '/en/dashboard/organizer/my-events/add', 7, NULL),
-(9, 2, NULL, '/en/page/about-us', 0, NULL),
-(10, 2, NULL, '/en/help-center', 1, NULL),
-(11, 2, NULL, '/en/blog', 2, NULL),
-(12, 2, NULL, '/en/venues', 3, NULL),
-(13, 2, NULL, '/en/contact', 4, NULL),
-(14, 3, NULL, '/en/signup/attendee', 0, NULL),
-(15, 3, NULL, '/en/signup/organizer', 1, NULL),
-(16, 3, NULL, '/en/dashboard/attendee/my-tickets', 2, NULL),
-(17, 3, NULL, '/en/resetting/request', 3, NULL),
-(18, 3, NULL, '/en/page/pricing-and-fees', 4, NULL),
+(4, 1, 'fas fa-compass', '/venues', 3, NULL),
+(5, 1, 'fas fa-question-circle', '/help-center', 4, NULL),
+(6, 1, 'fas fa-newspaper', '/blog', 5, NULL),
+(7, 1, 'fas fa-ticket-alt', '/dashboard/attendee/my-tickets', 6, NULL),
+(8, 1, 'fas fa-calendar-plus', '/dashboard/organizer/my-events/add', 7, NULL),
+(9, 2, NULL, '/page/about-us', 0, NULL),
+(10, 2, NULL, '/help-center', 1, NULL),
+(11, 2, NULL, '/blog', 2, NULL),
+(12, 2, NULL, '/venues', 3, NULL),
+(13, 2, NULL, '/contact', 4, NULL),
+(14, 3, NULL, '/signup/attendee', 0, NULL),
+(15, 3, NULL, '/signup/organizer', 1, NULL),
+(16, 3, NULL, '/dashboard/attendee/my-tickets', 2, NULL),
+(17, 3, NULL, '/resetting/request', 3, NULL),
+(18, 3, NULL, '/page/pricing-and-fees', 4, NULL),
 (19, 4, NULL, 'footer_categories_section', 0, NULL),
-(20, 4, NULL, '/en/categories', 1, NULL);
+(20, 4, NULL, '/categories', 1, NULL);
 
 --
 -- Table structure for table `universe_menu_element_translation`

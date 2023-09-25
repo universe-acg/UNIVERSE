@@ -31,26 +31,35 @@ class CategoryRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder("c");
         $qb->select("DISTINCT c");
-//            $qb->join("c.translations", "translations");
+
         if ($hidden !== "all") {
             $qb->andWhere("c.hidden = :hidden")->setParameter("hidden", $hidden);
         }
+
         if ($keyword !== "all") {
             $qb->andWhere("c.name LIKE :keyword or :keyword LIKE c.name")->setParameter("keyword", "%" . $keyword . "%");
         }
+
         if ($slug !== "all") {
             $qb->andWhere("c.slug = :slug")->setParameter("slug", $slug);
         }
+
         if ($featured !== "all") {
             $qb->andWhere("c.featured = :featured")->setParameter("featured", $featured);
+
             if ($featured === true) {
                 $qb->orderBy("c.featuredorder", "ASC");
             }
         }
+
         if ($limit !== "all") {
             $qb->setMaxResults($limit);
         }
-        $qb->orderBy($sort, $order);
+
+        if ($sort !== "all" && $order !== "all") {
+            $qb->orderBy("c." . $sort, $order);
+        }
+
         return $qb;
     }
 

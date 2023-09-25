@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class OrganizerProfileType extends AbstractType
@@ -67,13 +68,23 @@ class OrganizerProfileType extends AbstractType
 //            ])
             ->add('logoFile', VichImageType::class, [
                 'required' => true,
-                'allow_delete' => false,
+                'allow_delete' => true,
                 'download_label' => false,
                 'download_uri' => false,
                 'image_uri' => false,
                 'imagine_pattern' => 'scale',
                 'label' => 'Organizer logo',
-                'translation_domain' => 'messages'
+                'help' => 'Optionally add a cover photo to showcase your organizer activities. Only PNG, JPEG with max size 5M are allowed.',
+                'constraints' => [
+                    new File([
+                        'maxSize' => '5M', // Set the maximum upload size (e.g., 5 megabytes)
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                        ],
+                        'mimeTypesMessage' => 'Please upload a valid image file (JPEG, PNG)',
+                    ]),
+                ],
             ])
             ->add('coverFile', VichImageType::class, [
                 'required' => false,
@@ -83,8 +94,17 @@ class OrganizerProfileType extends AbstractType
                 'image_uri' => false,
                 'imagine_pattern' => 'scale',
                 'label' => 'Cover photo',
-                'help' => 'Optionally add a cover photo to showcase your organizer activities',
-                'translation_domain' => 'messages'
+                'help' => 'Optionally add a cover photo to showcase your organizer activities. Only PNG, JPEG with max size 5M are allowed.',
+                'constraints' => [
+                    new File([
+                        'maxSize' => '5M', // Set the maximum upload size (e.g., 5 megabytes)
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                        ],
+                        'mimeTypesMessage' => 'Please upload a valid image file (JPEG, PNG)',
+                    ]),
+                ],
             ])
 //                ->add('country', EntityType::class, [
 //                    'required' => false,

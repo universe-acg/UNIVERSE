@@ -28,9 +28,9 @@ class AccountController extends Controller
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($this->getUser());
                 $em->flush();
-                $this->addFlash('success', $translator->trans('Your account settings have been updated'));
+                $this->addFlash('success', 'Your account settings have been updated');
             } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+                $this->addFlash('error', 'The form contains invalid data');
             }
         }
 
@@ -53,9 +53,9 @@ class AccountController extends Controller
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($this->getUser());
                 $em->flush();
-                $this->addFlash('success', $translator->trans('Your account settings have been updated'));
+                $this->addFlash('success', 'Your account settings have been updated');
             } else {
-                $this->addFlash('error', $translator->trans('The form contains invalid data'));
+                $this->addFlash('error', 'The form contains invalid data');
             }
         }
 

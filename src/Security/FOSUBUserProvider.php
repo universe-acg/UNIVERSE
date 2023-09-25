@@ -69,6 +69,7 @@ class FOSUBUserProvider extends BaseClass
             $user->setFirstname($firstname);
             $user->setLastname($lastname);
             $user->setUsername(Sluggable\Urlizer::urlize($user->getFullName(), '-'));
+            $user->getOrganizer()->setSlug(Sluggable\Urlizer::urlize($user->getFullName(), '-'));
             $user->setUsernameCanonical(Sluggable\Urlizer::urlize($user->getFullName(), '-'));
             $temporaryPassword = (new Services)->generateReference(8);
             $user->setPlainPassword($temporaryPassword);
@@ -85,6 +86,7 @@ class FOSUBUserProvider extends BaseClass
         $user->setFirstname($firstname);
         $user->setLastname($lastname);
         $user->setUsername(Sluggable\Urlizer::urlize($user->getFullName(), '-'));
+        $user->getOrganizer()->setSlug(Sluggable\Urlizer::urlize($user->getFullName(), '-'));
         $user->setUsernameCanonical(Sluggable\Urlizer::urlize($user->getFullName(), '-'));
         if ($response->getProfilePicture() != null) {
             $user->setFacebookProfilePicture($response->getProfilePicture());
