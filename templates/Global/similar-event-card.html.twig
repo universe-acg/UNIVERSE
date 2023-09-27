@@ -52,8 +52,9 @@
                 {% endif %}
             {% endif %}
 
-            <span style="float: right"><a href="{{ path('organizer', {slug: (event.getOrganizer().getSlug())}) }}"
-                                          class="link-style text-dark">{{ (event.getOrganizer().getName()) }}</a></span>
+            <span style="float: right"><a
+                        href="{{ path('organizer', {slug: (event.getOrganizer().getUser().getUsername())}) }}"
+                        class="link-style text-dark">{{ (event.getOrganizer().getName()) }}</a></span>
 
         </div>
         {% if orderReference is defined %}

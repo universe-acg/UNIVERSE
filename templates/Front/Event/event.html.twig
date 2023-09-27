@@ -759,8 +759,7 @@
                     <div class="mt-5">
                         {% include '@FOSComment/Thread/async.html.twig' with {'id':event.slug} %}
                     </div>
-
-                    {% set similareventscriteria = {"category" : event.category.slug, "limit" : 8} %}
+                    {% set similareventscriteria = {"category" : event.category, "limit" : 8, "otherthan": event.slug} %}
                     {% set similarevents = services.getEvents(similareventscriteria).getQuery().getResult() %}
                     {% if similarevents %}
                         <div class="row">

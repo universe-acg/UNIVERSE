@@ -291,11 +291,11 @@
         </script>
         <script>
             // Add an event listener to the tabs to handle tab switching
-            document.querySelectorAll('.nav-link').forEach(function (tab) {
+            document.querySelectorAll('.nav-pills .nav-link').forEach(function (tab) {
                 tab.addEventListener('click', function (e) {
                     e.preventDefault();
                     // Remove the 'active' class from all tab links
-                    document.querySelectorAll('.nav-link').forEach(function (link) {
+                    document.querySelectorAll('.nav-pills .nav-link').forEach(function (link) {
                         link.classList.remove('active');
                     });
                     // Add the 'active' class to the clicked tab link
@@ -312,7 +312,7 @@
             });
 
             // Show the first tab by default
-            document.querySelector('.nav-link:first-child').classList.add('show', 'active');
+            document.querySelector('.nav-pills .nav-link:first-child').classList.add('show', 'active');
         </script>
 
         {% include "Global/organizer-info-box.html.twig" %}

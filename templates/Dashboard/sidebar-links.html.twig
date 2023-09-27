@@ -235,18 +235,19 @@
     {# Attendee role sidebar links #}
 
     <li class="nav-item">
+        <a href="{{ path('dashboard_attendee_orders') }}"
+           class="nav-link {% if app.request.pathinfo == "/dashboard/attendee/my-tickets" %}active{% endif %}">
+            <i class="fas fa-ticket-alt fa-fw"></i> {{ 'My tickets' }}
+        </a>
+    </li>
+
+    <li class="nav-item">
         <a href="{{ path('dashboard_attendee_following') }}"
            class="nav-link {% if routename == "dashboard_attendee_following" %}active{% endif %}">
             <i class="fas fa-address-book fa-fw"></i> {{ 'Creators Following' }}
         </a>
     </li>
 
-    <li class="nav-item">
-        <a href="{{ path('dashboard_attendee_orders') }}"
-           class="nav-link">
-            <i class="fas fa-ticket-alt fa-fw"></i> {{ 'My tickets' }}
-        </a>
-    </li>
 
     <li class="nav-item">
         <a href="{{ path('dashboard_attendee_favorites') }}"

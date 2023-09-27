@@ -56,6 +56,10 @@
                                        href="https://universeacg.xyz/dashboard/organizer/my-events">
                                         <i class="fas fa-tachometer-alt fa-fw"></i> {{ 'Dashboard' }}
                                     </a>
+                                {% elseif is_granted('ROLE_ATTENDEE') %}
+                                    <a class="dropdown-item" href="{{ path('dashboard_index') }}">
+                                        <i class="fas fa-tachometer-alt fa-fw"></i> {{ 'Dashboard' }}
+                                    </a>
                                 {% endif %}
                                 <hr class="dropdown-divider">
                                 <a class="dropdown-item" href="{{ path('fos_user_security_logout') }}"><i

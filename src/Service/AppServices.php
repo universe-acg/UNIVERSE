@@ -751,7 +751,7 @@
             $order = $criterias['order'] ?? "ASC";
             $limit = $criterias['limit'] ?? "all";
             $count = $criterias['count'] ?? false;
-            $elapsed = $criterias['elapsed'] ?? false;
+            $elapsed = $criterias['elapsed'] ?? "all";
             
             // Create the query builder
             $queryBuilder = $this->em->getRepository(Event::class)->createQueryBuilder('e');
@@ -873,6 +873,10 @@
                     $startDateMin = new DateTime($customDate);
                     $startDateMax = new DateTime($customDate);
                 }
+            }
+            
+            if ($otherthan !== "all") {
+                $queryBuilder->andWhere("e.slug != :otherthan")->setParameter("otherthan", $otherthan);
             }
             
             if ($startDateMin && $startDateMax) {
@@ -1073,14 +1077,19 @@
         
         public function getEventCountForDateRange(DateTimeInterface $startDate, DateTimeInterface $endDate): int
         {
+//            $query = $this->em->createQuery('
+//SELECT COUNT(DISTINCT e.id)
+//FROM App\Entity\Event e
+//LEFT JOIN App\Entity\EventDate ed WITH e.id = ed.event
+//WHERE ed.startdate >= :startDate AND ed.enddate <= :endDate
+//');
             $query = $this->em->createQuery('
-    SELECT COUNT(e.id)
-    FROM App\Entity\Event e
-        LEFT JOIN App\Entity\EventDate ed WITH e.id = ed.event
-    WHERE ed.startdate >= :startDate AND ed.enddate <= :endDate
+SELECT COUNT(DISTINCT e.id)
+FROM App\Entity\Event e
+LEFT JOIN App\Entity\EventDate ed WITH e.id = ed.event
+WHERE ed.startdate >= :startDate
 ');
             $query->setParameter('startDate', $startDate);
-            $query->setParameter('endDate', $endDate);
             
             return (int)$query->getSingleScalarResult();
         }

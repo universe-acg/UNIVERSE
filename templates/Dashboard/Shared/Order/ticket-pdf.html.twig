@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>Ticket - QR Code</title>
-</head>
-<body>
-<h1>Ticket</h1>
-Reference: <h4>{{ order.reference }}</h4>
-Attendee: <h4>{{ order.user.firstname }} {{ order.user.lastname }}</h4>
-Booked at: <h4>{{ order.createdAt|date(date_format_date_only) }}</h4>
-Event starts on: <h4>{{ startdate|date('D j M Y, g:i A') }}</h4>
+    <head>
+        <meta charset="UTF-8">
+        <title>Ticket - QR Code</title>
+    </head>
+    <body>
+        <h1>Ticket: {{ ticketname }}</h1>
+        Reference: <h4>{{ order.reference }}</h4>
+        Attendee: <h4>{{ order.user.firstname }} {{ order.user.lastname }}</h4>
+        Booked at: <h4>{{ order.createdAt|date(date_format_date_only) }}</h4>
+        Event starts on: <h4>{{ startdate|date('D j M Y, g:i A') }}</h4>
 
-<img style="margin-left: -10px !important;" src="{{ qrCodeImage }}" alt="QR Code">
-</body>
+        <img style="margin-left: -10px !important;" src="{{ qrCodeImage }}" alt="QR Code">
+    </body>
 </html>
