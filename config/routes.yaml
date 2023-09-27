@@ -14,6 +14,18 @@ fos_user_change_email:
   path: /dashboard/change-email
   controller: 'App\Controller\Api\EmailChangeController::changeEmail'
 
+dashboard_organizer_blog_post_delete:
+  path: /dashboard/organizer/manage-blog-posts/{slug}/delete
+  controller: 'App\Controller\Dashboard\Organizer\BlogPostController::delete'
+
+dashboard_organizer_blog_post_show:
+  path: /dashboard/organizer/manage-blog-posts/{slug}/show
+  controller: 'App\Controller\Dashboard\Organizer\BlogPostController::showhide'
+
+dashboard_organizer_blog_post_hide:
+  path: /dashboard/organizer/manage-blog-posts/{slug}/hide
+  controller: 'App\Controller\Dashboard\Organizer\BlogPostController::showhide'
+
 fos_user_change_username:
   path: /dashboard/change-username
   controller: 'App\Controller\Api\UsernameChangeController::changeUsername'

@@ -115,7 +115,7 @@
                             </div>
                             <div class="col-12 col-lg-8 bg-light">
 
-                                {% set publishedeventscount = services.getEvents({"count": true, elapsed: "all", organizer: organizer.slug}).getQuery().getResult()[0] %}
+                                {% set publishedeventscount = services.getEvents({"count": true, elapsed: "all", organizer: organizer.slug}).getQuery().getResult() | length %}
 
                                 <div class="p-4 d-flex justify-content-end text-center">
                                     <ul class="list-inline mb-0">
@@ -169,8 +169,9 @@
                                     </ul>
                                 </div>
 
-                                {% set onsaleeventscount = services.getEvents({"count": true, elapsed: false, organizer: organizer.slug}).getQuery().getSingleScalarResult() %}
-                                {% set pasteventscount = services.getEvents({"count": true, elapsed: true, organizer: organizer.slug}).getQuery().getSingleScalarResult() %}
+                                {% set onsaleeventscount = currentevnts | length %}
+                                {% set pasteventscount = pastevents | length %}
+                                {% set newscount = news | length %}
                                 <div class="py-4 px-4">
                                     <ul class="nav nav-pills mb-3">
                                         <li class="nav-item">
@@ -180,38 +181,50 @@
                                                aria-selected="true">{{ "Events" }}
                                                 ({{ onsaleeventscount }})</a>
                                         </li>
-                                        {#                                        <li class="nav-item"> #}
-                                        {#                                            <a class="nav-link" data-toggle="pill" href="#organizer-past-events" #}
-                                        {#                                               role="tab" aria-controls="organizer-past-events" #}
-                                        {#                                               aria-selected="false">{{ "Past events" }} ({{ pasteventscount }} #}
-                                        {#                                                )</a> #}
-                                        {#                                        </li> #}
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="pill"
+                                               href="#organizer-past-events" role="tab"
+                                               aria-controls="organizer-past-events"
+                                               aria-selected="true">{{ "Past events" }}
+                                                ({{ pasteventscount }})</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="pill"
+                                               href="#organizer-news" role="tab"
+                                               aria-controls="organizer-news"
+                                               aria-selected="true">{{ "News/Articles" }}
+                                                ({{ newscount }})</a>
+                                        </li>
                                     </ul>
                                     <div class="tab-content">
                                         <div class="tab-pane fade show active" id="organizer-onsale-events"
                                              role="tabpanel" aria-labelledby="organizer-onsale-events-tab">
                                             {% if onsaleeventscount > 0 %}
-                                                {% for event in services.getEvents({elapsed: true, organizer: organizer.slug, limit: 10}).getQuery().getResult() %}
+                                                {% for event in currentevnts %}
                                                     {% include "Global/event-card.html.twig" with {event: event} %}
                                                 {% endfor %}
                                             {% else %}
                                                 {% include "Global/message.html.twig" with { type: "info", message: ('No active events for now') } %}
                                             {% endif %}
-                                            {% if onsaleeventscount > 10 %}
-                                                <a href="{{ path('events', { organizer: organizer.slug }) }}"
-                                                   class="btn btn-outline-primary mx-auto"><i
-                                                            class="fas fa-ticket-alt"></i> {{ "See all active events" }}
-                                                </a>
-                                            {% endif %}
                                         </div>
-                                        <div class="tab-pane fade" id="organizer-past-events" role="tabpanel"
-                                             aria-labelledby="organizer-past-events">
+                                        <div class="tab-pane fade active" id="organizer-past-events"
+                                             role="tabpanel" aria-labelledby="organizer-past-events-tab">
                                             {% if pasteventscount > 0 %}
-                                                {% for event in services.getEvents({elapsed: true, organizer: organizer.slug, limit: 10}).getQuery().getResult() %}
+                                                {% for event in pastevents %}
                                                     {% include "Global/event-card.html.twig" with {event: event} %}
                                                 {% endfor %}
                                             {% else %}
-                                                {% include "Global/message.html.twig" with { type: "info", message: ('No past events found') } %}
+                                                {% include "Global/message.html.twig" with { type: "info", message: ('No past events') } %}
+                                            {% endif %}
+                                        </div>
+                                        <div class="tab-pane fade active" id="organizer-news"
+                                             role="tabpanel" aria-labelledby="organizer-news-tab">
+                                            {% if newscount > 0 %}
+                                                {% for new in news %}
+                                                    {% include "Global/new-card.html.twig" with {new: new} %}
+                                                {% endfor %}
+                                            {% else %}
+                                                {% include "Global/message.html.twig" with { type: "info", message: ('No news/articles published yet') } %}
                                             {% endif %}
                                         </div>
                                     </div>
@@ -276,6 +289,31 @@
         <script async defer
                 src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap">
         </script>
+        <script>
+            // Add an event listener to the tabs to handle tab switching
+            document.querySelectorAll('.nav-link').forEach(function (tab) {
+                tab.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    // Remove the 'active' class from all tab links
+                    document.querySelectorAll('.nav-link').forEach(function (link) {
+                        link.classList.remove('active');
+                    });
+                    // Add the 'active' class to the clicked tab link
+                    this.classList.add('active');
+
+                    // Remove the 'show' class from all tab panes
+                    document.querySelectorAll('.tab-pane').forEach(function (pane) {
+                        pane.classList.remove('show', 'active');
+                    });
+                    // Add the 'show' class to the clicked tab's associated pane
+                    const targetId = this.getAttribute('href').replace('#', '');
+                    document.getElementById(targetId).classList.add('show', 'active');
+                });
+            });
+
+            // Show the first tab by default
+            document.querySelector('.nav-link:first-child').classList.add('show', 'active');
+        </script>
 
         {% include "Global/organizer-info-box.html.twig" %}
     {% endif %}
@@ -286,4 +324,5 @@
             display: none;
         }
     </style>
+
 {% endblock %}

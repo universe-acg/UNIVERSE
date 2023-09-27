@@ -912,7 +912,7 @@ $(document).ready(function () {
     });
 
 
-// Lazy loading images
+    //  Lazy loading images
     var bLazy = new Blazy({
         selector: '.img-lazy-load',
         success: function (ele) {

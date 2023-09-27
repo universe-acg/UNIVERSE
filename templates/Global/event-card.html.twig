@@ -1,6 +1,6 @@
 {% set runtimeConfig = {"thumbnail": {"size": [500, 250] }} %}
 
-{% set displayedEventDate = event.eventdates[0] %}
+{% set displayedEventDate = event.eventdates[(event.eventdates | length )-1] %}
 
 {% if customLink is defined %}
     {% set link = customLink %}
@@ -66,8 +66,9 @@
                 {% endif %}
             {% endif %}
 
-            <span style="float: right"><a href="{{ path('organizer', {slug: (event.getOrganizer().getSlug())}) }}"
-                                          class="link-style text-dark">{{ (event.getOrganizer().getName()) }}</a></span>
+            <span style="float: right"><a
+                        href="{{ path('organizer', {slug: (event.getOrganizer().getUser().getUsername())}) }}"
+                        class="link-style text-dark">{{ (event.getOrganizer().getName()) }}</a></span>
 
         </div>
         {% if orderReference is defined %}

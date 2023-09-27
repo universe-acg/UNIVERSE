@@ -562,18 +562,18 @@
                                                     <div class="table-responsive">
                                                         <table class="table table-hover table-condensed">
                                                             <tbody>
-                                                            {% for ticket in eventDate.tickets %}
-                                                                {% if ticket.active %}
-                                                                    <tr class="bg-gray">
-                                                                        <td class="border-top-white"
-                                                                            style="width: 75%;">
-                                                                            {{ ticket.name }}
-                                                                        </td>
-                                                                        <td class="border-top-white text-right">
-                                                                            <span class="badge badge-{{ ticket.stringifyStatusClass }}">{{ ticket.stringifyStatus }}</span>
-                                                                    </tr>
-                                                                {% endif %}
-                                                            {% endfor %}
+                                                                {% for ticket in eventDate.tickets %}
+                                                                    {% if ticket.active %}
+                                                                        <tr class="bg-gray">
+                                                                            <td class="border-top-white"
+                                                                                style="width: 75%;">
+                                                                                {{ ticket.name }}
+                                                                            </td>
+                                                                            <td class="border-top-white text-right">
+                                                                                <span class="badge badge-{{ ticket.stringifyStatusClass }}">{{ ticket.stringifyStatus }}</span>
+                                                                        </tr>
+                                                                    {% endif %}
+                                                                {% endfor %}
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -632,7 +632,7 @@
                             <dl class="mt-5 mb-5">
                                 <dt class="text-muted">
                                     <span class="{% if app.request.locale == "ar" %}float-right{% else %}float-left{% endif %}">{{ "Organizer" }}</span>
-                                    <a href="{{ path('organizer', { slug : event.organizer.slug }) }}"
+                                    <a href="{{ path('organizer', { slug : event.organizer.user.username }) }}"
                                        class="{% if app.request.locale == "ar" %}float-left{% else %}float-right{% endif %} text-sm"><i
                                                 class="far fa-id-card"></i> {{ "Details" }}</a>
                                     <div class="clearfix"></div>
@@ -641,7 +641,7 @@
                                     <div class="card-banner {{ event.organizer.coverName ? '' : 'organizer-preview-no-cover' }}"{% if event.organizer.coverName %} style="height:250px;background-image: url('{{ asset(event.organizer.getCoverPath|imagine_filter('thumbnail', {"thumbnail": {"size": [400, 250] }})) }}');" {% endif %}>
                                         <article class="overlay bottom text-center">
                                             <h4 class="card-title"><a
-                                                        href="{{ path('organizer', { slug : event.organizer.slug }) }}">{{ event.organizer.name }}</a>
+                                                        href="{{ path('organizer', { slug : event.organizer.user.username }) }}">{{ event.organizer.name }}</a>
                                             </h4>
                                             {% if event.organizer.logoName %}
                                                 <img src="{{ asset(event.organizer.getLogoPath) }}"

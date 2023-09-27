@@ -3,138 +3,138 @@
         <div class="table-responsive">
             <table class="table table-borderless table-striped table-hover table-sm">
                 <thead>
-                <tr>
-                    <th colspan="2">
-                        <i class="fas fa-file-alt fa-fw text-muted"></i> {{ "Account information" }}
-                    </th>
-                </tr>
+                    <tr>
+                        <th colspan="2">
+                            <i class="fas fa-file-alt fa-fw text-muted"></i> {{ "Account information" }}
+                        </th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td width="30%">{{ "Role" }}</td>
-                    <td>
-                        {{ user.getRole }}
-                    </td>
-                </tr>
-                <tr>
-                    <td width="30%">{{ "Status" }}</td>
-                    <td>
-                        {% if user.enabled %}
-                            <span class="badge badge-success"><i
-                                        class="fas fa-user-check fa-fw"></i> {{ "Enabled" }}</span>
-                        {% else %}
-                            <span class="badge badge-danger"><i
-                                        class="fas fa-user-slash fa-fw"></i> {{ "Disabled" }}</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% if user.firstname %}
                     <tr>
-                        <td width="30%">{{ "First name" }}</td>
+                        <td width="30%">{{ "Role" }}</td>
                         <td>
-                            {{ user.firstname }}
+                            {{ user.getRole }}
                         </td>
                     </tr>
-                {% endif %}
-                {% if user.lastname %}
                     <tr>
-                        <td width="30%">{{ "Last name" }}</td>
+                        <td width="30%">{{ "Status" }}</td>
                         <td>
-                            {{ user.lastname }}
+                            {% if user.enabled %}
+                                <span class="badge badge-success"><i
+                                            class="fas fa-user-check fa-fw"></i> {{ "Enabled" }}</span>
+                            {% else %}
+                                <span class="badge badge-danger"><i
+                                            class="fas fa-user-slash fa-fw"></i> {{ "Disabled" }}</span>
+                            {% endif %}
                         </td>
                     </tr>
-                {% endif %}
-                <tr>
-                    <td width="30%">{{ "Email" }}</td>
-                    <td>
-                        {{ user.email }}
-                    </td>
-                </tr>
-                <tr>
-                    <td width="30%">{{ "Username" }}</td>
-                    <td>
-                        {{ user.username }}
-                    </td>
-                </tr>
-                <tr>
-                    <td width="30%">{{ "Registration date" }}</td>
-                    <td>
-                        {{ user.createdAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}
-                    </td>
-                </tr>
-                <tr>
-                    <td width="30%">{{ "Update date" }}</td>
-                    <td>
-                        {{ user.updatedAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}
-                    </td>
-                </tr>
-                <tr>
-                    <td width="30%">{{ "Last login" }}</td>
-                    <td>
-                        {{ user.lastLogin|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}
-                    </td>
-                </tr>
-                {% if user.phone %}
+                    {% if user.firstname %}
+                        <tr>
+                            <td width="30%">{{ "First name" }}</td>
+                            <td>
+                                {{ user.firstname }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if user.lastname %}
+                        <tr>
+                            <td width="30%">{{ "Last name" }}</td>
+                            <td>
+                                {{ user.lastname }}
+                            </td>
+                        </tr>
+                    {% endif %}
                     <tr>
-                        <td width="30%">{{ "Phone number" }}</td>
+                        <td width="30%">{{ "Email" }}</td>
                         <td>
-                            {{ user.phone }}
+                            {{ user.email }}
                         </td>
                     </tr>
-                {% endif %}
-                {% if user.avatarName %}
                     <tr>
-                        <td width="30%">{{ "Avatar" }}</td>
+                        <td width="30%">{{ "Username" }}</td>
                         <td>
-                            <img src="{{ asset(user.getAvatarPath) }}" class="img-thumbnail img-50-50"/>
+                            {{ user.username }}
                         </td>
                     </tr>
-                {% endif %}
-                {% if user.facebookId %}
                     <tr>
-                        <td width="30%">{{ "Registered using Facebook" }} <i
-                                    class="fab fa-facebook-f fa-sm btn-facebook ml-2 p-2"></i></td>
+                        <td width="30%">{{ "Registration date" }}</td>
                         <td>
-                            Facebook Id: {{ user.facebookId }}
+                            {{ user.createdAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}
                         </td>
                     </tr>
-                {% endif %}
-                {% if user.googleId %}
                     <tr>
-                        <td width="30%">{{ "Registered using Google" }} <i
-                                    class="fab fa-google fa-sm btn-youtube ml-2 p-2"></i></td>
+                        <td width="30%">{{ "Update date" }}</td>
                         <td>
-                            Google Id: {{ user.googleId }}
+                            {{ user.updatedAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}
                         </td>
                     </tr>
-                {% endif %}
-                {% if user.facebookProfilePicture %}
                     <tr>
-                        <td width="30%">{{ "Facebook profile picture" }}</td>
+                        <td width="30%">{{ "Last login" }}</td>
                         <td>
-                            <a class="fancybox" href="{{ user.facebookProfilePicture }}" data-toggle="tooltip"
-                               title="{{ "Enlarge" }}">
-                                <img src="{{ user.facebookProfilePicture }}" class="img-thumbnail img-50-50"/>
-                            </a>
+                            {{ user.lastLogin|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}
                         </td>
                     </tr>
-                {% endif %}
-                {% if user.birthdate %}
-                    <tr>
-                        <td width="30%">{{ "Birthdate" }}</td>
-                        <td>
-                            {{ user.birthdate|date(date_format_date_only) }}
-                        </td>
-                    </tr>
-                {% endif %}
-                {% if user.stringifyAddress %}
-                    <tr>
-                        <td width="30%">{{ "Address" }}</td>
-                        <td>
-                            {{ user.stringifyAddress }}
-                        </td>
-                    </tr>
-                {% endif %}
+                    {% if user.phone %}
+                        <tr>
+                            <td width="30%">{{ "Phone number" }}</td>
+                            <td>
+                                {{ user.phone }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if user.avatarName %}
+                        <tr>
+                            <td width="30%">{{ "Avatar" }}</td>
+                            <td>
+                                <img src="{{ asset(user.getAvatarPath) }}" class="img-thumbnail img-50-50"/>
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if user.facebookId %}
+                        <tr>
+                            <td width="30%">{{ "Registered using Facebook" }} <i
+                                        class="fab fa-facebook-f fa-sm btn-facebook ml-2 p-2"></i></td>
+                            <td>
+                                Facebook Id: {{ user.facebookId }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if user.googleId %}
+                        <tr>
+                            <td width="30%">{{ "Registered using Google" }} <i
+                                        class="fab fa-google fa-sm btn-youtube ml-2 p-2"></i></td>
+                            <td>
+                                Google Id: {{ user.googleId }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if user.facebookProfilePicture %}
+                        <tr>
+                            <td width="30%">{{ "Facebook profile picture" }}</td>
+                            <td>
+                                <a class="fancybox" href="{{ user.facebookProfilePicture }}" data-toggle="tooltip"
+                                   title="{{ "Enlarge" }}">
+                                    <img src="{{ user.facebookProfilePicture }}" class="img-thumbnail img-50-50"/>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if user.birthdate %}
+                        <tr>
+                            <td width="30%">{{ "Birthdate" }}</td>
+                            <td>
+                                {{ user.birthdate|date(date_format_date_only) }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if user.stringifyAddress %}
+                        <tr>
+                            <td width="30%">{{ "Address" }}</td>
+                            <td>
+                                {{ user.stringifyAddress }}
+                            </td>
+                        </tr>
+                    {% endif %}
                 </tbody>
                 </thead>
             </table>
@@ -147,43 +147,43 @@
             <div class="table-responsive">
                 <table class="table table-borderless table-striped table-hover table-sm">
                     <thead>
-                    <tr>
-                        <th colspan="2">
-                            <i class="far fa-user fa-fw text-muted"></i> {{ "Attendee information" }}
-                        </th>
-                    </tr>
+                        <tr>
+                            <th colspan="2">
+                                <i class="far fa-user fa-fw text-muted"></i> {{ "Attendee information" }}
+                            </th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td width="30%">{{ "Cart elements" }}</td>
-                        <td>
-                            {{ user.cartelements|length }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td width="30%">{{ "Bought tickets" }}</td>
-                        <td>
-                            {{ user.getOrdersQuantitySum }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td width="30%">{{ "Reviews" }}</td>
-                        <td>
-                            {{ user.reviews|length }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td width="30%">{{ "Favorites" }}</td>
-                        <td>
-                            {{ user.favorites|length }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td width="30%">{{ "Following" }}</td>
-                        <td>
-                            {{ user.following|length }}
-                        </td>
-                    </tr>
+                        <tr>
+                            <td width="30%">{{ "Cart elements" }}</td>
+                            <td>
+                                {{ user.cartelements|length }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="30%">{{ "Bought tickets" }}</td>
+                            <td>
+                                {{ user.getOrdersQuantitySum }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="30%">{{ "Reviews" }}</td>
+                            <td>
+                                {{ user.reviews|length }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="30%">{{ "Favorites" }}</td>
+                            <td>
+                                {{ user.favorites|length }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="30%">{{ "Following" }}</td>
+                            <td>
+                                {{ user.following|length }}
+                            </td>
+                        </tr>
                     </tbody>
                     </thead>
                 </table>
@@ -196,168 +196,170 @@
             <div class="table-responsive">
                 <table class="table table-borderless table-striped table-hover table-sm">
                     <thead>
-                    <tr>
-                        <th colspan="2">
-                            <i class="far fa-calendar-plus fa-fw text-muted"></i> {{ "Organizer information" }}
-                        </th>
-                    </tr>
+                        <tr>
+                            <th colspan="2">
+                                <i class="far fa-calendar-plus fa-fw text-muted"></i> {{ "Organizer information" }}
+                            </th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td width="30%">{{ "Name" }}</td>
-                        <td>
-                            {{ user.organizer.name }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td width="30%">{{ "Profile views" }}</td>
-                        <td>
-                            {{ user.organizer.views }}
-                        </td>
-                    </tr>
-                    {% if user.organizer.description %}
                         <tr>
-                            <td width="30%">{{ "Description" }}</td>
+                            <td width="30%">{{ "Name" }}</td>
                             <td>
-                                {{ user.organizer.description|striptags }}
+                                {{ user.organizer.name }}
                             </td>
                         </tr>
-                    {% endif %}
-                    {% if user.organizer.logoName %}
                         <tr>
-                            <td width="30%">{{ "Logo" }}</td>
+                            <td width="30%">{{ "Profile views" }}</td>
                             <td>
-                                <a class="fancybox" href="{{ asset(user.organizer.getLogoPath) }}" data-toggle="tooltip"
-                                   title="{{ "Enlarge" }}">
-                                    <img src="{{ asset(user.organizer.getLogoPath) }}" class="img-thumbnail img-50-50"/>
-                                </a>
+                                {{ user.organizer.views }}
                             </td>
                         </tr>
-                    {% endif %}
-                    {% if user.organizer.coverName %}
+                        {% if user.organizer.description %}
+                            <tr>
+                                <td width="30%">{{ "Description" }}</td>
+                                <td>
+                                    {{ user.organizer.description|striptags }}
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if user.organizer.logoName %}
+                            <tr>
+                                <td width="30%">{{ "Logo" }}</td>
+                                <td>
+                                    <a class="fancybox" href="{{ asset(user.organizer.getLogoPath) }}"
+                                       data-toggle="tooltip"
+                                       title="{{ "Enlarge" }}">
+                                        <img src="{{ asset(user.organizer.getLogoPath) }}"
+                                             class="img-thumbnail img-50-50"/>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if user.organizer.coverName %}
+                            <tr>
+                                <td width="30%">{{ "Cover picture" }}</td>
+                                <td>
+                                    <a class="fancybox" href="{{ asset(user.organizer.getCoverPath) }}"
+                                       data-toggle="tooltip" title="{{ "Enlarge" }}">
+                                        <img src="{{ asset(user.organizer.getCoverPath) }}"
+                                             class="img-thumbnail img-50-50"/>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endif %}
                         <tr>
-                            <td width="30%">{{ "Cover picture" }}</td>
+                            <td width="30%">{{ "Is featured on the homepage slider?" }}</td>
                             <td>
-                                <a class="fancybox" href="{{ asset(user.organizer.getCoverPath) }}"
-                                   data-toggle="tooltip" title="{{ "Enlarge" }}">
-                                    <img src="{{ asset(user.organizer.getCoverPath) }}"
-                                         class="img-thumbnail img-50-50"/>
-                                </a>
+                                {{ user.isorganizeronhomepageslider ? "Yes" : "No" }}
                             </td>
                         </tr>
-                    {% endif %}
-                    <tr>
-                        <td width="30%">{{ "Is featured on the homepage slider?" }}</td>
-                        <td>
-                            {{ user.isorganizeronhomepageslider ? "Yes" : "No" }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td width="30%">{{ "Events" }}</td>
-                        <td>
-                            {{ user.organizer.events|length }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td width="30%">{{ "Venues" }}</td>
-                        <td>
-                            {{ user.organizer.venues|length }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td width="30%">{{ "Followed by" }}</td>
-                        <td>
-                            {{ user.organizer.followedby|length }}
-                        </td>
-                    </tr>
-                    {% if user.organizer.categories|length %}
                         <tr>
-                            <td width="30%">{{ "Main categories" }}</td>
+                            <td width="30%">{{ "Events" }}</td>
                             <td>
-                                {{ user.organizer.displayCategories }}
+                                {{ user.organizer.events|length }}
                             </td>
                         </tr>
-                    {% endif %}
-                    {% if user.organizer.website %}
                         <tr>
-                            <td width="30%">{{ "Website" }}</td>
+                            <td width="30%">{{ "Venues" }}</td>
                             <td>
-                                {{ user.organizer.website }}
+                                {{ user.organizer.venues|length }}
                             </td>
                         </tr>
-                    {% endif %}
-                    {% if user.organizer.phone %}
                         <tr>
-                            <td width="30%">{{ "Phone number" }}</td>
+                            <td width="30%">{{ "Followed by" }}</td>
                             <td>
-                                {{ user.organizer.phone }}
+                                {{ user.organizer.followedby|length }}
                             </td>
                         </tr>
-                    {% endif %}
-                    {% if user.organizer.facebook %}
-                        <tr>
-                            <td width="30%">{{ "Facebook" }}</td>
-                            <td>
-                                {{ user.organizer.facebook }}
-                            </td>
-                        </tr>
-                    {% endif %}
-                    {% if user.organizer.twitter %}
-                        <tr>
-                            <td width="30%">{{ "Twitter" }}</td>
-                            <td>
-                                {{ user.organizer.twitter }}
-                            </td>
-                        </tr>
-                    {% endif %}
-                    {% if user.organizer.instagram %}
-                        <tr>
-                            <td width="30%">{{ "Instagram" }}</td>
-                            <td>
-                                {{ user.organizer.instagram }}
-                            </td>
-                        </tr>
-                    {% endif %}
-                    {% if user.organizer.googleplus %}
-                        <tr>
-                            <td width="30%">{{ "TikTok" }}</td>
-                            <td>
-                                {{ user.organizer.tiktok }}
-                            </td>
-                        </tr>
-                    {% endif %}
-                    {% if user.organizer.linkedin %}
-                        <tr>
-                            <td width="30%">{{ "LinkedIn" }}</td>
-                            <td>
-                                {{ user.organizer.linkedin }}
-                            </td>
-                        </tr>
-                    {% endif %}
-                    {% if user.organizer.youtubeurl %}
-                        <tr>
-                            <td width="30%">{{ "Youtube video" }}</td>
-                            <td>
-                                {{ user.organizer.youtubeurl }}
-                            </td>
-                        </tr>
-                    {% endif %}
-                    {% if user.organizer.showfollowers %}
-                        <tr>
-                            <td width="30%">{{ "Show followers" }}</td>
-                            <td>
-                                {{ user.organizer.showfollowers ? "Yes" : "No" }}
-                            </td>
-                        </tr>
-                    {% endif %}
-                    {% if user.organizer.showreviews %}
-                        <tr>
-                            <td width="30%">{{ "Show reviews" }}</td>
-                            <td>
-                                {{ user.organizer.showreviews ? "Yes" : "No" }}
-                            </td>
-                        </tr>
-                    {% endif %}
+                        {% if user.organizer.categories|length %}
+                            <tr>
+                                <td width="30%">{{ "Main categories" }}</td>
+                                <td>
+                                    {{ user.organizer.displayCategories }}
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if user.organizer.website %}
+                            <tr>
+                                <td width="30%">{{ "Website" }}</td>
+                                <td>
+                                    {{ user.organizer.website }}
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if user.organizer.phone %}
+                            <tr>
+                                <td width="30%">{{ "Phone number" }}</td>
+                                <td>
+                                    {{ user.organizer.phone }}
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if user.organizer.facebook %}
+                            <tr>
+                                <td width="30%">{{ "Facebook" }}</td>
+                                <td>
+                                    {{ user.organizer.facebook }}
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if user.organizer.twitter %}
+                            <tr>
+                                <td width="30%">{{ "Twitter" }}</td>
+                                <td>
+                                    {{ user.organizer.twitter }}
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if user.organizer.instagram %}
+                            <tr>
+                                <td width="30%">{{ "Instagram" }}</td>
+                                <td>
+                                    {{ user.organizer.instagram }}
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if user.organizer.tiktok %}
+                            <tr>
+                                <td width="30%">{{ "TikTok" }}</td>
+                                <td>
+                                    {{ user.organizer.tiktok }}
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if user.organizer.linkedin %}
+                            <tr>
+                                <td width="30%">{{ "LinkedIn" }}</td>
+                                <td>
+                                    {{ user.organizer.linkedin }}
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if user.organizer.youtubeurl %}
+                            <tr>
+                                <td width="30%">{{ "Youtube video" }}</td>
+                                <td>
+                                    {{ user.organizer.youtubeurl }}
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if user.organizer.showfollowers %}
+                            <tr>
+                                <td width="30%">{{ "Show followers" }}</td>
+                                <td>
+                                    {{ user.organizer.showfollowers ? "Yes" : "No" }}
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if user.organizer.showreviews %}
+                            <tr>
+                                <td width="30%">{{ "Show reviews" }}</td>
+                                <td>
+                                    {{ user.organizer.showreviews ? "Yes" : "No" }}
+                                </td>
+                            </tr>
+                        {% endif %}
                     </tbody>
                     </thead>
                 </table>
