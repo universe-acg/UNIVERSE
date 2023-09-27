@@ -29,17 +29,6 @@ class UserRepository extends ServiceEntityRepository
 
         if ($role !== "all") {
             $qb->andWhere("u.roles LIKE :role")->setParameter("role", "%ROLE_" . strtoupper($role) . "%");
-            if ($role == "pointofsale" && $createdbyorganizerslug !== "all") {
-                $qb->leftJoin("u.pointofsale", "pointofsale");
-                $qb->leftJoin("pointofsale.organizer", "pointofsaleorganizer");
-                $qb->andWhere("pointofsaleorganizer.slug = :pointofsalecreatedbyorganizerslug");
-                $qb->setParameter("pointofsalecreatedbyorganizerslug", $createdbyorganizerslug);
-            } else if ($role == "scanner" && $createdbyorganizerslug !== "all") {
-                $qb->leftJoin("u.scanner", "scanner");
-                $qb->leftJoin("scanner.organizer", "scannerorganizer");
-                $qb->andWhere("scannerorganizer.slug = :scannercreatedbyorganizerslug");
-                $qb->setParameter("scannercreatedbyorganizerslug", $createdbyorganizerslug);
-            }
         }
         if ($keyword !== "all") {
             $qb->andWhere("u.username LIKE :keyword or :keyword LIKE u.username or u.email LIKE :keyword or :keyword LIKE u.email or u.firstname LIKE :keyword or :keyword LIKE u.firstname or u.lastname LIKE :keyword or :keyword LIKE u.lastname")->setParameter("keyword", "%" . $keyword . "%");

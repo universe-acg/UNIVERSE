@@ -45,7 +45,7 @@
             <td class="custom-td">{{ order.user.getCrossRoleName }}</td>
             <td class="custom-td">{{ order.createdAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
             <td class="custom-td">
-                {% if order.status == 1 %}
+                {% if order.status == 1 or order.status == 2 %}
                     Not attended
                 {% elseif order.status == 2 %}
                     Attended

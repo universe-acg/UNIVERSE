@@ -19,9 +19,8 @@ class OrganizerController extends AbstractController
     /**
      * @Route("/organizer/{slug}", name="organizer")
      */
-    public function organizer($slug, Request $request, AppServices $services, UserRepository $userRepository): Response
+    public function organizer($slug, AppServices $services, UserRepository $userRepository): Response
     {
-        // $user = $services->getUsers(array('slug' => $slug))->getQuery()->getOneOrNullResult();
         $user = $userRepository->getByUsername($slug);
 
         if (!$user || !$user->getOrganizer()) {
@@ -33,7 +32,9 @@ class OrganizerController extends AbstractController
         $user->getOrganizer()->viewed();
         $em->flush();
 
-        return $this->render('Front/Organizer/profile.html.twig', ['organizer' => $user->getOrganizer()]
+        $org = $user->getOrganizer();
+
+        return $this->render('Front/Organizer/profile.html.twig', ['organizer' => $org]
         );
     }
 

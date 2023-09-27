@@ -46,6 +46,22 @@
     <!-- Summernote JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 
+    <!-- Include the necessary libraries (e.g., jQuery and datepicker) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+
+    <!-- Initialize the datepicker -->
+    <script>
+        $(document).ready(function () {
+            $('.datepicker').datepicker({
+                multidate: true, // Allow multiple date selections
+                format: 'yyyy-mm-dd', // Customize the date format
+            });
+        });
+    </script>
+
     <script>
         // Assuming you're using jQuery for simplicity
         $(document).ready(function () {
@@ -110,14 +126,6 @@
 
 
             {% if event.id %}
-            {% for eventDate in event.eventdates if eventDate.payoutRequested %}
-            $('.event-date-reference').each(function () {
-                if ($(this).val() == "{{ eventDate.reference }}") {
-                    $(this).closest("fieldset").prop('disabled', true);
-                    $(this).closest("fieldset").prepend('<p class="alert alert-danger alert-icon"><i class="fas fa-exclamation-circle"></i> {{ "This event date is locked because a payout request has been submitted" }}</p>');
-                }
-            });
-            {% endfor %}
             {% for eventDate in event.eventdates %}
             {% for eventDateTicket in eventDate.tickets if eventDateTicket.isOnSale and eventDateTicket.getOrderElementsQuantitySum() > 0 %}
             $('.event-date-ticket-reference').each(function () {

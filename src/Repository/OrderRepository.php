@@ -31,7 +31,7 @@ class OrderRepository extends ServiceEntityRepository
             $qb->select("o");
         }
         if ($status !== "all") {
-            $qb->andWhere("o.status = :status")->setParameter("status", $status);
+            $qb->andWhere("o.status >= :status")->setParameter("status", $status);
         }
         if ($user !== "all") {
             $qb->leftJoin("o.user", "user");

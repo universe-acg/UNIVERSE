@@ -23,32 +23,36 @@ class EditAdminRegistrationOrganizerType extends AbstractType
             ->add('firstname', TextType::class, [
                 'purify_html' => true,
                 'required' => true,
-                'attr' => array(
-                    'placeholder' => 'First name'
-                ),
+                'attr' => [
+                    'placeholder' => 'Enter First Name',
+                    'title' => 'Enter your first name.',
+                ],
                 'data' => $options['user'] ? $options['user']->getFirstname() : ''
             ])
             ->add('lastname', TextType::class, [
                 'purify_html' => true,
                 'required' => true,
-                'attr' => array(
-                    'placeholder' => 'Last name'
-                ),
+                'attr' => [
+                    'placeholder' => 'Enter Last Name',
+                    'title' => 'Enter your last name.',
+                ],
                 'data' => $options['user'] ? $options['user']->getLastname() : ''
             ])
             ->add('username', TextType::class, [
                 'purify_html' => true,
                 'required' => true,
-                'attr' => array(
-                    'placeholder' => 'Username'
-                ),
+                'attr' => [
+                    'placeholder' => 'Choose a Username',
+                    'title' => 'Choose a unique username.',
+                ],
                 'data' => $options['user'] ? $options['user']->getUsername() : ''
             ])
             ->add('email', EmailType::class, [
                 'purify_html' => true,
                 'required' => true,
                 'attr' => [
-                    'placeholder' => 'Email',
+                    'placeholder' => 'Enter Email',
+                    'title' => 'Enter your email address.',
                 ],
                 'data' => $options['user'] ? $options['user']->getEmail() : ''
             ])
@@ -60,9 +64,12 @@ class EditAdminRegistrationOrganizerType extends AbstractType
                     'No' => false,
                 ],
                 'expanded' => true, // Display as radio buttons
-                'data' => $options['user'] ? $options['user']->isIsbusinessweek() : false
+                'data' => $options['user'] ? $options['user']->isIsbusinessweek() : false,
+                'help' => 'Select "Yes" if you are a multi-ticket user.',
             ])
-            ->add('organizer', OrganizerRegistrationType::class);
+            ->add('organizer', OrganizerRegistrationType::class, [
+                'help' => 'Complete organizer details if you are an organizer.'
+            ]);
     }
 
     public function getParent()

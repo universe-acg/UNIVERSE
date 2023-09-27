@@ -32,12 +32,10 @@ class OrderController extends Controller
     /**
      * @Route("/attendee/my-tickets", name="dashboard_attendee_orders")
      * @Route("/organizer/manage-orders", name="dashboard_organizer_orders")
-     * @Route("/pointofsale/my-orders", name="dashboard_pointofsale_orders")
      * @Route("/administrator/manage-orders", name="dashboard_administrator_orders")
      */
     public function orders(Request $request, AppServices $services, PaginatorInterface $paginator, AuthorizationCheckerInterface $authChecker)
     {
-
 //$upcomingtickets = ($request->query->get('upcomingtickets')) == "" ? 1 : intval($request->query->get('upcomingtickets'));
         $reference = ($request->query->get('reference')) == "" ? "all" : $request->query->get('reference');
         $event = ($request->query->get('event')) == "" ? "all" : $request->query->get('event');
@@ -55,7 +53,7 @@ class OrderController extends Controller
         $ordersQuery = $services->getOrders(array("reference" => $reference, "event" => $event, "eventdate" => $eventdate, "eventticket" => $eventticket, "user" => $user, "organizer" => $organizer, "datefrom" => $datefrom, "dateto" => $dateto, "status" => $status, "paymentgateway" => $paymentgateway))->getQuery();
 
 // Export current orders query results into Excel / Csv
-        if (($authChecker->isGranted("ROLE_ADMINISTRATOR") || $authChecker->isGranted("ROLE_ORGANIZER") || $authChecker->isGranted("ROLE_POINTOFSALE")) && (($request->query->get('excel') == "1" || $request->query->get('csv') == "1" || $request->query->get('pdf') == "1"))) {
+        if (($authChecker->isGranted("ROLE_ADMINISTRATOR") || $authChecker->isGranted("ROLE_ORGANIZER")) && (($request->query->get('excel') == "1" || $request->query->get('csv') == "1" || $request->query->get('pdf') == "1"))) {
             $orders = $ordersQuery->getResult();
             if (!count($orders)) {
                 $this->addFlash('error', 'No orders found to be included in the report');
@@ -116,12 +114,11 @@ class OrderController extends Controller
         $organizer = ($request->query->get('organizer')) == "" ? "all" : $request->query->get('organizer');
         $datefrom = ($request->query->get('datefrom')) == "" ? "all" : $request->query->get('datefrom');
         $dateto = ($request->query->get('dateto')) == "" ? "all" : $request->query->get('dateto');
+
         $status = 1;
-        $paymentgateway = ($request->query->get('paymentgateway')) == "" ? "all" : $request->query->get('paymentgateway');
+        $authChecker->isGranted("ROLE_ATTENDEE") ? $status = "all" : 1;
 
-        $authChecker->isGranted("ROLE_ATTENDEE") ? $status = "all" : $upcomingtickets = "all";
-
-        $ordersQuery = $services->getOrders(array("reference" => $reference, "event" => $event, "eventdate" => $eventdate, "eventticket" => $eventticket, "user" => $user, "organizer" => $organizer, "datefrom" => $datefrom, "dateto" => $dateto, "status" => $status, "paymentgateway" => $paymentgateway))->getQuery();
+        $ordersQuery = $services->getOrders(array("reference" => $reference, "eventdate" => $eventdate, "eventticket" => $eventticket, "user" => $user, "organizer" => $organizer, "datefrom" => $datefrom, "dateto" => $dateto, "status" => $status))->getQuery();
 
 // Export current orders query results into Excel / Csv
 
@@ -186,9 +183,6 @@ class OrderController extends Controller
     {
         $order = $orderRepository->find($orderid);
         $user = $userRepository->getBySlug($userslug);
-//        dump($eventRepository->findById($order->getOrderelements()[0]->getEventticket()->getEventdate()->getEvent()->getId()));
-        dump($user);
-        die();
 
         return $this->render('Dashboard/Shared/Order/attendees-details.html.twig', [
             'orders' => $ordersPagination,
@@ -198,7 +192,6 @@ class OrderController extends Controller
 
     /**
      * @Route("/attendee/my-tickets/{reference}", name="dashboard_attendee_order_details")
-     * @Route("/pointofsale/my-orders/{reference}", name="dashboard_pointofsale_order_details")
      * @Route("/organizer/recent-orders/{reference}", name="dashboard_organizer_order_details")
      * @Route("/administrator/manage-orders/{reference}", name="dashboard_administrator_order_details")
      */
@@ -409,7 +402,8 @@ class OrderController extends Controller
         $dompdf = new Dompdf($pdfOptions);
 
         // Generate QR code
-        $qrCodeData = $eventlink;
+        // route with order id/refernece
+        $qrCodeData = $order->getId() . "/" . $order->getReference();
         $qrCode = new QrCode($qrCodeData);
         $qrCode->setEncoding(new Encoding('UTF-8'));
         $qrCode->setErrorCorrectionLevel(new ErrorCorrectionLevelLow());

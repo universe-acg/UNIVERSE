@@ -1,5 +1,6 @@
 {% set runtimeConfig = {"thumbnail": {"size": [500, 250] }} %}
-{% set displayedEventDate = event.getFirstOnSaleEventDate %}
+
+{% set displayedEventDate = event.eventdates[0] %}
 
 {% if customLink is defined %}
     {% set link = customLink %}
@@ -69,17 +70,6 @@
                                           class="link-style text-dark">{{ (event.getOrganizer().getName()) }}</a></span>
 
         </div>
-        {% if hidePrice is not defined %}
-            <div class="price-wrap">
-                {% if event.isFree %}
-                    {#                    <span class="price-new">{{ "Free" }}</span> #}
-                {% else %}
-                    {% if displayedEventDate %}
-                        {#                        <span class="price-new">{{ services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '' }}{{ event.getCheapestTicket.getSalePrice }}{{ services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '' }}</span> #}
-                    {% endif %}
-                {% endif %}
-            </div>
-        {% endif %}
         {% if orderReference is defined %}
             <div class="order-reference">
                 <a href="{{ path('dashboard_attendee_order_details', {reference: orderReference}) }}"><small>{{ "Order" }}

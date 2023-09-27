@@ -131,7 +131,6 @@
 
 {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
     {% include "Global/message.html.twig" with { type: 'info', icon: 'fas fa-info-circle', message: ('You are connected as "%username%'|trans({'%username%' : app.user.username})~ '", <a href="'~ path('dashboard_index', {'_switch_user': '_exit'}) ~'">' ~ 'Click here'|trans ~ '</a> ' ~ 'to return to your dashboard'|trans) } %}
-    {#            {% include "Global/message.html.twig" with { type: 'info', icon: 'fas fa-info-circle', message: ('You are connected as "%username%'({'%username%' : app.user.username})~ '", <a href="'~ path('dashboard_index', {'_switch_user': '_exit'}) ~'">' ~ 'Click here' ~ '</a> ' ~ 'to return to your dashboard') } %} #}
 {% endif %}
 
 {% block content %}{% endblock %}

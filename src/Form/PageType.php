@@ -21,14 +21,22 @@ class PageType extends AbstractType
         $builder
             ->add('title', TextType::class, [
                 'required' => false,
-                'label' => 'Title',
+                'label' => 'Page Title',
                 'purify_html' => true,
+                'attr' => [
+                    'placeholder' => 'Enter the page title',
+                    'help' => 'Provide a descriptive title for the page.',
+                ],
             ])
             ->add('content', TextareaType::class, [
                 'required' => false,
-                'label' => 'Content',
+                'label' => 'Page Content',
                 'purify_html' => true,
-                'attr' => ['class' => 'wysiwyg'],
+                'attr' => [
+                    'class' => 'wysiwyg',
+                    'placeholder' => 'Enter the page content',
+                    'help' => 'Add the content for the page. You can use rich text formatting.',
+                ],
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Save',

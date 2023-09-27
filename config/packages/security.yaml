@@ -18,21 +18,10 @@ security:
     in_memory:
       memory:
         users:
-    scanner_api_provider:
-      entity:
-        class: App\Entity\User
-        property: apiKey
   firewalls:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
-    scanner_api:
-      logout: ~
-      provider: scanner_api_provider
-      pattern: /api/scanner/
-      guard:
-        authenticators:
-          - App\Security\TokenAuthenticator
     main:
       provider: chain_provider
       pattern: ^/
@@ -75,5 +64,3 @@ security:
     #    - { path: /_console, role: ROLE_ADMINISTRATOR }
     - { path: /dashboard/organizer, role: ROLE_ORGANIZER }
     - { path: /dashboard/attendee, role: ROLE_ATTENDEE }
-    - { path: /dashboard/scanner, role: ROLE_SCANNER }
-    - { path: /dashboard/pointofsale, role: ROLE_POINTOFSALE }

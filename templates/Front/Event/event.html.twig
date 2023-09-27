@@ -173,17 +173,6 @@
                                     </dd>
                                 </dl>
                             {% endif %}
-                            {% if event.youtubeurl %}
-                                <dl class="mt-5">
-                                    <dt class="text-muted">{{ "Video" }}</dt>
-                                    <dd class="mr-0">
-                                        <iframe class="w-100 border-0" height="400"
-                                                src="https://www.youtube.com/embed/{{ event.youtubeurl|split('=')[1] }}"
-                                                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                                                allowfullscreen></iframe>
-                                    </dd>
-                                </dl>
-                            {% endif %}
                             {% if event.hasContactAndSocialMedia %}
                                 <dl class="mt-5">
                                     <dt class="text-muted">{{ "Contact & Social media" }}</dt>
@@ -204,41 +193,6 @@
                                             {% if event.phonenumber %}
                                                 <li class="col-md-6"><a href="tel:{{ event.phonenumber }}" class="pl-4"><i
                                                                 class="icon fas fa-phone fa-fw"></i><span>{{ event.phonenumber }}</span></a>
-                                                </li>
-                                            {% endif %}
-                                            {% if event.facebook %}
-                                                <li class="col-md-6"><a
-                                                            href="{% if 'http://' not in event.facebook and 'https://' not in event.facebook %}http://{% endif %}{{ event.facebook }}"
-                                                            class="pl-4" target="_blank"><i
-                                                                class="icon fab fa-facebook-f fa-fw"></i><span>{{ event.facebook }}</span></a>
-                                                </li>
-                                            {% endif %}
-                                            {% if event.twitter %}
-                                                <li class="col-md-6"><a
-                                                            href="{% if 'http://' not in event.twitter and 'https://' not in event.twitter %}http://{% endif %}{{ event.twitter }}"
-                                                            class="pl-4" target="_blank"><i
-                                                                class="icon fab fa-twitter fa-fw"></i><span>{{ event.twitter }}</span></a>
-                                                </li>
-                                            {% endif %}
-                                            {#                                            {% if event.googleplus %} #}
-                                            {#                                                <li class="col-md-6"><a #}
-                                            {#                                                            href="{% if 'http://' not in event.googleplus and 'https://' not in event.googleplus %}http://{% endif %}{{ event.googleplus }}" #}
-                                            {#                                                            class="pl-4" target="_blank"><i #}
-                                            {#                                                                class="icon fab fa-google-plus fa-fw"></i><span>{{ event.googleplus }}</span></a> #}
-                                            {#                                                </li> #}
-                                            {#                                            {% endif %} #}
-                                            {% if event.instagram %}
-                                                <li class="col-md-6"><a
-                                                            href="{% if 'http://' not in event.instagram and 'https://' not in event.instagram %}http://{% endif %}{{ event.instagram }}"
-                                                            class="pl-4" target="_blank"><i
-                                                                class="icon fab fa-instagram fa-fw"></i><span>{{ event.instagram }}</span></a>
-                                                </li>
-                                            {% endif %}
-                                            {% if event.linkedin %}
-                                                <li class="col-md-6"><a
-                                                            href="{% if 'http://' not in event.linkedin and 'https://' not in event.linkedin %}http://{% endif %}{{ event.linkedin }}"
-                                                            class="pl-4" target="_blank"><i
-                                                                class="icon fab fa-linkedin fa-fw"></i><span>{{ event.linkedin }}</span></a>
                                                 </li>
                                             {% endif %}
                                         </ul>
@@ -262,28 +216,6 @@
                                     </div>
                                 </div>
                             {% endif %}
-                            {#                            <div class="mt-5"> #}
-                            {#                                <div id="disqus_thread"></div> #}
-                            {#                                <script> #}
-                            {#                                    /** #}
-                            {#                                     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS. #}
-                            {#                                     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/ #}
-                            {#                                    var disqus_config = function () { #}
-                            {#                                        this.page.url = "{{ app.request.uri }}";  // Replace PAGE_URL with your page's canonical URL variable #}
-                            {#                                        this.page.identifier = "{{ event.slug }}"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable #}
-                            {#                                        this.language = "{{ app.request.locale|lower }}"; #}
-                            {#                                    }; #}
-                            {#                                    (function () { // DON'T EDIT BELOW THIS LINE #}
-                            {#                                        var d = document, s = d.createElement('script'); #}
-                            {#                                        s.src = 'https://{{ services.getSetting("disqus_subdomain") }}.disqus.com/embed.js'; #}
-                            {#                                        s.setAttribute('data-timestamp', +new Date()); #}
-                            {#                                        (d.head || d.body).appendChild(s); #}
-                            {#                                    })(); #}
-                            {#                                </script> #}
-                            {#                                <noscript>Please enable JavaScript to view the <a #}
-                            {#                                            href="https://disqus.com/?ref_noscript">comments powered by #}
-                            {#                                        Disqus.</a></noscript> #}
-                            {#                            </div> #}
                             {% if false %}
                                 {#                            {% if event.enablereviews %} #}
                                 <hr class="mb-5">
@@ -638,14 +570,7 @@
                                                                             {{ ticket.name }}
                                                                         </td>
                                                                         <td class="border-top-white text-right">
-                                                                            {% if not ticket.isOnSale %}
-                                                                                <span class="badge badge-{{ ticket.stringifyStatusClass }}">{{ ticket.stringifyStatus }}</span>
-                                                                            {% else %}
-                                                                                {{ ticket.free ? "Available" : ((services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '') ~ ticket.getSalePrice() ~ (services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '')) }}
-                                                                                {% if ticket.promotionalprice and not ticket.free %}
-                                                                                    <del class="price-old">{{ (services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '') ~ ticket.getPrice() ~ (services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '') }}</del>
-                                                                                {% endif %}
-                                                                            {% endif %}
+                                                                            <span class="badge badge-{{ ticket.stringifyStatusClass }}">{{ ticket.stringifyStatus }}</span>
                                                                     </tr>
                                                                 {% endif %}
                                                             {% endfor %}
@@ -776,6 +701,16 @@
                                                                     {% endfor %}
                                                                 </div>
                                                             </div>
+                                                        </div>
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title"><i
+                                                                        class="fas fa-calendar-plus"></i> {{ "Add to calendar" }}
+                                                            </h4>
+                                                            <button type="button" class="close"
+                                                                    data-dismiss="modal">&times;
+                                                            </button>
+                                                        </div>
+                                                        <div id="add-to-calendar" class="modal-body">
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-primary"

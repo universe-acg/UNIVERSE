@@ -5,9 +5,6 @@
         <tr>
             {#            <th class="text-center">{{ "Reference" }}</th> #}
             <th>{{ 'Event' }}</th>
-            {% if not is_granted("ROLE_POINTOFSALE") and not is_granted("ROLE_ATTENDEE") %}
-                <th>{{ 'Attendee ' }}</th>
-            {% endif %}
             <th>{{ 'Date booked' }}</th>
             <th>{{ 'Status' }}</th>
             <th class="text-center"><i class="fas fa-cog"></i></th>
@@ -17,66 +14,23 @@
 
         {% for order in orders %}
             {% if true %}
-
                 <tr>
-                {#                <td class="text-center text-muted text-sm"> #}
-                {#                    {% if is_granted("ROLE_ADMINISTRATOR") %} #}
-                {#                        <a href="{{ path('dashboard_administrator_order_details', { reference : order.reference }) }}"> #}
-                {#                            {{ order.reference }} #}
-                {#                        </a> #}
-                {#                    {% elseif is_granted("ROLE_ORGANIZER") %} #}
-                {#                        <a href="{{ path('dashboard_organizer_order_details', { reference : order.reference }) }}"> #}
-                {#                            {{ order.reference }} #}
-                {#                        </a> #}
-                {#                    {% elseif is_granted("ROLE_POINTOFSALE") %} #}
-                {#                        <a href="{{ path('dashboard_pointofsale_order_details', { reference : order.reference }) }}"> #}
-                {#                            {{ order.reference }} #}
-                {#                        </a> #}
-                {#                    {% elseif is_granted("ROLE_ATTENDEE") %} #}
-                {#                        <a href="{{ path('dashboard_attendee_order_details', { reference : order.reference }) }}"> #}
-                {#                            {{ order.reference }} #}
-                {#                        </a> #}
-                {#                    {% endif %} #}
-                {#                </td> #}
                 <td class="text-sm">
+                    {% for orderelement in order.orderelements %}
+                    {% if is_granted('ROLE_ATTENDEE') %}
+                    {% if (not app.request.get('event') or app.request.get('event') == orderelement.eventticket.eventdate.event.slug) and (not app.request.get('eventdate') or app.request.get('eventdate') == orderelement.eventticket.eventdate.reference) and (not app.request.get('eventticket') or app.request.get('eventticket') == orderelement.eventticket.reference) and (not app.request.get('organizer') or app.request.get('organizer') == orderelement.eventticket.eventdate.event.organizer.slug) %}
                     <ul class="p-0 ml-4">
-                        {% for orderelement in order.orderelements %}
-                            {% if is_granted('ROLE_ADMINISTRATOR') or (is_granted('ROLE_ORGANIZER') and orderelement.belongsToOrganizer(app.user.organizer.slug)) or is_granted('ROLE_POINTOFSALE') or is_granted('ROLE_ATTENDEE') %}
-                                {% if (not app.request.get('event') or app.request.get('event') == orderelement.eventticket.eventdate.event.slug) and (not app.request.get('eventdate') or app.request.get('eventdate') == orderelement.eventticket.eventdate.reference) and (not app.request.get('eventticket') or app.request.get('eventticket') == orderelement.eventticket.reference) and (not app.request.get('organizer') or app.request.get('organizer') == orderelement.eventticket.eventdate.event.organizer.slug) %}
-                                    <li>
-                                        {#                                        {% if is_granted("ROLE_ADMINISTRATOR") or is_granted("ROLE_ATTENDEE") %} #}
-                                        {#                                            <a href="{{ path('organizer', { slug: orderelement.eventticket.eventdate.event.organizer.slug }) }}">{{ orderelement.eventticket.eventdate.event.organizer.name }}</a> #}
-                                        {#                                            <i class="fas fa-chevron-{{ app.request.locale == "ar" ? "left" : "right" }} fa-sm"></i> #}
-                                        {#                                        {% endif %} #}
-                                        {% set eventlink  = "https://universeacg.xyz/event/" ~ orderelement.eventticket.eventdate.event.slug %}
-                                        <a href="{{ path('event', { slug: orderelement.eventticket.eventdate.event.slug }) }}">{{ orderelement.eventticket.eventdate.event.name }}</a>
-                                        {#                                        <i class="fas fa-chevron-{{ app.request.locale == "ar" ? "left" : "right" }} fa-sm"></i> #}
-                                        {#                                        {{ orderelement.eventticket.eventdate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }} #}
-                                        {#                                        <i class="fas fa-chevron-{{ app.request.locale == "ar" ? "left" : "right" }} fa-sm"></i> #}
-                                        {#                                        {{ orderelement.eventticket.name }} #}
-                                        {#                                        <br> #}
-                                        {#                                        <small><strong>{{ orderelement.quantity }} {{ orderelement.quantity > 1 ? "tickets" : "ticket" }}</strong></small> #}
-                                        {#                                        {% if order.status == 0 %} #}
-                                        {#                                            {% for ticketReservation in orderelement.ticketsReservations if not ticketReservation.isExpired %} #}
-                                        {#                                                {% set dateInterval = ticketReservation.expiresAt|date_modify("+"~ services.getSetting('checkout_timeleft') ~" second").diff(date("now")) %} #}
-                                        {#                                                {% set secondsLeft = dateInterval|date("%i") * 60 + dateInterval|date("%s") %} #}
-                                        {#                                                {% if secondsLeft > 0 %} #}
-                                        {#                                                    <span class="badge badge-warning"> #}
-                                        {#                                                                                        <i class="fas fa-hourglass-half"></i> <span #}
-                                        {#                                                                class="checkout-timer" #}
-                                        {#                                                                data-seconds-left="{{ secondsLeft }}"></span> {{ "left before tickets are released" }} #}
-                                        {#                                                                                    </span> #}
-                                        {#                                                {% endif %} #}
-                                        {#                                            {% endfor %} #}
-                                        {#                                        {% endif %} #}
-                                    </li>
-                                {% endif %}
-                            {% endif %}
+                        <li>
+                            {% set eventlink  = "https://universeacg.xyz/event/" ~ orderelement.eventticket.eventdate.event.slug %}
+                            <a href="{{ path('event', { slug: orderelement.eventticket.eventdate.event.slug }) }}">{{ orderelement.eventticket.eventdate.event.name }}</a>
+                        </li>
+                        {% endif %}
+                        {% endif %}
                         {% endfor %}
                     </ul>
                 </td>
 
-                {% if not is_granted("ROLE_POINTOFSALE") and not is_granted("ROLE_ATTENDEE") %}
+                {% if  not is_granted("ROLE_ATTENDEE") %}
                     <td class="text-sm">
                         {% if is_granted('ROLE_ADMINISTRATOR') %}
                             <span title="{{ "User information" }}" data-toggle="tooltip"
@@ -93,12 +47,21 @@
                     {{ order.createdAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}
                 </td>
                 <td class="text-sm">
-                    <span class="badge badge-{{ order.getStatusClass }}">{{ order.stringifyStatus }}</span>
+                    {% if order.status == 2 %}
+                        <span class="badge badge-success"><i
+                                    class="fas fa-user-check fa-fw"></i>{{ order.stringifyStatus }}</span>
+                    {% elseif order.status == 1 or order.status == 2 %}
+                        <span class="badge badge-info"><i
+                                    class="fas fa-user-check fa-fw"></i>{{ order.stringifyStatus }}</span>
+                    {% else %}
+                        <span class="badge badge-{{ order.getStatusClass }}">{{ order.stringifyStatus }}</span>
+                    {% endif %}
+                    {#                    <span class="badge badge-{{ order.getStatusClass }}">{{ order.stringifyStatus }}</span> #}
                     {% if not is_granted("ROLE_ATTENDEE") %}
                         {% if order.deletedAt %}
                             <br>
                             <br>
-                            <span class="badge badge-danger"><i
+                            <span class="badge badge-success"><i
                                         class="fas fa-times fa-fw"></i> {{ "Deleted" }}</span>
                         {% endif %}
                     {% endif %}
@@ -108,65 +71,21 @@
                 <a href="javascript:void(0)" data-toggle="dropdown" data-boundary="window" class="icon"><i
                             class="fas fa-ellipsis-v"></i></a>
                 <div class="dropdown-menu dropdown-menu-right">
-                {% if order.status == 1 %}
+                {% if order.status == 1 or order.status == 2 %}
                     <a href="{{ path('dashboard_tickets_print', { reference: order.reference, link: eventlink }) }}"
                        class="dropdown-item" target="_blank"><i
                                 class="dropdown-icon fas fa-ticket-alt fa-fw text-muted"></i> {{ "Print" }}
                     </a>
                 {% endif %}
-                {% if is_granted('ROLE_ADMINISTRATOR') %}
-                    {#                        <a href="{{ path('dashboard_administrator_order_details', { reference : order.reference }) }}" #}
-                    {#                           class="dropdown-item"><i #}
-                    {#                                    class="dropdown-icon fas fa-file-invoice fa-fw text-muted"></i> {{ "Details" }} #}
-                    {#                        </a> #}
-                    {#                        #}
-                    {#                        {% if order.status == -2 or order.status == 1 %} #}
-                    {#                            <span class="dropdown-item cursor-pointer" data-toggle="modal" #}
-                    {#                                  data-target="#order-{{ order.reference }}-payment-details"><i #}
-                    {#                                        class="dropdown-icon fas fa-file-alt fa-fw text-muted"></i> {{ "Payment details" }}</span> #}
-                    {#                        {% endif %} #}
-                    {#                        {% if order.status == 0 and not order.deletedAt and order.paymentGateway and order.paymentGateway.factoryName == "offline" %} #}
-                    {#                            <span data-target="{{ path('dashboard_administrator_order_validate', { reference : order.reference }) }}" #}
-                    {#                                  class="dropdown-item requires-confirmation" #}
-                    {#                                  data-confirmation-text="{{ "You are about to validate this order, generate the tickets and send a confirmation email to the attendee" }}"><i #}
-                    {#                                        class="dropdown-icon fas fa-check fa-fw text-muted"></i> {{ "Validate" }}</span> #}
-                    {#                        {% endif %} #}
-                    {#                        {% if order.deletedAt %} #}
-                    {#                            <a href="{{ path('dashboard_administrator_order_restore', { reference : order.reference  }) }}" #}
-                    {#                               class="dropdown-item"><i #}
-                    {#                                        class="dropdown-icon fas fa-trash-restore fa-fw text-muted"></i> {{ "Restore" }} #}
-                    {#                            </a> #}
-                    {#                            <span data-target="{{ path('dashboard_administrator_order_delete', { reference : order.reference }) }}" #}
-                    {#                                  class="dropdown-item requires-confirmation" #}
-                    {#                                  data-confirmation-text="{{ "You are about to delete the order and all its related information (payment details, tickets...)" ~ " " ~ "PERMANENTLY" }}"><i #}
-                    {#                                        class="dropdown-icon fas fa-trash fa-fw text-muted"></i> {{ "Delete" }}</span> #}
-                    {#                        {% else %} #}
-                    {#                            <span data-target="{{ path('dashboard_administrator_order_delete', { reference : order.reference }) }}" #}
-                    {#                                  class="dropdown-item requires-confirmation" #}
-                    {#                                  data-confirmation-text="{{ "You are about to delete the order and all its related information (payment details, tickets...)" }}"><i #}
-                    {#                                        class="dropdown-icon fas fa-times fa-fw text-muted"></i> {{ "Delete" }} </span> #}
-                    {#                        {% endif %} #}
-                {% elseif is_granted('ROLE_ORGANIZER') %}
-                    {#                        {% if order.status == 0 and not order.deletedAt and order.paymentGateway and order.paymentGateway.factoryName == "offline" %} #}
-                    {#                            <span data-target="{{ path('dashboard_organizer_order_validate', { reference : order.reference }) }}" #}
-                    {#                                  class="dropdown-item requires-confirmation" #}
-                    {#                                  data-confirmation-text="{{ "You are about to validate this order, generate the tickets and send a confirmation email to the attendee" }}"><i #}
-                    {#                                        class="dropdown-icon fas fa-check fa-fw text-muted"></i> {{ "Validate" }}</span> #}
-                    {#                        {% endif %} #}
-                    {#                        <span class="dropdown-item cursor-pointer" data-toggle="modal" #}
-                    {#                              data-target="#order-{{ order.reference }}-contactAttendee"><i #}
-                    {#                                    class="dropdown-icon fas fa-envelope fa-fw text-muted"></i> {{ "Contact the attendee" }}</span> #}
-                    {#                        <a href="{{ path('dashboard_organizer_order_details', { reference : order.reference }) }}" #}
-                    {#                           class="dropdown-item"><i #}
-                    {#                                    class="dropdown-icon fas fa-file-invoice fa-fw text-muted"></i> {{ "Details" }} #}
-                    {#                        </a> #}
-                {% elseif is_granted('ROLE_ATTENDEE') %}
+                {% if is_granted('ROLE_ATTENDEE') %}
                     {% if not order.deletedAt %}
-                        {% if order.status == 1 %}
-                            <span data-target="{{ path('dashboard_attendee_order_cancel', { reference : order.reference }) }}"
-                                  class="dropdown-item cursor-pointer order-cancel-button"
-                                  data-confirmation-text="{{ "You are about to cancel your ticket" }}"><i
-                                        class="dropdown-icon fas fa-window-close fa-fw text-muted"></i> {{ "Cancel" }}</span>
+                        {% if order.status == 1 or order.status == 2 %}
+                            {% if order.status == 1 %}
+                                <span data-target="{{ path('dashboard_attendee_order_cancel', { reference : order.reference }) }}"
+                                      class="dropdown-item cursor-pointer order-cancel-button"
+                                      data-confirmation-text="{{ "You are about to cancel your ticket" }}"><i
+                                            class="dropdown-icon fas fa-window-close fa-fw text-muted"></i> {{ "Cancel" }}</span>
+                            {% endif %}
                         {% endif %}
                         {% if order.status == -1 %}
                             <span data-target="{{ path('dashboard_attendee_order_delete', { reference : order.reference }) }}"
@@ -250,7 +169,7 @@
 
             {% endif %}
 
-            {% if is_granted("ROLE_ADMINISTRATOR") and (order.status == -2 or order.status == 1) and order.payment %}
+            {% if is_granted("ROLE_ADMINISTRATOR") and (order.status == -2 or order.status == 1 or order.status == 2) and order.payment %}
 
                 <div class="modal fade" id="order-{{ order.reference }}-payment-details">
                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">

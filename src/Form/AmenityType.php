@@ -19,7 +19,7 @@ class AmenityType extends AbstractType
     {
         $builder
             ->add('title', TextType::class,
-                ['required' => false, 'label' => 'title', 'purify_html' => true])
+                ['required' => false, 'label' => 'Title', 'purify_html' => true])
             ->add('icon', TextType::class, [
                 'purify_html' => true,
                 'required' => true,

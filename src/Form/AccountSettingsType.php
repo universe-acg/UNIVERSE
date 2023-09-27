@@ -46,7 +46,10 @@ class AccountSettingsType extends AbstractType
                         'maxMessage' => 'Email should be no more than {{ limit }} characters long.'
                     ])
                 ],
-                'attr' => ['readonly' => true, 'placeholder' => 'example@example.com']
+                'attr' => [
+                    'readonly' => true,
+                    'placeholder' => 'example@example.com',
+                ]
             ])
             ->add('username', TextType::class, [
                 'purify_html' => true,
@@ -61,28 +64,37 @@ class AccountSettingsType extends AbstractType
                         'maxMessage' => 'Username should be no more than {{ limit }} characters long.'
                     ])
                 ],
-                'attr' => ['readonly' => true, 'placeholder' => 'john_doe123']
+                'attr' => [
+                    'readonly' => true,
+                    'placeholder' => 'john_doe123',
+                ]
             ])
             ->add('firstname', TextType::class, [
                 'purify_html' => true,
                 'required' => true,
                 'label' => 'First name',
                 'help' => 'Enter your first name',
-                'attr' => ['placeholder' => 'John']
+                'attr' => [
+                    'placeholder' => 'John',
+                ]
             ])
             ->add('lastname', TextType::class, [
                 'purify_html' => true,
                 'required' => true,
                 'label' => 'Last name',
                 'help' => 'Enter your last name',
-                'attr' => ['placeholder' => 'Doe']
+                'attr' => [
+                    'placeholder' => 'Doe',
+                ]
             ])
             ->add('phone', TextType::class, [
                 'purify_html' => true,
                 'required' => false,
                 'label' => 'Phone number',
                 'help' => 'Enter your phone number (optional)',
-                'attr' => ['placeholder' => '123-456-7890']
+                'attr' => [
+                    'placeholder' => '123-456-7890',
+                ]
             ])
             ->add('birthdate', DateType::class, [
                 'required' => false,
@@ -90,11 +102,16 @@ class AccountSettingsType extends AbstractType
                 'help' => 'Select your birthdate (optional)',
                 'widget' => 'single_text',
                 'html5' => false,
-                'attr' => ['class' => 'datepicker', 'placeholder' => 'YYYY-MM-DD']
+                'attr' => [
+                    'class' => 'datepicker',
+                    'placeholder' => 'YYYY-MM-DD',
+                ]
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Save',
-                'attr' => ['class' => 'btn btn-primary'],
+                'attr' => [
+                    'class' => 'btn btn-primary',
+                ],
             ]);
     }
 

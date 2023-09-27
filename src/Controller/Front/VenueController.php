@@ -5,11 +5,8 @@
 
 namespace App\Controller\Front;
 
-use App\Form\VenueQuoteType;
 use App\Service\AppServices;
 use Knp\Component\Pager\PaginatorInterface;
-use Swift_Mailer;
-use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,45 +30,6 @@ class VenueController extends AbstractController
         $venues = $paginator->paginate($services->getVenues(array('directory' => true, 'keyword' => $keyword, 'country' => $country, 'venuetypes' => $venuetypes, 'minseatedguests' => $minseatedguests, 'maxseatedguests' => $maxseatedguests, 'minstandingguests' => $minstandingguests, 'maxstandingguests' => $maxstandingguests)), $request->query->getInt('page', 1), 8);
         return $this->render('Front/Venue/venues.html.twig', [
             'venues' => $venues
-        ]);
-    }
-
-    /**
-     * @Route("/venue/{slug}", name="venue")
-     */
-    public function venue(Request $request, $slug, AppServices $services, Swift_Mailer $mailer): Response
-    {
-        $venue = $services->getVenues(array('directory' => true, 'slug' => $slug))->getQuery()->getOneOrNullResult();
-        if (!$venue) {
-            $this->addFlash('error', 'The venue can not be found');
-            return $this->redirectToRoute('venues');
-        }
-
-        $form = $this->createForm(VenueQuoteType::class);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                $quoterequest = $form->getData();
-                $email = (new Swift_Message('New quote request'))
-                    ->setFrom($services->getSetting("no_reply_email"))
-                    ->setTo($venue->getContactemail())
-                    ->setBody(
-                        $this->renderView(
-                            'Front/Venue/email.html.twig', ['quoterequest' => $quoterequest, 'venue' => $venue]
-                        ), 'text/html'
-                    );
-                $mailer->send($email);
-                $this->addFlash('success', 'Your quote request has been successfully sent');
-                $this->redirectToRoute("venue", ['slug' => $venue->getSlug()]);
-            } else {
-                $this->addFlash('error', 'The form contains invalid data');
-            }
-        }
-
-        return $this->render('Front/Venue/venue.html.twig', [
-            'venue' => $venue,
-            'form' => $form->createView()
         ]);
     }
 }

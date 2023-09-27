@@ -15,7 +15,7 @@
         {% for order in orders %}
             {% if true %}
                 <tr>
-                {% if not is_granted("ROLE_POINTOFSALE") and not is_granted("ROLE_ATTENDEE") %}
+                {% if not is_granted("ROLE_ATTENDEE") %}
                     <td class="text-sm">
                         {% if is_granted('ROLE_ADMINISTRATOR') %}
                             <span title="{{ "User information" }}" data-toggle="tooltip"
@@ -31,7 +31,15 @@
                     {{ order.createdAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}
                 </td>
                 <td class="text-sm">
-                    <span class="badge badge-{{ order.getStatusClass }}">{{ order.stringifyStatus }}</span>
+                    {% if order.status == 2 %}
+                        <span class="badge badge-success"><i
+                                    class="fas fa-user-check fa-fw"></i>{{ order.stringifyStatus }}</span>
+                    {% elseif order.status == 1 or order.status == 2 %}
+                        <span class="badge badge-info"><i
+                                    class="fas fa-user-check fa-fw"></i>{{ order.stringifyStatus }}</span>
+                    {% else %}
+                        <span class="badge badge-{{ order.getStatusClass }}">{{ order.stringifyStatus }}</span>
+                    {% endif %}
                     {% if not is_granted("ROLE_ATTENDEE") %}
                         {% if order.deletedAt %}
                             <br>
@@ -46,16 +54,16 @@
                 <a href="javascript:void(0)" data-toggle="dropdown" data-boundary="window" class="icon"><i
                             class="fas fa-ellipsis-v"></i></a>
                 <div class="dropdown-menu dropdown-menu-right">
-                {% if order.status == 1 %}
+                {% if order.status == 1 or order.status == 2 or  order.status == 2 %}
                     <a href="{{ path('dashboard_tickets_print', { reference: order.reference, link: eventlink }) }}"
                        class="dropdown-item" target="_blank"><i
                                 class="dropdown-icon fas fa-ticket-alt fa-fw text-muted"></i> {{ "Print" }}
                     </a>
                     {% if true %}
-                        <a href="{{ path('dashboard_organizer_attendees_details', {orderid: order.id, userslug: order.user.slug}) }}"
-                           class="dropdown-item">
-                            <i class="dropdown-icon fas fa-ticket-alt fa-fw text-muted"></i> {{ 'Attendance Details' }}
-                        </a>
+                        {#                        <a href="{{ path('dashboard_organizer_attendees_details', {orderid: order.id, userslug: order.user.slug}) }}" #}
+                        {#                           class="dropdown-item"> #}
+                        {#                            <i class="dropdown-icon fas fa-ticket-alt fa-fw text-muted"></i> {{ 'Attendance Details' }} #}
+                        {#                        </a> #}
                     {% endif %}
                 {% endif %}
             {% endif %}
@@ -132,7 +140,7 @@
 
             {% endif %}
 
-            {% if is_granted("ROLE_ADMINISTRATOR") and (order.status == -2 or order.status == 1) and order.payment %}
+            {% if is_granted("ROLE_ADMINISTRATOR") and (order.status == -2 or order.status == 1 or order.status == 2) and order.payment %}
 
                 <div class="modal fade" id="order-{{ order.reference }}-payment-details">
                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">

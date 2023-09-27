@@ -29,37 +29,40 @@ class EditAdminRegistrationTypeAttendee extends AbstractType
             ->add('firstname', TextType::class, [
                 'purify_html' => true,
                 'required' => true,
-                'attr' => array(
-                    'placeholder' => 'First name'
-                ),
+                'attr' => [
+                    'placeholder' => 'Enter First Name',
+                    'title' => 'Enter your first name.',
+                ],
                 'data' => $options['user'] ? $options['user']->getFirstname() : ''
             ])
             ->add('lastname', TextType::class, [
                 'purify_html' => true,
                 'required' => true,
-                'attr' => array(
-                    'placeholder' => 'Last name'
-                ),
+                'attr' => [
+                    'placeholder' => 'Enter Last Name',
+                    'title' => 'Enter your last name.',
+                ],
                 'data' => $options['user'] ? $options['user']->getLastname() : ''
             ])
             ->add('username', TextType::class, [
                 'purify_html' => true,
                 'required' => true,
-                'attr' => array(
-                    'placeholder' => 'Username'
-                ),
+                'attr' => [
+                    'placeholder' => 'Choose a Username',
+                    'title' => 'Choose a unique username.',
+                ],
                 'data' => $options['user'] ? $options['user']->getUsername() : ''
             ])
             ->add('email', EmailType::class, [
                 'purify_html' => true,
                 'required' => true,
                 'attr' => [
-                    'placeholder' => 'Email',
+                    'placeholder' => 'Enter Email',
+                    'title' => 'Enter your email address.',
                 ],
                 'data' => $options['user'] ? $options['user']->getEmail() : ''
             ]);
     }
-
 
     public function getParent()
     {

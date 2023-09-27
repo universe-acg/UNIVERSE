@@ -76,6 +76,50 @@ class BlogPostController extends Controller
     }
 
     /**
+     * @Route("/manage-blog-posts-admin/{slug}/edit", name="dashboard_administrator_blog_post_edit", methods="GET|POST")
+     */
+    public function addeditadmin(Request $request, AppServices $services, $slug = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        if (!$slug) {
+            $blogpost = new BlogPost();
+            $user = $this->getUser();
+            $blogpost->setUser($user);
+        } else {
+            $blogpost = $services->getBlogPosts(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
+            if (!$blogpost) {
+                $this->addFlash('error', 'The blog post can not be found');
+                return $services->redirectToReferer('blog_post');
+            }
+        }
+
+        $form = $this->createForm(BlogPostType::class, $blogpost);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $em->persist($blogpost);
+                $em->flush();
+                if (!$slug) {
+                    $user = $this->getUser();
+                    $blogpost->setUser($user);
+                    $this->addFlash('success', 'The blog post has been successfully created');
+                } else {
+                    $this->addFlash('success', 'The blog post has been successfully updated');
+                }
+                return $this->redirectToRoute("dashboard_administrator_blog_post");
+            }
+
+            $this->addFlash('error', 'The form contains invalid data');
+        }
+        return $this->render('Dashboard/Administrator/BlogPost/add-edit.html.twig', array(
+            "blogpost" => $blogpost,
+            "form" => $form->createView(),
+        ));
+    }
+
+    /**
      * @Route("/manage-blog-posts/{slug}/disable", name="blog_post_disable", methods="GET")
      * @Route("/manage-blog-posts/{slug}/delete", name="blog_post_delete", methods="GET")
      */

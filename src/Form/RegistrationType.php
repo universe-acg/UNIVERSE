@@ -25,49 +25,58 @@ class RegistrationType extends AbstractType
     {
         $builder
             ->add('firstname', TextType::class, [
-                'purify_html' => true,
                 'required' => true,
-                'attr' => array(
-                    'placeholder' => 'First name'
-                )
+                'label' => 'First Name',
+                'attr' => [
+                    'placeholder' => 'Enter your first name',
+                    'help' => 'Enter your first name.',
+                ],
             ])
             ->add('lastname', TextType::class, [
-                'purify_html' => true,
                 'required' => true,
-                'attr' => array(
-                    'placeholder' => 'Last name'
-                )
+                'label' => 'Last Name',
+                'attr' => [
+                    'placeholder' => 'Enter your last name',
+                    'help' => 'Enter your last name.',
+                ],
             ])
             ->add('username', TextType::class, [
-                'purify_html' => true,
                 'required' => true,
-                'attr' => array(
-                    'placeholder' => 'Username'
-                )
+                'label' => 'Username',
+                'attr' => [
+                    'placeholder' => 'Choose a username',
+                    'help' => 'Choose a unique username.',
+                ],
             ])
             ->add('email', EmailType::class, [
-                'purify_html' => true,
                 'required' => true,
+                'label' => 'Email',
                 'attr' => [
-                    'placeholder' => 'Email',
+                    'placeholder' => 'Enter your email address',
+                    'help' => 'Enter your email address.',
                 ],
                 'constraints' => [
-                    new AcgEmailDomain(), // Apply the custom constraint here
+                    new AcgEmailDomain([
+                        'message' => 'Invalid email domain. Please use an @acg.edu email address.',
+                    ]), // Apply the custom constraint here
                 ],
             ])
             ->add('plainPassword', RepeatedType::class, array(
                 'type' => PasswordType::class,
                 'options' => array(
-                    'purify_html' => true,
-                    'translation_domain' => 'FOSUserBundle',
-                    'attr' => array(
-                        'placeholder' => 'Password',
+                    'attr' => [
+                        'placeholder' => 'Choose a password',
                         'autocomplete' => 'new-password',
-                    ),
+                        'help' => 'Choose a strong password. It must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character.',
+                    ],
                 ),
-                'first_options' => array('attr' => array('placeholder' => 'form.password')),
-                'second_options' => array('attr' => array('placeholder' => 'form.password_confirmation')),
-                'invalid_message' => 'fos_user.password.mismatch',
+                'first_options' => array(
+                    'label' => 'Password',
+                ),
+                'second_options' => array(
+                    'label' => 'Repeat Password',
+                ),
+                'invalid_message' => 'Passwords do not match.',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Please enter a password.',

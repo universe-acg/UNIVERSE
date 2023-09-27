@@ -1339,11 +1339,8 @@ $(document).ready(function () {
 
             // Opens the respective event date pop up
             $(document).on("click", ".cld-number.eventday", function () {
-                var eventDateReference = $(this).find(".cld-title > a").attr("href");
-                var eventDateHour = $(this).find(".cld-title > a").text();
-
-                console.dir(eventDateReference);
-                console.dir(eventDateHour);
+                const eventDateReference = $(this).find(".cld-title > a").attr("href");
+                const eventDateHour = $(this).find(".cld-title > a").text();
 
                 if (eventDateReference.indexOf("|") == -1) {
                     $('.event-eventDate-wrapper').hide()
@@ -1353,16 +1350,6 @@ $(document).ready(function () {
                     var eventDateHoursDialogContent = "";
                     var eventDatesReferences = eventDateReference.split("|");
                     var eventDatesHours = eventDateHour.split(", ");
-                    // for (var i = 0; i < eventDatesReferences.length; i++) {
-                    //     eventDateHoursDialogContent += '<div>' +
-                    //         '<b class="float-left">Starts at: ' + eventDatesHours[i] + '</b>' +
-                    //         '<button class="eventDate-hours-modal-tickets-button float-right btn btn-primary btn-sm" data-eventDate-reference="' + eventDatesReferences[i] + '" data-dismiss="modal">' + 'Tickets' + '</button>' +
-                    //         '<div class="clearfix"></div>' +
-                    //         '</div>';
-                    //     if (i != eventDatesReferences.length - 1) {
-                    //         eventDateHoursDialogContent += "<hr>";
-                    //     }
-                    // }
                     for (var i = 0; i < eventDatesReferences.length; i++) {
                         var eventName = $('#add-to-calendar-link').data('title'); // Get the event.name value
                         eventDateHoursDialogContent += '<div>' +
@@ -1403,7 +1390,6 @@ $(document).ready(function () {
                     });
                 }
             });
-
         }
     }
 

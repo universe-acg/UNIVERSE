@@ -37,18 +37,6 @@ class Order
     private $orderelements;
 
     /**
-     * @ORM\ManyToOne(targetEntity="PaymentGateway", inversedBy="orders")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $paymentgateway;
-
-    /**
-     * @ORM\OneToOne(targetEntity="Payment", cascade={"persist", "remove"}, fetch="EAGER")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $payment;
-
-    /**
      * @var string
      * @ORM\Column(type="string", length=255)
      */
@@ -66,30 +54,6 @@ class Order
      * @ORM\Column(type="integer")
      */
     private $status;
-
-    /**
-     * @var decimal
-     * @ORM\Column(type="decimal", precision=10, scale=2)
-     */
-    private $ticketFee;
-
-    /**
-     * @var integer
-     * @ORM\Column(type="integer")
-     */
-    private $ticketPricePercentageCut;
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=255)
-     */
-    private $currencyCcy;
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=255)
-     */
-    private $currencySymbol;
 
     /**
      * @var DateTime $createdAt
@@ -134,10 +98,8 @@ class Order
     {
 
         switch ($this->status) {
-            case -2:
-                return "danger";
-                break;
             case -1:
+            case -2:
                 return "danger";
                 break;
             case 0:
@@ -155,41 +117,16 @@ class Order
     {
 
         switch ($this->status) {
-            case -2:
-                return "Failed";
-                break;
             case -1:
                 return "Canceled";
                 break;
-            case 0:
-                return "Awaiting";
-                break;
             case 1:
                 return "Booked";
+            case 2:
+                return "Attendeed";
                 break;
             default:
                 return "Unknown";
-        }
-    }
-
-    public function getPaymentStatusClass($status)
-    {
-        if ($status == "new") {
-            return "info";
-        } else if ($status == "pending") {
-            return "warning";
-        } else if ($status == "authorized") {
-            return "success";
-        } else if ($status == "captured") {
-            return "success";
-        } else if ($status == "canceled") {
-            return "danger";
-        } else if ($status == "suspended") {
-            return "danger";
-        } else if ($status == "failed") {
-            return "danger";
-        } else if ($status == "unknown") {
-            return "danger";
         }
     }
 
@@ -204,45 +141,6 @@ class Order
             }
         }
         return $count;
-    }
-
-    public function getOrderElementsPriceSum($includeFees = false)
-    {
-        $sum = 0;
-        foreach ($this->orderelements as $orderelement) {
-            $sum += $orderelement->getPrice();
-        }
-        if ($includeFees) {
-            $sum += $this->getTotalFees();
-        }
-        return (float)$sum;
-    }
-
-    public function getTotalFees()
-    {
-        $sum = 0;
-        $sum += $this->getTotalTicketFees();
-        return $sum;
-    }
-
-    public function getTotalTicketFees()
-    {
-        if (!$this->getTicketFee()) {
-            return 0;
-        }
-        return $this->getNotFreeOrderElementsQuantitySum() * $this->getTicketFee();
-    }
-
-    public function getTicketFee()
-    {
-        return (float)$this->ticketFee;
-    }
-
-    public function setTicketFee($ticketFee)
-    {
-        $this->ticketFee = $ticketFee;
-
-        return $this;
     }
 
     public function getNotFreeOrderElementsQuantitySum()
@@ -380,18 +278,6 @@ class Order
         return $this;
     }
 
-    public function getPaymentgateway()
-    {
-        return $this->paymentgateway;
-    }
-
-    public function setPaymentgateway($paymentgateway)
-    {
-        $this->paymentgateway = $paymentgateway;
-
-        return $this;
-    }
-
     public function getNote()
     {
         return $this->note;
@@ -403,53 +289,4 @@ class Order
 
         return $this;
     }
-
-    public function getPayment()
-    {
-        return $this->payment;
-    }
-
-    public function setPayment($payment)
-    {
-        $this->payment = $payment;
-
-        return $this;
-    }
-
-    public function getCurrencyCcy()
-    {
-        return $this->currencyCcy;
-    }
-
-    public function setCurrencyCcy($currencyCcy)
-    {
-        $this->currencyCcy = $currencyCcy;
-
-        return $this;
-    }
-
-    public function getCurrencySymbol()
-    {
-        return $this->currencySymbol;
-    }
-
-    public function setCurrencySymbol($currencySymbol)
-    {
-        $this->currencySymbol = $currencySymbol;
-
-        return $this;
-    }
-
-    public function getTicketPricePercentageCut()
-    {
-        return $this->ticketPricePercentageCut;
-    }
-
-    public function setTicketPricePercentageCut($ticketPricePercentageCut)
-    {
-        $this->ticketPricePercentageCut = $ticketPricePercentageCut;
-
-        return $this;
-    }
-
 }

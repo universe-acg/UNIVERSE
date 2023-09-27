@@ -22,14 +22,19 @@ class CategoryType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'required' => false,
-                'label' => 'label',
+                'label' => 'Category Name',
                 'purify_html' => true,
+                'placeholder' => 'Enter a Category Name (e.g., Travel)',
             ])
             ->add('icon', TextType::class, [
-                'purify_html' => true,
                 'required' => true,
                 'label' => 'Icon',
-                'attr' => ['class' => 'icon-picker', 'autocomplete' => 'disabled']
+                'purify_html' => true,
+                'attr' => [
+                    'class' => 'icon-picker',
+                    'autocomplete' => 'disabled',
+                    'placeholder' => 'Enter an Icon (e.g., fa fa-plane)',
+                ],
             ])
             ->add('imageFile', VichImageType::class, [
                 'required' => false,
@@ -38,13 +43,21 @@ class CategoryType extends AbstractType
                 'download_uri' => false,
                 'image_uri' => false,
                 'imagine_pattern' => 'scale',
-                'label' => 'Image'
+                'label' => 'Image',
+                'attr' => [
+                    'placeholder' => 'Choose an Image',
+                ],
             ])
             ->add('featuredorder', ChoiceType::class, [
                 'required' => false,
-                'label' => 'Featured order',
-                'choices' => ['1' => 1, '2' => 2, '3' => 3, '4' => 4, '5' => 5, '6' => 6, '7' => 7, '8' => 8, '9' => 9, '10' => 10, '11' => 11, '12' => 12, '13' => 13, '14' => 14, '15' => 15],
-                'help' => 'Set the display order for the featured categories'
+                'label' => 'Featured Order',
+                'choices' => [
+                    '1' => 1, '2' => 2, '3' => 3, '4' => 4, '5' => 5,
+                    '6' => 6, '7' => 7, '8' => 8, '9' => 9, '10' => 10,
+                    '11' => 11, '12' => 12, '13' => 13, '14' => 14, '15' => 15
+                ],
+                'help' => 'Set the display order for the featured categories',
+                'placeholder' => 'Select Featured Order',
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Save',

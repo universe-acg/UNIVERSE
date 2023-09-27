@@ -30,24 +30,31 @@ class MenuElementType extends AbstractType
             ->add('icon', TextType::class, [
                 'purify_html' => true,
                 'required' => false,
-                'label' => 'Icon',
-                'attr' => ['class' => 'icon-picker', 'autocomplete' => 'disabled']
+                'label' => 'Icon (optional)',
+                'attr' => ['class' => 'icon-picker', 'autocomplete' => 'disabled'],
+                'help' => 'Enter the icon class name for the menu element (optional).'
             ])
             ->add('label', TextType::class, [
                 'required' => false,
-                'label' => 'label',
+                'label' => 'Label (optional)',
                 'purify_html' => true,
+                'attr' => ['placeholder' => 'Enter menu label, e.g., "Home"'],
+                'help' => 'Enter the label for the menu element (optional).'
             ])
             ->add('link', ChoiceType::class, [
                 'required' => false,
-                'label' => 'Choose the link destination page',
+                'label' => 'Link Destination Page',
                 'choices' => $this->services->getLinks(),
-//                'attr' => ['class' => 'select2', 'data-sort-options' => '0']
+                'attr' => ['class' => 'select2', 'data-sort-options' => '0'],
+                'placeholder' => 'Select a page or leave empty',
+                'help' => 'Choose the destination page for the menu element.'
             ])
             ->add('customLink', TextType::class, [
                 'purify_html' => true,
                 'required' => false,
-                'label' => 'Custom link',
+                'label' => 'Custom Link (optional)',
+                'attr' => ['placeholder' => 'Enter a custom URL for the menu element'],
+                'help' => 'Enter a custom URL for the menu element (optional).'
             ])
             ->add('position', HiddenType::class, [
                 'attr' => [

@@ -33,22 +33,29 @@ class HelpCenterCategoryType extends AbstractType
                 'class' => HelpCenterCategory::class,
                 'choice_label' => 'name',
                 'attr' => ['class' => 'select2'],
-                'label' => 'Parent',
-                'help' => 'Select the parent category to add a sub category',
+                'label' => 'Parent Category',
+                'help' => 'Select the parent category if this is a sub-category.',
                 'query_builder' => function () {
                     return $this->services->getHelpCenterCategories(array("parent" => "none"));
-                }
+                },
+                'placeholder' => 'Select parent category (optional)',
             ])
             ->add('name', TextType::class, [
                 'required' => false,
-                'label' => 'name',
+                'label' => 'Category Name',
                 'purify_html' => true,
+                'attr' => ['placeholder' => 'Enter category name'],
             ])
             ->add('icon', TextType::class, [
                 'purify_html' => true,
                 'required' => false,
                 'label' => 'Icon',
-                'attr' => ['class' => 'icon-picker', 'autocomplete' => 'disabled']
+                'attr' => [
+                    'class' => 'icon-picker',
+                    'autocomplete' => 'disabled',
+                    'placeholder' => 'Enter icon name or URL',
+                ],
+                'help' => 'Enter the icon name or URL for the category (optional).',
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Save',

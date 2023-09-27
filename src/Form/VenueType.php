@@ -19,7 +19,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class VenueType extends AbstractType
 {
-
     private $services;
 
     public function __construct(AppServices $services)
@@ -32,17 +31,24 @@ class VenueType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'purify_html' => true,
-                'label' => 'Name',
+                'label' => 'Venue Name',
+                'attr' => [
+                    'placeholder' => 'Enter the name of the venue',
+                ],
             ])
             ->add('description', TextareaType::class, [
-                'attr' => ['class' => 'wysiwyg'],
-                'label' => 'Description',
+                'label' => 'Venue Description',
+                'attr' => [
+                    'placeholder' => 'Provide a description of the venue',
+                    'class' => 'wysiwyg'
+                ],
             ])
             ->add('type', EntityType::class, [
                 'required' => true,
                 'class' => Type::class,
                 'choice_label' => 'name',
-                'label' => 'Type',
+                'label' => 'Venue Type',
+                'placeholder' => 'Select a venue type',
                 'query_builder' => function () {
                     return $this->services->getVenuesTypes(array());
                 }
@@ -59,132 +65,8 @@ class VenueType extends AbstractType
                     return $this->services->getAmenities(array());
                 }
             ])
-//            ->add('seatedguests', TextType::class, [
-//                'purify_html' => true,
-//                'required' => false,
-//                'label' => 'Seated guests number',
-//                'attr' => ['class' => 'touchspin-integer', 'data-max' => 100000]
-//            ])
-//            ->add('standingguests', TextType::class, [
-//                'disabled' => true,
-//                'purify_html' => true,
-//                'required' => false,
-//                'label' => 'Standing guests number',
-//                'attr' => ['class' => 'touchspin-integer', 'data-max' => 100000]
-//            ])
-//            ->add('neighborhoods', TextType::class, [
-//                'disabled' => true,
-//                'purify_html' => true,
-//                'required' => false,
-//                'label' => 'Neighborhoods',
-//            ])
-//            ->add('foodbeverage', TextareaType::class, [
-//                'disabled' => true,
-//                'purify_html' => true,
-//                'required' => false,
-//                'label' => 'Food and beverage details',
-//            ])
-//            ->add('pricing', TextareaType::class, [
-//                'disabled' => true,
-//                'purify_html' => true,
-//                'required' => false,
-//                'label' => 'Pricing',
-//            ])
-//            ->add('availibility', TextareaType::class, [
-//                'disabled' => true,
-//                'purify_html' => true,
-//                'required' => false,
-//                'label' => 'Availibility',
-//            ])
-//            ->add('street', TextType::class, [
-//                'disabled' => true,
-//                'purify_html' => true,
-//                'required' => false,
-//                'label' => 'Street address',
-//            ])
-//            ->add('street2', TextType::class, [
-//                'disabled' => true,
-//                'purify_html' => true,
-//                'required' => false,
-//                'label' => 'Street address 2',
-//            ])
-//            ->add('city', TextType::class, [
-//                'disabled' => true,
-//                'purify_html' => true,
-//                'required' => false,
-//                'label' => 'City',
-//            ])
-//            ->add('postalcode', TextType::class, [
-//                'disabled' => true,
-//                'purify_html' => true,
-//                'required' => false,
-//                'label' => 'Zip / Postal code',
-//            ])
-//            ->add('state', TextType::class, [
-//                'disabled' => true,
-//                'purify_html' => true,
-//                'required' => false,
-//                'label' => 'State',
-//            ])
-//            ->add('country', EntityType::class, [
-//                'disabled' => true,
-//                'required' => false,
-//                'class' => Country::class,
-//                'choice_label' => 'name',
-//                'label' => 'Country',
-//                'attr' => ['class' => 'select2'],
-//                'placeholder' => 'Select an option',
-//                'query_builder' => function () {
-//                    return $this->services->getCountries(array());
-//                }
-//            ])
-//            ->add('lat', HiddenType::class, [
-//                'disabled' => true,
-//                'required' => false,
-//            ])
-//            ->add('lng', HiddenType::class, [
-//                'disabled' => true,
-//                'required' => false,
-//            ])
-//            ->add('showmap', ChoiceType::class, [
-//                'disabled' => true,
-//                'required' => false,
-//                'multiple' => false,
-//                'expanded' => true,
-//                'label' => 'Show the map along with the address on the venue page and event page',
-//                'choices' => ['No' => false, 'Yes' => true],
-//                'label_attr' => ['class' => 'radio-custom radio-inline']
-//            ])
-//            ->add('quoteform', ChoiceType::class, [
-//                'disabled' => true,
-//                'required' => false,
-//                'multiple' => false,
-//                'expanded' => true,
-//                'label' => 'Show the quote form on the venue page',
-//                'choices' => ['No' => false, 'Yes' => true],
-//                'label_attr' => ['class' => 'radio-custom radio-inline']
-//            ])
-//            ->add('contactemail', TextType::class, [
-//                'disabled' => true,
-//                'purify_html' => true,
-//                'required' => false,
-//                'label' => 'Contact email',
-//                'help' => 'This email address will be used to receive the quote requests, make sure to mention it if you want to show the quote form'
-//            ])
-//            ->add('images', CollectionType::class, array(
-//                'required' => false,
-//                'label' => 'Images',
-//                'entry_type' => VenueImageType::class,
-//                'allow_add' => true,
-//                'allow_delete' => true,
-//                'prototype' => true,
-//                'by_reference' => false,
-//                'attr' => array(
-//                    'class' => 'form-collection',
-//                ),
-//            ))
             ->add('save', SubmitType::class, [
-                'label' => 'Save',
+                'label' => 'Save Venue',
                 'attr' => ['class' => 'btn btn-primary'],
             ]);
     }

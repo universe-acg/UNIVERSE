@@ -113,25 +113,6 @@ class UserController extends Controller
             $organizer->setUser(null);
             $user->setOrganizer(null);
 
-            /* if ($user->getOrganizer()) {
-                $user->getOrganizer()->setUser(null);
-                $em->persist($user->getOrganizer());
-                $em->flush();
-                $user->setOrganizer(null);
-                }
-                if ($user->hasRole('ROLE_SCANNER')) {
-                $user->getScanner()->setUser(null);
-                $em->persist($user->getScanner());
-                $em->flush();
-                $user->setScanner(null);
-                }
-                if ($user->hasRole('ROLE_POINTOFSALE')) {
-                $user->getPointofsale()->setUser(null);
-                $em->persist($user->getPointofsale());
-                $em->flush();
-                $user->setPointofsale(null);
-                } */
-
             // Remove the organizer entity (if cascade={"remove"} is configured)
             $em->remove($organizer);
         }
@@ -185,29 +166,9 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         if ($user->isEnabled()) {
             $user->setEnabled(false);
-            if ($user->hasRole("ROLE_ORGANIZER")) {
-                foreach ($user->getOrganizer()->getScanners() as $scanner) {
-                    $scanner->getUser()->setEnabled(false);
-                    $em->persist($scanner->getUser());
-                }
-                foreach ($user->getOrganizer()->getPointofsales() as $pos) {
-                    $pos->getUser()->setEnabled(false);
-                    $em->persist($pos->getUser());
-                }
-            }
             $this->addFlash('notice', 'The user has been disabled');
         } else {
             $user->setEnabled(true);
-            if ($user->hasRole("ROLE_ORGANIZER")) {
-                foreach ($user->getOrganizer()->getScanners() as $scanner) {
-                    $scanner->getUser()->setEnabled(true);
-                    $em->persist($scanner->getUser());
-                }
-                foreach ($user->getOrganizer()->getPointofsales() as $pos) {
-                    $pos->getUser()->setEnabled(true);
-                    $em->persist($pos->getUser());
-                }
-            }
             $this->addFlash('success', 'The user has been enabled');
         }
         $em->persist($user);

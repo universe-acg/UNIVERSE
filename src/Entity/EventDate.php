@@ -30,7 +30,6 @@ class EventDate
 
     private $event;
 
-//* @Assert\NotNull(groups={"create", "update"})
     /**
      * @ORM\Column(type="boolean")
      */
@@ -50,30 +49,6 @@ class EventDate
     private $tickets;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Scanner", inversedBy="eventdates", cascade={"persist", "merge"})
-     * @ORM\JoinTable(name="universe_eventdate_scanner",
-     *   joinColumns={@ORM\JoinColumn(name="eventdate_id", referencedColumnName="id")},
-     *   inverseJoinColumns={@ORM\JoinColumn(name="scanner_id", referencedColumnName="id")}
-     * )
-     */
-    private $scanners;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="PointOfSale", inversedBy="eventdates", cascade={"persist", "merge"})
-     * @ORM\JoinTable(name="universe_eventdate_pointofsale",
-     *   joinColumns={@ORM\JoinColumn(name="eventdate_id", referencedColumnName="id")},
-     *   inverseJoinColumns={@ORM\JoinColumn(name="pointofsale_id", referencedColumnName="id")}
-     * )
-     */
-    private $pointofsales;
-
-    /**
-     * @ORM\OneToMany(targetEntity="PayoutRequest", mappedBy="eventDate", cascade={"persist", "remove"}, fetch = "LAZY")
-     */
-    private $payoutRequests;
-
-//    * @Assert\NotNull(groups={"create", "update"})
-    /**
      * @ORM\Column(type="boolean")
      */
     private $active = true;
@@ -89,12 +64,12 @@ class EventDate
      * @ORM\Column(type="string")
      */
     private $description;
+
     /**
      * @var string
      * @ORM\Column(type="string", length=255)
      */
     private $title;
-
 
     /**
      * @var DateTime
@@ -112,10 +87,7 @@ class EventDate
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
-        $this->scanners = new ArrayCollection();
-        $this->pointofsales = new ArrayCollection();
         $this->reference = $this->generateReference(10);
-        $this->payoutRequests = new ArrayCollection();
         $this->startdate = new \DateTime();
         $this->enddate = new \DateTime();
         $this->active = true;
@@ -212,10 +184,6 @@ class EventDate
             return "Sold out";
         }
 
-        if ($this->payoutRequested()) {
-            return "Locked (Payout request " . strtolower($this->payoutRequestStatus()) . ")";
-        }
-
         if (!$this->hasATicketOnSale()) {
             return "No ticket on sale";
         }
@@ -245,16 +213,6 @@ class EventDate
         return true;
     }
 
-    public function payoutRequested(): bool
-    {
-        foreach ($this->payoutRequests as $payoutRequest) {
-            if ($payoutRequest->getStatus() == 0 || $payoutRequest->getStatus() == 1) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public function hasATicketOnSale(): bool
     {
         foreach ($this->tickets as $ticket) {
@@ -267,51 +225,7 @@ class EventDate
 
     public function isOnSale(): bool
     {
-        return $this->event->getOrganizer()->getUser()->isEnabled()
-            && $this->active && $this->event->getPublished();
-    }
-
-    public function canBeScannedBy($scanner): bool
-    {
-        return $this->getScanners()->contains($scanner);
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getScanners(): ArrayCollection
-    {
-        return $this->scanners;
-    }
-
-    public function isOnSaleByPos($pointOfSale): bool
-    {
-        return $this->getPointofsales()->contains($pointOfSale);
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getPointofsales(): ArrayCollection
-    {
-        return $this->pointofsales;
-    }
-
-    public function getTotalCheckInPercentage(): float
-    {
-        if ($this->getOrderElementsQuantitySum() == 0) {
-            return 0.0; // Use 0.0 to ensure a float is returned.
-        }
-        return round(($this->getScannedTicketsCount() / $this->getOrderElementsQuantitySum()) * 100);
-    }
-
-    public function getOrderElementsQuantitySum($status = 1, $user = "all", $role = "all")
-    {
-        $sum = 0;
-        foreach ($this->tickets as $ticket) {
-            $sum += $ticket->getOrderElementsQuantitySum($status, $user, $role);
-        }
-        return $sum;
+        return true;
     }
 
     public function getScannedTicketsCount()
@@ -341,9 +255,13 @@ class EventDate
         return $sum;
     }
 
-    public function getTotalTicketFees()
+    public function getOrderElementsQuantitySum($status = 1, $user = "all", $role = "all")
     {
-        return $this->getSales("all", "all", false, true) - $this->getSales();
+        $sum = 0;
+        foreach ($this->tickets as $ticket) {
+            $sum += $ticket->getOrderElementsQuantitySum($status, $user, $role);
+        }
+        return $sum;
     }
 
     public function getSales($role = "all", $user = "all", $formattedForPayoutApproval = false, $includeFees = false)
@@ -353,42 +271,6 @@ class EventDate
             $sum += $eventDateTicket->getSales($role, $user, $formattedForPayoutApproval, $includeFees);
         }
         return $sum;
-    }
-
-    public function getOrganizerPayoutAmount()
-    {
-        return $this->getSales() - $this->getTicketPricePercentageCutSum() - $this->getSales("ROLE_POINTOFSALE");
-    }
-
-    public function getTicketPricePercentageCutSum($role = "all")
-    {
-        $sum = 0;
-        foreach ($this->tickets as $eventDateTicket) {
-            $sum += $eventDateTicket->getTicketPricePercentageCutSum($role);
-        }
-        return $sum;
-    }
-
-    public function displayPosNames(): string
-    {
-        $pointofsales = '';
-        if (count($this->pointofsales) > 0) {
-            foreach ($this->pointofsales as $pointofsale) {
-                $pointofsales .= $pointofsale->getName() . ', ';
-            }
-        }
-        return rtrim($pointofsales, ', ');
-    }
-
-    public function displayScannersNames(): string
-    {
-        $scanners = '';
-        if (count($this->scanners) > 0) {
-            foreach ($this->scanners as $scanner) {
-                $scanners .= $scanner->getName() . ', ';
-            }
-        }
-        return rtrim($scanners, ', ');
     }
 
     public function stringifyStatusClass(): string
@@ -407,23 +289,10 @@ class EventDate
             return "info";
         } else if ($this->isSoldOut()) {
             return "warning";
-        } else if ($this->payoutRequested()) {
-            return "warning";
         } else if (!$this->hasATicketOnSale()) {
             return "danger";
         } else {
             return "success";
-        }
-    }
-
-    public function isFree()
-    {
-        foreach ($this->tickets as $ticket) {
-            if (!$ticket->getFree()) {
-                return false;
-            }
-
-            return true;
         }
     }
 
@@ -475,42 +344,6 @@ class EventDate
             if ($ticket->getEventdate() === $this) {
                 $ticket->setEventdate(null);
             }
-        }
-
-        return $this;
-    }
-
-    public function addScanner($scanner)
-    {
-        if (!$this->scanners->contains($scanner)) {
-            $this->scanners[] = $scanner;
-        }
-
-        return $this;
-    }
-
-    public function removeScanner($scanner)
-    {
-        if ($this->scanners->contains($scanner)) {
-            $this->scanners->removeElement($scanner);
-        }
-
-        return $this;
-    }
-
-    public function addPointofsale($pointofsale)
-    {
-        if (!$this->pointofsales->contains($pointofsale)) {
-            $this->pointofsales[] = $pointofsale;
-        }
-
-        return $this;
-    }
-
-    public function removePointofsale($pointofsale)
-    {
-        if ($this->pointofsales->contains($pointofsale)) {
-            $this->pointofsales->removeElement($pointofsale);
         }
 
         return $this;

@@ -199,58 +199,6 @@ class EventController extends Controller
         $event->setCommonvalue($commonValue);
 
         if ($form->isSubmitted() && $form->isValid()) {
-//            $isRepeat = $form->get('isrepeat')->getData();
-//            if ($form->has('isrepeat') && $form->get('isrepeat')->getData()) {
-//                $newstartdate = $event->getEventdates()[0]->getStartdate();
-//                $newenddate = $event->getEventdates()[0]->getEnddate();
-//                $interval = $newstartdate->diff($newenddate);
-//                $days = $interval->days;
-//                $repeatDays = $form->get('repeat_days')->getData();
-//                $eventrepeatsxtimes = $days / $repeatDays;
-//                ++$eventrepeatsxtimes;
-//                $tempstartdate = $newstartdate;
-//
-//                $eventrepeatsxtimes = (int)floor($eventrepeatsxtimes);
-//
-//                for ($i = 0; $i < $eventrepeatsxtimes; $i++) {
-////                    $newEvent = $this->initializeEvent($slug, $services, $eventRepository,  $eventChoices);
-//                    $newEvent = new Event();
-//
-//                    $newEvent->setCommonvalue($commonValue);
-//                    $newEvent->setOrganizer($this->getUser()->getOrganizer());
-//                    // Adjust the start date of the new event based on the repetition
-////                        $newEvent->setEventdates($event->getEventdates());
-//                    foreach ($event->getEventdates() as $originalEventdate) {
-//                        // Clone the event date
-//                        $newEventdate = clone $originalEventdate;
-//
-//                        // Set the cloned event date's start date (if needed, adjust other properties as well)
-//                        $newEventdate->setStartdate($tempstartdate);
-//
-//                        // Add the cloned event date to the new event
-//                        $newEvent->addEventdate($newEventdate);
-//                    }
-//
-//
-//                    $newrepslug = $this->generateUniqueSlug($event->getName());
-//                    $newEvent->setCategory($category);
-//                    $newEvent->setSlug($newrepslug); // Implement logic to generate unique slugs
-//                    $newEvent->setOrganizer($this->getUser()->getOrganizer());
-//                    $this->processFormSubmission($newEvent, $em, $services, $authChecker, $category, $newrepslug);
-////                     Convert $repeatDays to an integer before adding it to $tempstartdate
-//                    $tempstartdate->add(new DateInterval("P" . intval($repeatDays) . "D"));
-//                }
-//
-//                $newslug = $this->generateUniqueSlug($event->getName());
-//                $event->setCommonvalue($commonValue);
-//                $event->setCategory($category);
-//                $event->setSlug($newslug); // Implement logic to generate unique slugs
-//                $event->setOrganizer($this->getUser()->getOrganizer());
-//                $em->persist($event);
-//                $em->flush();
-//                $this->processFormSubmission($event, $em, $services, $authChecker, $category, $newslug);
-//                return $this->redirectToRouteAfterSubmission($authChecker);
-//            }
 
             $event->setOrganizer($this->getUser()->getOrganizer());
             $newnewslug = $this->generateUniqueSlug($event->getName());
@@ -726,7 +674,8 @@ class EventController extends Controller
 
     /**
      * @Route("/administrator/my-events/{slug}/delete-permanently-admin", name="dashboard_organizer_event_delete_permanently_admin", methods="GET")
-     * @throws InvalidDatabaseException
+     * @throws InvalidDatabaseException|Exception
+     * @throws Exception
      */
     public function deleteforadmin(Request $request, AppServices $services, $slug, AuthorizationCheckerInterface $authChecker)
     {
@@ -761,7 +710,7 @@ class EventController extends Controller
      * @Route("/administrator/manage-events/{slug}/delete", name="dashboard_administrator_event_delete", methods="GET")
      * @Route("/organizer/my-events/{slug}/delete-permanently", name="dashboard_organizer_event_delete_permanently", methods="GET")
      * @Route("/organizer/my-events/{slug}/delete", name="dashboard_organizer_event_delete", methods="GET")
-     * @throws InvalidDatabaseException
+     * @throws InvalidDatabaseException|Exception
      */
     public function delete(Request $request, AppServices $services, $slug, AuthorizationCheckerInterface $authChecker)
     {

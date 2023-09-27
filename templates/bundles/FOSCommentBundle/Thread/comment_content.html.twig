@@ -41,7 +41,7 @@ with this source code in the file LICENSE.
                 {% endblock fos_comment_comment_metas_edit %}
 
                 {% block fos_comment_comment_metas_delete %}
-                    {% if  is_granted('ROLE_USER') and app.user.username == comment.author.username %}
+                    {% if  ( is_granted('ROLE_USER') and app.user.username == comment.author.username ) or  is_granted('ROLE_ADMINISTRATOR') %}
                         <a href="#" class="delete-comment-btn btn btn-sm text-danger display-inline ml-3"
                            data-comment-id="{{ comment.id }}">
                             <i class="fas fa-comment-slash"></i>

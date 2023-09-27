@@ -32,11 +32,6 @@ class EventTicket
     private $eventdate;
 
     /**
-     * @ORM\OneToMany(targetEntity="CartElement", mappedBy="eventticket", cascade={"remove"})
-     */
-    private $cartelements;
-
-    /**
      * @ORM\OneToMany(targetEntity="OrderElement", mappedBy="eventticket", cascade={"remove"})
      */
     private $orderelements;
@@ -71,25 +66,6 @@ class EventTicket
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $description;
-
-//         * @Assert\NotNull(groups={"create", "update"})
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $free = 1;
-
-    /**
-     * @var decimal
-     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
-     */
-    private $price;
-
-//     * @Assert\LessThan(propertyPath="price", groups={"create", "update"})
-    /**
-     * @var decimal
-     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
-     */
-    private $promotionalprice = 0;
 
     /**
      * @var int
@@ -235,13 +211,6 @@ class EventTicket
         return (float)$this->price;
     }
 
-    public function setPrice($price)
-    {
-        $this->price = $price;
-
-        return $this;
-    }
-
     public function getTotalFees(): float
     {
         $sum = 0;
@@ -258,6 +227,13 @@ class EventTicket
             }
         }
         return $sum;
+    }
+
+    public function setPrice($price)
+    {
+        $this->price = $price;
+
+        return $this;
     }
 
     public function getTicketPricePercentageCutSum($role = "all"): float
@@ -278,7 +254,7 @@ class EventTicket
         }
 
         return
-            $this->eventdate->getEvent()->getOrganizer()->getUser()->isEnabled() && $this->eventdate->getEvent()->getPublished() && $this->eventdate->getActive() && ($this->eventdate->getStartdate() >= new Datetime) && $this->active && !$this->isSoldOut() && ($this->salesstartdate < new Datetime || !$this->salesstartdate) && ($this->salesenddate > new Datetime || !$this->salesenddate) && (!$this->eventdate->payoutRequested());
+            $this->eventdate->getEvent()->getOrganizer()->getUser()->isEnabled() && $this->eventdate->getEvent()->getPublished() && $this->eventdate->getActive() && ($this->eventdate->getStartdate() >= new Datetime) && $this->active && !$this->isSoldOut() && ($this->salesstartdate < new Datetime || !$this->salesstartdate) && ($this->salesenddate > new Datetime || !$this->salesenddate);
     }
 
     public function getActive()
@@ -362,10 +338,6 @@ class EventTicket
             return "Tickets ended";
         }
 
-        if ($this->eventdate->payoutRequested()) {
-            return "Locked (Payout request " . strtolower($this->eventdate->payoutRequestStatus()) . ")";
-        }
-
         return "Tickets active";
     }
 
@@ -403,52 +375,7 @@ class EventTicket
             return "warning";
         }
 
-        if ($this->eventdate->payoutRequested()) {
-            return "warning";
-        }
-
         return "success";
-    }
-
-    public function getValidTicketReservationExpirationDate($user)
-    {
-        foreach ($this->ticketreservations as $ticketreservation) {
-            if (!$ticketreservation->isExpired() && $ticketreservation->getUser() == $user) {
-                return $ticketreservation->getExpiresAt();
-            }
-        }
-        return null;
-    }
-
-    public function getMaxTicketsForSaleCount($user)
-    {
-        $ticketsForSaleCount = 0;
-        if ($this->ticketsperattendee) {
-            if ($this->getTicketsLeftCount() >= $this->ticketsperattendee) {
-                $ticketsForSaleCount = $this->ticketsperattendee - $this->getOrderElementsQuantitySum(1, $user);
-            } else {
-                $ticketsForSaleCount = $this->getTicketsLeftCount() - $this->ticketsperattendee - $this->getOrderElementsQuantitySum(1, $user);
-            }
-        } else {
-            $ticketsForSaleCount = $this->quantity - $this->getOrderElementsQuantitySum();
-        }
-        if ($ticketsForSaleCount < 0) {
-            $ticketsForSaleCount = 0;
-        }
-        return $ticketsForSaleCount;
-    }
-
-    public function getSalePrice(): float
-    {
-        if ($this->promotionalprice) {
-            return (float)$this->getPromotionalprice();
-        }
-
-        if ($this->price) {
-            return (float)$this->getPrice();
-        }
-
-        return 0;
     }
 
     public function getPromotionalprice(): float
@@ -516,9 +443,9 @@ class EventTicket
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getOrderelements(): array
+    public function getOrderelements(): ArrayCollection
     {
         return $this->orderelements;
     }

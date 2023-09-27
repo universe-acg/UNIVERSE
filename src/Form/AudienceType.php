@@ -26,7 +26,11 @@ class AudienceType extends AbstractType
                 'image_uri' => false,
                 'imagine_pattern' => 'scale',
                 'label' => 'Image',
-                'translation_domain' => 'messages'
+                'help' => 'Upload an image for the audience',
+                'attr' => [
+                    'placeholder' => 'Upload an image...',
+                ],
+                'invalid_message' => 'Invalid image format. Please upload a valid image.',
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Save',

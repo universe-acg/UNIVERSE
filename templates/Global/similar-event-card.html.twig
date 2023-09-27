@@ -56,17 +56,6 @@
                                           class="link-style text-dark">{{ (event.getOrganizer().getName()) }}</a></span>
 
         </div>
-        {% if hidePrice is not defined %}
-            <div class="price-wrap">
-                {% if event.isFree %}
-                    {#                    <span class="price-new">{{ "Free" }}</span> #}
-                {% else %}
-                    {% if displayedEventDate %}
-                        {#                        <span class="price-new">{{ services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '' }}{{ event.getCheapestTicket.getSalePrice }}{{ services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '' }}</span> #}
-                    {% endif %}
-                {% endif %}
-            </div>
-        {% endif %}
         {% if orderReference is defined %}
             <div class="order-reference">
                 <a href="{{ path('dashboard_attendee_order_details', {reference: orderReference}) }}"><small>{{ "Order" }}
@@ -75,16 +64,6 @@
         {% endif %}
         <div class="clearfix"></div>
     </div>
-    {#    <span class="event-category"> #}
-    {#        {% if ticketName is defined %} #}
-    {#            #}{#            <b>{{ ticketName }}</b> <br> #}
-    {#        {% endif %} #}
-    {#        {% if ticketsCount is defined %} #}
-    {#            #}{#            {{ ticketsCount }} {{ ticketsCount > 1 ? "tickets" : "ticket" }} #}
-    {#        {% else %} #}
-    {#            #}{#            {{ event.category.name }} #}
-    {#        {% endif %} #}
-    {#    </span> #}
     {% if displayedEventDate %}
         {% if displayedEventDate.startdate %}
             <div class="event-date text-center">

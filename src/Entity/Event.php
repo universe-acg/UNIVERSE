@@ -53,22 +53,7 @@ class Event
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="events")
      */
     private $category;
-    /**
-     * @ORM\ManyToMany(targetEntity="Language", inversedBy="events", cascade={"persist", "merge"})
-     * @ORM\JoinTable(name="universe_event_language",
-     *   joinColumns={@ORM\JoinColumn(name="Event_id", referencedColumnName="id")},
-     *   inverseJoinColumns={@ORM\JoinColumn(name="Language_Id", referencedColumnName="id")}
-     * )
-     */
-    private $languages;
-    /**
-     * @ORM\ManyToMany(targetEntity="Language", inversedBy="eventssubtitled", cascade={"persist", "merge"})
-     * @ORM\JoinTable(name="universe_event_subtitle",
-     *   joinColumns={@ORM\JoinColumn(name="Event_id", referencedColumnName="id")},
-     *   inverseJoinColumns={@ORM\JoinColumn(name="Language_Id", referencedColumnName="id")}
-     * )
-     */
-    private $subtitles;
+
     /**
      * @ORM\ManyToMany(targetEntity="Audience", inversedBy="events", cascade={"persist", "merge"})
      * @ORM\JoinTable(name="universe_event_audience",
@@ -77,11 +62,6 @@ class Event
      * )
      */
     private $audiences;
-    /**
-     * @ORM\ManyToOne(targetEntity="Country", inversedBy="events")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $country;
     /**
      * @ORM\ManyToOne(targetEntity="Organizer", inversedBy="events")
      */
@@ -129,13 +109,6 @@ class Event
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(max = 255)
      */
-    private $youtubeurl;
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Length(max = 255)
-     */
     private $externallink;
     /**
      * @var string
@@ -155,58 +128,9 @@ class Event
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Length(max = 255)
-     */
-    private $twitter;
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Length(max = 255)
-     */
-    private $instagram;
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Length(max = 255)
-     */
-    private $facebook;
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Length(max = 255)
-     */
-    private $googleplus;
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Length(max = 255)
-     */
-    private $linkedin;
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Length(max = 500)
-     */
-    private $artists;
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(max = 500)
      */
     private $tags;
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Length(max = 5)
-     */
-    private $year;
 //    * @Assert\NotNull(groups={"create"})
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
@@ -294,13 +218,11 @@ class Event
 
     public function __construct()
     {
-//            $this->languages = new ArrayCollection();
         $this->audiences = new ArrayCollection();
         $this->views = 0;
         $this->eventdates = new ArrayCollection();
         $this->images = new ArrayCollection();
         $this->reference = $this->generateReference(10);
-//            $this->subtitles = new ArrayCollection();
         $this->reviews = new ArrayCollection();
         $this->addedtofavoritesby = new ArrayCollection();
     }
@@ -677,16 +599,6 @@ class Event
             $this->published;
     }
 
-    public function isFree()
-    {
-        foreach ($this->eventdates as $eventdate) {
-            if (!$eventdate->isFree()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public function getFirstOnSaleEventDate()
     {
         foreach ($this->eventdates as $eventdate) {
@@ -969,18 +881,6 @@ class Event
     public function setExternallink($externallink)
     {
         $this->externallink = $externallink;
-
-        return $this;
-    }
-
-    public function getCountry()
-    {
-        return $this->country;
-    }
-
-    public function setCountry($country)
-    {
-        $this->country = $country;
 
         return $this;
     }

@@ -30,13 +30,6 @@ class MainController extends Controller
             return $this->redirectToRoute("dashboard_attendee_index");
         }
 
-        if ($authChecker->isGranted('ROLE_SCANNER')) {
-            return $this->redirectToRoute("dashboard_scanner_index");
-        }
-
-        if ($authChecker->isGranted('ROLE_POINTOFSALE')) {
-            return $this->redirectToRoute("dashboard_pointofsale_index");
-        }
         return $this->redirectToRoute("fos_user_security_login");
     }
 }

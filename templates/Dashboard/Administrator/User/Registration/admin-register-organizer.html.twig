@@ -40,20 +40,20 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text border-0"> <i class="fas fa-user"></i> </span>
                             </div>
-                            {{ form_widget(form.firstname, {'attr': {'placeholder': 'Enter your first name'}}) }}
+                            {{ form_widget(form.firstname, {'attr': {'placeholder': 'Enter their first name'}}) }}
                         </div>
                         {{ form_errors(form.firstname) }}
-                        <small class="form-text text-muted">Please enter your first name.</small>
+                        <small class="form-text text-muted">Please enter their first name.</small>
                     </div>
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text border-0"> <i class="fas fa-user"></i> </span>
                             </div>
-                            {{ form_widget(form.lastname, {'attr': {'placeholder': 'Enter your last name'}}) }}
+                            {{ form_widget(form.lastname, {'attr': {'placeholder': 'Enter their last name'}}) }}
                         </div>
                         {{ form_errors(form.lastname) }}
-                        <small class="form-text text-muted">Please enter your last name.</small>
+                        <small class="form-text text-muted">Please enter their last name.</small>
                     </div>
                     <div class="form-group">
                         <div class="input-group">
@@ -70,10 +70,10 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text border-0"> <i class="fas fa-envelope"></i> </span>
                             </div>
-                            {{ form_widget(form.email, {'attr': {'placeholder': 'Enter your email address'}}) }}
+                            {{ form_widget(form.email, {'attr': {'placeholder': 'Enter their email address'}}) }}
                         </div>
                         {{ form_errors(form.email) }}
-                        <small class="form-text text-muted">Please enter your email address.</small>
+                        <small class="form-text text-muted">Please enter their email address.</small>
                     </div>
                     <p>Is this a multi-ticket user?</p>
                     <div class="form-group">
@@ -86,6 +86,29 @@
                         {{ form_errors(form.isbusinessweek) }}
                         <small class="form-text text-muted">Please indicate if this is a multi-ticket user.</small>
                     </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text border-0"> <i class="fas fa-user-lock"></i> </span>
+                            </div>
+                            {{ form_widget(form.plainPassword.first, {'attr': {'placeholder': 'Enter their password'}}) }}
+                        </div>
+                        {{ form_errors(form.plainPassword.first) }}
+                        <small class="form-text text-muted">Please enter their password.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text border-0"> <i class="fas fa-user-lock"></i> </span>
+                            </div>
+                            {{ form_widget(form.plainPassword.second, {'attr': {'placeholder': 'Confirm their password'}}) }}
+                        </div>
+                        {{ form_errors(form.plainPassword.second) }}
+                        <small class="form-text text-muted">Please confirm their password.</small>
+                    </div>
+
+
                     <div class="form-group">
                         <button type="submit"
                                 class="btn btn-primary btn-block">Create

@@ -19,11 +19,14 @@ class BlogPostCategoryType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'purify_html' => true,
                 'required' => true,
-                'attr' => array(
-                    'placeholder' => 'Name'
-                )
+                'attr' => [
+                    'placeholder' => 'Enter category name (e.g., Travel)',
+                    'title' => 'Please enter a descriptive category name.',
+                ],
+                'label' => 'Category Name',
+                'error_bubbling' => true, // Show errors next to the field
+                'invalid_message' => 'Please provide a valid category name.',
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Save',

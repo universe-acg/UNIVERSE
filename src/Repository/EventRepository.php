@@ -80,7 +80,7 @@ class EventRepository extends ServiceEntityRepository
 //            return $qb;
 //        }
 
-    public function getEvents($category, $venue, $country, $location, $organizer, $keyword, $slug, $freeonly, $onlineonly, $pricemin, $pricemax, $audience, $startdate, $startdatemin, $startdatemax, $published, $elapsed, $organizerEnabled, $addedtofavoritesby, $onsalebypos, $canbescannedby, $isOnHomepageSlider, $otherthan, $sort, $order, $limit, $count): QueryBuilder
+    public function getEvents($category, $venue, $country, $location, $organizer, $keyword, $slug, $freeonly, $onlineonly, $pricemin, $pricemax, $audience, $startdate, $startdatemin, $startdatemax, $published, $elapsed, $organizerEnabled, $addedtofavoritesby, $isOnHomepageSlider, $otherthan, $sort, $order, $limit, $count): QueryBuilder
     {
         $qb = $this->createQueryBuilder("e");
         if ($count) {
@@ -136,12 +136,6 @@ class EventRepository extends ServiceEntityRepository
         }
         if ($addedtofavoritesby !== "all") {
             $qb->andWhere(":addedtofavoritesbyuser MEMBER OF e.addedtofavoritesby")->setParameter("addedtofavoritesbyuser", $addedtofavoritesby);
-        }
-        if ($onsalebypos !== "all") {
-            $qb->andWhere(":onsalebypos MEMBER OF eventdates.pointofsales")->setParameter("onsalebypos", $onsalebypos);
-        }
-        if ($canbescannedby !== "all") {
-            $qb->andWhere(":canbescannedby MEMBER OF eventdates.scanners")->setParameter("canbescannedby", $canbescannedby);
         }
         if ($isOnHomepageSlider === true) {
             $qb->andWhere("e.isonhomepageslider IS NOT NULL");

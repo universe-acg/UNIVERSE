@@ -12,7 +12,6 @@ with this source code in the file LICENSE.
 <div class="fos_comment_commentable_form_holder mt-4 mb-4 text-right">
     <form class="fos_comment_commentable_form" action="{{ url('fos_comment_patch_thread_commentable', {'id': id}) }}"
           data-fos-comment-thread-id="{{ id }}" method="POST">
-
         {% block fos_comment_form_fields %}
             {{ form_errors(form) }}
 
@@ -28,6 +27,5 @@ with this source code in the file LICENSE.
                         class="btn btn-sm btn-danger">{{ (isCommentable ? 'fos_comment_thread_open' : 'fos_comment_thread_close') }}</button>
             {% endblock %}
         </div>
-
     </form>
 </div>

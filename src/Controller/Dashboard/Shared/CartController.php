@@ -34,17 +34,15 @@ class CartController extends Controller
 
         if (!$event) {
             $this->addFlash('error', 'The event can not be found');
-            return $this->redirectToRoute("dashboard_index"); // Redirect to the dashboard or appropriate route
+            return $this->redirectToRoute("dashboard_index");
         }
 
         // Assuming you have access to the user, payment gateway, and order elements
         $user = $this->getUser();
-        $paymentGateway = $this->getDoctrine()->getRepository(PaymentGateway::class)->findOneBySlug("free");
 
         // Create a new Order entity
         $order = new Order();
         $order->setUser($user);
-        $order->setPaymentGateway($paymentGateway);
         $order->setTicketFee(0);
         $order->setTicketPricePercentageCut(0);
         $order->setTicketPricePercentageCut(0);

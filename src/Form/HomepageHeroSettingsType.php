@@ -77,7 +77,7 @@ class HomepageHeroSettingsType extends AbstractType
             ])
             ->add('title', TextType::class, [
                 'required' => false,
-                'label' => 'title',
+                'label' => 'Title',
                 'purify_html' => true,
             ])
             ->add('paragraph', TextType::class, [

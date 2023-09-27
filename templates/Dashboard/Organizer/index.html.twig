@@ -30,28 +30,28 @@
                                 <div class="col-md-3 col-sm-6 col-12 p-1">
                                     <div class="bg-primary rounded p-4 text-center text-white position-relative counter-box">
                                         <i class="fas fa-calendar-alt"></i>
-                                        <h4>{{ services.getEvents({"organizer": app.user.organizer.slug, "count": true, "published": "all", "elapsed": "all"}).getQuery().getSingleScalarResult() }}</h4>
+                                        <h4>{{ services.getEvents({"organizer": app.user.organizer.slug, "count": true, "published": "all", "elapsed": "all"}).getQuery().getResult() | length }}</h4>
                                         <h5 class="mb-0">{{ "Events added" }}</h5>
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-sm-6 col-12 p-1">
                                     <div class="bg-primary rounded p-4 text-center text-white position-relative counter-box">
                                         <i class="fas fa-calendar-alt"></i>
-                                        <h4>{{ services.getEvents({"organizer": app.user.organizer.slug, "count": true, "published": true, "elapsed": "all"}).getQuery().getSingleScalarResult() }}</h4>
+                                        <h4>{{ services.getEvents({"organizer": app.user.organizer.slug, "count": true, "published": true, "elapsed": "all"}).getQuery().getResult() | length }}</h4>
                                         <h5 class="mb-0">{{ "Published events" }}</h5>
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-sm-6 col-12 p-1">
                                     <div class="bg-primary rounded p-4 text-center text-white position-relative counter-box">
                                         <i class="fas fa-calendar-alt"></i>
-                                        <h4>{{ services.getEvents({"organizer": app.user.organizer.slug, "count": true, "published": true, "elapsed": false}).getQuery().getSingleScalarResult() }}</h4>
+                                        <h4>{{ services.getEvents({"organizer": app.user.organizer.slug, "count": true, "published": true, "elapsed": false}).getQuery().getResult() | length }}</h4>
                                         <h5 class="mb-0">{{ "Upcoming events" }}</h5>
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-sm-6 col-12 p-1">
                                     <div class="bg-primary rounded p-4 text-center text-white position-relative counter-box">
                                         <i class="fas fa-calendar-alt"></i>
-                                        <h4>{{ services.getEventDates({"organizer": app.user.organizer.slug, "count": true}).getQuery().getSingleScalarResult() }}</h4>
+                                        <h4>{{ services.getEventDates({"organizer": app.user.organizer.slug, "count": true}).getQuery().getResult() | length }}</h4>
                                         <h5 class="mb-0">{{ "Event dates" }}</h5>
                                     </div>
                                 </div>
@@ -78,28 +78,28 @@
                             {#                                <div class="col-md-3 col-sm-6 col-12 p-1"> #}
                             {#                                    <div class="bg-primary rounded p-4 text-center text-white position-relative counter-box"> #}
                             {#                                        <i class="fas fa-cart-arrow-down"></i> #}
-                            {#                                        <h4>{{ services.getOrders({"organizer": app.user.organizer.slug, "count": true, "status": "all"}).getQuery().getSingleScalarResult() }}</h4> #}
+                            {#                                        <h4>{{ services.getOrders({"organizer": app.user.organizer.slug, "count": true, "status": "all"}).getQuery().getResult() | length }}</h4> #}
                             {#                                        <h5 class="mb-0">{{ "Orders placed" }}</h5> #}
                             {#                                    </div> #}
                             {#                                </div> #}
                             {#                                <div class="col-md-3 col-sm-6 col-12 p-1"> #}
                             {#                                    <div class="bg-primary rounded p-4 text-center text-white position-relative counter-box"> #}
                             {#                                        <i class="fas fa-cart-arrow-down"></i> #}
-                            {#                                        <h4>{{ services.getOrders({"organizer": app.user.organizer.slug, "count": true, "status": 1}).getQuery().getSingleScalarResult() }}</h4> #}
+                            {#                                        <h4>{{ services.getOrders({"organizer": app.user.organizer.slug, "count": true, "status": 1}).getQuery().getResult() | length }}</h4> #}
                             {#                                        <h5 class="mb-0">{{ "Completed" }}</h5> #}
                             {#                                    </div> #}
                             {#                                </div> #}
                             {#                                <div class="col-md-3 col-sm-6 col-12 p-1"> #}
                             {#                                    <div class="bg-primary rounded p-4 text-center text-white position-relative counter-box"> #}
                             {#                                        <i class="fas fa-cart-arrow-down"></i> #}
-                            {#                                        <h4>{{ services.getOrders({"organizer": app.user.organizer.slug, "count": true, "status": 0}).getQuery().getSingleScalarResult() }}</h4> #}
+                            {#                                        <h4>{{ services.getOrders({"organizer": app.user.organizer.slug, "count": true, "status": 0}).getQuery().getResult() | length }}</h4> #}
                             {#                                        <h5 class="mb-0">{{ "Awaiting" }}</h5> #}
                             {#                                    </div> #}
                             {#                                </div> #}
                             {#                                <div class="col-md-3 col-sm-6 col-12 p-1"> #}
                             {#                                    <div class="bg-primary rounded p-4 text-center text-white position-relative counter-box"> #}
                             {#                                        <i class="fas fa-ticket-alt"></i> #}
-                            {#                                        {% set ticketsSold = services.getOrders({"organizer": app.user.organizer.slug, "sumOrderElements": true, "status": 1}).getQuery().getSingleScalarResult() %} #}
+                            {#                                        {% set ticketsSold = services.getOrders({"organizer": app.user.organizer.slug, "sumOrderElements": true, "status": 1}).getQuery().getResult() | length %} #}
                             {#                                        <h4>{{ ticketsSold ? ticketsSold : 0 }}</h4> #}
                             {#                                        <h5 class="mb-0">{{ "Tickets offered" }}</h5> #}
                             {#                                    </div> #}

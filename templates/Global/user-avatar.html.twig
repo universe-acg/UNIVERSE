@@ -10,16 +10,4 @@
             <i class="far fa-user"></i>
         {% endif %}
     </span>
-{% elseif user.hasRole('ROLE_POINTOFSALE') %}
-    <span class="avatar"{% if user.pointofsale.organizer.logoName %} style="background: url('{{ asset(user.pointofsale.organizer.getLogoPath) }}');"{% endif %} {% if showusernametooltip is defined %}data-toggle="tooltip" title="{{ user.username }}" data-container="body"{% endif %} >
-        {% if not user.pointofsale.organizer.logoName %}
-            <i class="far fa-user"></i>
-        {% endif %}
-    </span>
-{% elseif user.hasRole('ROLE_SCANNER') %}
-    <span class="avatar"{% if user.scanner.organizer.logoName %} style="background: url('{{ asset(user.scanner.organizer.getLogoPath) }}');"{% endif %} {% if showusernametooltip is defined %}data-toggle="tooltip" title="{{ user.username }}" data-container="body"{% endif %} >
-        {% if not user.scanner.organizer.logoName %}
-            <i class="far fa-user"></i>
-        {% endif %}
-    </span>
 {% endif %}

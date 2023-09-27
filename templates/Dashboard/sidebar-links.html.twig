@@ -1,15 +1,13 @@
 {% set routename = app.request.get('_route') %}
 {% set random = services.generateReference(5) %}
 
-{% if not is_granted('ROLE_ATTENDEE') %}
+{% if  is_granted('ROLE_ADMINISTRATOR') %}
     <li class="nav-item">
         <a href="{{ path('dashboard_index') }}"
-           class="nav-link {% if routename == "dashboard_administrator_index" or routename == "dashboard_organizer_index" or routename == "dashboard_pointofsale_index" or routename == "dashboard_scanner_index" %}active{% endif %}">
-            {% if is_granted("ROLE_ADMINISTRATOR") %}
-                <i class="fas fa-tachometer-alt fa-fw"></i> {{ 'Dashboard' }}
-            {% elseif is_granted("ROLE_ORGANIZER") %}
-                <i class="fas fa-tachometer-alt fa-fw"></i> {{ 'Dashboard' }}
-            {% endif %}
+           class="nav-link {% if routename == "dashboard_administrator_index" or routename == "dashboard_organizer_index" %}active{% endif %}">
+            <i class="fas fa-tachometer-alt fa-fw"></i> {{ 'Dashboard' }}
+            {#            {% elseif is_granted("ROLE_ORGANIZER") %} #}
+            {#                <i class="fas fa-tachometer-alt fa-fw"></i> {{ 'Dashboard' }} #}
         </a>
     </li>
 {% endif %}
@@ -174,12 +172,6 @@
 
     {# Organizer role sidebar links #}
 
-    <li class="nav-item">
-        <a href="{{ path('dashboard_organizer_profile') }}"
-           class="nav-link {% if routename == "dashboard_organizer_profile" %}active{% endif %}">
-            <i class="far fa-id-card fa-fw"></i> {{ 'My organizer profile' }}
-        </a>
-    </li>
 
     <li class="nav-item">
         <a href="{{ path('dashboard_organizer_event') }}"
@@ -189,6 +181,12 @@
     </li>
 
 
+    <li class="nav-item">
+        <a href="{{ path('dashboard_organizer_profile') }}"
+           class="nav-link {% if routename == "dashboard_organizer_profile" %}active{% endif %}">
+            <i class="far fa-id-card fa-fw"></i> {{ 'My organizer profile' }}
+        </a>
+    </li>
     <li class="nav-item">
         <a href="{{ path('blog_post_organizer') }}"
            class="nav-link {% if routename == "blog_post_organizer" %}active{% endif %}">

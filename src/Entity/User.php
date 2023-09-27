@@ -67,20 +67,6 @@ class User extends BaseUser implements UserInterface
      */
     private $organizer;
     /**
-     * @ORM\OneToOne(targetEntity="Scanner", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
-     */
-    private $scanner;
-    /**
-     * @ORM\OneToOne(targetEntity="PointOfSale", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
-     */
-    private $pointofsale;
-    /**
-     * @ORM\OneToMany(targetEntity="CartElement", mappedBy="user", cascade={"remove"})
-     */
-    private $cartelements;
-    /**
      * @ORM\OneToMany(targetEntity="Order", mappedBy="user", cascade={"remove"})
      */
     private $orders;
@@ -140,11 +126,6 @@ class User extends BaseUser implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $postalcode;
-    /**
-     * @ORM\ManyToOne(targetEntity="Country")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $country;
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(min = 1)
@@ -289,9 +270,6 @@ class User extends BaseUser implements UserInterface
         if ($this->state) {
             $address .= $this->state . " ";
         }
-        if ($this->country) {
-            $address .= $this->country->getName();
-        }
         return $address;
     }
 
@@ -415,14 +393,6 @@ class User extends BaseUser implements UserInterface
             return "Organizer";
         }
 
-        if ($this->hasRole("ROLE_POINTOFSALE")) {
-            return "Point of sale";
-        }
-
-        if ($this->hasRole("ROLE_SCANNER")) {
-            return "Scanner";
-        }
-
         if ($this->hasRole("ROLE_SUPER_ADMIN") || $this->hasRole("ROLE_ADMINISTRATOR")) {
             return "Administrator";
         }
@@ -443,14 +413,6 @@ class User extends BaseUser implements UserInterface
 
         if ($this->hasRole("ROLE_ORGANIZER") && $this->organizer) {
             return $this->organizer->getName();
-        }
-
-        if ($this->hasRole("ROLE_POINTOFSALE") && $this->pointofsale) {
-            return $this->pointofsale->getName();
-        }
-
-        if ($this->hasRole("ROLE_SCANNER") && $this->scanner) {
-            return $this->scanner->getName();
         }
 
         return "N/A";
@@ -621,18 +583,6 @@ class User extends BaseUser implements UserInterface
         return $this;
     }
 
-    public function getCountry()
-    {
-        return $this->country;
-    }
-
-    public function setCountry($country)
-    {
-        $this->country = $country;
-
-        return $this;
-    }
-
     public function getOrganizer()
     {
         return $this->organizer;
@@ -645,32 +595,8 @@ class User extends BaseUser implements UserInterface
         return $this;
     }
 
-    public function getScanner()
-    {
-        return $this->scanner;
-    }
-
-    public function setScanner($scanner)
-    {
-        $this->scanner = $scanner;
-
-        return $this;
-    }
-
-    public function getPointofsale()
-    {
-        return $this->pointofsale;
-    }
-
-    public function setPointofsale($pointofsale)
-    {
-        $this->pointofsale = $pointofsale;
-
-        return $this;
-    }
-
     /**
-     * @return Collection|Order[]
+     * @return ArrayCollection
      */
     public function getOrders()
     {

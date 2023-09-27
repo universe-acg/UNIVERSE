@@ -70,8 +70,8 @@
                                                                 class="icon fab fa-twitter fa-lg fa-fw"></i></a>
                                                 </li>
                                             {% endif %}
-                                            {% if organizer.googleplus %}
-                                                <a href="{% if 'http://' not in organizer.googleplus and 'https://' not in organizer.googleplus %}http://{% endif %}{{ organizer.googleplus }}"
+                                            {% if organizer.tiktok %}
+                                                <a href="{% if 'http://' not in organizer.tiktok and 'https://' not in organizer.tiktok %}http://{% endif %}{{ organizer.tiktok }}"
                                                    class="display-inline-block mr-3" target="_blank"><i
                                                             class="icon fab fa-google-plus fa-lg fa-fw"></i></a>
                                             {% endif %}
@@ -115,7 +115,7 @@
                             </div>
                             <div class="col-12 col-lg-8 bg-light">
 
-                                {% set publishedeventscount = services.getEvents({"count": true, elapsed: "all", organizer: organizer.slug}).getQuery().getSingleScalarResult() %}
+                                {% set publishedeventscount = services.getEvents({"count": true, elapsed: "all", organizer: organizer.slug}).getQuery().getResult()[0] %}
 
                                 <div class="p-4 d-flex justify-content-end text-center">
                                     <ul class="list-inline mb-0">
@@ -131,16 +131,6 @@
                                                 </li>
                                             {% endfor %}
 
-                                        {% endif %}
-                                        {% if organizer.country %}
-                                            <li class="list-inline-item mr-3">
-                                                <h5 class="font-weight-bold mb-0 d-block">
-                                                    <span class="flag flag-{{ organizer.country.code|lower }}"></span>
-                                                </h5>
-                                                <small class="text-muted">
-                                                    {{ organizer.country.name }}
-                                                </small>
-                                            </li>
                                         {% endif %}
                                         <li class="list-inline-item mr-3">
                                             <h5 class="font-weight-bold mb-0 d-block">{{ publishedeventscount }}</h5>

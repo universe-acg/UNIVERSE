@@ -49,18 +49,8 @@
                                                 <option value="all">{{ "All" }}</option>
                                                 <option value="organizer">{{ "Organizer" }}</option>
                                                 <option value="attendee">{{ "Attendee" }}</option>
-                                                {#                                                <option value="pointofsale">{{ "Point of sale" }}</option> #}
-                                                {#                                                <option value="scanner">{{ "Scanner" }}</option> #}
                                             </select>
                                         </div>
-                                        {#                                        <div class="col-12 col-sm-4 text-left mb-4"> #}
-                                        {#                                            <label for="createdbyorganizerslug">{{ "Created by organizer" }} <i #}
-                                        {#                                                        class="fas fa-info-circle" data-toggle="tooltip" #}
-                                        {#                                                        title="{{ "Select parent of 'Point of sale' or 'Scanner'" }}"></i></label> #}
-                                        {#                                            <input type="text" class="mr-sm-2 mb-2 mb-sm-0 autocomplete bg-white" #}
-                                        {#                                                   id="createdbyorganizerslug" name="createdbyorganizerslug" #}
-                                        {#                                                   data-url-list="{{ path('get_organizers') }}"> #}
-                                        {#                                        </div> #}
                                         <div class="col-12 col-sm-4 text-left mb-4">
                                             <label for="organizername">{{ "Organizer name" }}</label>
                                             <input type="text" class="form-control mr-sm-2 mb-2 mb-sm-0 bg-white"
@@ -90,32 +80,6 @@
                                                    id="lastname" name="lastname"
                                                    value="{{ app.request.get('lastname') }}">
                                         </div>
-                                        {#                                        <div class="col-12 col-sm-4 text-left mb-4"> #}
-                                        {#                                            <div class="custom-control custom-checkbox"> #}
-                                        {#                                                <input id="enabled-filter-all" type="radio" name="enabled" value="all" #}
-                                        {#                                                       class="custom-control-input"> #}
-                                        {#                                                <label for="enabled-filter-all" #}
-                                        {#                                                       class="custom-control-label">{{ "All" }}</label> #}
-                                        {#                                            </div> #}
-                                        {#                                            <div class="custom-control custom-checkbox"> #}
-                                        {#                                                <input id="enabled-filter-yes" type="radio" name="enabled" value="1" #}
-                                        {#                                                       class="custom-control-input"> #}
-                                        {#                                                <label for="enabled-filter-yes" #}
-                                        {#                                                       class="custom-control-label">{{ "Enabled only" }}</label> #}
-                                        {#                                            </div> #}
-                                        {#                                            <div class="custom-control custom-checkbox"> #}
-                                        {#                                                <input id="enabled-filter-no" type="radio" name="enabled" value="0" #}
-                                        {#                                                       class="custom-control-input"> #}
-                                        {#                                                <label for="enabled-filter-no" #}
-                                        {#                                                       class="custom-control-label">{{ "Disabled only" }}</label> #}
-                                        {#                                            </div> #}
-                                        {#                                        </div> #}
-                                        {#                                                                                <div class="col-12 col-sm-4 text-left mb-4"> #}
-                                        {#                                                                                    <label for="countryslug">{{ "Country" }}</label> #}
-                                        {#                                                                                    <input type="text" class="mr-sm-2 mb-2 mb-sm-0 autocomplete bg-white" #}
-                                        {#                                                                                           id="countryslug" name="countryslug" #}
-                                        {#                                                                                           data-url-list="{{ path('get_countries') }}"> #}
-                                        {#                                                                                </div> #}
                                         <div class="col-12 col-sm-4 text-left mb-4">
                                             <button type="submit" class="btn btn-primary" data-toggle="tooltip"
                                                     title="{{ "Search" }}"><i class="fas fa-search"></i></button>

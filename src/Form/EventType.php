@@ -171,7 +171,6 @@ class EventType extends AbstractType
                 'imagine_pattern' => 'scale',
                 'label' => 'Main event image',
                 'help' => 'Choose the right image to represent your event (We recommend using at least a 1200x600px (2:1 ratio) image )',
-                'translation_domain' => 'messages'
             ])
             ->add('images', CollectionType::class, array(
                 'label' => 'Images gallery',
@@ -187,6 +186,14 @@ class EventType extends AbstractType
                 'help' => 'Add other images that represent your event to be displayed as a gallery',
                 'error_bubbling' => false,
             ))
+//            ->add('repeatdates', DateTimeType::class, [
+//                'required' => true,
+//                'label' => 'Ends On',
+//                'widget' => 'single_text',
+//                'html5' => false,
+//                'attr' => ['class' => 'datetimepicker', 'autocomplete' => 'off'],
+//                'format' => 'yyyy-MM-dd HH:mm',
+//            ])
 //            ->add('isrepeat', ChoiceType::class, [
 //                'required' => true,
 //                'multiple' => false,

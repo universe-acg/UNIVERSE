@@ -18,6 +18,9 @@ class CustomResettingType extends AbstractType
     {
         $builder
             ->add('plainPassword', PasswordType::class, [
+                'label' => 'New Password',
+                'help' => 'Your new password should be secure.',
+                'attr' => ['placeholder' => 'Enter a new password'],
                 'constraints' => [
                     new Length([
                         'min' => 8,

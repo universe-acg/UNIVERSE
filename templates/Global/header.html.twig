@@ -47,15 +47,16 @@
                                 </div>
                             </a>
                             <div class="dropdown-menu dropdown-menu-left dropdown-menu-arrow header-user-dropdown-menu">
-                                <a class="dropdown-item" href="{{ path('dashboard_index') }}">
-                                    {% if is_granted("ROLE_POINTOFSALE") %}
-                                        <i class="fas fa-ticket-alt fa-fw"></i> {{ 'active events' }}
-                                    {% elseif is_granted("ROLE_SCANNER") %}
-                                        <i class="fas fa-calendar-alt fa-fw"></i> {{ 'Events list' }}
-                                    {% else %}
+                                {% if is_granted('ROLE_ADMINISTRATOR') %}
+                                    <a class="dropdown-item" href="{{ path('dashboard_index') }}">
                                         <i class="fas fa-tachometer-alt fa-fw"></i> {{ 'Dashboard' }}
-                                    {% endif %}
-                                </a>
+                                    </a>
+                                {% elseif is_granted('ROLE_ORGANIZER') %}
+                                    <a class="dropdown-item"
+                                       href="https://universeacg.xyz/dashboard/organizer/my-events">
+                                        <i class="fas fa-tachometer-alt fa-fw"></i> {{ 'Dashboard' }}
+                                    </a>
+                                {% endif %}
                                 <hr class="dropdown-divider">
                                 <a class="dropdown-item" href="{{ path('fos_user_security_logout') }}"><i
                                             class="fas fa-sign-out-alt fa-fw"></i> {{ "Sign out" }}</a>
@@ -134,7 +135,7 @@
                                 </div>
                             </li>
                         {% else %}
-                            {% if link != "/dashboard/attendee/my-tickets" and link != "/dashboard/organizer/my-events/add" %}
+                            {% if link != "/dashboard/attendee/my-tickets" and link != "/dashboard/organizer/my-events/add" and menuElement.customLink  != "https://universeacg.xyz/scanqr" %}
                                 <li class="nav-item {% if app.request.pathinfo == link %}active{% endif %}">
                                     <a class="nav-link" href="{{ link }}">
                                         {% if menuElement.icon %}
@@ -159,6 +160,17 @@
                                     </li>
                                 {% endif %}
                                 {% if link == "/dashboard/organizer/my-events/add" and is_granted('ROLE_ORGANIZER') %}
+                                    <li class="nav-item {% if app.request.pathinfo == link %}active{% endif %}">
+                                    <a class="nav-link" href="{{ link }}">
+                                        {% if menuElement.icon %}
+                                            <i class="{{ menuElement.icon }} fa-fw"></i>
+                                        {% endif %}
+                                        {% if menuElement.label %}
+                                            {{ menuElement.label }}
+                                        {% endif %}
+                                    </a>
+                                {% endif %}
+                                {% if menuElement.customLink == "https://universeacg.xyz/scanqr" and is_granted('ROLE_ORGANIZER') %}
                                     <li class="nav-item {% if app.request.pathinfo == link %}active{% endif %}">
                                         <a class="nav-link" href="{{ link }}">
                                             {% if menuElement.icon %}

@@ -19,7 +19,6 @@ use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class OrganizerProfileType extends AbstractType
 {
-
     private $services;
 
     public function __construct(AppServices $services)
@@ -32,40 +31,17 @@ class OrganizerProfileType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'purify_html' => true,
+                'required' => true,
                 'label' => 'Organizer name',
+                'attr' => ['placeholder' => 'Enter the organizer name'],
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'About the organizer',
-                'attr' => ['class' => 'wysiwyg']
+                'attr' => [
+                    'class' => 'wysiwyg',
+                    'placeholder' => 'Tell us about your organizer...',
+                ],
             ])
-//            ->add('categories', EntityType::class, [
-//                'required' => false,
-//                'multiple' => false, // Set this to false to allow selecting only one category
-//                'expanded' => false,
-//                'class' => Category::class,
-//                'choice_label' => 'name',
-//                'label' => 'Category', // You can use a singular label since only one category is allowed
-//                'help' => 'Select the category that represents your account type',
-//                'attr' => ['class' => 'select2'],
-//                'query_builder' => function () {
-//                    return $this->services->getCategories(array());
-//                }
-//            ])
-//            ->add('categories', EntityType::class, [
-//                'required' => false,
-//                'multiple' => false,
-//                'expanded' => false,
-//                'class' => Category::class,
-//                'choice_label' => 'name',
-//                'label' => 'Category',
-//                'help' => 'Select the category that represents your account type',
-//                'attr' => ['class' => 'select2'],
-//                'choices' => [
-//                    'Club' => $this->services->getCategoryByName('Club'),
-//                    'Office' => $this->services->getCategoryByName('Office'),
-//                    'Society' => $this->services->getCategoryByName('Society'),
-//                ],
-//            ])
             ->add('logoFile', VichImageType::class, [
                 'required' => true,
                 'allow_delete' => true,
@@ -74,10 +50,10 @@ class OrganizerProfileType extends AbstractType
                 'image_uri' => false,
                 'imagine_pattern' => 'scale',
                 'label' => 'Organizer logo',
-                'help' => 'Optionally add a cover photo to showcase your organizer activities. Only PNG, JPEG with max size 5M are allowed.',
+                'help' => 'Upload a logo to represent your organizer. Supported formats: PNG, JPEG (max size: 5MB).',
                 'constraints' => [
                     new File([
-                        'maxSize' => '5M', // Set the maximum upload size (e.g., 5 megabytes)
+                        'maxSize' => '5M',
                         'mimeTypes' => [
                             'image/jpeg',
                             'image/png',
@@ -94,10 +70,10 @@ class OrganizerProfileType extends AbstractType
                 'image_uri' => false,
                 'imagine_pattern' => 'scale',
                 'label' => 'Cover photo',
-                'help' => 'Optionally add a cover photo to showcase your organizer activities. Only PNG, JPEG with max size 5M are allowed.',
+                'help' => 'Upload a cover photo to showcase your organizer activities. Supported formats: PNG, JPEG (max size: 5MB).',
                 'constraints' => [
                     new File([
-                        'maxSize' => '5M', // Set the maximum upload size (e.g., 5 megabytes)
+                        'maxSize' => '5M',
                         'mimeTypes' => [
                             'image/jpeg',
                             'image/png',
@@ -106,71 +82,18 @@ class OrganizerProfileType extends AbstractType
                     ]),
                 ],
             ])
-//                ->add('country', EntityType::class, [
-//                    'required' => false,
-//                    'class' => Country::class,
-//                    'choice_label' => 'name',
-//                    'label' => 'Country',
-//                    'attr' => ['class' => 'select2'],
-//                    'query_builder' => function () {
-//                        return $this->services->getCountries(array());
-//                    }
-//                ])
-//            ->add('website', TextType::class, [
-//                'purify_html' => true,
-//                'required' => false,
-//                'label' => 'Website'
-//            ])
             ->add('email', TextType::class, [
                 'purify_html' => true,
                 'required' => false,
-                'label' => 'Email'
+                'label' => 'Email',
+                'attr' => ['placeholder' => 'Enter the organizer email'],
             ])
-//            ->add('phone', TextType::class, [
-//                'purify_html' => true,
-//                'required' => false,
-//                'label' => 'Phone'
-//            ])
-//            ->add('facebook', TextType::class, [
-//                'purify_html' => true,
-//                'required' => false,
-//                'label' => 'Facebook'
-//            ])
-//            ->add('twitter', TextType::class, [
-//                'purify_html' => true,
-//                'required' => false,
-//                'label' => 'Twitter'
-//            ])
             ->add('instagram', TextType::class, [
                 'purify_html' => true,
                 'required' => false,
-                'label' => 'Instagram'
+                'label' => 'Instagram',
+                'attr' => ['placeholder' => 'Enter the Instagram username'],
             ])
-//                ->add('googleplus', TextType::class, [
-//                    'purify_html' => true,
-//                    'required' => false,
-//                    'label' => 'Google Plus'
-//                ])
-//            ->add('linkedin', TextType::class, [
-//                'purify_html' => true,
-//                'required' => false,
-//                'label' => 'LinkedIn'
-//            ])
-//            ->add('youtubeurl', TextType::class, [
-//                'purify_html' => true,
-//                'required' => false,
-//                'label' => 'Youtube video url',
-//                'help' => 'If you have an Youtube video that represents your activities as an event organizer, add it in the standard format: https://www.youtube.com/watch?v=FzG4uDgje3M'
-//            ])
-//                ->add('showvenuesmap', ChoiceType::class, [
-//                    'required' => true,
-//                    'multiple' => false,
-//                    'expanded' => true,
-//                    'label' => 'Show venues map',
-//                    'choices' => ['Show' => true, 'Hide' => false],
-//                    'label_attr' => ['class' => 'radio-custom radio-inline'],
-//                    'help' => 'Show a map at the bottom of your organizer profile page containing the venues you added'
-//                ])
             ->add('showfollowers', ChoiceType::class, [
                 'required' => true,
                 'multiple' => false,
@@ -178,17 +101,8 @@ class OrganizerProfileType extends AbstractType
                 'label' => 'Show followers',
                 'choices' => ['Show' => true, 'Hide' => false],
                 'label_attr' => ['class' => 'radio-custom radio-inline'],
-                'help' => 'Show the number and list of people that follow you'
+                'help' => 'Choose whether to display the number and list of people that follow your organizer.',
             ])
-//                ->add('showreviews', ChoiceType::class, [
-//                    'required' => true,
-//                    'multiple' => false,
-//                    'expanded' => true,
-//                    'label' => 'Show reviews',
-//                    'choices' => ['Show' => true, 'Hide' => false],
-//                    'label_attr' => ['class' => 'radio-custom radio-inline'],
-//                    'help' => 'Show the reviews that you received for your events'
-//                ])
             ->add('save', SubmitType::class, [
                 'label' => 'Save',
                 'attr' => ['class' => 'btn btn-primary btn-block'],

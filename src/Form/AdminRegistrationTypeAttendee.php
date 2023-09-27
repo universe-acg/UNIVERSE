@@ -22,13 +22,13 @@ class AdminRegistrationTypeAttendee extends AbstractType
                 'purify_html' => true,
                 'required' => true,
                 'label' => 'First Name',
-                'attr' => ['placeholder' => 'Enter your first name'],
+                'attr' => ['placeholder' => 'Enter their first name'],
             ])
             ->add('lastname', TextType::class, [
                 'purify_html' => true,
                 'required' => true,
                 'label' => 'Last Name',
-                'attr' => ['placeholder' => 'Enter your last name'],
+                'attr' => ['placeholder' => 'Enter their last name'],
             ])
             ->add('username', TextType::class, [
                 'purify_html' => true,
@@ -40,13 +40,12 @@ class AdminRegistrationTypeAttendee extends AbstractType
                 'purify_html' => true,
                 'required' => true,
                 'label' => 'Email',
-                'attr' => ['placeholder' => 'Enter your email address'],
+                'attr' => ['placeholder' => 'Enter their email address'],
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'options' => [
                     'purify_html' => true,
-                    'translation_domain' => 'FOSUserBundle',
                 ],
                 'invalid_message' => 'fos_user.password.mismatch',
             ]);

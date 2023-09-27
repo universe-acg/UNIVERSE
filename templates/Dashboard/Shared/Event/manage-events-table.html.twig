@@ -92,11 +92,6 @@
                                                 class="dropdown-icon far fa-calendar-times fa-fw text-muted"></i> {{ "Delete" }}</span>
                                 {% endif %}
                             {% elseif is_granted('ROLE_ORGANIZER') %}
-                                {#                                    {% if not event.isFree %} #}
-                                {#                                        <span class="dropdown-item cursor-pointer" data-toggle="modal" data-target="#event-{{ event.reference }}-payout-request"><i class="dropdown-icon fas fa-file-invoice-dollar fa-fw text-muted"></i> {{ "Request payout" }}</span> #}
-                                {#                                    {% endif %} #}
-
-                                {#                                    <span data-title="{{ event.name }}" data-url="{{ path('dashboard_organizer_event_details', { slug : event.slug }) }}" class="dropdown-item ajax-loading"><i class="dropdown-icon fas fa-file-alt fa-fw text-muted"></i> {{ "Details" }}</span> #}
                                 <a href="{{ path('dashboard_organizer_event_edit', { slug : event.slug }) }}"
                                    class="dropdown-item"><i
                                             class="dropdown-icon fas fa-edit fa-fw text-muted"></i> {{ "Edit" }}
@@ -122,12 +117,14 @@
                                 {% endif %}
                                 {#                                {% if event.deletedAt %} #}
                                 {% if event.isrepeat %}
-                                    <span data-target="{{ path('dashboard_organizer_event_delete_permanently_repeating_organizer', { slug : event.slug }) }}"
+                                    <span style="cursor: pointer !important;"
+                                          data-target="{{ path('dashboard_organizer_event_delete_permanently_repeating_organizer', { slug : event.slug }) }}"
                                           class="dropdown-item requires-confirmation-repeating"
                                           data-confirmation-text="{{ "THIS IS A REPEATING EVENT. ALL OCCURENCES WILL ALSO BE DELETED PERMANENTLY!" }}"><i
                                                 class="dropdown-icon far fa-calendar-times fa-fw text-muted"></i> {{ "Delete repeating" }}</span>
                                 {% else %}
-                                    <span data-target="{{ path('dashboard_organizer_event_delete_permanently', { slug : event.slug }) }}"
+                                    <span style="cursor: pointer !important;"
+                                          data-target="{{ path('dashboard_organizer_event_delete_permanently', { slug : event.slug }) }}"
                                           class="dropdown-item requires-confirmation-normal"
                                           data-confirmation-text="{{ "You are about to delete the event and all its related information PERMANENTLY" }}"><i
                                                 class="dropdown-icon far fa-calendar-times fa-fw text-muted"></i> {{ "Delete" }}</span>
@@ -175,56 +172,6 @@
                     </div>
                 </div>
             </div>
-
-            {% if not event.isFree %}
-                <div class="modal fade" id="event-{{ event.reference }}-payout-request">
-                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title">{{ event.name }}: {{ "Payout request" }}</h4>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
-                            <div class="modal-body">
-
-                                {% include "Global/message.html.twig" with { type: "info", message: ('Once the payout request submitted, the event date will be locked and the sales will be suspended for the specific event date. If you wish, you can wait until the start date of the event date before requesting the payout. You can cancel the payout request any time before it is processed'), icon: "fas fa-exclamation-circle" } %}
-
-                                <hr>
-
-                                {% for eventDate in event.eventdates %}
-                                    {% if not eventDate.isFree %}
-                                        {#                                            <div> #}
-                                        {#                                                <b class="float-left">{{ eventDate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</b> #}
-
-                                        {#                                                {% if eventDate.isFree %} #}
-                                        {#                                                    <span class="badge badge-info float-right">{{ "Free" }}</span> #}
-                                        {#                                                {% elseif eventDate.getSales <= 0 %} #}
-                                        {#                                                    <span class="badge badge-info float-right">{{ "No sales yet" }}</span> #}
-                                        {#                                                {% elseif eventDate.payoutRequested %} #}
-                                        {#                                                    <a href="{{ path("dashboard_organizer_payout_requests", {eventdate: eventDate.reference}) }}" #}
-                                        {#                                                       class="float-right"><i #}
-                                        {#                                                                class="fas fa-file-invoice-dollar"></i> {{ "Payout already requested" }} #}
-                                        {#                                                    </a> #}
-                                        {#                                                {% else %} #}
-                                        {#                                                    <a href="{{ path("dashboard_organizer_event_date_request_payout", {eventDateReference: eventDate.reference}) }}" #}
-                                        {#                                                       class="float-right"><i #}
-                                        {#                                                                class="fas fa-file-invoice-dollar"></i> {{ "Request payout" }} #}
-                                        {#                                                    </a> #}
-                                        {#                                                {% endif %} #}
-                                        {#                                                <div class="clearfix"></div> #}
-                                        {#                                            </div> #}
-                                    {% endif %}
-                                    {% if not loop.last %}
-                                        <hr>{% endif %}
-                                {% endfor %}
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary"
-                                        data-dismiss="modal">{{ "Close" }}</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
         {% endfor %}
         </tbody>
     </table>
@@ -233,153 +180,187 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
+
     $(document).on('click', '.requires-confirmation-normal', function (e) {
         e.preventDefault();
         var $thisElement = $(this);
 
-        // Check if the element has a data-target attribute
         if (typeof $thisElement.attr('data-target') !== typeof undefined && $thisElement.attr('data-target') !== false) {
             // Get the value of the data-target attribute
             var dataTarget = $thisElement.attr('data-target');
 
             // Check if the data-target attribute contains '/delete-permanently'
             if (dataTarget.indexOf('/delete-permanently') >= 0) {
-                var $confirmDialog = $.confirm({
-                    title: Translator.trans('Confirmation required',
-                        content
-            :
-                $thisElement.data('confirmation-text'),
-                    buttons
-            :
-                {
-                    {
-                        Translator.trans('Confirm',
-                            btnClass
-                    :
-                        'btn-primary btn-sm',
-                            keys
-                    :
-                        ['enter'],
-                            action
-                    :
 
-                        function () {
-                            location.href = $thisElement.data('target');
+                const $confirmDialog = $.confirm({
+                    title: 'Confirmation required',
+                    content: $thisElement.data('confirmation-text'),
+                    buttons: {
+                        confirm: {
+                            text: 'Confirm',
+                            btnClass: 'btn-primary btn-sm',
+                            keys: ['enter'],
+                            action: function () {
+                                location.href = $thisElement.data('target');
+                            }
+                        },
+                        cancel: {
+                            text: 'Cancel',
+                            btnClass: 'btn-default btn-sm',
+                            keys: ['esc'],
+                            action: function () {
+                                $confirmDialog.close();
+                            }
                         }
                     }
-                ,
-                    {
-                        Translator.trans('Cancel',
-                            btnClass
-                    :
-                        'btn-default btn-sm',
-                            keys
-                    :
-                        ['esc'],
-                            action
-                    :
-
-                        function () {
-                            $confirmDialog.close();
-                        }
-                    }
-                }
-            })
-
-                return;
-            }
-        }
-
-        // Check if the element has an href attribute
-        if (typeof $thisElement.attr('href') !== typeof undefined && $thisElement.attr('href') !== false) {
-            // Get the value of the href attribute
-            var hrefValue = $thisElement.attr('href');
-
-            // Check if the href attribute contains '/delete', '/disable', etc.
-            if (
-                hrefValue.indexOf('/delete') >= 0 ||
-                hrefValue.indexOf('/disable') >= 0 ||
-                hrefValue.indexOf('/featured') >= 0 ||
-                hrefValue.indexOf('/notfeatured') >= 0 ||
-                hrefValue.indexOf('/hide') >= 0
-            ) {
-                return false;
+                });
             }
         }
     });
+
 
     $(document).on('click', '.requires-confirmation-repeating', function (e) {
-        e.preventDefault();
-        var $thisElement = $(this);
+            e.preventDefault();
+            var $thisElement = $(this);
+            if (typeof $thisElement.attr('data-target') !== typeof undefined && $thisElement.attr('data-target') !== false) {
+                // Get the value of the data-target attribute
+                var dataTarget = $thisElement.attr('data-target');
 
-        // Check if the element has a data-target attribute
-        if (typeof $thisElement.attr('data-target') !== typeof undefined && $thisElement.attr('data-target') !== false) {
-            // Get the value of the data-target attribute
-            var dataTarget = $thisElement.attr('data-target');
-
-            // Check if the data-target attribute contains '/delete-permanently'
-            if (dataTarget.indexOf('/delete-permanently') >= 0) {
-                var $confirmDialog = $.confirm({
-                    title: Translator.trans('Confirmation required',
-                        content
-            :
-                $thisElement.data('confirmation-text'),
-                    buttons
-            :
-                {
-                    {
-                        Translator.trans('Confirm',
-                            btnClass
-                    :
-                        'btn-primary btn-sm',
-                            keys
-                    :
-                        ['enter'],
-                            action
-                    :
-
-                        function () {
-                            location.href = $thisElement.data('target');
+                // Check if the data-target attribute contains '/delete-permanently'
+                if (dataTarget.indexOf('/delete-permanently') >= 0) {
+                    const $confirmDialog = $.confirm({
+                        title: 'Confirmation required',
+                        content: $thisElement.data('confirmation-text'),
+                        buttons: {
+                            confirm: {
+                                text: 'Confirm',
+                                btnClass: 'btn-primary btn-sm',
+                                keys: ['enter'],
+                                action: function () {
+                                    location.href = $thisElement.data('target');
+                                }
+                            },
+                            cancel: {
+                                text: 'Cancel',
+                                btnClass: 'btn-default btn-sm',
+                                keys: ['esc'],
+                                action: function () {
+                                    $confirmDialog.close();
+                                }
+                            }
                         }
-                    }
-                ,
-                    {
-                        Translator.trans('Cancel',
-                            btnClass
-                    :
-                        'btn-default btn-sm',
-                            keys
-                    :
-                        ['esc'],
-                            action
-                    :
-
-                        function () {
-                            $confirmDialog.close();
-                        }
-                    }
+                    });
                 }
-            })
-
-                return;
             }
         }
+    )
 
-        // Check if the element has an href attribute
-        if (typeof $thisElement.attr('href') !== typeof undefined && $thisElement.attr('href') !== false) {
-            // Get the value of the href attribute
-            var hrefValue = $thisElement.attr('href');
-
-            // Check if the href attribute contains '/delete', '/disable', etc.
-            if (
-                hrefValue.indexOf('/delete') >= 0 ||
-                hrefValue.indexOf('/disable') >= 0 ||
-                hrefValue.indexOf('/featured') >= 0 ||
-                hrefValue.indexOf('/notfeatured') >= 0 ||
-                hrefValue.indexOf('/hide') >= 0
-            ) {
-                return false;
-            }
-        }
-    });
+    //
+    // $(document).on('click', '.requires-confirmation-normal', function (e) {
+    //         e.preventDefault();
+    //         var $thisElement = $(this);
+    //
+    //         // Check if the element has a data-target attribute
+    //         if (typeof $thisElement.attr('data-target') !== typeof undefined && $thisElement.attr('data-target') !== false) {
+    //             // Get the value of the data-target attribute
+    //             var dataTarget = $thisElement.attr('data-target');
+    //
+    //             // Check if the data-target attribute contains '/delete-permanently'
+    //             if (dataTarget.indexOf('/delete-permanently') >= 0) {
+    //                 // Check if the element has an href attribute
+    //                 if (typeof $thisElement.attr('href') !== typeof undefined && $thisElement.attr('href') !== false) {
+    //                     // Get the value of the href attribute
+    //                     var hrefValue = $thisElement.attr('href');
+    //
+    //                     // Check if the href attribute contains '/delete', '/disable', etc.
+    //                     if (
+    //                         hrefValue.indexOf('/delete') >= 0 ||
+    //                         hrefValue.indexOf('/disable') >= 0 ||
+    //                         hrefValue.indexOf('/featured') >= 0 ||
+    //                         hrefValue.indexOf('/notfeatured') >= 0 ||
+    //                         hrefValue.indexOf('/hide') >= 0
+    //                     ) {
+    //                         return false;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // )
+    //
+    //
+    // $(document).on('click', '.requires-confirmation-repeating', function (e) {
+    //     e.preventDefault();
+    //     var $thisElement = $(this);
+    //
+    //     // Check if the element has a data-target attribute
+    //     if (typeof $thisElement.attr('data-target') !== typeof undefined && $thisElement.attr('data-target') !== false) {
+    //         // Get the value of the data-target attribute
+    //         var dataTarget = $thisElement.attr('data-target');
+    //
+    //         // Check if the data-target attribute contains '/delete-permanently'
+    //         if (dataTarget.indexOf('/delete-permanently') >= 0) {
+    // var $confirmDialog = $.confirm({
+    //                 title: Translator.trans('Confirmation required',
+    //                     content
+    //         :
+    //             $thisElement.data('confirmation-text'),
+    //                 buttons
+    //         :
+    //             {
+    //                 {
+    //                     Translator.trans('Confirm',
+    //                         btnClass
+    //                 :
+    //                     'btn-primary btn-sm',
+    //                         keys
+    //                 :
+    //                     ['enter'],
+    //                         action
+    //                 :
+    //
+    //                     function () {
+    //                         location.href = $thisElement.data('target');
+    //                     }
+    //                 }
+    //             ,
+    //                 {
+    //                     Translator.trans('Cancel',
+    //                         btnClass
+    //                 :
+    //                     'btn-default btn-sm',
+    //                         keys
+    //                 :
+    //                     ['esc'],
+    //                         action
+    //                 :
+    //
+    //                     function () {
+    //                         $confirmDialog.close();
+    //                     }
+    //                 }
+    //             }
+    //         })
+    //
+    //             return;
+    //         }
+    //     }
+    //
+    //     // Check if the element has an href attribute
+    //     if (typeof $thisElement.attr('href') !== typeof undefined && $thisElement.attr('href') !== false) {
+    //         // Get the value of the href attribute
+    //         var hrefValue = $thisElement.attr('href');
+    //
+    //         // Check if the href attribute contains '/delete', '/disable', etc.
+    //         if (
+    //             hrefValue.indexOf('/delete') >= 0 ||
+    //             hrefValue.indexOf('/disable') >= 0 ||
+    //             hrefValue.indexOf('/featured') >= 0 ||
+    //             hrefValue.indexOf('/notfeatured') >= 0 ||
+    //             hrefValue.indexOf('/hide') >= 0
+    //         ) {
+    //             return false;
+    //         }
+    //     }
+    // });
 </script>

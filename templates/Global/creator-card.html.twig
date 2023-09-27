@@ -3,7 +3,7 @@
 {% if customLink is defined %}
     {% set link = customLink %}
 {% else %}
-    {% set link = path('event', { slug : creator.slug }) %}
+    {% set link = path('event', { slug : creator.username }) %}
 {% endif %}
 
 <style>
@@ -27,7 +27,7 @@
             {% endif %}
             <div class="event-info">
                 <h5>
-                    <a href="{{ path('organizer', {slug: (creator.getOrganizer().slug)}) }}"
+                    <a href="{{ path('organizer', {slug: (creator.username)}) }}"
                        class="text-dark">{{ creator.getOrganizer().name }}</a>
                 </h5>
             </div>

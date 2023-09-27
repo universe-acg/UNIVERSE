@@ -59,6 +59,7 @@
             {% endif %}
             {% if eventsoncalendar|length > 0 and services.getSetting("show_calendar_button") == "yes" %}
                 <div id="events-calendar" data-default-date="{{ "now"|date('Y-m-d') }}"
+                        {#                <div id="events-calendar" data-default-date="{{ "new DateTime(date())"|date('Y-m-d') }}" #}
                      data-events="{{ eventsoncalendar|json_encode() }}" class="mb-4 collapse"></div>
             {% endif %}
 
@@ -119,6 +120,7 @@
                                         <div class="card-body">
                                             <select id="category" name="category" class="select2" data-sort-options="1">
                                                 <option value="">&nbsp;</option>
+                                                <option value="all">All</option>
                                                 {% for category in services.getCategories({}).getQuery().getResult() %}
                                                     <option value="{{ category.slug }}">{{ category.name }}</option>
                                                 {% endfor %}
@@ -191,8 +193,8 @@
                                                            for="date-today">{{ "Today" }}</label>
                                                 </div>
                                                 <span class="float-right form-check-label">
-                                                    <span class="badge badge-light round">{{ services.getEvents({"count": true, "startdate" : ("now"|date("Y-m-d"))}).getQuery().getSingleScalarResult() }}</span>
-                                                </span>
+                <span class="badge badge-light round">{{ todayEventCount }}</span>
+            </span>
                                                 <div class="clearfix"></div>
                                             </div>
                                             <div class="form-check">
@@ -203,82 +205,76 @@
                                                            for="date-tomorrow">{{ "Tomorrow" }}</label>
                                                 </div>
                                                 <span class="float-right form-check-label">
-                                                    <span class="badge badge-light round">{{ services.getEvents({"count": true, "startdate" : ("now"|date_modify("+1 day")|date("Y-m-d"))}).getQuery().getSingleScalarResult() }}</span>
-                                                </span>
+                <span class="badge badge-light round">{{ tomorrowEventCount }}</span>
+            </span>
                                                 <div class="clearfix"></div>
                                             </div>
                                             <div class="form-check">
                                                 <div class="float-left custom-control custom-radio form-check-input">
                                                     <input type="radio" class="custom-control-input"
                                                            id="date-thisweekend" name="startdate" value="thisweekend">
-                                                    <label class="custom-control-label" for="date-thisweekend">
-                                                        {{ "This weekend" }}
-                                                    </label>
+                                                    <label class="custom-control-label"
+                                                           for="date-thisweekend">{{ "This weekend" }}</label>
                                                 </div>
                                                 <span class="float-right form-check-label">
-                                                    <span class="badge badge-light round">{{ services.getEvents({"count": true, "startdatemin" : ("now"|date_modify("saturday this week")|date("Y-m-d")), "startdatemax" : ("now"|date_modify("sunday this week")|date("Y-m-d"))}).getQuery().getSingleScalarResult() }}</span>
-                                                </span>
+                <span class="badge badge-light round">{{ thisWeekEventCount }}</span>
+            </span>
                                                 <div class="clearfix"></div>
                                             </div>
                                             <div class="form-check">
                                                 <div class="float-left custom-control custom-radio form-check-input">
                                                     <input type="radio" class="custom-control-input" id="date-thisweek"
                                                            name="startdate" value="thisweek">
-                                                    <label class="custom-control-label" for="date-thisweek">
-                                                        {{ "This week" }}
-                                                    </label>
+                                                    <label class="custom-control-label"
+                                                           for="date-thisweek">{{ "This week" }}</label>
                                                 </div>
                                                 <span class="float-right form-check-label">
-                                                    <span class="badge badge-light round">{{ services.getEvents({"count": true, "startdatemin" : ("now"|date_modify("monday this week")|date("Y-m-d")), "startdatemax" : ("now"|date_modify("sunday this week")|date("Y-m-d"))}).getQuery().getSingleScalarResult() }}</span>
-                                                </span>
+                <span class="badge badge-light round">{{ thisWeekEventCount }}</span>
+            </span>
                                                 <div class="clearfix"></div>
                                             </div>
                                             <div class="form-check">
                                                 <div class="float-left custom-control custom-radio form-check-input">
                                                     <input type="radio" class="custom-control-input" id="date-nextweek"
                                                            name="startdate" value="nextweek">
-                                                    <label class="custom-control-label" for="date-nextweek">
-                                                        {{ "Next week" }}
-                                                    </label>
+                                                    <label class="custom-control-label"
+                                                           for="date-nextweek">{{ "Next week" }}</label>
                                                 </div>
                                                 <span class="float-right form-check-label">
-                                                    <span class="badge badge-light round">{{ services.getEvents({"count": true, "startdatemin" : ("now"|date_modify("monday next week")|date("Y-m-d")), "startdatemax" : ("now"|date_modify("sunday next week")|date("Y-m-d"))}).getQuery().getSingleScalarResult() }}</span>
-                                                </span>
+                <span class="badge badge-light round">{{ nextWeekEventCount }}</span>
+            </span>
                                                 <div class="clearfix"></div>
                                             </div>
                                             <div class="form-check">
                                                 <div class="float-left custom-control custom-radio form-check-input">
                                                     <input type="radio" class="custom-control-input" id="date-thismonth"
                                                            name="startdate" value="thismonth">
-                                                    <label class="custom-control-label" for="date-thismonth">
-                                                        {{ "This month" }}
-                                                    </label>
+                                                    <label class="custom-control-label"
+                                                           for="date-thismonth">{{ "This month" }}</label>
                                                 </div>
                                                 <span class="float-right form-check-label">
-                                                    <span class="badge badge-light round">{{ services.getEvents({"count": true, "startdatemin" : ("now"|date("Y-m-01")), "startdatemax" : ("now"|date("Y-m-t"))}).getQuery().getSingleScalarResult() }}</span>
-                                                </span>
+                <span class="badge badge-light round">{{ thisMonthEventCount }}</span>
+            </span>
                                                 <div class="clearfix"></div>
                                             </div>
                                             <div class="form-check">
                                                 <div class="float-left custom-control custom-radio form-check-input">
                                                     <input type="radio" class="custom-control-input" id="date-nextmonth"
                                                            name="startdate" value="nextmonth">
-                                                    <label class="custom-control-label" for="date-nextmonth">
-                                                        {{ "Next month" }}
-                                                    </label>
+                                                    <label class="custom-control-label"
+                                                           for="date-nextmonth">{{ "Next month" }}</label>
                                                 </div>
                                                 <span class="float-right form-check-label">
-                                                    <span class="badge badge-light round">{{ services.getEvents({"count": true, "startdatemin" : ("now"|date_modify("+1 month")|date("Y-m-01")), "startdatemax" : ("now"|date_modify("+1 month")|date("Y-m-t"))}).getQuery().getSingleScalarResult() }}</span>
-                                                </span>
+                <span class="badge badge-light round">{{ nextMonthEventCount }}</span>
+            </span>
                                                 <div class="clearfix"></div>
                                             </div>
                                             <div class="form-check">
                                                 <div class="float-left custom-control custom-radio form-check-input">
                                                     <input type="radio" class="custom-control-input datepicker"
                                                            id="date-pickadate" name="startdate" value="all">
-                                                    <label class="custom-control-label" for="date-pickadate">
-                                                        {{ "Pick a date" }}
-                                                    </label>
+                                                    <label class="custom-control-label"
+                                                           for="date-pickadate">{{ "Pick a date" }}</label>
                                                 </div>
                                                 <div class="clearfix"></div>
                                             </div>
@@ -287,32 +283,32 @@
                                 </article>
                             {% endif %}
 
-                            {% if services.getSetting("show_audience_filter") == "yes" %}
-                                <article class="card-group-item">
-                                    <header class="card-header">
-                                        <a href="#" data-toggle="collapse" data-target="#filter-audience">
-                                            <i class="icon-action fa fa-chevron-down"></i>
-                                            <h6 class="title">{{ "Audience" }}</h6>
-                                        </a>
-                                    </header>
-                                    <div class="filter-content collapse show" id="filter-audience">
-                                        <div class="card-body">
-                                            <div class="btn-group btn-group-toggle" data-toggle="buttons"
-                                            >
-                                                {% for audience in services.getAudiences({}).getQuery().getResult() %}
-                                                    <label class="btn btn-light btn-sm py-2 px-3" data-toggle="tooltip"
-                                                           title="{{ audience.name }}">
-                                                        <input type="radio" name="audience" id="{{ audience.slug }}"
-                                                               value="{{ audience.slug }}">
-                                                        <img src="{{ asset(audience.getImagePath) }}" class="img-15-15"
-                                                             alt="{{ audience.name }}">
-                                                    </label>
-                                                {% endfor %}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
-                            {% endif %}
+                            {#                            {% if services.getSetting("show_audience_filter") == "yes" %} #}
+                            {#                                <article class="card-group-item"> #}
+                            {#                                    <header class="card-header"> #}
+                            {#                                        <a href="#" data-toggle="collapse" data-target="#filter-audience"> #}
+                            {#                                            <i class="icon-action fa fa-chevron-down"></i> #}
+                            {#                                            <h6 class="title">{{ "Audience" }}</h6> #}
+                            {#                                        </a> #}
+                            {#                                    </header> #}
+                            {#                                    <div class="filter-content collapse show" id="filter-audience"> #}
+                            {#                                        <div class="card-body"> #}
+                            {#                                            <div class="btn-group btn-group-toggle" data-toggle="buttons" #}
+                            {#                                            > #}
+                            {#                                                {% for audience in services.getAudiences({}).getQuery().getResult() %} #}
+                            {#                                                    <label class="btn btn-light btn-sm py-2 px-3" data-toggle="tooltip" #}
+                            {#                                                           title="{{ audience.name }}"> #}
+                            {#                                                        <input type="radio" name="audience" id="{{ audience.slug }}" #}
+                            {#                                                               value="{{ audience.slug }}"> #}
+                            {#                                                        <img src="{{ asset(audience.getImagePath) }}" class="img-15-15" #}
+                            {#                                                             alt="{{ audience.name }}"> #}
+                            {#                                                    </label> #}
+                            {#                                                {% endfor %} #}
+                            {#                                            </div> #}
+                            {#                                        </div> #}
+                            {#                                    </div> #}
+                            {#                                </article> #}
+                            {#                            {% endif %} #}
                             <div class="row">
                                 <div class="col-4">
                                     <article class="card-group-item">

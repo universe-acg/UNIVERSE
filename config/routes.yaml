@@ -57,6 +57,10 @@ dashboard_organizer_blog_post_edit:
   path: '/manage-blog-posts/{slug}/edit'
   controller: App\Controller\Dashboard\Organizer\BlogPostController::addedit
 
+dashboard_administrator_blog_post_edit:
+  path: '/manage-blog-posts-admin/{slug}/edit'
+  controller: App\Controller\Dashboard\Administrator\BlogPostController::addeditadmin
+
 dashboard_organizer_event_delete_permanently_admin:
   path: '/administrator/my-events/{slug}/delete-permanently-admin'
   controller: App\Controller\Dashboard\Shared\EventController::deleteforadmin
@@ -195,13 +199,6 @@ app_dashboard_point_of_sale:
   
   trailing_slash_on_root: false
 
-app_dashboard_scanner:
-  resource: '../src/Controller/Dashboard/Scanner'
-  prefix: /dashboard/scanner
-  name_prefix: 'dashboard_scanner_'
-  
-  trailing_slash_on_root: false
-
 # Front routes
 
 app_front:
@@ -274,3 +271,11 @@ facebook_login:
 google_login:
   path: /login/check-google
 
+qr_reader:
+  path: /scanqr
+  controller: App\Controller\Api\QrReaderController::qrReader
+
+api_handle_post_request:
+  path: /api/handle-post-request
+  controller: App\Controller\Api\QrReaderController::handlePostRequest
+  methods: POST

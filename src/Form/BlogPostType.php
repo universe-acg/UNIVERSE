@@ -35,27 +35,32 @@ class BlogPostType extends AbstractType
                 'class' => BlogPostCategory::class,
                 'choice_label' => 'name',
                 'label' => 'Category',
-                'help' => 'Make sure to select right category to let the users find it quickly',
+                'help' => 'Select the appropriate category to help users find your post.',
+                'placeholder' => 'Select a Category',
                 'query_builder' => function () {
                     return $this->services->getBlogPostCategories(array());
                 },
+                'invalid_message' => 'Please select a category.',
             ])
             ->add('name', TextType::class, [
                 'purify_html' => true,
                 'required' => false,
                 'label' => 'Title',
+                'placeholder' => 'Enter a Title (e.g., "A Travel Adventure")',
             ])
             ->add('content', TextareaType::class, [
                 'required' => false,
                 'label' => 'Content',
                 'attr' => ['class' => 'wysiwyg'],
+                'placeholder' => 'Write your content here...',
             ])
             ->add('tags', TextType::class, [
                 'required' => false,
-                'label' => 'tags',
+                'label' => 'Tags',
                 'purify_html' => true,
-                'help' => 'Tags',
+                'help' => 'Enter tags separated by commas (e.g., travel, adventure)',
                 'attr' => ['class' => 'tags-input'],
+                'placeholder' => 'Enter Tags',
             ])
             ->add('imageFile', VichImageType::class, [
                 'required' => false,
@@ -64,8 +69,9 @@ class BlogPostType extends AbstractType
                 'download_uri' => false,
                 'image_uri' => false,
                 'imagine_pattern' => 'scale',
-                'label' => 'Main blog post image',
-                'translation_domain' => 'messages'
+                'label' => 'Main post image',
+
+                'attr' => ['placeholder' => 'Choose an Image'],
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Save',
@@ -79,5 +85,4 @@ class BlogPostType extends AbstractType
             'data_class' => BlogPost::class,
         ]);
     }
-
 }

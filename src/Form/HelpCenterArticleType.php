@@ -43,7 +43,7 @@ class HelpCenterArticleType extends AbstractType
             ])
             ->add('title', TextType::class, [
                 'required' => false,
-                'label' => 'title',
+                'label' => 'Title',
                 'purify_html' => true,
             ])
             ->add('content', TextareaType::class, [
@@ -53,7 +53,7 @@ class HelpCenterArticleType extends AbstractType
             ])
 //            ->add('tags', TextType::class, [
 //                'required' => false,
-//                'label' => 'tags',
+//                'label' => 'Tags',
 //                'attr' => ['class' => 'tags-input'],
 //            ])
             ->add('save', SubmitType::class, [

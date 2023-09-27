@@ -46,12 +46,6 @@ class OrderElement
     private $ticketsReservations;
 
     /**
-     * @var decimal
-     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
-     */
-    private $unitprice;
-
-    /**
      * @var int
      * @ORM\Column(type="integer", nullable=true)
      */

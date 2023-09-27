@@ -62,18 +62,18 @@ function createCalendar(calendar, element, adjuster) {
         }
     }
     var months = [
-        "January", {}, 'javascript',
-        "February", {}, 'javascript',
-        "March", {}, 'javascript',
-        "April", {}, 'javascript',
-        "May", {}, 'javascript',
-        "June", {}, 'javascript',
-        "July", {}, 'javascript',
-        "August", {}, 'javascript',
-        "September", {}, 'javascript',
-        "October", {}, 'javascript',
-        "November", {}, 'javascript',
-        "December", {}, 'javascript'];
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"];
 
     function AddSidebar() {
         var sidebar = document.createElement('div');

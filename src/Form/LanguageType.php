@@ -20,13 +20,17 @@ class LanguageType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'required' => false,
-                'label' => 'name',
+                'label' => 'Language Name',
                 'purify_html' => true,
+                'attr' => ['placeholder' => 'Enter language name (optional)'],
+                'help' => 'Enter the name of the language (optional).'
             ])
             ->add('code', TextType::class, [
                 'purify_html' => true,
                 'required' => true,
-                'label' => 'Language code'
+                'label' => 'Language Code',
+                'attr' => ['placeholder' => 'e.g., en_US'],
+                'help' => 'Enter the language code, e.g., en_US.'
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Save',

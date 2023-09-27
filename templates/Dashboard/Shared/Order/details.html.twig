@@ -11,9 +11,6 @@
 {% elseif is_granted('ROLE_ATTENDEE') %}
     {% set parentpagetitle = 'My tickets' %}
     {% set parentpagelink = path('dashboard_attendee_orders') %}
-{% elseif is_granted('ROLE_POINTOFSALE') %}
-    {% set parentpagetitle = 'My orders' %}
-    {% set parentpagelink = path('dashboard_pointofsale_orders') %}
 {% endif %}
 
 {% block title %}{{ pagetitle }}{% endblock %}
@@ -51,7 +48,7 @@
 
                                     <div class="row mb-3">
 
-                                        {% if not is_granted('ROLE_ORGANIZER') and order.payment and order.status == 1 and order.getOrderElementsPriceSum(true) > 0 %}
+                                        {% if not is_granted('ROLE_ORGANIZER') and order.payment and order.status == 1 or order.status == 2 and order.getOrderElementsPriceSum(true) > 0 %}
 
                                             <div class="col-12 col-lg-6">
                                                 <div class="card">
@@ -131,7 +128,7 @@
                                                 </div>
                                             </div>
                                         {% endif %}
-                                        <div class="col-12 {% if not is_granted('ROLE_ORGANIZER') and order.payment and order.status == 1 and order.getOrderElementsPriceSum(true) > 0 %}col-lg-6{% endif %}">
+                                        <div class="col-12 {% if not is_granted('ROLE_ORGANIZER') and order.payment and order.status == 1 or order.status == 2 and order.getOrderElementsPriceSum(true) > 0 %}col-lg-6{% endif %}">
                                             <div class="card">
                                                 <div class="card-header">
                                                     {{ "Attendee" }} / {{ "Point of sale" }}
@@ -195,7 +192,7 @@
                                                     <tbody>
                                                     {% for orderelement in order.orderelements %}
 
-                                                        {% if is_granted('ROLE_ATTENDEE') or is_granted('ROLE_ADMINISTRATOR') or (is_granted('ROLE_ORGANIZER') and orderelement.belongsToOrganizer(app.user.organizer.slug)) or (is_granted("ROLE_POINTOFSALE") and order.user == app.user) %}
+                                                        {% if is_granted('ROLE_ATTENDEE') or is_granted('ROLE_ADMINISTRATOR') or (is_granted('ROLE_ORGANIZER') and orderelement.belongsToOrganizer(app.user.organizer.slug)) %}
 
                                                             <tr>
                                                                 <td>
@@ -273,7 +270,7 @@
 
                                                             {% if is_granted('ROLE_ADMINISTRATOR') %}
 
-                                                                {% if order.status == 0 or order.status == 1 %}
+                                                                {% if order.status == 0 or order.status == 1 or order.status == 2 %}
                                                                     <button id="order-cancel-button"
                                                                             data-target="{{ path('dashboard_administrator_order_cancel', { reference : order.reference }) }}"
                                                                             class="btn btn-outline-primary mr-3 requires-confirmation"
@@ -302,7 +299,7 @@
 
                                                             {% endif %}
 
-                                                            {% if order.status == 1 %}
+                                                            {% if order.status == 1 or order.status == 2 %}
                                                                 <a href="{{ path('dashboard_tickets_print', { reference: order.reference, link: "https://universeacg.xyz/event/" ~ orderelement.eventticket.eventdate.event.slug }) }}"
                                                                    class="btn btn-primary" target="_blank"><i
                                                                             class="fas fa-ticket-alt"></i> {{ "Print" }}
@@ -313,7 +310,7 @@
                                                     </tr>
                                                     </tfoot>
                                                 </table>
-                                                {% if is_granted("ROLE_ADMINISTRATOR") and (order.status == -2 or order.status == 1) and order.payment %}
+                                                {% if is_granted("ROLE_ADMINISTRATOR") and (order.status == -2 or order.status == 1 or order.status == 2) and order.payment %}
 
                                                     <div class="modal fade"
                                                          id="order-{{ order.reference }}-payment-details">

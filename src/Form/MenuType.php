@@ -20,17 +20,14 @@ class MenuType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'required' => false,
-                'label' => 'Menu name',
+                'required' => true,
+                'label' => 'Menu Name',
                 'purify_html' => true,
+                'attr' => ['placeholder' => 'Enter menu name'],
+                'help' => 'Enter the name for the menu.'
             ])
-//            ->add('header', TextType::class, [
-//                'required' => false,
-//                'label' => 'Header text',
-//                'purify_html' => true,
-//            ])
             ->add('menuElements', CollectionType::class, array(
-                'label' => 'Menu elements',
+                'label' => 'Menu Elements',
                 'entry_type' => MenuElementType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -41,6 +38,7 @@ class MenuType extends AbstractType
                 'attr' => array(
                     'class' => 'menuelements-collection form-collection manual-init',
                 ),
+                'help' => 'Add menu elements to the menu.',
             ))
             ->add('save', SubmitType::class, [
                 'label' => 'Save',

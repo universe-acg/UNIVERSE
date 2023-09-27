@@ -33,7 +33,7 @@ class PdfController extends Controller
         $organizer = ($request->query->get('organizer')) == "" ? "all" : $request->query->get('organizer');
         $datefrom = ($request->query->get('datefrom')) == "" ? "all" : $request->query->get('datefrom');
         $dateto = ($request->query->get('dateto')) == "" ? "all" : $request->query->get('dateto');
-        $status = ($request->query->get('status')) == "" ? "all" : $request->query->get('status');
+        $status = 1;
         $paymentgateway = ($request->query->get('paymentgateway')) == "" ? "all" : $request->query->get('paymentgateway');
 
         $ordersQuery = $services->getOrders(array("reference" => $reference, "event" => $event, "eventdate" => $eventdate, "eventticket" => $eventticket, "user" => $user, "organizer" => $organizer, "datefrom" => $datefrom, "dateto" => $dateto, "status" => $status, "paymentgateway" => $paymentgateway))->getQuery();

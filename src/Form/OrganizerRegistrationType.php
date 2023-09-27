@@ -14,16 +14,17 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class OrganizerRegistrationType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('name', TextType::class, [
                 'purify_html' => true,
                 'required' => true,
-                'attr' => array(
-                    'placeholder' => 'Organizer name'
-                )
+                'attr' => [
+                    'placeholder' => 'Enter the organizer name',
+                    'help' => 'Provide the name of your organization or group.',
+                ],
+                'label' => 'Organizer Name',
             ])
             ->add('category', ChoiceType::class, [
                 'required' => true,
@@ -31,9 +32,13 @@ class OrganizerRegistrationType extends AbstractType
                     'Club' => 'Club',
                     'Office' => 'Office',
                     'Society' => 'Society',
-                    'Organization' => 'Organization'
+                    'Organization' => 'Organization',
                 ],
                 'placeholder' => 'Select a category',
+                'attr' => [
+                    'help' => 'Choose the category that best describes your organization.',
+                ],
+                'label' => 'Category',
             ]);
     }
 
@@ -43,5 +48,4 @@ class OrganizerRegistrationType extends AbstractType
             'data_class' => Organizer::class,
         ]);
     }
-
 }

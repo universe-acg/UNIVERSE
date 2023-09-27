@@ -36,57 +36,26 @@ class EventTypeMulti extends AbstractType
             ->add('userEvents', ChoiceType::class, [
                 'label' => 'Select an event to prefill your inputs',
                 'choices' => $options['user_choices'],
-                'required' => false, // Make it optional
-                'mapped' => false, // This field won't be mapped to your entity
+                'required' => false,
+                'mapped' => false,
                 'attr' => [
                     'id' => 'form_userEvents',
                 ],
+                'help' => 'Select an event from the list to automatically fill in the form with its details.',
             ])
-//                ->add('category', EntityType::class, [
-//                    'required' => true,
-//                    'class' => Category::class,
-//                    'placeholder' => 'Select an option',
-//                    'choice_label' => 'name',
-//                    'label' => 'Category',
-//                    'help' => 'Make sure to select right category to let the users find it quickly',
-//                    'query_builder' => function () {
-//                        return $this->services->getCategories(array());
-//                    },
-//                    'attr' => ['class' => 'select2', 'data-sort-options' => '1']
-//                ])
-//                ->add('translations', TranslationsType::class, [
-////                    'label' => 'Event details',
-//                    'fields' => [
-//                        'name' => [
-//                            'purify_html' => true,
-//                            'help' => "Editing the title after the event is saved won't change the event url",
-//                            'locale_options' => [
-//                                'en' => ['label' => 'Title'],
-//                            ],
-//                        ],
-//                        'description' => [
-//                            'required' => false,
-//                            'field_type' => TextareaType::class,
-//                            'attr' => ['class' => 'wysiwyg'],
-//                            'locale_options' => [
-//                                'en' => ['label' => 'Description'],
-//                            ]
-//                        ]
-//                    ],
-//                    'excluded_fields' => ['slug']
-//                ])
             ->add('name', TextType::class, [
                 'purify_html' => true,
-                'help' => "Editing the title after the event is saved won't change the event URL",
                 'label' => 'Title',
                 'required' => true,
-//                    'data' => $responseData['name'] ?? '', // Set the initial value based on the received data or leave it blank
+                'help' => "Editing the title after the event is saved won't change the event URL.",
+                'attr' => ['placeholder' => 'Enter the event title'],
             ])
             ->add('description', TextareaType::class, [
                 'required' => true,
                 'attr' => ['class' => 'wysiwyg', 'id' => 'descriptionsummernote'],
                 'label' => 'Description',
-//                    'data' => $responseData['description'] ?? '', // Set the initial value based on the received data or leave it blank
+                'help' => 'Provide a detailed description of the event.',
+                'attr' => ['placeholder' => 'Enter event description'],
             ])
             ->add('showattendees', ChoiceType::class, [
                 'required' => true,
@@ -95,8 +64,7 @@ class EventTypeMulti extends AbstractType
                 'label' => 'Attendees',
                 'choices' => ['Hide' => false, 'Show' => true],
                 'label_attr' => ['class' => 'radio-custom radio-inline'],
-                'help' => 'Show the attendees number and list in the event page',
-//                    'data' => $responseData['showattendees'] ?? false, // Set the initial value based on the received data or leave it as 'false'
+                'help' => 'Choose whether to display the number of attendees and the attendee list on the event page.',
             ])
             ->add('volsneeded', ChoiceType::class, [
                 'required' => true,
@@ -105,40 +73,8 @@ class EventTypeMulti extends AbstractType
                 'label' => 'Are you looking for volunteers?',
                 'choices' => ['No' => false, 'Yes' => true],
                 'label_attr' => ['class' => 'radio-custom radio-inline'],
-                'help' => 'Make it available for volunteers to contact you so they can help you prepare the event',
-//                    'data' => $responseData['volsneeded'] ?? false, // Set the initial value based on the received data or leave it as 'false'
+                'help' => 'Indicate whether you need volunteers for your event preparation.',
             ])
-//            ->add('enablereviews', ChoiceType::class, [
-//                'required' => true,
-//                'multiple' => false,
-//                'expanded' => true,
-//                'label' => 'Enable reviews',
-//                'choices' => ['Enable' => true, 'Disable' => false],
-//                'label_attr' => ['class' => 'radio-custom radio-inline']
-//            ])
-//                ->add('country', EntityType::class, [
-//                    'required' => false,
-//                    'class' => Country::class,
-//                    'choice_label' => 'name',
-//                    'label' => 'Campus',
-//                    'help' => "Select the campus in which your event takes place",
-//                    'query_builder' => function () {
-//                        return $this->services->getCountries(array());
-//                    },
-//                    'attr' => ['class' => 'select2', 'data-sort-options' => '1']
-//                ])
-//                ->add('youtubeurl', TextType::class, [
-//                    'purify_html' => true,
-//                    'required' => false,
-//                    'label' => 'Youtube video url',
-//                    'help' => 'If you have an Youtube video that represents your activities as an event organizer, add it in the standard format: https://www.youtube.com/watch?v=FzG4uDgje3M'
-//                ])
-//                ->add('externallink', TextType::class, [
-//                    'purify_html' => true,
-//                    'required' => false,
-//                    'label' => 'External link',
-//                    'help' => 'If your event has a dedicated website, enter its url here'
-//                ])
             ->add('audiences', EntityType::class, [
                 'required' => false,
                 'multiple' => true,
@@ -146,54 +82,30 @@ class EventTypeMulti extends AbstractType
                 'class' => Audience::class,
                 'choice_label' => 'name',
                 'label' => 'Audiences',
-                'help' => 'Select the audience types that are targeted in your event',
+                'help' => 'Select the audience types that are targeted for your event.',
                 'label_attr' => ['class' => 'checkbox-custom checkbox-inline'],
-//                    'query_builder' => function () {
-//                        return $this->services->getAudiences(array());
-//                    },
-                'data' => isset($responseData['audiences']) ? $responseData['audiences']->toArray() : [], // Set the initial value based on the received data or an empty array
+                'attr' => ['placeholder' => 'Select audience types'],
             ])
             ->add('phonenumber', TextType::class, [
                 'purify_html' => true,
                 'required' => false,
                 'label' => 'Contact phone number',
-                'help' => 'Enter the phone number to be called for inquiries',
-//                    'data' => $responseData['phonenumber'] ?? '', // Set the initial value based on the received data or leave it blank
+                'help' => 'Enter the phone number to be contacted for event inquiries.',
+                'attr' => ['placeholder' => 'Enter contact phone number'],
             ])
             ->add('email', TextType::class, [
                 'purify_html' => true,
                 'required' => true,
                 'label' => 'Contact email address',
-                'help' => 'Enter the email address to be reached for inquiries',
-//                    'data' => $responseData['email'] ?? '', // Set the initial value based on the received data or leave it blank
+                'help' => 'Enter the email address to be reached for event inquiries.',
+                'attr' => ['placeholder' => 'Enter contact email address'],
             ])
-//                ->add('twitter', TextType::class, [
-//                    'purify_html' => true,
-//                    'required' => false,
-//                    'label' => 'Twitter',
-//                ])
-//                ->add('instagram', TextType::class, [
-//                    'purify_html' => true,
-//                    'required' => false,
-//                    'label' => 'Instagram',
-//                ])
-//                ->add('facebook', TextType::class, [
-//                    'purify_html' => true,
-//                    'required' => false,
-//                    'label' => 'Facebook',
-//                ])
-//                ->add('linkedin', TextType::class, [
-//                    'purify_html' => true,
-//                    'required' => false,
-//                    'label' => 'LinkedIn',
-//                ])
             ->add('tags', TextType::class, [
                 'purify_html' => true,
                 'required' => false,
                 'label' => 'Tags',
-                'help' => 'To help attendee find your event quickly, enter some keywords that identify your event (press Enter after each entry)',
-                'attr' => ['class' => 'tags-input'],
-//                    'data' => $responseData['tags'] ?? '', // Set the initial value based on the received data or leave it blank
+                'help' => 'Enter keywords separated by commas to help attendees find your event quickly (press Enter after each entry).',
+                'attr' => ['class' => 'tags-input', 'placeholder' => 'Enter event tags'],
             ])
             ->add('imageFile', VichImageType::class, [
                 'required' => true,
@@ -201,9 +113,8 @@ class EventTypeMulti extends AbstractType
                 'download_label' => false,
                 'download_uri' => false,
                 'image_uri' => false,
-                'imagine_pattern' => 'scale',
                 'label' => 'Main event image',
-                'help' => 'Choose the right image to represent your event (We recommend using at least a 1200x600px (2:1 ratio) image )'
+                'help' => 'Choose the main image that represents your event (recommended size: 1200x600px, 2:1 ratio).',
             ])
             ->add('images', CollectionType::class, array(
                 'label' => 'Images gallery',
@@ -216,32 +127,9 @@ class EventTypeMulti extends AbstractType
                 'attr' => array(
                     'class' => 'form-collection',
                 ),
-                'help' => 'Add other images that represent your event to be displayed as a gallery',
+                'help' => 'Add other images that represent your event to be displayed as a gallery.',
                 'error_bubbling' => false,
             ))
-//            ->add('isrepeat', ChoiceType::class, [
-//                'required' => true,
-//                'multiple' => false,
-//                'expanded' => true,
-//                'label' => 'Will this event repeat like weekly, monthly, etc.?',
-//                'choices' => ['No' => false, 'Yes' => true],
-//                'label_attr' => ['class' => 'radio-custom radio-inline'],
-//                'help' => 'If this event will repeat weekly or monthly, or during some other time frame, please mark it as so',
-//                'attr' => [
-//                    // Add an id to the "Yes" option
-//                    'id' => 'repeat-yes',
-//                ],
-//            ])
-//            ->add('repeat_days', NumberType::class, [
-//                'label' => false, // Set the label to an empty string to hide it
-//                'required' => false,
-//                'attr' => [
-//                    'id' => 'repeat-days',
-//                    'pattern' => '^(0?[1-9]|[12][0-9]|3[0-1])$', // Regular expression for numbers from 1 to 31
-//                    'title' => 'Please enter a number from 1 to 31', // Hint for the user
-//                    'placeholder' => 'Enter number of days, for how often to repeat', // Add the placeholder text here
-//                ],
-//            ])
             ->add('eventdates', CollectionType::class, [
                 'label' => 'Event dates',
                 'entry_type' => EventDateTypeMulti::class,
@@ -255,6 +143,7 @@ class EventTypeMulti extends AbstractType
                 'attr' => [
                     'class' => 'form-collection eventdates-collection manual-init',
                 ],
+                'help' => 'Add the dates and times for your event.',
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Save',
@@ -264,10 +153,9 @@ class EventTypeMulti extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-
         $resolver->setDefaults([
             'data_class' => Event::class,
-            'validation_groups' => ['create', 'update']
+            'validation_groups' => ['create', 'update'],
         ]);
 
         $resolver->setDefined('user_choices'); // Define a custom option for user choices

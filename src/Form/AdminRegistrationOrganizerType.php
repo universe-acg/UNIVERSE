@@ -23,17 +23,17 @@ class AdminRegistrationOrganizerType extends AbstractType
                 'required' => true,
                 'label' => 'First Name',
                 'attr' => [
-                    'placeholder' => 'Enter your first name',
+                    'placeholder' => 'Enter their first name',
                 ],
-                'help' => 'Please enter your first name.',
+                'help' => 'Please enter their first name.',
             ])
             ->add('lastname', TextType::class, [
                 'required' => true,
                 'label' => 'Last Name',
                 'attr' => [
-                    'placeholder' => 'Enter your last name',
+                    'placeholder' => 'Enter their last name',
                 ],
-                'help' => 'Please enter your last name.',
+                'help' => 'Please enter their last name.',
             ])
             ->add('username', TextType::class, [
                 'required' => true,
@@ -47,12 +47,12 @@ class AdminRegistrationOrganizerType extends AbstractType
                 'required' => true,
                 'label' => 'Email',
                 'attr' => [
-                    'placeholder' => 'Enter your email address',
+                    'placeholder' => 'Enter their email address',
                 ],
-                'help' => 'Please enter your email address for communication.',
+                'help' => 'Please enter their email address for communication.',
             ])
             ->add('isbusinessweek', ChoiceType::class, [
-                'label' => 'Are you a multi-ticket user?',
+                'label' => 'Are they a multi-ticket user?',
                 'required' => true,
                 'choices' => [
                     'Yes' => true,
@@ -61,27 +61,15 @@ class AdminRegistrationOrganizerType extends AbstractType
                 'expanded' => true, // Display as radio buttons
                 'data' => false, // Set the default value based on the user's status
                 'attr' => [
-                    'help' => 'Select "Yes" if you are a multi-ticket user, otherwise select "No".',
+                    'help' => 'Select "Yes" if they are a multi-ticket user, otherwise select "No".',
                 ],
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'options' => [
-                    'translation_domain' => 'FOSUserBundle',
+                    'purify_html' => true,
                 ],
-                'invalid_message' => 'Passwords do not match.',
-                'first_options' => [
-                    'attr' => [
-                        'placeholder' => 'Enter your password',
-                    ],
-                    'help' => 'Please enter your password.',
-                ],
-                'second_options' => [
-                    'attr' => [
-                        'placeholder' => 'Confirm your password',
-                    ],
-                    'help' => 'Please confirm your password.',
-                ],
+                'invalid_message' => 'fos_user.password.mismatch',
             ])
             ->add('organizer', OrganizerRegistrationType::class);
     }

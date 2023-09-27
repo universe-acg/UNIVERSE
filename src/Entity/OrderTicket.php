@@ -35,11 +35,6 @@ class OrderTicket
     private $reference;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    private $scanned;
-
-    /**
      * @var DateTime $createdAt
      *
      * @Gedmo\Timestampable(on="create")
