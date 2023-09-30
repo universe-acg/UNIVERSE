@@ -5,9 +5,7 @@
     
     namespace App\Service;
     
-    use App\Entity\Amenity;
     use App\Entity\AppLayoutSettings;
-    use App\Entity\Audience;
     use App\Entity\BlogPost;
     use App\Entity\BlogPostCategory;
     use App\Entity\Category;
@@ -20,10 +18,7 @@
     use App\Entity\Order;
     use App\Entity\OrderTicket;
     use App\Entity\Page;
-    use App\Entity\Review;
     use App\Entity\Settings;
-    use App\Entity\Venue;
-    use App\Entity\VenueType;
     use DateTime;
     use DateTimeInterface;
     use Doctrine\ORM\EntityManagerInterface;
@@ -31,8 +26,6 @@
     use Dompdf\Dompdf;
     use Dompdf\Options;
     use Exception;
-    use GeoIp2\Database\Reader;
-    use GeoIp2\Exception\AddressNotFoundException;
     use MaxMind\Db\Reader\InvalidDatabaseException;
     use Psr\Cache\InvalidArgumentException;
     use Swift_Attachment;
@@ -181,20 +174,6 @@
             return null;
         }
         
-        // Sets a setting from the cache / db
-        
-        public function emptyCart($user): void
-        {
-            foreach ($user->getCartelements() as $cartelement) {
-                $this->em->remove($cartelement);
-            }
-            $this->em->flush();
-        }
-        
-        // Updates the .env key with the choosen value
-        
-        // Gets the value with the entered key from the .env file
-        
         /**
          * @param $orderReference
          * @throws InvalidArgumentException
@@ -202,7 +181,7 @@
          * @throws RuntimeError
          * @throws SyntaxError
          */
-        public function handleSuccessfulPayment($orderReference): void
+        public function orderticket($orderReference): void
         {
             $order = $this->getOrders(array('status' => 0, 'reference' => $orderReference))->getQuery()->getOneOrNullResult();
             $order->setStatus(1);
@@ -217,15 +196,12 @@
             $this->em->persist($order);
             $this->em->flush();
             if ($order->getUser()->hasRole("ROLE_ATTENDEE")) {
-                $this->sendOrderConfirmationEmail($order, $order->getPayment()->getClientEmail());
+                $this->sendOrderConfirmationEmail($order, $order->getUser()->getEmail());
             }
         }
         
-        // Removes all the specified user cart elements
-        
         public function getOrders($criterias)
         {
-            $this->disableSofDeleteFilterForAdmin($this->em, $this->authChecker);
             $status = array_key_exists('status', $criterias) ? $criterias['status'] : "all";
             $reference = array_key_exists('reference', $criterias) ? $criterias['reference'] : "all";
             $user = array_key_exists('user', $criterias) ? $criterias['user'] : "all";
@@ -236,7 +212,6 @@
             $upcomingtickets = array_key_exists('upcomingtickets', $criterias) ? $criterias['upcomingtickets'] : "all";
             $datefrom = array_key_exists('datefrom', $criterias) ? $criterias['datefrom'] : "all";
             $dateto = array_key_exists('dateto', $criterias) ? $criterias['dateto'] : "all";
-            $paymentgateway = array_key_exists('paymentgateway', $criterias) ? $criterias['paymentgateway'] : "all";
             $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "createdAt";
             $order = array_key_exists('order', $criterias) ? $criterias['order'] : "DESC";
             $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
@@ -251,19 +226,8 @@
                 $organizer = $this->security->getUser()->getOrganizer()->getSlug();
             }
             
-            return $this->em->getRepository(Order::class)->getOrders($status, $user, $organizer, $event, $eventDate, $eventTicket, $reference, $upcomingtickets, $datefrom, $dateto, $paymentgateway, $sort, $order, $limit, $count, $ordersQuantityByDateStat, $sumOrderElements);
+            return $this->em->getRepository(Order::class)->getOrders($status, $user, $organizer, $event, $eventDate, $eventTicket, $reference, $upcomingtickets, $datefrom, $dateto, $sort, $order, $limit, $count, $ordersQuantityByDateStat, $sumOrderElements);
         }
-        
-        
-        public function disableSofDeleteFilterForAdmin($entityManager, $authChecker)
-        {
-//            $entityManager->getFilters()->enable('softdeleteable');
-//            if ($authChecker->isGranted("ROLE_ADMINISTRATOR")) {
-//                $entityManager->getFilters()->disable('softdeleteable');
-//            }
-        }
-        
-        // Handles all the operations needed after a successful payment processing
         
         /**
          * @throws Exception
@@ -313,8 +277,6 @@
             return 1;
         }
         
-        // Handles all the operations needed after a failed payment processing
-        
         /**
          * @throws InvalidArgumentException
          */
@@ -336,20 +298,7 @@
             return ($setting ? ($setting->getValue()) : (null));
         }
         
-        // Handles all the operations needed after a canceled payment processing
-        
-        public function handleFailedPayment($orderReference, $note = null): void
-        {
-            $order = $this->getOrders(array('status' => 0, 'reference' => $orderReference))->getQuery()->getOneOrNullResult();
-            $order->setStatus(-2);
-            $order->setNote($note);
-            $this->em->persist($order);
-            $this->em->flush();
-        }
-        
-        // Shows the soft deleted entities for ROLE_ADMINISTRATOR
-        
-        public function handleCanceledPayment($orderReference, $note = null): void
+        public function cancelticket($orderReference, $note = null): void
         {
             $order = $this->getOrders(array('status' => 'all', 'reference' => $orderReference))->getQuery()->getOneOrNullResult();
             foreach ($order->getOrderelements() as $orderElement) {
@@ -364,93 +313,9 @@
             $this->em->flush();
         }
         
-        // Returns the categories after applying the specified search criterias
-        
-        public function getLanguages($criterias)
-        {
-            $this->disableSofDeleteFilterForAdmin($this->em, $this->authChecker);
-            $hidden = array_key_exists('hidden', $criterias) ? $criterias['hidden'] : false;
-            $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
-            $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
-            $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
-            $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "name";
-            $order = array_key_exists('order', $criterias) ? $criterias['order'] : "ASC";
-            
-            return $this->em->getRepository(Language::class)->getLanguages($hidden, $keyword, $slug, $limit, $sort, $order);
-        }
-        
-        // Returns the countries after applying the specified search criterias
-        
-        public function getAudiences($criterias)
-        {
-            $this->disableSofDeleteFilterForAdmin($this->em, $this->authChecker);
-            $hidden = array_key_exists('hidden', $criterias) ? $criterias['hidden'] : false;
-            $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
-            $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
-            $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
-            $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "name";
-            $order = array_key_exists('order', $criterias) ? $criterias['order'] : "ASC";
-            
-            return $this->em->getRepository(Audience::class)->getAudiences($hidden, $keyword, $slug, $limit, $sort, $order);
-        }
-        
-        // Returns the languages after applying the specified search criterias
-        
-        public function getVenuesTypes($criterias)
-        {
-            $this->disableSofDeleteFilterForAdmin($this->em, $this->authChecker);
-            $hidden = array_key_exists('hidden', $criterias) ? $criterias['hidden'] : false;
-            $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
-            $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
-            $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
-            $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "name";
-            $order = array_key_exists('order', $criterias) ? $criterias['order'] : "ASC";
-            $hasvenues = array_key_exists('hasvenues', $criterias) ? $criterias['hasvenues'] : "all";
-            return $this->em->getRepository(VenueType::class)->getVenuesTypes($hidden, $keyword, $slug, $limit, $sort, $order, $hasvenues);
-        }
-        
-        // Returns the audiences after applying the specified search criterias
-        
-        public function getAmenities($criterias)
-        {
-            $this->disableSofDeleteFilterForAdmin($this->em, $this->authChecker);
-            $hidden = array_key_exists('hidden', $criterias) ? $criterias['hidden'] : false;
-            $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
-            $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
-            $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
-            $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "name";
-            $order = array_key_exists('order', $criterias) ? $criterias['order'] : "ASC";
-            
-            return $this->em->getRepository(Amenity::class)->getAmenities($hidden, $keyword, $slug, $limit, $sort, $order);
-        }
-        
-        // Returns the venues types after applying the specified search criterias
-        
-        public function getReviews($criterias)
-        {
-            $this->disableSofDeleteFilterForAdmin($this->em, $this->authChecker);
-            $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
-            $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
-            $user = array_key_exists('user', $criterias) ? $criterias['user'] : "all";
-            $event = array_key_exists('event', $criterias) ? $criterias['event'] : "all";
-            $organizer = array_key_exists('organizer', $criterias) ? $criterias['organizer'] : "all";
-            $visible = array_key_exists('visible', $criterias) ? $criterias['visible'] : true;
-            $rating = array_key_exists('rating', $criterias) ? $criterias['rating'] : "all";
-            $minrating = array_key_exists('minrating', $criterias) ? $criterias['minrating'] : "all";
-            $maxrating = array_key_exists('maxrating', $criterias) ? $criterias['maxrating'] : "all";
-            $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
-            $count = array_key_exists('count', $criterias) ? $criterias['count'] : false;
-            $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "createdAt";
-            $order = array_key_exists('order', $criterias) ? $criterias['order'] : "DESC";
-            
-            return $this->em->getRepository(Review::class)->getReviews($keyword, $slug, $user, $event, $organizer, $visible, $rating, $minrating, $maxrating, $limit, $count, $sort, $order);
-        }
-        
-        // Returns the amenities after applying the specified search criterias
-        
         public function getBlogPostCategories($criterias)
         {
-            $this->disableSofDeleteFilterForAdmin($this->em, $this->authChecker);
+            
             $hidden = array_key_exists('hidden', $criterias) ? $criterias['hidden'] : false;
             $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
             $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
@@ -458,41 +323,16 @@
             $order = array_key_exists('order', $criterias) ? $criterias['order'] : "name";
             $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "ASC";
             
-            return $this->em->getRepository(BlogPostCategory::class)->getBlogPostCategories($hidden, $keyword, $slug, $limit, $order, $sort);
-        }
-        
-        // Returns the venues after applying the specified search criterias
-        
-        public function getPaymentGateways($criterias)
-        {
-            $this->disableSofDeleteFilterForAdmin($this->em, $this->authChecker);
-            $organizer = $criterias['organizer'] ?? null;
-            $enabled = array_key_exists('enabled', $criterias) ? $criterias['enabled'] : true;
-            $gatewayFactoryName = array_key_exists('gatewayFactoryName', $criterias) ? $criterias['gatewayFactoryName'] : "all";
-            $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
-            $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "number";
-            $order = array_key_exists('order', $criterias) ? $criterias['order'] : "ASC";
-            $organizerPayoutPaypalEnabled = $this->getSetting("organizer_payout_paypal_enabled");
-            $organizerPayoutStripeEnabled = $this->getSetting("organizer_payout_stripe_enabled");
-            
-            return $this->em->getRepository(PaymentGateway::class)->getPaymentGateways($organizer, $enabled, $gatewayFactoryName, $slug, $sort, $order, $organizerPayoutPaypalEnabled, $organizerPayoutStripeEnabled);
+            return $this->em->getRepository(BlogPostCategory::class)->getBlogPostCategories($hidden, $keyword, $slug, $limit);
         }
         
         // Returns the events after applying the specified search criterias
-        
-        public function getPayments($criterias)
-        {
-            $this->disableSofDeleteFilterForAdmin($this->em, $this->authChecker);
-            $number = array_key_exists('number', $criterias) ? $criterias['number'] : "all";
-            
-            return $this->em->getRepository(Payment::class)->getPayments($number);
-        }
         
         // Returns the users after applying the specified search criterias
         
         public function getEventDates($criterias)
         {
-            $this->disableSofDeleteFilterForAdmin($this->em, $this->authChecker);
+            
             $reference = array_key_exists('reference', $criterias) ? $criterias['reference'] : "all";
             $organizer = array_key_exists('organizer', $criterias) ? $criterias['organizer'] : "all";
             $event = array_key_exists('event', $criterias) ? $criterias['event'] : "all";
@@ -502,11 +342,9 @@
             return $this->em->getRepository(EventDate::class)->getEventDates($reference, $organizer, $event, $limit, $count);
         }
         
-        // Returns the reviews after applying the specified search criterias
-        
         public function getEventTickets($criterias)
         {
-            $this->disableSofDeleteFilterForAdmin($this->em, $this->authChecker);
+            
             $reference = array_key_exists('reference', $criterias) ? $criterias['reference'] : "all";
             $organizer = array_key_exists('organizer', $criterias) ? $criterias['organizer'] : "all";
             $event = array_key_exists('event', $criterias) ? $criterias['event'] : "all";
@@ -520,55 +358,13 @@
         
         public function getOrderTickets($criterias)
         {
-            $this->disableSofDeleteFilterForAdmin($this->em, $this->authChecker);
+            
             $reference = array_key_exists('reference', $criterias) ? $criterias['reference'] : "all";
             $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
             $eventDate = array_key_exists('eventdate', $criterias) ? $criterias['eventdate'] : "all";
             $checkedin = array_key_exists('checkedin', $criterias) ? $criterias['checkedin'] : "all";
             return $this->em->getRepository(OrderTicket::class)->getOrderTickets($reference, $keyword, $eventDate, $checkedin);
         }
-        
-        // Returns the blog posts after applying the specified search criterias
-        
-        public function getPayoutRequests($criterias)
-        {
-            $this->disableSofDeleteFilterForAdmin($this->em, $this->authChecker);
-            $reference = array_key_exists('reference', $criterias) ? $criterias['reference'] : "all";
-            $eventdate = array_key_exists('eventdate', $criterias) ? $criterias['eventdate'] : "all";
-            $organizer = array_key_exists('organizer', $criterias) ? $criterias['organizer'] : "all";
-            if ($this->authChecker->isGranted("ROLE_ORGANIZER")) {
-                $organizer = $this->security->getUser()->getOrganizer()->getSlug();
-            }
-            $datefrom = array_key_exists('datefrom', $criterias) ? $criterias['datefrom'] : "all";
-            $dateto = array_key_exists('dateto', $criterias) ? $criterias['dateto'] : "all";
-            $status = array_key_exists('status', $criterias) ? $criterias['status'] : "all";
-            $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "createdAt";
-            $order = array_key_exists('order', $criterias) ? $criterias['order'] : "DESC";
-            $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
-            $count = array_key_exists('count', $criterias) ? $criterias['count'] : false;
-            return $this->em->getRepository(PayoutRequest::class)->getPayoutRequests($reference, $eventdate, $organizer, $datefrom, $dateto, $status, $sort, $order, $limit, $count);
-        }
-        
-        // Returns the pages after applying the specified search criterias
-        
-        /**
-         * @throws RuntimeError
-         * @throws SyntaxError
-         * @throws LoaderError|InvalidArgumentException
-         */
-        public function sendPayoutProcessedEmail($payoutRequest, $emailTo): int
-        {
-            $email = (new Swift_Message('Your payout request has been processed'))
-                ->setFrom($this->getSetting('no_reply_email'))
-                ->setTo($emailTo)
-                ->setBody(
-                    $this->templating->render('Dashboard/Shared/Payout/payout-processed-email.html.twig', ['payoutRequest' => $payoutRequest]), 'text/html');
-            
-            $this->mailer->send($email);
-            return 1;
-        }
-        
-        // Returns the help center categories after applying the specified search criterias
         
         public function getAppLayoutSettings()
         {
@@ -583,10 +379,9 @@
             return $this->em->getRepository(Menu::class)->getMenus($slug);
         }
         
-        // Returns the payment gateways after applying the specified search criterias
         
         /**
-         * @throws InvalidDatabaseException
+         * @throws InvalidDatabaseException|Exception
          */
         public function getLinks(): array
         {
@@ -666,15 +461,6 @@
             }
             $linksArray["Organizers Pages"] = $organizersPagesArray;
             
-            // Add venues pages urls
-            $venuesPagesArray = array();
-            $venuesPagesArray['Venues page'] = $this->router->generate('venues');
-            $venues = $this->getVenues(array())->getQuery()->getResult();
-            foreach ($venues as $venue) {
-                $venuesPagesArray['Venue' . ' - ' . $venue->getName()] = $this->router->generate('venue', ['slug' => $venue->getSlug()]);
-            }
-            $linksArray["Venues Pages"] = $venuesPagesArray;
-            
             return $linksArray;
         }
         
@@ -682,17 +468,15 @@
         
         public function getPages($criterias)
         {
-            $this->disableSofDeleteFilterForAdmin($this->em, $this->authChecker);
+            
             $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
             
             return $this->em->getRepository(Page::class)->getPages($slug);
         }
         
-        // Returns the payments after applying the specified search criterias
-        
         public function getCategories($criterias)
         {
-            $this->disableSofDeleteFilterForAdmin($this->em, $this->authChecker);
+            
             $hidden = array_key_exists('hidden', $criterias) ? $criterias['hidden'] : false;
             $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
             $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
@@ -707,7 +491,7 @@
         
         public function getBlogPosts($criterias)
         {
-            $this->disableSofDeleteFilterForAdmin($this->em, $this->authChecker);
+            
             $selecttags = array_key_exists('selecttags', $criterias) ? $criterias['selecttags'] : false;
             $hidden = array_key_exists('hidden', $criterias) ? $criterias['hidden'] : false;
             $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
@@ -730,23 +514,17 @@
          */
         public function getEvents($criterias)
         {
-            $this->disableSofDeleteFilterForAdmin($this->em, $this->authChecker);
-            
             // Extract criteria variables
             $category = $criterias['category'] ?? "all";
-            $venue = $criterias['venue'] ?? "all";
             $organizer = $criterias['organizer'] ?? "all";
             $keyword = $criterias['keyword'] ?? "all";
+            $open = $criterias['open'] ?? "all";
             $onlineonly = $criterias['onlineonly'] ?? false;
-            $pricemin = $criterias['pricemin'] ?? "all";
-            $pricemax = $criterias['pricemax'] ?? "all";
-            $audience = $criterias['audience'] ?? "all";
             $startDateFilter = $criterias['startdate'] ?? "all";
-            $startdatemin = $criterias['startdatemin'] ?? "all";
-            $startdatemax = $criterias['startdatemax'] ?? "all";
             $slug = $criterias['slug'] ?? "all";
             $otherthan = $criterias['otherthan'] ?? "all";
-            $published = $criterias['published'] ?? true;
+            $published = $criterias['published'] ?? "all";
+            $addedtofavoritesby = $criterias['addedtofavoritesby'] ?? "all";
             $sort = $criterias['sort'] ?? "eventdates.startdate";
             $order = $criterias['order'] ?? "ASC";
             $limit = $criterias['limit'] ?? "all";
@@ -755,8 +533,6 @@
             
             // Create the query builder
             $queryBuilder = $this->em->getRepository(Event::class)->createQueryBuilder('e');
-            $queryBuilder
-                ->leftJoin('e.eventdates', 'eventdates');
             
             // Add conditions based on criteria
             if ($category !== "all") {
@@ -764,6 +540,11 @@
                     ->andWhere('e.category = :category')
                     ->setParameter('category', $category);
             }
+            
+            if ($addedtofavoritesby !== "all") {
+                $queryBuilder->andWhere(":addedtofavoritesbyuser MEMBER OF e.addedtofavoritesby")->setParameter("addedtofavoritesbyuser", $addedtofavoritesby);
+            }
+            
             if ($slug !== "all") {
                 // Add a condition for the slug
                 $queryBuilder
@@ -772,24 +553,17 @@
             }
             if ($organizer !== "all") {
                 $queryBuilder->leftJoin("e.organizer", "organizer");
+                $queryBuilder->andWhere("organizer.slug = :organizer")
+                    ->setParameter("organizer", $organizer);
             }
-            if ($organizer !== "all") {
-                $queryBuilder->andWhere("organizer.slug = :organizer")->setParameter("organizer", $organizer);
-            }
-
-//        if ($localonly) {
-//            // Add a condition for local-only events
-//            $queryBuilder->andWhere('e.isLocal = :isLocal')->setParameter('isLocal', true);
-//        }
-
-//        if ($location !== "all") {
-//             Add a condition for the location
-//            $queryBuilder
-//                ->andWhere('e.location = :location')
-//                ->setParameter('location', $location);
-//        }
             
-            $queryBuilder->andWhere('e.published = :published')->setParameter('published', $published);
+            if ($published !== "all") {
+                $queryBuilder->andWhere('e.published = :published')->setParameter('published', $published);
+            }
+            
+            if ($open !== "all") {
+                $queryBuilder->andWhere('e.open = :open')->setParameter('open', $open);
+            }
             
             
             if ($category !== "all") {
@@ -798,49 +572,12 @@
                     ->andWhere('e.category = :category')
                     ->setParameter('category', $category);
             }
-//
-//        if ($venue !== "all") {
-//            // Add a condition for the venue
-//            $queryBuilder
-//                ->andWhere('e.venue = :venue')
-//                ->setParameter('venue', $venue);
-//        }
-//
-//        if ($country !== "all") {
-//            // Add a condition for the country
-//            $queryBuilder
-//                ->andWhere('e.country = :country')
-//                ->setParameter('country', $country);
-//        }
-            
             if ($keyword !== "all") {
                 // Add a condition for the keyword
                 $queryBuilder
                     ->andWhere('e.name LIKE :keyword OR e.description LIKE :keyword')
                     ->setParameter('keyword', '%' . $keyword . '%');
             }
-            
-            if ($pricemin !== "all") {
-                // Add a condition for the minimum price
-                $queryBuilder
-                    ->andWhere('e.price >= :pricemin')
-                    ->setParameter('pricemin', $pricemin);
-            }
-            
-            if ($pricemax !== "all") {
-                // Add a condition for the maximum price
-                $queryBuilder
-                    ->andWhere('e.price <= :pricemax')
-                    ->setParameter('pricemax', $pricemax);
-            }
-            
-            if ($audience !== "all") {
-                // Add a condition for the audience
-                $queryBuilder
-                    ->andWhere('e.audience = :audience')
-                    ->setParameter('audience', $audience);
-            }
-            
             // Add date range filtering
             $startDateMin = null;
             $startDateMax = null;
@@ -879,6 +616,10 @@
                 $queryBuilder->andWhere("e.slug != :otherthan")->setParameter("otherthan", $otherthan);
             }
             
+            $queryBuilder
+                ->leftJoin('e.eventdates', 'eventdates');
+            
+            
             if ($startDateMin && $startDateMax) {
                 $queryBuilder
                     ->andWhere('eventdates.startdate >= :startDateMin')
@@ -899,7 +640,7 @@
         
         public function getHelpCenterCategories($criterias)
         {
-            $this->disableSofDeleteFilterForAdmin($this->em, $this->authChecker);
+            
             $parent = array_key_exists('parent', $criterias) ? $criterias['parent'] : "all";
             $hidden = array_key_exists('hidden', $criterias) ? $criterias['hidden'] : false;
             $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
@@ -915,9 +656,6 @@
         
         public function getHelpCenterArticles($criterias)
         {
-            // Disable soft delete filter if necessary
-            $this->disableSofDeleteFilterForAdmin($this->em, $this->authChecker);
-            
             // Extract criteria parameters from the input array
             $selecttags = $criterias['selecttags'] ?? false;
             $hidden = $criterias['hidden'] ?? false;
@@ -945,14 +683,10 @@
             );
         }
         
-        // Returns the bought tickets after applying the specified search criterias
-        
         public function getUsers($criterias)
         {
-            $this->disableSofDeleteFilterForAdmin($this->em, $this->authChecker);
             $role = array_key_exists('role', $criterias) ? $criterias['role'] : "all";
             $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
-            $createdbyorganizerslug = array_key_exists('createdbyorganizerslug', $criterias) ? $criterias['createdbyorganizerslug'] : "all";
             $organizername = array_key_exists('organizername', $criterias) ? $criterias['organizername'] : "all";
             $organizerslug = array_key_exists('organizerslug', $criterias) ? $criterias['organizerslug'] : "all";
             $username = array_key_exists('username', $criterias) ? $criterias['username'] : "all";
@@ -960,76 +694,220 @@
             $firstname = array_key_exists('firstname', $criterias) ? $criterias['firstname'] : "all";
             $lastname = array_key_exists('lastname', $criterias) ? $criterias['lastname'] : "all";
             $enabled = array_key_exists('enabled', $criterias) ? $criterias['enabled'] : true;
-            $countryslug = array_key_exists('countryslug', $criterias) ? $criterias['countryslug'] : "all";
             $followedby = array_key_exists('followedby', $criterias) ? $criterias['followedby'] : "all";
-            $hasboughtticketforEvent = array_key_exists('hasboughtticketfor', $criterias) ? $criterias['hasboughtticketfor'] : "all";
-            $hasboughtticketforOrganizer = array_key_exists('hasboughtticketfororganizer', $criterias) ? $criterias['hasboughtticketfororganizer'] : "all";
             $apiKey = array_key_exists('apikey', $criterias) ? $criterias['apikey'] : "all";
             $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
+            $hasboughtticketforEvent = array_key_exists('hasboughtticketfor', $criterias) ? $criterias['hasboughtticketfor'] : "all";
+            $hasboughtticketforOrganizer = array_key_exists('hasboughtticketfororganizer', $criterias) ? $criterias['hasboughtticketfororganizer'] : "all";
             $isOnHomepageSlider = array_key_exists('isOnHomepageSlider', $criterias) ? $criterias['isOnHomepageSlider'] : "all";
             $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
             $count = array_key_exists('count', $criterias) ? $criterias['count'] : false;
             
-            return $this->em->getRepository("App\Entity\User")->getUsers($role, $keyword, $createdbyorganizerslug, $organizername, $organizerslug, $username, $email, $firstname, $lastname, $enabled, $countryslug, $slug, $followedby, $hasboughtticketforEvent, $hasboughtticketforOrganizer, $apiKey, $isOnHomepageSlider, $limit, $count);
+            return $this->em->getRepository("App\Entity\User")->getUsers($role, $keyword, $organizername, $organizerslug, $username, $email, $firstname, $lastname, $enabled, $slug, $followedby, $hasboughtticketforEvent, $hasboughtticketforOrganizer, $apiKey, $isOnHomepageSlider, $limit, $count);
         }
-        
-        // Returns the payout requests after applying the specified search criterias
-        
-        public function getVenues($criterias)
-        {
-            $this->disableSofDeleteFilterForAdmin($this->em, $this->authChecker);
-            $organizer = array_key_exists('organizer', $criterias) ? $criterias['organizer'] : "all";
-            $hidden = array_key_exists('hidden', $criterias) ? $criterias['hidden'] : false;
-            $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
-            $country = array_key_exists('country', $criterias) ? $criterias['country'] : "all";
-            $venuetypes = array_key_exists('venuetypes', $criterias) ? $criterias['venuetypes'] : "all";
-            $directory = array_key_exists('directory', $criterias) ? $criterias['directory'] : "all";
-            $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
-            $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
-            $count = array_key_exists('count', $criterias) ? $criterias['count'] : false;
-            $minseatedguests = array_key_exists('minseatedguests', $criterias) ? $criterias['minseatedguests'] : "all";
-            $maxseatedguests = array_key_exists('maxseatedguests', $criterias) ? $criterias['maxseatedguests'] : "all";
-            $minstandingguests = array_key_exists('minstandingguests', $criterias) ? $criterias['minstandingguests'] : "all";
-            $maxstandingguests = array_key_exists('maxstandingguests', $criterias) ? $criterias['maxstandingguests'] : "all";
-            $organizerEnabled = array_key_exists('organizerEnabled', $criterias) ? $criterias['organizerEnabled'] : "all";
-            
-            return $this->em->getRepository(Venue::class)->getVenues($organizer, $hidden, $keyword, $country, $venuetypes, $directory, $slug, $limit, $minseatedguests, $maxseatedguests, $minstandingguests, $maxstandingguests, $count, $organizerEnabled);
-        }
-        
-        // Sends the payout processed email to the organizer
         
         /**
-         * @throws InvalidDatabaseException
+         * @param $criterias
+         * @return QueryBuilder
+         * @throws Exception
          */
-        public function locateUser(): ?array
+        public function getEventsHomepageIndex($criterias)
         {
-            $request = $this->requestStack->getCurrentRequest();
-            $reader = new Reader($this->kernel->getProjectDir() . "/assets/vendor/geolite/GeoLite2-City.mmdb");
-            try {
-                $ip = '128.101.101.101';
-                if ($this->kernel->getEnvironment() == "prod") {
-                    $ip = $request->getClientIp();
-                }
-                $record = $reader->city($ip);
-                $countryentity = $this->getCountries(array('isocode' => $record->country->isoCode))->getQuery()->getOneOrNullResult();
-            } catch (AddressNotFoundException $ex) {
-                return null;
-                // return new Response("It wasn't possible to retrieve information about the provided IP"));
+            // Extract criteria variables
+            $category = $criterias['category'] ?? "all";
+            $organizer = $criterias['organizer'] ?? "all";
+            $open = $criterias['open'] ?? "all";
+            $keyword = $criterias['keyword'] ?? "all";
+            $onlineonly = $criterias['onlineonly'] ?? false;
+            $startDateFilter = $criterias['startdate'] ?? "all";
+            $slug = $criterias['slug'] ?? "all";
+            $otherthan = $criterias['otherthan'] ?? "all";
+            $published = $criterias['published'] ?? "all";
+            $sort = $criterias['sort'] ?? "eventdates.startdate";
+            $order = $criterias['order'] ?? "ASC";
+            $limit = $criterias['limit'] ?? "all";
+            $count = $criterias['count'] ?? false;
+            $elapsed = $criterias['elapsed'] ?? "all";
+            
+            // Create the query builder
+            $queryBuilder = $this->em->getRepository(Event::class)->createQueryBuilder('e');
+            
+            // Add conditions based on criteria
+            if ($category !== "all") {
+                $queryBuilder
+                    ->andWhere('e.category = :category')
+                    ->setParameter('category', $category);
             }
             
-            return array('record' => $record, 'country' => $countryentity);
+            if ($slug !== "all") {
+                // Add a condition for the slug
+                $queryBuilder
+                    ->andWhere('e.slug = :slug')
+                    ->setParameter('slug', $slug);
+            }
+            if ($organizer !== "all") {
+                $queryBuilder->leftJoin("e.organizer", "organizer");
+                $queryBuilder->andWhere("organizer.slug = :organizer")
+                    ->setParameter("organizer", $organizer);
+            }
+            
+            if ($published !== "all") {
+                $queryBuilder->andWhere('e.published = :published')->setParameter('published', $published);
+            }
+            
+            if ($open !== "all") {
+                $queryBuilder->andWhere('e.open = :open')->setParameter('open', $open);
+            }
+            
+            if ($category !== "all") {
+                // Add a condition for the category
+                $queryBuilder
+                    ->andWhere('e.category = :category')
+                    ->setParameter('category', $category);
+            }
+            if ($keyword !== "all") {
+                // Add a condition for the keyword
+                $keyword = "%" . $keyword . "%";
+                $queryBuilder
+                    ->andWhere(
+                        $queryBuilder->expr()->orX(
+                            $queryBuilder->expr()->like('e.name', ':keyword'),
+                            $queryBuilder->expr()->like('e.description', ':keyword'),
+                            $queryBuilder->expr()->like('e.tags', ':keyword'),
+                        )
+                    )
+                    ->setParameter('keyword', $keyword);
+            }
+            
+            // Add date range filtering
+            $startDateMin = null;
+            $startDateMax = null;
+            
+            
+            if ($startDateFilter === "today") {
+                $startDateMin = new DateTime('today');
+                $startDateMax = new DateTime('today');
+            } elseif ($startDateFilter === "tomorrow") {
+                $startDateMin = new DateTime('tomorrow');
+                $startDateMax = new DateTime('tomorrow');
+            } elseif ($startDateFilter === "thisweekend") {
+                $startDateMin = new DateTime('saturday this week');
+                $startDateMax = new DateTime('sunday this week');
+            } elseif ($startDateFilter === "thisweek") {
+                $startDateMin = new DateTime('monday this week');
+                $startDateMax = new DateTime('sunday this week');
+            } elseif ($startDateFilter === "nextweek") {
+                $startDateMin = new DateTime('monday next week');
+                $startDateMax = new DateTime('sunday next week');
+            } elseif ($startDateFilter === "thismonth") {
+                $startDateMin = new DateTime('first day of this month');
+                $startDateMax = new DateTime('last day of this month');
+            } elseif ($startDateFilter === "nextmonth") {
+                $startDateMin = new DateTime('first day of next month');
+                $startDateMax = new DateTime('last day of next month');
+            }
+            
+            if ($otherthan !== "all") {
+                $queryBuilder->andWhere("e.slug != :otherthan")->setParameter("otherthan", $otherthan);
+            }
+            
+            $queryBuilder
+                ->leftJoin('e.eventdates', 'eventdates');
+            
+            
+            if ($startDateMin && $startDateMax) {
+                $queryBuilder
+                    ->leftJoin('e.eventdates', 'eventdates')
+                    ->andWhere('eventdates.startdate >= :startDateMin')
+                    ->andWhere('eventdates.startdate <= :startDateMax')
+                    ->setParameter('startDateMin', $startDateMin->format('Y-m-d H:i:s'))
+                    ->setParameter('startDateMax', $startDateMax->format('Y-m-d H:i:s'));
+            }
+            if ($elapsed !== "all") {
+                if ($elapsed === true || $elapsed == "1") {
+                    $queryBuilder->andWhere("eventdates.enddate < CURRENT_TIMESTAMP()");
+                } else if ($elapsed === false || $elapsed == "0") {
+                    $queryBuilder->andWhere("eventdates.enddate >= CURRENT_TIMESTAMP()");
+                }
+            }
+            // Execute the query
+            return $queryBuilder->orderBy('eventdates.startdate', 'ASC');
         }
         
-        // Returns the menus (header and footer)
-        
-        public function getEventCountForToday(): int
+        /**
+         * @param $criterias
+         * @return QueryBuilder
+         * @throws Exception
+         */
+        public function getEventsHomepageIndexMain($criterias)
         {
-            $today = new DateTime('today');
-            $qb = $this->getEventsQueryBuilder(['startdate' => $today]);
+            // Extract criteria variables
+            $startDateFilter = $criterias['startdate'] ?? "all";
+            $elapsed = $criterias['elapsed'] ?? "all";
+            $published = $criterias['published'] ?? "all";
             
-            return (int)$qb->select('COUNT(e.id)')
-                ->getQuery()
-                ->getSingleScalarResult();
+            // Create the query builder
+            $queryBuilder = $this->em->getRepository(Event::class)->createQueryBuilder('e');
+            
+            if ($published !== "all") {
+                $queryBuilder->andWhere('e.published = :published')->setParameter('published', $published);
+            }
+            
+            
+            // Add date range filtering
+            $startDateMin = null;
+            $startDateMax = null;
+            
+            
+            if ($startDateFilter === "today") {
+                $startDateMin = new DateTime('today');
+                $startDateMax = new DateTime('today');
+            } elseif ($startDateFilter === "tomorrow") {
+                $startDateMin = new DateTime('tomorrow');
+                $startDateMax = new DateTime('tomorrow');
+            } elseif ($startDateFilter === "thisweekend") {
+                $startDateMin = new DateTime('saturday this week');
+                $startDateMax = new DateTime('sunday this week');
+            } elseif ($startDateFilter === "thisweek") {
+                $startDateMin = new DateTime('monday this week');
+                $startDateMax = new DateTime('sunday this week');
+            } elseif ($startDateFilter === "nextweek") {
+                $startDateMin = new DateTime('monday next week');
+                $startDateMax = new DateTime('sunday next week');
+            } elseif ($startDateFilter === "thismonth") {
+                $startDateMin = new DateTime('first day of this month');
+                $startDateMax = new DateTime('last day of this month');
+            } elseif ($startDateFilter === "nextmonth") {
+                $startDateMin = new DateTime('first day of next month');
+                $startDateMax = new DateTime('last day of next month');
+            }
+            
+            $queryBuilder
+                ->leftJoin('e.eventdates', 'eventdates');
+            
+            
+            if ($startDateMin && $startDateMax) {
+                $queryBuilder
+                    ->leftJoin('e.eventdates', 'eventdates')
+                    ->andWhere('eventdates.startdate >= :startDateMin')
+                    ->andWhere('eventdates.startdate <= :startDateMax')
+                    ->setParameter('startDateMin', $startDateMin->format('Y-m-d H:i:s'))
+                    ->setParameter('startDateMax', $startDateMax->format('Y-m-d H:i:s'));
+            }
+            if ($elapsed !== "all") {
+                if ($elapsed === true || $elapsed == "1") {
+                    $queryBuilder->andWhere("eventdates.startdate < CURRENT_TIMESTAMP()");
+                } else if ($elapsed === false || $elapsed == "0") {
+                    $queryBuilder->andWhere("eventdates.startdate >= CURRENT_TIMESTAMP()");
+                }
+            }
+            // Execute the query
+            return $queryBuilder->orderBy('eventdates.startdate', 'ASC')->setMaxResults(8);
+        }
+        
+        public function getUsersTotal()
+        {
+            return $this->em->getRepository("App\Entity\User")->getTotalUsersCount();
         }
         
         public function getEventsQueryBuilder(array $criteria = []): QueryBuilder
@@ -1075,25 +953,39 @@
             return $queryBuilder;
         }
         
-        public function getEventCountForDateRange(DateTimeInterface $startDate, DateTimeInterface $endDate): int
+        public function getEventCountForDateRangeOpen(DateTimeInterface $startDate, DateTimeInterface $endDate): int
         {
-//            $query = $this->em->createQuery('
-//SELECT COUNT(DISTINCT e.id)
-//FROM App\Entity\Event e
-//LEFT JOIN App\Entity\EventDate ed WITH e.id = ed.event
-//WHERE ed.startdate >= :startDate AND ed.enddate <= :endDate
-//');
             $query = $this->em->createQuery('
-SELECT COUNT(DISTINCT e.id)
-FROM App\Entity\Event e
-LEFT JOIN App\Entity\EventDate ed WITH e.id = ed.event
-WHERE ed.startdate >= :startDate
-');
-            $query->setParameter('startDate', $startDate);
+        SELECT COUNT(DISTINCT e.id)
+        FROM App\Entity\Event e
+        LEFT JOIN App\Entity\EventDate ed WITH e.id = ed.event
+        WHERE ed.startdate >= :startDate AND ed.enddate <= :endDate and e.open = 1 and e.published = 1
+    ');
+            
+            $query->setParameters([
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+            ]);
             
             return (int)$query->getSingleScalarResult();
         }
         
+        public function getEventCountForDateRange(DateTimeInterface $startDate, DateTimeInterface $endDate): int
+        {
+            $query = $this->em->createQuery('
+        SELECT COUNT(DISTINCT e.id)
+        FROM App\Entity\Event e
+        LEFT JOIN App\Entity\EventDate ed WITH e.id = ed.event
+        WHERE ed.startdate >= :startDate AND ed.enddate <= :endDate and e.published = 1
+    ');
+            
+            $query->setParameters([
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+            ]);
+            
+            return (int)$query->getSingleScalarResult();
+        }
         
         // Generates a list of pages to be cho $services->getEvents(array("slug" => $slug, "elapsed" => "all", "published" => "all"))->getQuery()sen in a menu element
         
@@ -1113,7 +1005,7 @@ WHERE ed.startdate >= :startDate
         }
         
         // Checks if string ends with string
-        public function changeLinkLocale($newLocale, $link)
+        public function changeLinkLocale($link)
         {
             if ($link == "categories_dropdown" || $link == "footer_categories_section") {
                 return $link;

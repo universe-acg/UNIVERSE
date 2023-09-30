@@ -106,10 +106,6 @@ services:
   app.services:
     alias: App\Service\AppServices
 
-  debril.rss_atom.provider:
-    class: App\Feed\Provider
-    arguments: [ "@app.services", "@router.default", "@assets.packages" ]
-
   DrewM\MailChimp\MailChimp: '@welp_mailchimp.mailchimp_master'
 
   universe_mailchimp_fos_subscriber_provider:

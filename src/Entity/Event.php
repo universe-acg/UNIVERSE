@@ -8,7 +8,6 @@
     use DateTime;
     use DateTimeImmutable;
     use Doctrine\Common\Collections\ArrayCollection;
-    use Doctrine\Common\Collections\Collection;
     use Doctrine\ORM\Mapping as ORM;
     use Exception;
     use Gedmo\Mapping\Annotation as Gedmo;
@@ -25,16 +24,12 @@
      */
     class Event
     {
-        
         /**
          * @ORM\Column(type="string", length=255, nullable=false)
-         * @Assert\NotBlank
-         * @Assert\Length(min = 10)
          */
         protected $name;
         /**
          * @ORM\Column(type="text", nullable=true)
-         * @Assert\NotBlank
          */
         protected $description;
         /**
@@ -48,20 +43,13 @@
          * @ORM\Column(type="integer")
          */
         private $id;
-//    * @Assert\NotNull(groups={"create", "update"})
         /**
          * @ORM\ManyToOne(targetEntity="Category", inversedBy="events")
          */
         private $category;
         
-        /**
-         * @ORM\ManyToMany(targetEntity="Audience", inversedBy="events", cascade={"persist", "merge"})
-         * @ORM\JoinTable(name="universe_event_audience",
-         *   joinColumns={@ORM\JoinColumn(name="Event_id", referencedColumnName="id")},
-         *   inverseJoinColumns={@ORM\JoinColumn(name="Audience_Id", referencedColumnName="id")}
-         * )
-         */
-        private $audiences;
+        private $isPassed = false;
+        private $isAttnded = false;
         /**
          * @ORM\ManyToOne(targetEntity="Organizer", inversedBy="events")
          */
@@ -76,12 +64,6 @@
          * @Assert\Valid(groups={"create", "update"})
          */
         private $eventdates;
-        
-        
-        /**
-         * @ORM\OneToMany(targetEntity="Review", mappedBy="event", cascade={"remove"})
-         */
-        private $reviews;
         /**
          * @ORM\ManyToMany(targetEntity="User", inversedBy="favorites", cascade={"persist", "merge"})
          * @ORM\JoinTable(name="universe_favorites",
@@ -109,31 +91,26 @@
          * @var string
          *
          * @ORM\Column(type="string", length=255, nullable=true)
-         * @Assert\Length(max = 255)
          */
         private $externallink;
         /**
          * @var string
          *
          * @ORM\Column(type="string", length=255, nullable=true)
-         * @Assert\Length(max = 50)
          */
         private $phonenumber;
         /**
          * @var string
          *
          * @ORM\Column(type="string", length=255, nullable=true)
-         * @Assert\Length(max = 255)
          */
         private $email;
         /**
          * @var string
          *
          * @ORM\Column(type="string", length=255, nullable=true)
-         * @Assert\Length(max = 500)
          */
         private $tags;
-//    * @Assert\NotNull(groups={"create"})
         /**
          * NOTE: This is not a mapped field of entity metadata, just a simple property.
          *
@@ -160,7 +137,6 @@
          * @ORM\Column(type="string", length=255, nullable=true)
          */
         private $imageMimeType;
-        
         /**
          * @ORM\Column(type="string", length=255, nullable=true)
          */
@@ -193,20 +169,18 @@
         private $deletedAt;
         /**
          * @ORM\Column(type="boolean")
-         * @Assert\NotNull
          */
         private $published = false;
+        
+        /**
+         * @ORM\Column(type="boolean")
+         */
+        private $open = false;
         private $repeatDays;
         /**
          * @ORM\Column(type="boolean")
-         * @Assert\NotNull
          */
         private $isrepeat = false;
-        /**
-         * @ORM\Column(type="boolean")
-         * @Assert\NotNull(groups={"create", "update"})
-         */
-        private $enablereviews = true;
         /**
          * @ORM\Column(type="boolean")
          * @Assert\NotNull(groups={"create", "update"})
@@ -220,12 +194,10 @@
         
         public function __construct()
         {
-            $this->audiences = new ArrayCollection();
             $this->views = 0;
             $this->eventdates = new ArrayCollection();
             $this->images = new ArrayCollection();
             $this->reference = $this->generateReference(10);
-            $this->reviews = new ArrayCollection();
             $this->addedtofavoritesby = new ArrayCollection();
         }
         
@@ -243,6 +215,74 @@
             ]);
             
             return strlen($reference) > $length ? substr($reference, 0, $length) : $reference;
+        }
+        
+        /**
+         * @return false
+         */
+        public function getOpen()
+        {
+            return $this->open;
+        }
+        
+        /**
+         * @param mixed $open
+         */
+        public function setOpen($open): void
+        {
+            $this->open = $open;
+        }
+        
+        /**
+         * @return bool
+         */
+        public function isAttnded(): bool
+        {
+            return $this->isAttnded;
+        }
+        
+        /**
+         * @param bool $isAttnded
+         */
+        public function setIsAttnded(bool $isAttnded): void
+        {
+            $this->isAttnded = $isAttnded;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getIsPassed()
+        {
+            return $this->isPassed;
+        }
+        
+        /**
+         * @param mixed $isPassed
+         */
+        public function setIsPassed($isPassed): void
+        {
+            $this->isPassed = $isPassed;
+        }
+        
+        public function getTotalOrderElementsQuantitySum($status = 1, $user = "all", $role = "all")
+        {
+            $sum = 0;
+            foreach ($this->eventdates as $eventDate) {
+                $sum += $eventDate->getOrderElementsQuantitySum($status, $user, $role);
+            }
+            return $sum;
+        }
+        
+        public function getTotalSalesPercentage()
+        {
+            if (count($this->eventdates) == 0)
+                return 0;
+            $eventDatesSalesPercentageSum = 0;
+            foreach ($this->eventdates as $eventDate) {
+                $eventDatesSalesPercentageSum += $eventDate->getTotalSalesPercentage();
+            }
+            return round($eventDatesSalesPercentageSum / count($this->eventdates));
         }
         
         /**
@@ -308,11 +348,9 @@
             $salt = uniqid('', true); // Generate a unique salt, you can use other methods if needed.
             
             // Combine the base slug and salt to create a unique slug.
-            $uniqueSlug = $baseSlug . '-' . $salt;
-            
             // You can further sanitize or modify the uniqueSlug if needed.
             
-            return $uniqueSlug;
+            return $baseSlug . '-' . $salt;
         }
         
         public function getDescription()
@@ -341,74 +379,6 @@
         public function setVolsneeded(bool $volsneeded): void
         {
             $this->volsneeded = $volsneeded;
-        }
-        
-        public function getSales($role = "all", $user = "all", $formattedForPayoutApproval = false, $includeFees = false)
-        {
-            $sum = 0;
-            foreach ($this->eventdates as $eventDate) {
-                $sum += $eventDate->getSales($role, $user, $formattedForPayoutApproval, $includeFees);
-            }
-            return $sum;
-        }
-        
-        public function getTicketPricePercentageCutSum($role = "all")
-        {
-            $sum = 0;
-            foreach ($this->eventdates as $eventDate) {
-                $sum += $eventDate->getTicketPricePercentageCutSum($role);
-            }
-            return $sum;
-        }
-        
-        public function getTotalOrderElementsQuantitySum($status = 1, $user = "all", $role = "all")
-        {
-            $sum = 0;
-            foreach ($this->eventdates as $eventDate) {
-                $sum += $eventDate->getOrderElementsQuantitySum($status, $user, $role);
-            }
-            return $sum;
-        }
-        
-        public function getOrderElementsQuantitySum($status = 1)
-        {
-            $sum = 0;
-            foreach ($this->eventdates as $eventdate) {
-                $sum += $eventdate->getOrderElementsQuantitySum($status);
-            }
-            return $sum;
-        }
-        
-        public function getTotalCheckInPercentage()
-        {
-            if (count($this->eventdates) == 0)
-                return 0;
-            $eventDatesCheckInPercentageSum = 0;
-            foreach ($this->eventdates as $eventDate) {
-                $eventDatesCheckInPercentageSum += $eventDate->getTotalCheckInPercentage();
-            }
-            return round($eventDatesCheckInPercentageSum / count($this->eventdates));
-        }
-        
-        public function getTotalSalesPercentage()
-        {
-            if (count($this->eventdates) == 0)
-                return 0;
-            $eventDatesSalesPercentageSum = 0;
-            foreach ($this->eventdates as $eventDate) {
-                $eventDatesSalesPercentageSum += $eventDate->getTotalSalesPercentage();
-            }
-            return round($eventDatesSalesPercentageSum / count($this->eventdates));
-        }
-        
-        public function isRatedBy($user)
-        {
-            foreach ($this->reviews as $review) {
-                if ($review->getUser() == $user) {
-                    return $review;
-                }
-            }
-            return false;
         }
         
         public function isAddedToFavoritesBy($user)
@@ -448,28 +418,25 @@
         
         public function hasAnEventDateOnSale(): bool
         {
-//        foreach ($this->eventdates as $eventdate) {
-//            if ($eventdate->isOnSale()) {
-//                return true;
-//            }
-//        }
+            foreach ($this->eventdates as $eventdate) {
+                if ($eventdate->isOnSale()) {
+                    return true;
+                }
+            }
             return true;
+        }
+        
+        public function isOnSale()
+        {
+            return
+                $this->hasAnEventDateOnSale() &&
+                $this->organizer->getUser()->isEnabled() &&
+                $this->published;
         }
         
         public function hasContactAndSocialMedia()
         {
-            return ($this->externallink || $this->phonenumber || $this->twitter || $this->tiktok || $this->instagram || $this->email || $this->facebook || $this->linkedin);
-        }
-        
-        public function displayAudiences()
-        {
-            $audiences = '';
-            if (count($this->audiences) > 0) {
-                foreach ($this->audiences as $audience) {
-                    $audiences .= $audience->getName() . ', ';
-                }
-            }
-            return rtrim($audiences, ', ');
+            return ($this->externallink || $this->phonenumber || $this->email);
         }
         
         public function getName()
@@ -484,102 +451,9 @@
             return $this;
         }
         
-        public function displaySubtitles()
-        {
-            $subtitles = '';
-            if (count($this->subtitles) > 0) {
-                foreach ($this->subtitles as $subtitle) {
-                    $subtitles .= $subtitle->getName() . ', ';
-                }
-            }
-            return rtrim($subtitles, ', ');
-        }
-        
-        public function displayLanguages()
-        {
-            $languages = '';
-            if (count($this->languages) > 0) {
-                foreach ($this->languages as $language) {
-                    $languages .= $language->getName() . ', ';
-                }
-            }
-            return rtrim($languages, ', ');
-        }
-        
-        public function getRatingsPercentageForRating($rating)
-        {
-            if (!$this->countVisibleReviews()) {
-                return 0;
-            }
-            return round(($this->getRatingsCountForRating($rating) / $this->countVisibleReviews()) * 100, 1);
-        }
-        
-        public function countVisibleReviews()
-        {
-            $count = 0;
-            foreach ($this->reviews as $review) {
-                if ($review->getVisible()) {
-                    $count++;
-                }
-            }
-            return $count;
-        }
-        
-        public function getRatingsCountForRating($rating)
-        {
-            if (!$this->countVisibleReviews()) {
-                return 0;
-            }
-            $ratingCount = 0;
-            foreach ($this->reviews as $review) {
-                if ($review->getVisible() && $review->getRating() == $rating) {
-                    $ratingCount++;
-                }
-            }
-            return $ratingCount;
-        }
-        
-        public function getRatingAvg()
-        {
-            if (!$this->countVisibleReviews()) {
-                return 0;
-            }
-            $ratingAvg = 0;
-            foreach ($this->reviews as $review) {
-                if ($review->getVisible()) {
-                    $ratingAvg += $review->getRating();
-                }
-            }
-            return round($ratingAvg / $this->countVisibleReviews(), 1);
-        }
-        
-        public function getRatingPercentage()
-        {
-            if (!$this->countVisibleReviews()) {
-                return 0;
-            }
-            $ratingPercentage = 0;
-            foreach ($this->reviews as $review) {
-                if ($review->getVisible()) {
-                    $ratingPercentage += $review->getRatingPercentage();
-                }
-            }
-            return round($ratingPercentage / $this->countVisibleReviews(), 1);
-        }
-        
         public function viewed()
         {
             $this->views++;
-        }
-        
-        public function getFirstVenue()
-        {
-            foreach ($this->eventdates as $date) {
-                if ($date->getVenue()) {
-                    return $date->getVenue();
-                }
-            }
-            return null;
         }
         
         public function hasTwoOrMoreEventDatesOnSale()
@@ -591,14 +465,6 @@
                 }
             }
             return $count >= 2;
-        }
-        
-        public function isOnSale()
-        {
-            return
-                $this->hasAnEventDateOnSale() &&
-                $this->organizer->getUser()->isEnabled() &&
-                $this->published;
         }
         
         public function getFirstOnSaleEventDate()
@@ -787,58 +653,6 @@
             return $this;
         }
         
-        /**
-         * @return Collection|Language[]
-         */
-        public function getLanguages()
-        {
-            return $this->languages;
-        }
-        
-        public function addLanguage($language)
-        {
-            if (!$this->languages->contains($language)) {
-                $this->languages[] = $language;
-            }
-            
-            return $this;
-        }
-        
-        public function removeLanguage($language)
-        {
-            if ($this->languages->contains($language)) {
-                $this->languages->removeElement($language);
-            }
-            
-            return $this;
-        }
-        
-        /**
-         * @return ArrayCollection
-         */
-        public function getAudiences()
-        {
-            return $this->audiences;
-        }
-        
-        public function addAudience($audience)
-        {
-            if (!$this->audiences->contains($audience)) {
-                $this->audiences[] = $audience;
-            }
-            
-            return $this;
-        }
-        
-        public function removeAudience($audience)
-        {
-            if ($this->audiences->contains($audience)) {
-                $this->audiences->removeElement($audience);
-            }
-            
-            return $this;
-        }
-        
         public function getReference()
         {
             return $this->reference;
@@ -979,32 +793,6 @@
             return $this;
         }
         
-        /**
-         * @return Collection|Language[]
-         */
-        public function getSubtitles()
-        {
-            return $this->subtitles;
-        }
-        
-        public function addSubtitle($subtitle)
-        {
-            if (!$this->subtitles->contains($subtitle)) {
-                $this->subtitles[] = $subtitle;
-            }
-            
-            return $this;
-        }
-        
-        public function removeSubtitle($subtitle)
-        {
-            if ($this->subtitles->contains($subtitle)) {
-                $this->subtitles->removeElement($subtitle);
-            }
-            
-            return $this;
-        }
-        
         public function getYear()
         {
             return $this->year;
@@ -1041,55 +829,6 @@
             return $this;
         }
         
-        public function getTwitter()
-        {
-            return $this->twitter;
-        }
-        
-        public function setTwitter($twitter)
-        {
-            $this->twitter = $twitter;
-            
-            return $this;
-        }
-        
-        public function getInstagram()
-        {
-            return $this->instagram;
-        }
-        
-        public function setInstagram($instagram)
-        {
-            $this->instagram = $instagram;
-            
-            return $this;
-        }
-        
-        public function getFacebook()
-        {
-            return $this->facebook;
-        }
-        
-        public function setFacebook($facebook)
-        {
-            $this->facebook = $facebook;
-            
-            return $this;
-        }
-        
-        
-        public function getLinkedin()
-        {
-            return $this->linkedin;
-        }
-        
-        public function setLinkedin($linkedin)
-        {
-            $this->linkedin = $linkedin;
-            
-            return $this;
-        }
-        
         public function getShowattendees()
         {
             return $this->showattendees;
@@ -1098,37 +837,6 @@
         public function setShowattendees($showattendees)
         {
             $this->showattendees = $showattendees;
-            
-            return $this;
-        }
-        
-        /**
-         * @return ArrayCollection
-         */
-        public function getReviews()
-        {
-            return $this->reviews;
-        }
-        
-        public function addReview($review)
-        {
-            if (!$this->reviews->contains($review)) {
-                $this->reviews[] = $review;
-                $review->setEvent($this);
-            }
-            
-            return $this;
-        }
-        
-        public function removeReview($review)
-        {
-            if ($this->reviews->contains($review)) {
-                $this->reviews->removeElement($review);
-// set the owning side to null (unless already changed)
-                if ($review->getEvent() === $this) {
-                    $review->setEvent(null);
-                }
-            }
             
             return $this;
         }
@@ -1155,18 +863,6 @@
             if ($this->addedtofavoritesby->contains($addedtofavoritesby)) {
                 $this->addedtofavoritesby->removeElement($addedtofavoritesby);
             }
-            
-            return $this;
-        }
-        
-        public function getEnablereviews()
-        {
-            return $this->enablereviews;
-        }
-        
-        public function setEnablereviews($enablereviews)
-        {
-            $this->enablereviews = $enablereviews;
             
             return $this;
         }

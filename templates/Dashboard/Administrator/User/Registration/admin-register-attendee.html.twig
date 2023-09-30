@@ -1,5 +1,7 @@
 {% extends "Global/layout.html.twig" %}
+{% set pagetitle = 'Create attendee' %}
 
+{% block title %}{{ pagetitle }}{% endblock %}
 {% block content %}
     <section class="section-content padding-y bg-white">
         <div class="{{ services.getSetting("app_layout") }}">

@@ -22,36 +22,26 @@
                             <div class="col-sm-12 col-lg-2  mb-3 mb-lg-0">
                                 <span class="center-lg-y text-muted">{{ "%resultsCount% result(s) found" |trans ({'%resultsCount%': blogposts.getTotalItemCount}) }}</span>
                             </div>
-                            <div class="col-sm-12 col-lg-4 text-center mb-3 mb-lg-0">
-                                <form>
-                                    <ul class="list-inline">
-                                        <li class="list-inline-item dropdown"><a href="#" class="dropdown-toggle"
-                                                                                 data-toggle="dropdown">{{ "Search" }}</a>
-                                            <div class="dropdown-menu dropdown-menu-arrow p-3"
-                                                 style="min-width:300px;max-width:500px;">
-                                                <label for="keyword">{{ "Keyword" }}</label>
-                                                <input id="keyword" name="keyword" type="text" class="form-control"
-                                                       value="{{ app.request.get('keyword') }}">
-                                            </div>
-                                        </li>
-                                        <li class="list-inline-item ml-3">
-                                            <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i>
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </form>
-                            </div>
+                            {#                            <div class="col-sm-12 col-lg-4 text-center mb-3 mb-lg-0"> #}
+                            {#                                <form> #}
+                            {#                                    <ul class="list-inline"> #}
+                            {#                                        <li class="list-inline-item dropdown"><a href="#" class="dropdown-toggle" #}
+                            {#                                                                                 data-toggle="dropdown">{{ "Search" }}</a> #}
+                            {#                                            <div class="dropdown-menu dropdown-menu-arrow p-3" #}
+                            {#                                                 style="min-width:300px;max-width:500px;"> #}
+                            {#                                                <label for="keyword">{{ "Keyword" }}</label> #}
+                            {#                                                <input id="keyword" name="keyword" type="text" class="form-control" #}
+                            {#                                                       value="{{ app.request.get('keyword') }}"> #}
+                            {#                                            </div> #}
+                            {#                                        </li> #}
+                            {#                                        <li class="list-inline-item ml-3"> #}
+                            {#                                            <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> #}
+                            {#                                            </button> #}
+                            {#                                        </li> #}
+                            {#                                    </ul> #}
+                            {#                                </form> #}
+                            {#                            </div> #}
                             <div class="col-sm-12 col-lg-6 ">
-                                {#                                <label for="sortable-select" class="display-inline">{{ "Sort by" }} #}
-                                {#                                    <select id="sortable-select" #}
-                                {#                                            class="form-control display-inline-block bg-white select2 ml-3" #}
-                                {#                                            data-placeholder="{{ "Select an option" }}" style="width: 100%;"> #}
-                                {#                                        {{ knp_pagination_sortable(blogposts, "Creation date" ~ ' (' ~ "desc" ~ ')', "b.createdAt", {"direction": "desc", "criteria": "b.createdAt"}) }} #}
-                                {#                                        {{ knp_pagination_sortable(blogposts, "Creation date" ~ ' (' ~ "asc" ~ ')', "b.createdAt", {"direction": "asc", "criteria": "b.createdAt"}) }} #}
-                                {#                                        {{ knp_pagination_sortable(blogposts, "Popularity" ~ ' (' ~ "desc" ~ ')', "b.views", {"direction": "desc", "criteria": "b.views"}) }} #}
-                                {#                                        {{ knp_pagination_sortable(blogposts, "Popularity" ~ ' (' ~ "asc" ~ ')', "b.views", {"direction": "asc", "criteria": "b.views"}) }} #}
-                                {#                                    </select> #}
-                                {#                                </label> #}
                                 <a href="{{ path('dashboard_organizer_blog_post_add') }}"
                                    class="btn btn-primary ml-3" data-toggle="tooltip"
                                    title="{{ 'Add a blog post' }}"><i class="fas fa-plus"></i></a>

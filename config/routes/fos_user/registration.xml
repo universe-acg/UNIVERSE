@@ -7,7 +7,6 @@
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://symfony.com/schema/routing"
         xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
-
     <route id="fos_user_registration_register_attendee" path="/signup/attendee" methods="GET POST">
         <default key="_controller">App\Controller\bundles\FOSUserBundle\RegistrationController::registerAttendeeAction
         </default>
@@ -31,17 +30,4 @@
     <route id="fos_user_registration_confirmed" path="/signup/confirmed" methods="GET">
         <default key="_controller">fos_user.registration.controller:confirmedAction</default>
     </route>
-
-    <!--    for admin starts here-->
-    <!--    <route id="fos_user_registration_register_attendee_admin" path="/admin/signup/attendee" methods="GET POST">-->
-    <!--        <default key="_controller">-->
-    <!--            App\Controller\bundles\FOSUserBundle\AdminRegistrationController::registerAttendeeAction-->
-    <!--        </default>-->
-    <!--    </route>-->
-
-    <!--    <route id="fos_user_registration_register_organizer_admin" path="/admin/signup/organizer" methods="GET POST">-->
-    <!--        <default key="_controller">-->
-    <!--            App\Controller\bundles\FOSUserBundle\AdminRegistrationController::registerOrganizerAction-->
-    <!--        </default>-->
-    <!--    </route>-->
 </routes>

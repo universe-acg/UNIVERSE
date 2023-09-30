@@ -1,27 +1,27 @@
 <?php
-/*
+    /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-
-namespace App\Security;
-
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface;
-
-class AccessDeniedHandler implements AccessDeniedHandlerInterface
-{
-    private $router;
-
-    public function __construct(RouterInterface $router)
+    
+    namespace App\Security;
+    
+    use Symfony\Component\HttpFoundation\RedirectResponse;
+    use Symfony\Component\HttpFoundation\Request;
+    use Symfony\Component\Routing\RouterInterface;
+    use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+    use Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface;
+    
+    class AccessDeniedHandler implements AccessDeniedHandlerInterface
     {
-        $this->router = $router;
+        private $router;
+        
+        public function __construct(RouterInterface $router)
+        {
+            $this->router = $router;
+        }
+        
+        public function handle(Request $request, AccessDeniedException $accessDeniedException): RedirectResponse
+        {
+            return new RedirectResponse($this->router->generate('fos_user_security_login'));
+        }
     }
-
-    public function handle(Request $request, AccessDeniedException $accessDeniedException): RedirectResponse
-    {
-        return new RedirectResponse($this->router->generate('access_denied'));
-    }
-}

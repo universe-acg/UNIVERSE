@@ -112,26 +112,6 @@
                                 </div>
                             </div>
                         </article>
-                        <article class="card-group-item">
-                            {#                            <header class="card-header"> #}
-                            {#                                <a href="#" data-toggle="collapse" data-target="#collapseTags"> #}
-                            {#                                    <i class="icon-action fa fa-chevron-down"></i> #}
-                            {#                                    <h6 class="title">{{ "Tags" }}</h6> #}
-                            {#                                </a> #}
-                            {#                            </header> #}
-                            {#                            <div class="filter-content collapse show" id="collapseTags"> #}
-                            {#                                <div class="card-body"> #}
-                            {#                                    {% for tag in services.getBlogPosts({"selecttags": true}).getQuery().getOneOrNullResult()[1]|split(',') %} #}
-                            {#                                        <a href="{{ path('blog', { keyword: tag }) }}" #}
-                            {#                                           class="btn btn-sm btn-default mr-2 mb-2 mt-2">{{ tag }}</a> #}
-                            {#                                    {% endfor %} #}
-                            {#                                </div> #}
-                            {#                            </div> #}
-                        </article>
-                        {% if services.getSetting("newsletter_enabled") == "yes" and services.getSetting("mailchimp_api_key") and services.getSetting("mailchimp_list_id") %}
-                            {% include "Global/newsletter-box.html.twig" %}
-                        {% endif %}
-
                     </div>
                 </aside>
                 <div class="col-lg-9 order-0 order-lg-1">

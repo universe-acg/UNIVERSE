@@ -2,172 +2,158 @@
 <div class="table-responsive">
     <table class="table table-hover table-vcenter">
         <thead>
-        <tr>
-            {#            <th class="text-center">{{ "Reference" }}</th> #}
-            <th>{{ 'Full name' }}</th>
-            <th>{{ 'Date booked' }}</th>
-            <th>{{ 'Status' }}</th>
-            <th class="text-center"><i class="fas fa-cog"></i></th>
-        </tr>
+            <tr>
+                {#            <th class="text-center">{{ "Reference" }}</th> #}
+                <th>{{ 'Full name' }}</th>
+                <th>{{ 'Date booked' }}</th>
+                <th>{{ 'Status' }}</th>
+                <th class="text-center"><i class="fas fa-cog"></i></th>
+            </tr>
         </thead>
         <tbody>
 
-        {% for order in orders %}
-            {% if true %}
-                <tr>
-                {% if not is_granted("ROLE_ATTENDEE") %}
+            {% for order in orders %}
+                {% if true %}
+                    <tr>
+                    {% if not is_granted("ROLE_ATTENDEE") %}
+                        <td class="text-sm">
+                            {% if is_granted('ROLE_ADMINISTRATOR') %}
+                                <span title="{{ "User information" }}" data-toggle="tooltip"
+                                      data-title="{{ "User information" }}"
+                                      data-url="{{ path('dashboard_administrator_user_information', { slug : order.user.slug }) }}"
+                                      class="ajax-loading">{{ order.user.getCrossRoleName }}</span>
+                            {% else %}
+                                {{ order.user.getCrossRoleName }}
+                            {% endif %}
+                        </td>
+                    {% endif %}
                     <td class="text-sm">
-                        {% if is_granted('ROLE_ADMINISTRATOR') %}
-                            <span title="{{ "User information" }}" data-toggle="tooltip"
-                                  data-title="{{ "User information" }}"
-                                  data-url="{{ path('dashboard_administrator_user_information', { slug : order.user.slug }) }}"
-                                  class="ajax-loading">{{ order.user.getCrossRoleName }}</span>
+                        {{ order.createdAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}
+                    </td>
+                    <td class="text-sm">
+                        {% if order.status == 2 %}
+                            <span class="badge badge-success"><i
+                                        class="fas fa-user-check fa-fw"></i>{{ order.stringifyStatus }}</span>
+                        {% elseif order.status == 1 or order.status == 2 %}
+                            <span class="badge badge-info"><i
+                                        class="fas fa-user-check fa-fw"></i>{{ order.stringifyStatus }}</span>
                         {% else %}
-                            {{ order.user.getCrossRoleName }}
+                            <span class="badge badge-{{ order.getStatusClass }}">{{ order.stringifyStatus }}</span>
+                        {% endif %}
+                        {% if not is_granted("ROLE_ATTENDEE") %}
+                            {% if order.deletedAt %}
+                                <br>
+                                <br>
+                                <span class="badge badge-danger"><i
+                                            class="fas fa-times fa-fw"></i> {{ "Deleted" }}</span>
+                            {% endif %}
                         {% endif %}
                     </td>
-                {% endif %}
-                <td class="text-sm">
-                    {{ order.createdAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}
-                </td>
-                <td class="text-sm">
-                    {% if order.status == 2 %}
-                        <span class="badge badge-success"><i
-                                    class="fas fa-user-check fa-fw"></i>{{ order.stringifyStatus }}</span>
-                    {% elseif order.status == 1 or order.status == 2 %}
-                        <span class="badge badge-info"><i
-                                    class="fas fa-user-check fa-fw"></i>{{ order.stringifyStatus }}</span>
-                    {% else %}
-                        <span class="badge badge-{{ order.getStatusClass }}">{{ order.stringifyStatus }}</span>
-                    {% endif %}
-                    {% if not is_granted("ROLE_ATTENDEE") %}
-                        {% if order.deletedAt %}
-                            <br>
-                            <br>
-                            <span class="badge badge-danger"><i
-                                        class="fas fa-times fa-fw"></i> {{ "Deleted" }}</span>
-                        {% endif %}
-                    {% endif %}
-                </td>
-                <td class="text-center">
-                <div class="item-action dropdown">
-                <a href="javascript:void(0)" data-toggle="dropdown" data-boundary="window" class="icon"><i
-                            class="fas fa-ellipsis-v"></i></a>
-                <div class="dropdown-menu dropdown-menu-right">
-                {% if order.status == 1 or order.status == 2 or  order.status == 2 %}
-                    <a href="{{ path('dashboard_tickets_print', { reference: order.reference, link: eventlink }) }}"
-                       class="dropdown-item" target="_blank"><i
-                                class="dropdown-icon fas fa-ticket-alt fa-fw text-muted"></i> {{ "Print" }}
-                    </a>
-                    {% if true %}
-                        {#                        <a href="{{ path('dashboard_organizer_attendees_details', {orderid: order.id, userslug: order.user.slug}) }}" #}
-                        {#                           class="dropdown-item"> #}
-                        {#                            <i class="dropdown-icon fas fa-ticket-alt fa-fw text-muted"></i> {{ 'Attendance Details' }} #}
-                        {#                        </a> #}
+                    <td class="text-center">
+                    <div class="item-action dropdown">
+                    <a href="javascript:void(0)" data-toggle="dropdown" data-boundary="window" class="icon"><i
+                                class="fas fa-ellipsis-v"></i></a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                    {% if order.status == 1 or order.status == 2 or  order.status == 2 %}
+                        <a href="{{ path('dashboard_tickets_print', { reference: order.reference, link: eventlink }) }}"
+                           class="dropdown-item" target="_blank"><i
+                                    class="dropdown-icon fas fa-ticket-alt fa-fw text-muted"></i> {{ "Print" }}
+                        </a>
                     {% endif %}
                 {% endif %}
-            {% endif %}
-            </div>
-            </div>
-            </td>
-            </tr>
+                </div>
+                </div>
+                </td>
+                </tr>
 
-            {% if is_granted('ROLE_ORGANIZER') and not order.deletedAt %}
+                {% if is_granted('ROLE_ORGANIZER') and not order.deletedAt %}
 
-                <div class="modal fade" id="order-{{ order.reference }}-contactAttendee">
-                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title">{{ "Order" }} #{{ order.reference }}
-                                    : {{ "Contact the attendee" }}</h4>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
-                            <div class="modal-body">
-                                <form action="{{ path('dashboard_organizer_order_contactAttendee', {reference: order.reference}) }}"
-                                      method="POST">
-                                    <div class="form-group">
-                                        <label for="message" class="form-label required">{{ "Message" }}</label>
-                                        <textarea name="message" id="message" class="form-control" rows="10"
-                                                  required></textarea>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary btn-block mt-3">
-                                        <i class="fas fa-envelope"></i>
-                                        {{ "Send" }}
-                                    </button>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary"
-                                        data-dismiss="modal">{{ "Close" }}</button>
+                    <div class="modal fade" id="order-{{ order.reference }}-contactAttendee">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">{{ "Order" }} #{{ order.reference }}
+                                        : {{ "Contact the attendee" }}</h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{{ path('dashboard_organizer_order_contactAttendee', {reference: order.reference}) }}"
+                                          method="POST">
+                                        <div class="form-group">
+                                            <label for="message" class="form-label required">{{ "Message" }}</label>
+                                            <textarea name="message" id="message" class="form-control" rows="10"
+                                                      required></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-block mt-3">
+                                            <i class="fas fa-envelope"></i>
+                                            {{ "Send" }}
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary"
+                                            data-dismiss="modal">{{ "Close" }}</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-            {% endif %}
+                {% endif %}
 
-            {% if is_granted('ROLE_ATTENDEE') and not order.deletedAt %}
+                {% if is_granted('ROLE_ATTENDEE') and not order.deletedAt %}
 
-                <div class="modal fade" id="order-{{ order.reference }}-contactOrganizer">
-                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title">{{ "Order" }} #{{ order.reference }}
-                                    : {{ "Contact the organizer" }}</h4>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
-                            <div class="modal-body">
-                                <form action="{{ path('dashboard_attendee_order_contactOrganizer', {reference: order.reference}) }}"
-                                      method="POST">
-                                    <div class="form-group">
-                                        <label for="message" class="form-label required">{{ "Message" }}</label>
-                                        <textarea name="message" id="message" class="form-control" rows="10"
-                                                  required></textarea>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary btn-block mt-3">
-                                        <i class="fas fa-envelope"></i>
-                                        {{ "Send" }}
-                                    </button>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary"
-                                        data-dismiss="modal">{{ "Close" }}</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            {% endif %}
-
-            {% if is_granted("ROLE_ADMINISTRATOR") and (order.status == -2 or order.status == 1 or order.status == 2) and order.payment %}
-
-                <div class="modal fade" id="order-{{ order.reference }}-payment-details">
-                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title">{{ "Order payment details" }} - {{ order.reference }}</h4>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
-                            <div class="modal-body">
-
-                                <p class="mb-3 text-center">
-                                    <img src="{{ asset(order.paymentgateway.getLogoPath) }}" class="img-80-80"/>
-                                </p>
-
-                                {{ order.payment.details|json_encode(constant('JSON_PRETTY_PRINT'))|nl2br }}
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary"
-                                        data-dismiss="modal">{{ "Close" }}</button>
+                    <div class="modal fade" id="order-{{ order.reference }}-contactOrganizer">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">{{ "Order" }} #{{ order.reference }}
+                                        : {{ "Contact the organizer" }}</h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{{ path('dashboard_attendee_order_contactOrganizer', {reference: order.reference}) }}"
+                                          method="POST">
+                                        <div class="form-group">
+                                            <label for="message" class="form-label required">{{ "Message" }}</label>
+                                            <textarea name="message" id="message" class="form-control" rows="10"
+                                                      required></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-block mt-3">
+                                            <i class="fas fa-envelope"></i>
+                                            {{ "Send" }}
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary"
+                                            data-dismiss="modal">{{ "Close" }}</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-            {% endif %}
+                {% endif %}
 
-        {% endfor %}
+                {% if is_granted("ROLE_ADMINISTRATOR") and (order.status == -2 or order.status == 1 or order.status == 2) %}
+
+                    <div class="modal fade" id="order-{{ order.reference }}-payment-details">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">{{ "Order payment details" }} - {{ order.reference }}</h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary"
+                                            data-dismiss="modal">{{ "Close" }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endif %}
+
+            {% endfor %}
         </tbody>
     </table>
 </div>

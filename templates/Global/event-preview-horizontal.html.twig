@@ -40,25 +40,25 @@
             {% endif %}
             {% if eventdate is defined %}
                 <dl class="dlist-inline small">
-                    <dt>{{ "When" }}</dt>
+                    <dt>{{ "When"|trans }}</dt>
                     <dd>{{ eventdate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</dd>
                 </dl>
-                {#                <dl class="dlist-inline small"> #}
-                {#                    <dt>{{ "Where" }}</dt> #}
-                {#                    <dd> #}
-                {#                        {% if eventdate.venue %} #}
-                {#                            {{ eventdate.venue.name }}: {{ eventdate.venue.stringifyAddress }} #}
-                {#                        {% else %} #}
-                {#                            {{ "Online" }} #}
-                {#                        {% endif %} #}
-                {#                    </dd> #}
-                {#                </dl> #}
+                <dl class="dlist-inline small">
+                    <dt>{{ "Where"|trans }}</dt>
+                    <dd>
+                        {% if eventdate.venue %}
+                            {{ eventdate.venue.name }}: {{ eventdate.venue.stringifyAddress }}
+                        {% else %}
+                            {{ "Online"|trans }}
+                        {% endif %}
+                    </dd>
+                </dl>
             {% endif %}
             {% if hideorganizer is not defined %}
                 <dl class="dlist-inline small">
-                    <dt>{{ "Organizer" }}</dt>
+                    <dt>{{ "Organizer"|trans }}</dt>
                     <dd><a href="{{ path('organizer', { slug :event.organizer.slug }) }}"
-                           taget="_blank">{{ event.organizer.name }}</a></dd>
+                           target="_blank">{{ event.organizer.name }}</a></dd>
                 </dl>
             {% endif %}
         </figcaption>

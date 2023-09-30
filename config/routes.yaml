@@ -14,6 +14,14 @@ fos_user_change_email:
   path: /dashboard/change-email
   controller: 'App\Controller\Api\EmailChangeController::changeEmail'
 
+open_events:
+  path: /open-events
+  controller: 'App\Controller\Front\EventController::openevents'
+
+open_event:
+  path: /open-event/{slug}
+  controller: 'App\Controller\Front\EventController::openevent'
+
 dashboard_organizer_blog_post_delete:
   path: /dashboard/organizer/manage-blog-posts/{slug}/delete
   controller: 'App\Controller\Dashboard\Organizer\BlogPostController::delete'
@@ -130,9 +138,9 @@ dashboard_attendee_following:
   trailing_slash_on_root: false
 
 dashboard_attendee_bookevent:
-  path: /dashboard/attendee/bookevent/{reference}
+  path: /dashboard/attendee/bookevent/{id}/{eventicketid}
   controller: 'App\Controller\Dashboard\Shared\CartController::bookevent'
-  methods: [ GET ]
+  methods: [ 'GET', 'POST' ]
   
   trailing_slash_on_root: false
 
@@ -204,13 +212,6 @@ app_dashboard_attendee:
   
   trailing_slash_on_root: false
 
-app_dashboard_point_of_sale:
-  resource: '../src/Controller/Dashboard/PointOfSale'
-  prefix: /dashboard/pointofsale
-  name_prefix: 'dashboard_pointofsale_'
-  
-  trailing_slash_on_root: false
-
 # Front routes
 
 app_front:
@@ -243,9 +244,6 @@ fos_user:
 
 fos_js_routing:
   resource: "@FOSJsRoutingBundle/Resources/config/routing/routing-sf4.xml"
-
-payum_all:
-  resource: "@PayumBundle/Resources/config/routing/all.xml"
 
 presta_sitemap:
   resource: "@PrestaSitemapBundle/Resources/config/routing.yml"

@@ -19,81 +19,70 @@
 
                     <div class="box shadow-none bg-gray mb-4">
                         <div class="row">
-                            <div class="col-sm-12 col-lg-4  mb-3 mb-lg-0">
+                            <div class="col-sm-12 col-lg-4 mb-3 mb-lg-0">
                                 <span class="center-lg-y text-muted">{{ "%resultsCount% result(s) found" |trans ({'%resultsCount%': users.getTotalItemCount}) }}</span>
                             </div>
-                            {#                            <div class="col-sm-12 col-lg-6 "> #}
-                            {#                                <label for="sortable-select" class="display-inline">{{ "Sort by" }} #}
-                            {#                                    <select id="sortable-select" #}
-                            {#                                            class="form-control display-inline-block bg-white select2 ml-3" #}
-                            {#                                            data-placeholder="{{ "Select an option" }}" style="width: 100%;"> #}
-                            {#                                        {{ knp_pagination_sortable(users, "Registration date" ~ ' (' ~ "desc" ~ ')', "u.createdAt", {"direction": "desc", "criteria": "u.createdAt"}) }} #}
-                            {#                                        {{ knp_pagination_sortable(users, "Registration date" ~ ' (' ~ "asc" ~ ')', "u.createdAt", {"direction": "asc", "criteria": "u.createdAt"}) }} #}
-                            {#                                        {{ knp_pagination_sortable(users, "Last login" ~ ' (' ~ "desc" ~ ')', "u.lastLogin", {"direction": "desc", "criteria": "u.lastLogin"}) }} #}
-                            {#                                        {{ knp_pagination_sortable(users, "Last login" ~ ' (' ~ "asc" ~ ')', "u.lastLogin", {"direction": "asc", "criteria": "u.lastLogin"}) }} #}
-                            {#                                    </select> #}
-                            {#                                </label> #}
+                            {#                            <div class="col-sm-12 col-lg-2 "> #}
+                            {#                                <a href="#search-filters" class="btn btn-primary has-tooltip" data-toggle="collapse" #}
+                            {#                                   title="{{ "Toggle display the search filters" }}" aria-expanded="false" #}
+                            {#                                   aria-controls="search-filters"><i class="fa fa-eye fa-lg"></i></a> #}
                             {#                            </div> #}
-                            <div class="col-sm-12 col-lg-2 ">
-                                <a href="#search-filters" class="btn btn-primary has-tooltip" data-toggle="collapse"
-                                   title="{{ "Toggle display the search filters" }}" aria-expanded="false"
-                                   aria-controls="search-filters"><i class="fa fa-eye fa-lg"></i></a>
-                            </div>
-                            <div id="search-filters" class="col-sm-12 col-lg-12 text-center mb-3 mb-lg-0 collapse show">
-                                <hr>
+                            {#                            <div id="search-filters" class="col-sm-12 col-lg-12 text-center mb-3 mb-lg-0 collapse show"> #}
+                            <div id="search-filters"
+                                 class="col-sm-12 col-lg-8 justify-content-start d-flex text-center mb-3 mb-lg-0 collapse show">
+                                {#                                <hr> #}
                                 <form>
-                                    <div class="row">
-                                        <div class="col-12 col-sm-4 text-left mb-4">
-                                            <label for="role">{{ "Role" }}</label>
-                                            <select id="role" name="role" class="form-control bg-white select2">
-                                                <option value="all">{{ "All" }}</option>
-                                                <option value="organizer">{{ "Organizer" }}</option>
-                                                <option value="attendee">{{ "Attendee" }}</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-12 col-sm-4 text-left mb-4">
-                                            <label for="organizername">{{ "Organizer name" }}</label>
-                                            <input type="text" class="form-control mr-sm-2 mb-2 mb-sm-0 bg-white"
-                                                   id="organizername" name="organizername"
-                                                   value="{{ app.request.get('organizername') }}">
-                                        </div>
-                                        <div class="col-12 col-sm-4 text-left mb-4">
-                                            <label for="username">{{ "Username" }}</label>
-                                            <input type="text" class="form-control mr-sm-2 mb-2 mb-sm-0 bg-white"
-                                                   id="username" name="username"
-                                                   value="{{ app.request.get('username') }}">
-                                        </div>
-                                        <div class="col-12 col-sm-4 text-left mb-4">
-                                            <label for="email">{{ "Email" }}</label>
-                                            <input type="text" class="form-control mr-sm-2 mb-2 mb-sm-0 bg-white"
-                                                   id="email" name="email" value="{{ app.request.get('email') }}">
-                                        </div>
-                                        <div class="col-12 col-sm-4 text-left mb-4">
-                                            <label for="firstname">{{ "First name" }}</label>
-                                            <input type="text" class="form-control mr-sm-2 mb-2 mb-sm-0 bg-white"
-                                                   id="firstname" name="firstname"
-                                                   value="{{ app.request.get('firstname') }}">
-                                        </div>
-                                        <div class="col-12 col-sm-4 text-left mb-4">
-                                            <label for="lastname">{{ "Last name" }}</label>
-                                            <input type="text" class="form-control mr-sm-2 mb-2 mb-sm-0 bg-white"
-                                                   id="lastname" name="lastname"
-                                                   value="{{ app.request.get('lastname') }}">
-                                        </div>
-                                        <div class="col-12 col-sm-4 text-left mb-4">
-                                            <button type="submit" class="btn btn-primary" data-toggle="tooltip"
-                                                    title="{{ "Search" }}"><i class="fas fa-search"></i></button>
-                                            <button type="reset" class="btn btn-primary" data-toggle="tooltip"
-                                                    title="{{ "Reset" }}"><i class="fas fa-search-minus"></i></button>
-
-                                            <a href="{{ path('registration_register_attendee_admin') }}"
-                                               class="btn btn-primary ml-3" data-toggle="tooltip"
-                                               title="{{ 'Add a new attendee' }}"><i class="fas fa-plus"></i></a>
-                                            <a href="{{ path('registration_register_organizer_admin') }}"
-                                               class="btn btn-primary ml-3" data-toggle="tooltip"
-                                               title="{{ 'Add a new creator' }}"><i class="fas fa-user"></i></a>
-                                        </div>
-                                    </div>
+                                    {#                                    <div class="row"> #}
+                                    {#                                        <div class="col-12 col-sm-4 text-left mb-4"> #}
+                                    {#                                            <label for="role">{{ "Role" }}</label> #}
+                                    {#                                            <select id="role" name="role" class="form-control bg-white select2"> #}
+                                    {#                                                <option value="all">{{ "All" }}</option> #}
+                                    {#                                                <option value="organizer">{{ "Organizer" }}</option> #}
+                                    {#                                                <option value="attendee">{{ "Attendee" }}</option> #}
+                                    {#                                            </select> #}
+                                    {#                                        </div> #}
+                                    {#                                        <div class="col-12 col-sm-4 text-left mb-4"> #}
+                                    {#                                            <label for="organizername">{{ "Organizer name" }}</label> #}
+                                    {#                                            <input type="text" class="form-control mr-sm-2 mb-2 mb-sm-0 bg-white" #}
+                                    {#                                                   id="organizername" name="organizername" #}
+                                    {#                                                   value="{{ app.request.get('organizername') }}"> #}
+                                    {#                                        </div> #}
+                                    {#                                        <div class="col-12 col-sm-4 text-left mb-4"> #}
+                                    {#                                            <label for="username">{{ "Username" }}</label> #}
+                                    {#                                            <input type="text" class="form-control mr-sm-2 mb-2 mb-sm-0 bg-white" #}
+                                    {#                                                   id="username" name="username" #}
+                                    {#                                                   value="{{ app.request.get('username') }}"> #}
+                                    {#                                        </div> #}
+                                    {#                                        <div class="col-12 col-sm-4 text-left mb-4"> #}
+                                    {#                                            <label for="email">{{ "Email" }}</label> #}
+                                    {#                                            <input type="text" class="form-control mr-sm-2 mb-2 mb-sm-0 bg-white" #}
+                                    {#                                                   id="email" name="email" value="{{ app.request.get('email') }}"> #}
+                                    {#                                        </div> #}
+                                    {#                                        <div class="col-12 col-sm-4 text-left mb-4"> #}
+                                    {#                                            <label for="firstname">{{ "First name" }}</label> #}
+                                    {#                                            <input type="text" class="form-control mr-sm-2 mb-2 mb-sm-0 bg-white" #}
+                                    {#                                                   id="firstname" name="firstname" #}
+                                    {#                                                   value="{{ app.request.get('firstname') }}"> #}
+                                    {#                                        </div> #}
+                                    {#                                        <div class="col-12 col-sm-4 text-left mb-4"> #}
+                                    {#                                            <label for="lastname">{{ "Last name" }}</label> #}
+                                    {#                                            <input type="text" class="form-control mr-sm-2 mb-2 mb-sm-0 bg-white" #}
+                                    {#                                                   id="lastname" name="lastname" #}
+                                    {#                                                   value="{{ app.request.get('lastname') }}"> #}
+                                    {#                                        </div> #}
+                                    {#                                        <div class="col-12 col-sm-4 text-left mb-4"> #}
+                                    {#                                            <button type="submit" class="btn btn-primary" data-toggle="tooltip" #}
+                                    {#                                                    title="{{ "Search" }}"><i class="fas fa-search"></i></button> #}
+                                    {#                                            <button type="reset" class="btn btn-primary" data-toggle="tooltip" #}
+                                    {#                                                    title="{{ "Reset" }}"><i class="fas fa-search-minus"></i></button> #}
+                                    <a href="{{ path('registration_register_attendee_admin') }}"
+                                       class="btn btn-primary" data-toggle="tooltip"
+                                       title="{{ 'Add a new attendee' }}"><i class="fas fa-plus"></i></a>
+                                    <a href="{{ path('registration_register_organizer_admin') }}"
+                                       class="btn btn-primary ml-3" data-toggle="tooltip"
+                                       title="{{ 'Add a new creator' }}"><i class="fas fa-user"></i></a>
+                                    {#                                        </div> #}
+                                    {#                            </div> #}
                                 </form>
                             </div>
                         </div>
@@ -138,19 +127,6 @@
 
             }
 
-            if (getURLParameter("countryslug")) {
-                var url = "{{ path('get_country', { slug : "countryslug" }) }}";
-                url = url.replace("countryslug", getURLParameter("countryslug"));
-                $.ajax({
-                    type: 'GET',
-                    url: url
-                }).then(function (data) {
-                    $('#fake_countryslug').select2('data', {id: data.slug, text: data.text});
-                    $('#countryslug').val(data.slug).change();
-                });
-
-            }
-
             if (getURLParameter('role')) {
                 $('#role').val(getURLParameter('role')).change();
             }
@@ -158,11 +134,6 @@
             if (getURLParameter('enabled')) {
                 $('input[type="radio"][name="enabled"][value="' + getURLParameter('enabled') + '"]').attr("checked", "checked");
             }
-
-            if (getURLParameter('countryslug')) {
-                $('#countryslug').val(getURLParameter('countryslug'));
-            }
-
         });
 
     </script>

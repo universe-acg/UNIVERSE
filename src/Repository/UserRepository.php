@@ -17,16 +17,22 @@
             parent::__construct($registry, User::class);
         }
         
-        public function getUsers($role, $keyword, $createdbyorganizerslug, $organizername, $organizerslug, $username, $email, $firstname, $lastname, $enabled, $countryslug, $slug, $followedby, $hasboughtticketforEvent, $hasboughtticketforOrganizer, $apiKey, $isOnHomepageSlider, $limit, $count)
+        public function getTotalUsersCount()
         {
-            
+            return $this->createQueryBuilder('u')
+                ->select('COUNT(u)')
+                ->getQuery()
+                ->getSingleScalarResult();
+        }
+        
+        public function getUsers($role, $keyword, $organizername, $organizerslug, $username, $email, $firstname, $lastname, $enabled, $slug, $followedby, $hasboughtticketforEvent, $hasboughtticketforOrganizer, $apiKey, $isOnHomepageSlider, $limit, $count)
+        {
             $qb = $this->createQueryBuilder("u");
             if ($count) {
                 $qb->select("COUNT(u)");
             } else {
                 $qb->select("u");
             }
-            
             if ($role !== "all") {
                 $qb->andWhere("u.roles LIKE :role")->setParameter("role", "%ROLE_" . strtoupper($role) . "%");
             }
@@ -75,10 +81,7 @@
                 $qb->andWhere("orders.status = :statuspaid")->setParameter("statuspaid", 1);
                 $qb->andWhere("event.slug = :hasboughtticketforevent")->setParameter("hasboughtticketforevent", $hasboughtticketforEvent);
             }
-            if ($hasboughtticketforOrganizer !== "all") {
-                $qb->join("event.organizer", "eventOrganizer");
-                $qb->andWhere("eventOrganizer.slug = :hasboughtticketfororganizer")->setParameter("hasboughtticketfororganizer", $hasboughtticketforOrganizer);
-            }
+            
             if ($apiKey !== "all") {
                 $qb->andWhere("u.apiKey = :apiKey")->setParameter("apiKey", $apiKey);
             }

@@ -105,7 +105,9 @@
                                             <div class="card border-0 card-body overflow-auto text-nowrap">
                                                 <div class="avatar-list py-4">
                                                     {% for user in organizer.followedby %}
-                                                        {% include "Global/user-avatar.html.twig" with { user: user, showusernametooltip: true } %}
+                                                        {% if user.id != organizer.user.id %}
+                                                            {% include "Global/user-avatar.html.twig" with { user: user, showusernametooltip: true } %}
+                                                        {% endif %}
                                                     {% endfor %}
                                                 </div>
                                             </div>
@@ -139,7 +141,13 @@
                                             </small>
                                         </li>
                                         <li class="list-inline-item">
-                                            <h5 class="font-weight-bold mb-0 d-block">{{ organizer.followedby|length }}</h5>
+                                            <h5 class="font-weight-bold mb-0 d-block">{{ news | length }}</h5>
+                                            <small class="text-muted"> <i
+                                                        class="fas fa-newspaper mr-1"></i>{{ "News" }}
+                                            </small>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <h5 class="font-weight-bold mb-0 d-block">{{ organizer.followedby|length -1 }}</h5>
                                             <small class="text-muted"> <i
                                                         class="fas fa-folder-plus mr-1"></i>{{ "Followers" }}
                                             </small>
@@ -178,7 +186,7 @@
                                             <a class="nav-link active" data-toggle="pill"
                                                href="#organizer-onsale-events" role="tab"
                                                aria-controls="organizer-onsale-events"
-                                               aria-selected="true">{{ "Events" }}
+                                               aria-selected="true">{{ "Active events" }}
                                                 ({{ onsaleeventscount }})</a>
                                         </li>
                                         <li class="nav-item">
@@ -230,23 +238,6 @@
                                     </div>
                                 </div>
 
-                                {% if organizer.showvenuesmap and google_maps_api_key != "" %}
-                                    {% set venuescount = services.getVenues({"count": true, organizer: organizer.slug}).getQuery().getSingleScalarResult() %}
-                                    {% if venuescount %}
-                                        {% set venues = [] %}
-                                        {% for venue in services.getVenues({organizer: organizer.slug}).getQuery().getResult() %}
-                                            {% set venues = venues|merge([{"name": venue.name, "address":(venue.name ~ ": " ~venue.stringifyAddress), "lat": venue.lat, "lng": venue.lng, "link": (path('venue', { slug : venue.slug })), "image": (venue.images|length ? (asset(venue.images[0].getImagePath)): (venue.getImagePlaceholder) ) }]) %}
-                                        {% endfor %}
-
-                                        <div class="py-4 px-4">
-                                            <h4 class="mb-2"><i class="fas fa-compass mr-1"></i> {{ "Venues" }}
-                                            </h4>
-                                            <div id="venues-map" data-pin-path="{{ asset('assets/img/icons/pin.png') }}"
-                                                 data-venues="{{ venues|json_encode() }}" class="vh-90"></div>
-                                        </div>
-                                    {% endif %}
-                                {% endif %}
-
                                 {% if organizer.youtubeurl %}
                                     <div class="py-4 px-4">
                                         <h4 class="mb-2"><i class="fab fa-youtube-square mr-1"></i> {{ "Video" }}
@@ -256,21 +247,6 @@
                                                 frameborder="0"
                                                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                                                 allowfullscreen></iframe>
-                                    </div>
-                                {% endif %}
-
-                                {% set reviewscount = services.getReviews({"count": true, "organizer": organizer.slug}).getQuery().getSingleScalarResult() %}
-
-                                {% if organizer.showreviews and reviewscount %}
-                                    <div class="row mt-5 px-4">
-                                        <div class="col-12">
-                                            <h4 class="mb-2"><i class="fas fa-star mr-1"></i> {{ "Reviews" }}</h4>
-                                        </div>
-                                        {% for review in services.getReviews({"organizer": organizer.slug, "limit": 8}).getQuery().getResult() %}
-                                            <div class="col-12 col-lg-6 py-4">
-                                                {% include "Global/user-review.html.twig" with { review : review, showuser: true, showevent: true } %}
-                                            </div>
-                                        {% endfor %}
                                     </div>
                                 {% endif %}
                             </div>

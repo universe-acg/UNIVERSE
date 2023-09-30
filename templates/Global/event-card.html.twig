@@ -8,21 +8,10 @@
     {% set link = path('event', { slug : event.slug }) %}
 {% endif %}
 
-<style>
-    .link-style {
-        color: #007bff; /* Set the text color to a blue shade (you can change the color to your preference) */
-        text-decoration: none; /* Remove the underline by default */
-        font-weight: bold; /* Optionally, make the text bold */
-    }
-
-    /* Define a hover effect for the hyperlink */
-    .link-style:hover {
-        text-decoration: underline; /* Underline the text when hovering */
-    }
-</style>
-
-<div class="card card-event">
-    <div class="img-wrap img-lazy-load"
+{% set past = past|default(false) %}
+{% set attendeed = attendeed|default(false) %}
+<div class="card card-event {{ attendeed ? 'attended-event' }}" style="z-index: 999 !important;">
+    <div class="img-wrap img-lazy-load {{ event.isPassed or past or   attendeed  ? 'grayed-out' : '' }}"
          data-src="{{ event.imageName ? asset(event.getImagePath|imagine_filter('thumbnail', runtimeConfig)) : event.getImagePlaceholder }}">
         <a href="{{ link }}"></a>
         <div class="loader"></div>
@@ -50,19 +39,23 @@
         {% endif %}
         <div class="event-info" style="width: 100%;">
             <h5>
-                <a href="{{ link }}" class="text-dark">{{ event.name }}</a>
+                <a href="{{ link }}" class="text-dark">{{ event.name }} {{ event.isPassed }}</a>
             </h5>
 
             {% if displayedEventDate.startdate %}
                 {% set currentDate = "now"|date('F j, Y H:i', 'Europe/Athens') %}
-                {% if displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') <= currentDate %}
-                    {% if displayedEventDate.enddate is not null and displayedEventDate.enddate|date('F j, Y H:i', 'Europe/Athens') < currentDate %}
-                        {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }} | Event has ended
-                    {% else %}
-                        {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }} | Event has started
-                    {% endif %}
+                {% if attendeed %}
+                    <span class="accomplishment">✨Attended✨</span>
                 {% else %}
-                    {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }}
+                    {% if displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') <= currentDate %}
+                        {% if displayedEventDate.enddate is not null and displayedEventDate.enddate|date('F j, Y H:i', 'Europe/Athens') < currentDate %}
+                            {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }} | Event has ended
+                        {% else %}
+                            {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }} | Event has started
+                        {% endif %}
+                    {% else %}
+                        {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }}
+                    {% endif %}
                 {% endif %}
             {% endif %}
 
@@ -79,16 +72,6 @@
         {% endif %}
         <div class="clearfix"></div>
     </div>
-    {#    <span class="event-category"> #}
-    {#        {% if ticketName is defined %} #}
-    {#            #}{#            <b>{{ ticketName }}</b> <br> #}
-    {#        {% endif %} #}
-    {#        {% if ticketsCount is defined %} #}
-    {#            #}{#            {{ ticketsCount }} {{ ticketsCount > 1 ? "tickets" : "ticket" }} #}
-    {#        {% else %} #}
-    {#            #}{#            {{ event.category.name }} #}
-    {#        {% endif %} #}
-    {#    </span> #}
     {% if displayedEventDate %}
         {% if displayedEventDate.startdate %}
             <div class="event-date text-center">

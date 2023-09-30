@@ -26,103 +26,12 @@
                                 <span class="center-lg-y text-muted">{{ "%resultsCount% result(s) found" |trans ({'%resultsCount%': events.getTotalItemCount}) }}</span>
                             </div>
                             <div class="col-sm-12 col-lg-8">
-                                {#                                <label for="sortable-select" class="display-inline">{{ "Sort by" }} #}
-                                {#                                    <select id="sortable-select" #}
-                                {#                                            class="form-control display-inline-block bg-white select2 w0 ml-3" #}
-                                {#                                            data-placeholder="{{ "Select an option" }}" style="width: 100%;"> #}
-                                {#                                        {{ knp_pagination_sortable(events, "Creation date" ~ ' (' ~ "desc" ~ ')', "e.createdAt", {"direction": "desc", "criteria": "e.createdAt"}) }} #}
-                                {#                                        {{ knp_pagination_sortable(events, "Creation date" ~ ' (' ~ "asc" ~ ')', "e.createdAt", {"direction": "asc", "criteria": "e.createdAt"}) }} #}
-                                {#                                        {{ knp_pagination_sortable(events, "Popularity" ~ ' (' ~ "desc" ~ ')', "e.views", {"direction": "desc", "criteria": "e.views"}) }} #}
-                                {#                                        {{ knp_pagination_sortable(events, "Popularity" ~ ' (' ~ "asc" ~ ')', "e.views", {"direction": "asc", "criteria": "e.views"}) }} #}
-                                {#                                    </select> #}
-                                {#                                </label> #}
                                 {% if is_granted('ROLE_ORGANIZER') %}
                                     <a href="{{ path('dashboard_organizer_event_add') }}"
                                        class="btn btn-primary ml-3"><i
                                                 class="fas fa-plus"></i> {{ 'Add a new event' }}</a>
                                 {% endif %}
                             </div>
-                            {#                            <div class="col-sm-12 col-lg-2"> #}
-                            {#                                <a href="#search-filters" class="btn btn-primary has-tooltip" data-toggle="collapse" #}
-                            {#                                   title="{{ "Toggle display the search filters" }}" aria-expanded="false" #}
-                            {#                                   aria-controls="search-filters"><i class="fa fa-eye fa-lg"></i></a> #}
-                            {#                            </div> #}
-                            {#                            <div id="search-filters" class="col-sm-12 col-lg-12  mb-3 mb-lg-0 collapse show"> #}
-                            {#                                <hr> #}
-                            {#                                <form> #}
-                            {#                                    <div class="row"> #}
-                            {#                                        <div class="col-12 col-sm-4 text-left mb-4"> #}
-                            {#                                            <label for="slug">{{ "Event" }}</label> #}
-                            {#                                            <input type="text" class="mr-sm-2 mb-2 mb-sm-0 autocomplete bg-white" #}
-                            {#                                                   id="slug" name="slug" #}
-                            {#                                                   data-url-list="{{ is_granted('ROLE_ADMINISTRATOR') ? path('get_events', { published: "all", elapsed: "all" }) : path('get_events', { organizer: app.user.organizer.slug, published: "all", elapsed: "all" }) }}" #}
-                            {#                                                   data-minimum-input-length="0"> #}
-                            {#                                        </div> #}
-                            {#                                        <div class="col-12 col-sm-4 text-left mb-4"> #}
-                            {#                                            <label for="category">{{ "Category" }}</label> #}
-                            {#                                            <select id="category" name="category" class="form-control bg-white select2" #}
-                            {#                                                    data-sort-options="1"> #}
-                            {#                                                <option value="all">{{ "All" }}</option> #}
-                            {#                                                {% for category in services.getCategories({}).getQuery().getResult() %} #}
-                            {#                                                    <option value="{{ category.slug }}">{{ category.name }}</option> #}
-                            {#                                                {% endfor %} #}
-                            {#                                            </select> #}
-                            {#                                        </div> #}
-                            {#                                        <div class="col-12 col-sm-4 text-left mb-4"> #}
-                            {#                                            <label for="venue">{{ "Venue" }}</label> #}
-                            {#                                            <select id="venue" name="venue" class="form-control bg-white select2" #}
-                            {#                                                    data-sort-options="1"> #}
-                            {#                                                <option value="all">{{ "All" }}</option> #}
-                            {#                                                {% for venue in services.getVenues({}).getQuery().getResult() %} #}
-                            {#                                                    <option value="{{ venue.slug }}">{{ venue.name }}</option> #}
-                            {#                                                {% endfor %} #}
-                            {#                                            </select> #}
-                            {#                                        </div> #}
-                            {#                                        <div class="col-12 col-sm-4 text-left mb-4"> #}
-                            {#                                            <div class="custom-control custom-checkbox"> #}
-                            {#                                                <input id="elapsed-filter-all" type="radio" name="elapsed" value="all" class="custom-control-input"> #}
-                            {#                                                <label for="elapsed-filter-all" class="custom-control-label">{{ "All" }}</label> #}
-                            {#                                            </div> #}
-                            {#                                            <div class="custom-control custom-checkbox"> #}
-                            {#                                                <input id="elapsed-filter-yes" type="radio" name="elapsed" value="1" class="custom-control-input"> #}
-                            {#                                                <label for="elapsed-filter-yes" class="custom-control-label">{{ "Elapsed only" }}</label> #}
-                            {#                                            </div> #}
-                            {#                                            <div class="custom-control custom-checkbox"> #}
-                            {#                                                <input id="elapsed-filter-no" type="radio" name="elapsed" value="0" class="custom-control-input"> #}
-                            {#                                                <label for="elapsed-filter-no" class="custom-control-label">{{ "Not elapsed only" }}</label> #}
-                            {#                                            </div> #}
-                            {#                                        </div> #}
-                            {#                                        <div class="col-12 col-sm-4 text-left mb-4"> #}
-                            {#                                            <div class="custom-control custom-checkbox"> #}
-                            {#                                                <input id="published-filter-all" type="radio" name="published" #}
-                            {#                                                       value="all" class="custom-control-input"> #}
-                            {#                                                <label for="published-filter-all" #}
-                            {#                                                       class="custom-control-label">{{ "All" }}</label> #}
-                            {#                                            </div> #}
-                            {#                                            <div class="custom-control custom-checkbox"> #}
-                            {#                                                <input id="published-filter-yes" type="radio" name="published" value="1" #}
-                            {#                                                       class="custom-control-input"> #}
-                            {#                                                <label for="published-filter-yes" #}
-                            {#                                                       class="custom-control-label">{{ "Published only" }}</label> #}
-                            {#                                            </div> #}
-                            {#                                            <div class="custom-control custom-checkbox"> #}
-                            {#                                                <input id="published-filter-no" type="radio" name="published" value="0" #}
-                            {#                                                       class="custom-control-input"> #}
-                            {#                                                <label for="published-filter-no" #}
-                            {#                                                       class="custom-control-label">{{ "Draft only" }}</label> #}
-                            {#                                            </div> #}
-                            {#                                        </div> #}
-
-                            {#                                        <div class="col-12 col-sm-4 text-left mb-4"> #}
-                            {#                                            <button type="submit" class="btn btn-primary" data-toggle="tooltip" #}
-                            {#                                                    title="{{ "Search" }}"><i class="fas fa-search"></i></button> #}
-                            {#                                            <button type="reset" class="btn btn-primary" data-toggle="tooltip" #}
-                            {#                                                    title="{{ "Reset" }}"><i class="fas fa-search-minus"></i> #}
-                            {#                                            </button> #}
-                            {#                                        </div> #}
-                            {#                                    </div> #}
-                            {#                                </form> #}
-                            {#                            </div> #}
                         </div>
                     </div>
 

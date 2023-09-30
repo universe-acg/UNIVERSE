@@ -40,10 +40,9 @@ import noUiSlider from 'nouislider/distribute/nouislider.min.js';
 import wNumb from 'wnumb/wNumb.js';
 import Readmore from 'readmore-js/dist/readmore.js';
 import Blazy from 'blazy/blazy.min.js';
-import Ouical from 'add-to-calendar-buttons/ouical.min.js';
+import Ouical from 'add-to-calendar-buttons/ouical.js';
 import Bloodhound from 'typeahead.js/dist/bloodhound.min.js';
 import Routing from '../../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min.js';
-import moment from 'moment/moment.js';
 import KnpPaginatorAjax from '../vendor/knppaginator-ajax/knppaginator-ajax.js';
 import caleandar from '../vendor/caleandar.js/caleandar.js';
 import bootbox from '../vendor/bootboxjs/bootbox.min';
@@ -301,43 +300,6 @@ $(document).ready(function () {
         });
     }
 
-
-// Initializes checkout timer
-    if ($('.checkout-timer').length) {
-        $('.checkout-timer').each(function () {
-            var $checkouttimer = $(this);
-            var $checkouttimerto = moment().add($checkouttimer.data('seconds-left'), 'seconds').format('YYYY-MM-DD HH:mm:ss');
-            $checkouttimer.countdown($checkouttimerto, function (event) {
-
-                if (event.strftime('%M') < 2) {
-                    $('.checkout-timer-wrapper > .alert').removeClass('alert-warning').addClass('alert-danger');
-                }
-
-                if (event.strftime('%M') < 1) {
-                    animateCSS('.checkout-timer-wrapper', 'flash');
-                }
-
-                $(this).html(event.strftime('%M:%S'));
-            }).on('finish.countdown', function () {
-                $('#checkout_submit').prop('disabled', true);
-                $.confirm({
-                    title: 'Time',
-                    content: 'The tickets have been released',
-                    theme: 'supervan',
-                    buttons: {
-                        confirm: {
-                            text: 'Return to cart',
-                            btnClass: 'btn-primary btn-sm',
-                            keys: ['enter'],
-                            action: function () {
-                                location.href = location.protocol + '//' + location.host + Routing.generate('dashboard_attendee_bookevent', {}, false);
-                            }
-                        }
-                    }
-                });
-            });
-        });
-    }
 
 // Initializes Event start countdown
     if ($('.countdown').length) {
@@ -724,11 +686,11 @@ $(document).ready(function () {
                     allow_up: true,
                     allow_down: true,
                     position_field_selector: '.event-date-ticket-position',
-                    add: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-add-button"><i class="fas fa-plus-square"></i> ' + 'Add a new ticket' + '</a>',
-                    remove: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-remove-button"><i class="fas fa-minus-square"></i> ' + 'Remove this ticket' + '</a>',
-                    duplicate: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-duplicate-button"><i class="fas fa-clone"></i> ' + 'Duplicate this ticket' + '</a>',
-                    up: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-up-button"><i class="fas fa-caret-square-up"></i> ' + 'Move up' + '</a>',
-                    down: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-down-button"><i class="fas fa-caret-square-down"></i> ' + 'Move down' + '</a>',
+                    // add: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-add-button"><i class="fas fa-plus-square"></i> ' + 'Add a new ticket' + '</a>',
+                    // remove: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-remove-button"><i class="fas fa-minus-square"></i> ' + 'Remove this ticket' + '</a>',
+                    // duplicate: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-duplicate-button"><i class="fas fa-clone"></i> ' + 'Duplicate this ticket' + '</a>',
+                    // up: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-up-button"><i class="fas fa-caret-square-up"></i> ' + 'Move up' + '</a>',
+                    // down: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-down-button"><i class="fas fa-caret-square-down"></i> ' + 'Move down' + '</a>',
                     after_add: function (eventticketscollection, eventticketelement) {
 
                         // Presets event date ticket radios
@@ -817,7 +779,6 @@ $(document).ready(function () {
                     });
                 },
                 after_init: function (eventdatecollection, eventdateelement) {
-
                     // Hides the venue select if online is checked
                     $(document).on("change", ".is-event-date-online input[type=radio]", function () {
                         if (this.value == 1) {
@@ -997,6 +958,9 @@ $(document).ready(function () {
                 end: $('#add-to-calendar-link').data('end') ? new Date($('#add-to-calendar-link').data('end')) : '',
                 address: $('#add-to-calendar-link').data('address') ? $('#add-to-calendar-link').data('address') : '',
                 description: $('#add-to-calendar-link').data('description') + '...'
+            },
+            services: {
+                yahoo: false, // Hide from Yahoo Calendar
             }
         });
         document.querySelector('#add-to-calendar').appendChild(myCalendar);
@@ -1058,46 +1022,6 @@ $(document).ready(function () {
         });
     });
 
-
-//Newsletter subscribe
-    $(document).on("click", "#newsletter-subscribe", function () {
-
-        var $thisButton = $(this);
-        if ($thisButton.attr("data-action-done") == "1") {
-            $thisButton.unbind("click");
-            return false;
-        }
-
-        if (!isEmailValid($("#newsletter-email").val())) {
-            showStackBarTop('error', '', 'Make sure to enter a valid email address');
-            return false;
-        }
-
-        $.ajax({
-            type: "POST",
-            url: $thisButton.data('target'),
-            data: {email: $("#newsletter-email").val()},
-            beforeSend: function () {
-                $thisButton.attr("data-action-done", "1");
-                $thisButton.html("<i class='fas fa-spinner fa-spin'></i>");
-            },
-            success: function (response) {
-                if (response.hasOwnProperty('success')) {
-                    $thisButton.html('<i class="fas fa-envelope-open-text"></i>');
-                    $thisButton.attr("title", response.success).tooltip("_fixTitle");
-                    showStackBarTop('success', '', response.success);
-                } else if (response.hasOwnProperty('error')) {
-                    $thisButton.html('<i class="fas fa-exclamation-circle"></i>');
-                    $thisButton.attr("title", response.error).tooltip("_fixTitle");
-                    showStackBarTop('error', '', response.error);
-                } else {
-                    $thisButton.html('<i class="fas fa-exclamation-circle"></i>');
-                    $thisButton.attr("title", 'An error has occured').tooltip("_fixTitle");
-                    showStackBarTop('error', '', 'An error has occured');
-                }
-            }
-        });
-    });
 
 // Initializes Bloodhound Search Engine
 
@@ -1421,7 +1345,7 @@ $(document).ready(function () {
             return false;
         }
 
-        $('form[name="organizer_profile"],form[name="event"],form[name="venue"],form[name="scanner"],form[name="scanner_app_settings"],form[name="point_of_sale"],form[name="organizer_payout_payment_gateway"],form[name="fos_user_change_password_form"],form[name="app_layout_settings"],form[name="menu"],form[name="homepage_hero_settings"],form[name="payment_settings"],form[name="payment_gateway"],form[name="checkout_settings"],form[name="recaptcha_settings"],form[name="gmaps_settings"],form[name="social_login_settings"],form[name="events_list_page_settings"],form[name="venue_page_settings"],form[name="blog_settings"],form[name="newsletter_settings"],form[name="category"],form[name="country"],form[name="language"],form[name="audience"],form[name="venue"],form[name="venue_type"],form[name="amenity"],form[name="page"],form[name="blog_post"],form[name="blog_post_category"],form[name="help_center_article"],form[name="help_center_category"],form[name="account_settings"],form[name="payout_request"]').on("submit", function (e) {
+        $('form[name="organizer_profile"],form[name="event"],form[name="scanner_app_settings"],form[name="fos_user_change_password_form"],form[name="app_layout_settings"],form[name="menu"],form[name="homepage_hero_settings"],form[name="recaptcha_settings"],form[name="events_list_page_settings"],form[name="blog_settings"],form[name="category"],form[name="page"],form[name="blog_post"],form[name="blog_post_category"],form[name="help_center_article"],form[name="help_center_category"],form[name="account_settings"]').on("submit", function (e) {
             disableFormSubmissionOnDemoMode(e);
         });
 

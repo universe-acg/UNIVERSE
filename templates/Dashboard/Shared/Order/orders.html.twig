@@ -27,19 +27,6 @@
 
                         <div class="box shadow-none bg-gray mb-4">
                             <div class="row">
-                                {#                                <div class="col-sm-12 col-lg-3  mb-3 mb-lg-0"> #}
-                                {#                                    <span class="center-lg-y text-muted">{{ "%resultsCount% result(s) found" |trans ({'%resultsCount%': orders.getTotalItemCount}) }}</span> #}
-                                {#                                </div> #}
-                                {#                                <div class="col-sm-12 col-lg-5 "> #}
-                                {#                                    <label for="sortable-select" class="display-inline">{{ "Sort by" }} #}
-                                {#                                        <select id="sortable-select" #}
-                                {#                                                class="form-control display-inline-block bg-white select2 ml-3" #}
-                                {#                                                data-placeholder="{{ "Select an option" }}" style="width: 100%;"> #}
-                                {#                                            {{ knp_pagination_sortable(orders, "Creation date" ~ ' (' ~ "desc" ~ ')', "o.createdAt", {"direction": "desc", "criteria": "o.createdAt"}) }} #}
-                                {#                                            {{ knp_pagination_sortable(orders, "Creation date" ~ ' (' ~ "asc" ~ ')', "o.createdAt", {"direction": "asc", "criteria": "o.createdAt"}) }} #}
-                                {#                                        </select> #}
-                                {#                                    </label> #}
-                                {#                                </div> #}
                                 <div class="col-sm-12 col-lg-4 ">
                                     <a href="#search-filters" class="btn btn-primary has-tooltip" data-toggle="collapse"
                                        title="{{ "Toggle display the search filters" }}" aria-expanded="false"
@@ -124,8 +111,6 @@
                                 <div class="card">
                                     {% include "Dashboard/Shared/Order/manage-orders-table.html.twig" with {orders: orders} %}
                                 </div>
-                            {% else %}
-                                {#                                {% include "Global/message.html.twig" with { type: "info", message: ('No orders found'), icon: "fas fa-exclamation-circle" } %} #}
                             {% endif %}
 
                             {{ knp_pagination_render(orders, null, {}, {'align': 'center'}) }}

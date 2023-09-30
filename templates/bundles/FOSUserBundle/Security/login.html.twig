@@ -7,27 +7,12 @@
 {% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
-
     <section class="section-content padding-y bg-white">
         <div class="{{ services.getSetting("app_layout") }}">
             <div class="row">
                 <div class="col-12 col-lg-4 offset-lg-4">
                     <div class="col-12 mb-5">
                         <h1 class="card-title text-center">{{ pagetitle }}</h1>
-                        {#                    </div> #}
-                        {#                    {% if services.getSetting("social_login_facebook_enabled") == "yes" or services.getSetting("social_login_google_enabled") == "yes" %} #}
-                        {#                        <p> #}
-                        {#                            {% if services.getSetting("social_login_facebook_enabled") == "yes" %} #}
-                        {#                                <a href="{{ path('hwi_oauth_service_redirect', {'service': 'facebook' }) }}" class="btn btn-block btn-facebook"> <i class="fab fa-facebook-f"></i> &nbsp; {{ 'Sign in via Facebook'({}, 'messages') }}</a> #}
-                        {#                            {% endif %} #}
-                        {#                            {% if services.getSetting("social_login_google_enabled") == "yes" %} #}
-                        {#                                <a href="{{ path('hwi_oauth_service_redirect', {'service': 'google' }) }}" class="btn btn-block btn-google-plus"> <i class="fab fa-google"></i> &nbsp; {{ 'Sign in via Google'({}, 'messages') }}</a> #}
-                        {#                            {% endif %} #}
-                        {#                        </p> #}
-                        {#                        <p class="divider-text"> #}
-                        {#                            <span>{{ 'OR'({}, 'messages') }}</span> #}
-                        {#                        </p> #}
-                        {#                    {% endif %} #}
                         {% if error %}
                             {% include "Global/message.html.twig" with { message: (error.messageKey(error.messageData, 'security')), type: "danger", icon: "fas fa-exclamation-circle" } %}
                         {% endif %}
@@ -42,9 +27,12 @@
                                         <span class="input-group-text border-0"> <i class="fa fa-user"></i> </span>
                                     </div>
                                     <input name="_username" value="{{ last_username }}" class="form-control"
-                                           placeholder="username" type="text"
-                                           autocomplete="username">
+                                           placeholder="{{ 'Username' }}"
+                                           type="text" autocomplete="username">
                                 </div>
+                                <small class="form-text text-muted">
+                                    {{ 'Enter your username.' }}
+                                </small>
                             </div>
 
                             <div class="form-group">
@@ -53,16 +41,19 @@
                                         <span class="input-group-text border-0"> <i class="fa fa-lock"></i> </span>
                                     </div>
                                     <input name="_password" class="form-control"
-                                           placeholder="password" type="password"
-                                           autocomplete="current-password">
+                                           placeholder="{{ 'Password' }}"
+                                           type="password" autocomplete="current-password">
                                 </div>
+                                <small class="form-text text-muted">
+                                    {{ 'Enter your password.' }}
+                                </small>
                             </div>
                             <div class="form-group">
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input" id="remember_me"
                                            name="_remember_me" value="on">
                                     <label class="custom-control-label"
-                                           for="remember_me">{{ 'security.login.remember_me'|trans }} </label>
+                                           for="remember_me">{{ 'Remember me' }}</label>
                                 </div>
                             </div>
 
@@ -81,11 +72,9 @@
                                         href="{{ path('fos_user_registration_register_attendee') }}"
                                         class="text-primary _600">{{ 'Sign up' }}</a></p>
                         </form>
-
                     </div>
                 </div>
             </div>
-            {#            below div was not here #}
         </div>
     </section>
 {% endblock %}

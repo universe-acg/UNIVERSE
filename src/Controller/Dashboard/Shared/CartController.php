@@ -10,31 +10,76 @@
     use App\Entity\Order;
     use App\Entity\OrderElement;
     use App\Entity\PaymentGateway;
+    use App\Entity\TicketReservation;
     use App\Repository\EventTicketRepository;
+    use App\Repository\OrderElementRepository;
+    use App\Repository\OrderRepository;
     use App\Service\AppServices;
+    use Endroid\QrCode\Encoding\Encoding;
+    use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
+    use Endroid\QrCode\QrCode;
+    use Endroid\QrCode\Writer\PngWriter;
     use Exception;
+    use RuntimeException;
+    use Swift_Attachment;
+    use Swift_Mailer;
+    use Swift_Message;
     use Symfony\Bundle\FrameworkBundle\Controller\Controller;
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\Routing\Annotation\Route;
-    use Symfony\Component\Routing\RouterInterface;
+    use Twig_Environment;
     
     class CartController extends Controller
     {
         
         /**
-         * @Route("/attendee/bookevent/{reference}", name="dashboard_attendee_bookevent")
+         * @Route("/attendee/bookevent/{id}/{eventicketid}", name="dashboard_attendee_bookevent")
          */
-        public function bookevent(Request $request, AppServices $services, EventTicketRepository $eventTicketRepository, RouterInterface $router)
+        public function bookevent(Request $request, AppServices $services, Swift_Mailer $mailer, Twig_Environment $templating, EventTicketRepository $eventTicketRepository, OrderElementRepository $orderElementRepository, OrderRepository $orderRepository)
         {
             $em = $this->getDoctrine()->getManager();
-            $reference = $request->request->get('reference');
-            $event = $em->getRepository(Event::class)->findOneBy(['id' => $reference]);
+            $id = $request->get('id');
+            $eventicketid = $request->get('eventicketid');
             
-            $eventticket = $eventTicketRepository->findByEventTicketId($event->getId());
+            
+            $user = $this->getUser();
+            
+            $orders = $orderRepository->getOrdersByUser($user);
+            $eventDates = [];
+
+// Iterate through the user's orders and order elements
+            foreach ($orders as $order) {
+                $orderElements = $order->getOrderelements();
+                
+                foreach ($orderElements as $orderElement) {
+                    // Get the event date associated with the order element
+                    $eventDate = $orderElement->getEventticket()->getEventdate();
+                    
+                    // Add the event date to the array if it's not already included
+                    if (!in_array($eventDate, $eventDates, true)) {
+                        $eventDates[] = $eventDate;
+                    }
+                }
+            }
+            
+            foreach ($eventDates as $eventDate) {
+                $referer = $request->headers->get('referer');
+                if ($eventDate->getTickets()[0]->getActive()) {
+                    if ($eventDate->getTickets()[0]->getId() == $eventicketid) {
+                        $this->addFlash('error', 'You have already booked this ticket');
+                        return $this->redirect($referer);
+                    }
+                }
+            }
+            
+            
+            $event = $em->getRepository(Event::class)->findOneBy(['id' => $id]);
+            
+            $eventticket = $eventTicketRepository->findById($eventicketid);
             
             if (!$event) {
                 $this->addFlash('error', 'The event can not be found');
-                return $this->redirectToRoute("dashboard_index");
+                return $this->redirectToRoute("dashboard_index"); // Redirect to the dashboard or appropriate route
             }
             
             // Assuming you have access to the user, payment gateway, and order elements
@@ -46,7 +91,7 @@
             
             $orderelement = new OrderElement();
             $orderelement->setOrder($order);
-            $orderelement->setEventticket($eventticket[0]);
+            $orderelement->setEventticket($eventticket);
             $orderelement->setQuantity(1);
             
             $order->addOrderelement($orderelement);
@@ -56,11 +101,64 @@
             
             // Persist the order to the database
             $entityManager = $this->getDoctrine()->getManager();
+
+//            $entityManager->persist($order);
+//            $entityManager->flush();
             
-            $entityManager->persist($order);
-            $entityManager->flush();
+            foreach ($order->getOrderelements() as $orderElement) {
+                $ticketreservation = new TicketReservation();
+                $ticketreservation->setEventticket($orderElement->getEventticket());
+                $ticketreservation->setUser($this->getUser());
+                $ticketreservation->setOrderelement($orderElement);
+                $ticketreservation->setQuantity(1);
+                $orderElement->addTicketsReservation($ticketreservation);
+//                $em->persist($ticketreservation);
+//                $em->flush();
+            }
             
             $this->addFlash('success', 'Event has been booked');
+            $qrCodeData = $order->getId() . "/" . $order->getReference();
+            $qrCode = new QrCode($qrCodeData);
+            $qrCode->setEncoding(new Encoding('UTF-8'));
+            $qrCode->setErrorCorrectionLevel(new ErrorCorrectionLevelLow());
+            
+            // Render the QR code as a PNG image
+            $renderer = new PngWriter();
+            $qrCodeImage = $renderer->write($qrCode);
+            
+            $emaildata = [
+                $titleofeventandticket = $event->getName() . " | " . $eventticket->getName(),
+                $startdate = $eventticket->getEventdate()->getStartdate()->format('Y-m-d H:i:s'),
+                $ticketcode = $eventticket->getReference(),
+                $link = $request->headers->get('referer')
+            ];
+            
+            $message = "You have just booked this event: " . $titleofeventandticket;
+            
+            // send email to organizer and user
+            $email = (new Swift_Message($services->getSetting('website_name') . ' - ' . $event->getName() . ' event booked' . ' #' . $eventticket->getReference()))
+                ->setFrom($services->getSetting('no_reply_email'), $services->getSetting('website_name'))
+                ->setTo($this->getUser()->getEmail())
+                ->setBody(
+                    $templating->render('Dashboard/Shared/Order/ticket-booked-email.html.twig', ['data' => $emaildata, 'message' => $message]), 'text/html', 'UTF-8');
+            
+            // Load the PNG image file
+            // Save as a temporary PNG file
+            $tempDirectory = $this->getParameter('kernel.project_dir') . '/var';
+            if (!file_exists($tempDirectory) && !mkdir($tempDirectory, 0777, true) && !is_dir($tempDirectory)) {
+                throw new RuntimeException(sprintf('Directory "%s" was not created', $tempDirectory));
+            }
+            $tempPngFile = $tempDirectory . '/qr_code.png';
+            file_put_contents($tempPngFile, $qrCodeImage->getString());
+            $pngAttachment = Swift_Attachment::fromPath($tempPngFile, 'image/png');
+            $pngAttachment->setFilename('qr_code.png'); // Set the desired filename
+            $email->attach($pngAttachment);
+            
+            try {
+                $result = $mailer->send($email);
+            } catch (Exception $e) {
+                $this->addFlash('danger', "The event booking reminder email could not be sent");
+            }
             
             return $this->redirectToRoute("dashboard_index");
         }

@@ -90,35 +90,6 @@
                             </td>
                         </tr>
                     {% endif %}
-                    {% if user.facebookId %}
-                        <tr>
-                            <td width="30%">{{ "Registered using Facebook" }} <i
-                                        class="fab fa-facebook-f fa-sm btn-facebook ml-2 p-2"></i></td>
-                            <td>
-                                Facebook Id: {{ user.facebookId }}
-                            </td>
-                        </tr>
-                    {% endif %}
-                    {% if user.googleId %}
-                        <tr>
-                            <td width="30%">{{ "Registered using Google" }} <i
-                                        class="fab fa-google fa-sm btn-youtube ml-2 p-2"></i></td>
-                            <td>
-                                Google Id: {{ user.googleId }}
-                            </td>
-                        </tr>
-                    {% endif %}
-                    {% if user.facebookProfilePicture %}
-                        <tr>
-                            <td width="30%">{{ "Facebook profile picture" }}</td>
-                            <td>
-                                <a class="fancybox" href="{{ user.facebookProfilePicture }}" data-toggle="tooltip"
-                                   title="{{ "Enlarge" }}">
-                                    <img src="{{ user.facebookProfilePicture }}" class="img-thumbnail img-50-50"/>
-                                </a>
-                            </td>
-                        </tr>
-                    {% endif %}
                     {% if user.birthdate %}
                         <tr>
                             <td width="30%">{{ "Birthdate" }}</td>
@@ -154,24 +125,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td width="30%">{{ "Cart elements" }}</td>
-                            <td>
-                                {{ user.cartelements|length }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="30%">{{ "Bought tickets" }}</td>
-                            <td>
-                                {{ user.getOrdersQuantitySum }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="30%">{{ "Reviews" }}</td>
-                            <td>
-                                {{ user.reviews|length }}
-                            </td>
-                        </tr>
                         <tr>
                             <td width="30%">{{ "Favorites" }}</td>
                             <td>
@@ -261,12 +214,6 @@
                             </td>
                         </tr>
                         <tr>
-                            <td width="30%">{{ "Venues" }}</td>
-                            <td>
-                                {{ user.organizer.venues|length }}
-                            </td>
-                        </tr>
-                        <tr>
                             <td width="30%">{{ "Followed by" }}</td>
                             <td>
                                 {{ user.organizer.followedby|length }}
@@ -349,14 +296,6 @@
                                 <td width="30%">{{ "Show followers" }}</td>
                                 <td>
                                     {{ user.organizer.showfollowers ? "Yes" : "No" }}
-                                </td>
-                            </tr>
-                        {% endif %}
-                        {% if user.organizer.showreviews %}
-                            <tr>
-                                <td width="30%">{{ "Show reviews" }}</td>
-                                <td>
-                                    {{ user.organizer.showreviews ? "Yes" : "No" }}
                                 </td>
                             </tr>
                         {% endif %}

@@ -1,6 +1,9 @@
 <?php
-    
-    namespace App\Entity;
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
+
+namespace App\Entity;
     
     use DateTime;
     use Doctrine\ORM\Mapping as ORM;
@@ -51,13 +54,6 @@
         private $createdAt;
         
         /**
-         * @var DateTime $expiresAt
-         *
-         * @ORM\Column(type="datetime")
-         */
-        private $expiresAt;
-        
-        /**
          * @ORM\Column(type="datetime", nullable=true)
          */
         private $deletedAt;
@@ -65,11 +61,6 @@
         public function getId()
         {
             return $this->id;
-        }
-        
-        public function isExpired()
-        {
-            return $this->expiresAt < new DateTime;
         }
         
         public function getQuantity()
@@ -116,18 +107,6 @@
         public function setCreatedAt($createdAt)
         {
             $this->createdAt = $createdAt;
-            
-            return $this;
-        }
-        
-        public function getExpiresAt()
-        {
-            return $this->expiresAt;
-        }
-        
-        public function setExpiresAt($expiresAt)
-        {
-            $this->expiresAt = $expiresAt;
             
             return $this;
         }

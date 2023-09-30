@@ -2,11 +2,18 @@
 
 {% set pagetitle = 'Add a new page' %}
 
-{% if page.id %}{% set pagetitle = 'Update the lapagenguage' %}{% endif %}
+{% if page.id %}{% set pagetitle = 'Update the page' %}{% endif %}
 
 {% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
+
+    <style>
+        .note-dropdown-menu.dropdown-menu.dropdown-style.show {
+            margin-top: 50px !important;
+        }
+    </style>
+
 
 
     {% set navigation = [{ "dashboard_index": ('Dashboard' ),  "dashboard_administrator_page": ('Manage pages' ), "current":(pagetitle) }] %}

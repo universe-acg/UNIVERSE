@@ -1,0 +1,235 @@
+{% extends "Global/layout.html.twig" %}
+
+{% if category != "all" %}
+    {% set pagetitle = category.name %}
+{% else %}
+    {% set pagetitle = 'Open events' %}
+{% endif %}
+
+{% block title %}{{ pagetitle }}{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('events') }}
+{% endblock %}
+
+{% block content %}
+
+    {% if category != "all" %}
+        {% set navigation = [{"events": ("Events"), "current" : (pagetitle)}] %}
+    {% else %}
+        {% set navigation = [{"current" : (pagetitle)}] %}
+    {% endif %}
+
+    {% include "Global/navigation.html.twig" with navigation %}
+
+    <section class="section-content bg-white padding-y">
+        <div class="{{ services.getSetting("app_layout") }}">
+
+            {% set eventsoncalendar = [] %}
+            {% set eventsonmap = [] %}
+
+
+            <div class="box shadow-none bg-gray mb-4">
+                <div class="row">
+                    <div class="col-sm-12 col-lg-2  mb-3 mb-lg-0">
+                        <span class="center-lg-y text-muted">{{ "%resultsCount% event(s) found"  |trans ({'%resultsCount%': events.getTotalItemCount}) }}</span>
+                    </div>
+                    {% if events.getTotalItemCount > 0 %}
+                        <div class="col-sm-12 col-lg-6 ">
+                            {% if eventsonmap|length > 0 and services.getSetting("show_map_button") == "yes" and google_maps_api_key != "" %}
+                                <a href="#events-map" class="btn btn-primary has-tooltip" data-toggle="collapse"
+                                   title="{{ "Show events on map" }}" aria-expanded="false"
+                                   aria-controls="events-map"><i class="fas fa-map-marked-alt fa-fw"></i></a>
+                            {% endif %}
+                            {% if eventsoncalendar|length > 0 and services.getSetting("show_calendar_button") == "yes" %}
+                                <a href="#events-calendar" class="btn btn-primary has-tooltip" data-toggle="collapse"
+                                   title="{{ "Show events calendar" }}" aria-expanded="false"
+                                   aria-controls="events-calendar"><i class="far fa-calendar fa-fw"></i></a>
+                            {% endif %}
+                            {% if services.getSetting("show_rss_feed_button") == "yes" %}
+                                <a href="{{ services.getSetting("website_url")~"/rss" }}" class="btn btn-primary"
+                                   data-toggle="tooltip" title="{{ "Events RSS feed" }}" target="_blank"><i
+                                            class="fas fa-rss fa-fw"></i></a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row">
+                <aside class="col-lg-3 order-2 order-lg-1">
+                    <div class="card card-filter">
+                        <form method="get">
+                            <article class="card-group-item">
+                                <header class="card-header">
+                                    <a href="#" data-toggle="collapse" data-target="#filter-keyword">
+                                        <i class="icon-action fa fa-chevron-down"></i>
+                                        <h6 class="title">{{ "Keyword" }}</h6>
+                                    </a>
+                                </header>
+                                <div class="filter-content collapse show" id="filter-keyword">
+                                    <div class="card-body">
+                                        <input id="keyword" name="keyword" type="text" class="form-control"
+                                               value="{{ app.request.get('keyword') }}">
+                                    </div>
+                                </div>
+                            </article>
+                            {% if services.getSetting("show_category_filter") == "yes" %}
+                                <article class="card-group-item">
+                                    <header class="card-header">
+                                        <a href="#" data-toggle="collapse" data-target="#filter-category">
+                                            <i class="icon-action fa fa-chevron-down"></i>
+                                            <h6 class="title">{{ "Category" }}</h6>
+                                        </a>
+                                    </header>
+                                    <div class="filter-content collapse show" id="filter-category">
+                                        <div class="card-body">
+                                            <select id="category" name="category" class="select2 col"
+                                                    data-sort-options="1">
+                                                <option value="">&nbsp;</option>
+                                                <option value="all">All</option>
+                                                {% for category in services.getCategories({}).getQuery().getResult() %}
+                                                    <option value="{{ category.slug }}">{{ category.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </article>
+                            {% endif %}
+                            {% if services.getSetting("show_date_filter") == "yes" %}
+                                <article class="card-group-item">
+                                    <header class="card-header">
+                                        <a href="#" data-toggle="collapse" data-target="#filter-date">
+                                            <i class="icon-action fa fa-chevron-down"></i>
+                                            <h6 class="title">{{ "Date" }}</h6>
+                                        </a>
+                                    </header>
+                                    <div class="filter-content collapse show" id="filter-date">
+                                        <div class="card-body">
+                                            <div class="form-check">
+                                                <div class="float-left custom-control custom-radio form-check-input">
+                                                    <input type="radio" class="custom-control-input" id="date-today"
+                                                           name="startdate" value="today">
+                                                    <label class="custom-control-label"
+                                                           for="date-today">{{ "Today" }}</label>
+                                                </div>
+                                                <span class="float-right form-check-label">
+                <span class="badge badge-light round">{{ todayEventCount }}</span>
+            </span>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div class="form-check">
+                                                <div class="float-left custom-control custom-radio form-check-input">
+                                                    <input type="radio" class="custom-control-input" id="date-tomorrow"
+                                                           name="startdate" value="tomorrow">
+                                                    <label class="custom-control-label"
+                                                           for="date-tomorrow">{{ "Tomorrow" }}</label>
+                                                </div>
+                                                <span class="float-right form-check-label">
+                <span class="badge badge-light round">{{ tomorrowEventCount }}</span>
+            </span>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div class="form-check">
+                                                <div class="float-left custom-control custom-radio form-check-input">
+                                                    <input type="radio" class="custom-control-input" id="date-thisweek"
+                                                           name="startdate" value="thisweek">
+                                                    <label class="custom-control-label"
+                                                           for="date-thisweek">{{ "This week" }}</label>
+                                                </div>
+                                                <span class="float-right form-check-label">
+                <span class="badge badge-light round">{{ thisWeekEventCount }}</span>
+            </span>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div class="form-check">
+                                                <div class="float-left custom-control custom-radio form-check-input">
+                                                    <input type="radio" class="custom-control-input" id="date-nextweek"
+                                                           name="startdate" value="nextweek">
+                                                    <label class="custom-control-label"
+                                                           for="date-nextweek">{{ "Next week" }}</label>
+                                                </div>
+                                                <span class="float-right form-check-label">
+                <span class="badge badge-light round">{{ nextWeekEventCount }}</span>
+            </span>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div class="form-check">
+                                                <div class="float-left custom-control custom-radio form-check-input">
+                                                    <input type="radio" class="custom-control-input" id="date-thismonth"
+                                                           name="startdate" value="thismonth">
+                                                    <label class="custom-control-label"
+                                                           for="date-thismonth">{{ "This month" }}</label>
+                                                </div>
+                                                <span class="float-right form-check-label">
+                <span class="badge badge-light round">{{ thisMonthEventCount }}</span>
+            </span>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div class="form-check">
+                                                <div class="float-left custom-control custom-radio form-check-input">
+                                                    <input type="radio" class="custom-control-input" id="date-nextmonth"
+                                                           name="startdate" value="nextmonth">
+                                                    <label class="custom-control-label"
+                                                           for="date-nextmonth">{{ "Next month" }}</label>
+                                                </div>
+                                                <span class="float-right form-check-label">
+                <span class="badge badge-light round">{{ nextMonthEventCount }}</span>
+            </span>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                            {% endif %}
+                            <div class="row">
+                                <div class="col-4">
+                                    <article class="card-group-item">
+                                        <div class="card-body">
+                                            <a href="{{ path('open_events') }}"
+                                               class="btn btn-outline-primary">
+                                                {{ "Clear" }}
+                                            </a>
+                                        </div>
+                                    </article>
+                                </div>
+                                <div class="col-8">
+                                    <article class="card-group-item">
+                                        <div class="card-body">
+                                            <button class="btn btn-outline-primary"><i
+                                                        class="fas fa-search"></i> {{ "Search" }}</button>
+                                        </div>
+                                    </article>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </aside>
+                <div class="col-lg-9 order-1 order-lg-2">
+                    {% if events.getTotalItemCount > 0 %}
+                        <div class="row">
+                            {% for event in events %}
+                                <div class="col-12 col-sm-6 col-lg-6 mb-3">
+                                    {% include "Global/open-event-card.html.twig" with {event: event, attendeed: event.isAttnded} %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {% include "Global/message.html.twig" with { type: "info", message: ('No events found'), icon: "fas fa-exclamation-circle" } %}
+                    {% endif %}
+                    {{ knp_pagination_render(events, null, {}, {'align': 'center'}) }}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('events') }}
+    {% if services.getSetting("show_map_button") == "yes" and google_maps_api_key != "" %}
+        <script async defer
+                src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap">
+        </script>
+        {% include "Global/event-info-box.html.twig" %}
+    {% endif %}
+{% endblock %}

@@ -8,7 +8,7 @@
         <section class="section-main">
             <div class="owl-init slider-main homepage-slider owl-carousel" data-items="1" data-dots="true"
                  data-nav="true" data-autoplay="true" data-rtl="true">
-                {% for event in herosettings.events %}
+                {% for event in events %}
                     <div class="item-slide img-lazy-load"
                          data-src="{{ event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder }}">
                         <div class="loader"></div>
@@ -198,13 +198,13 @@
     {% endif %}
 
     {% if services.getSetting('homepage_events_number') %}
-        {% set homepageEvents = services.getEvents({"limit": services.getSetting('homepage_events_number')}).getQuery().getResult() %}
+        {% set homepageEvents = events %}
         {% if homepageEvents|length > 0 %}
 
             <section class="section-content padding-y-lg bg-white">
                 <div class="{{ services.getSetting("app_layout") }}">
                     <header class="section-headin mb-5">
-                        <h4 class="title-section text-center text-muted text-uppercase">{{ 'Upcoming events' }}</h4>
+                        <h4 class="title-section text-center text-muted text-uppercase">{{ 'Happening now' }}</h4>
                     </header>
                     <div class="row-sm">
                         {% for event in homepageEvents %}

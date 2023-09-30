@@ -1,7 +1,11 @@
 <?php
+    /*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
     
     namespace App\Entity;
     
+    use App\Repository\VoteRepository;
     use Doctrine\ORM\Mapping as ORM;
     use FOS\CommentBundle\Entity\Comment as BaseComment;
     use FOS\CommentBundle\Model\SignedCommentInterface;
@@ -16,6 +20,7 @@
      */
     class Comment extends BaseComment implements SignedCommentInterface, VotableCommentInterface
     {
+        
         
         /**
          * @ORM\Id
@@ -45,6 +50,13 @@
          * @var int
          */
         protected $score = 0;
+        
+        private VoteRepository $voteRepository;
+        
+        public function Comment(VoteRepository $voteRepository)
+        {
+            $this->$voteRepository = $voteRepository;
+        }
         
         public function getId()
         {
@@ -112,13 +124,28 @@
          * Increments the comment score by the provided
          * value.
          *
-         * @param integer value
-         *
-         * @return integer The new comment score
+         * @param integer $by value
+         * @return void The new comment score
          */
         public function incrementScore($by = 1)
         {
             $this->score += $by;
         }
         
+        public function isUpvoteClickable($commentid)
+        {
+            $votes = $this->voteRepository->findVotesByCommentId($commentid);
+            dump($votes);
+            die();
+            // votes of comment
+            // if user id matches vote.voter.id
+            // then return false;
+        }
+        
+        public function isDownvoteClickable($userid, $commentid, $currentscore)
+        {
+            // votes of comment
+            // if user id matches vote.voter.id
+            // then return false;
+        }
     }

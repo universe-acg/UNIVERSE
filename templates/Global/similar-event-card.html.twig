@@ -1,5 +1,5 @@
 {% set runtimeConfig = {"thumbnail": {"size": [500, 250] }} %}
-{% set displayedEventDate = event.getFirstOnSaleEventDate %}
+{% set displayedEventDate = event.eventdates[0] %}
 
 {% if customLink is defined %}
     {% set link = customLink %}
@@ -7,8 +7,10 @@
     {% set link = path('event', { slug : event.slug }) %}
 {% endif %}
 
+{% set past = past|default(false) %}
+{% set attendeed = attendeed|default(false) %}
 <div class="card card-event">
-    <div class="img-wrap img-lazy-load"
+    <div class="img-wrap img-lazy-load {{ event.isPassed or past or attendeed  ? 'grayed-out' : '' }}"
          data-src="{{ event.imageName ? asset(event.getImagePath|imagine_filter('thumbnail', runtimeConfig)) : event.getImagePlaceholder }}">
         <a href="{{ link }}"></a>
         <div class="loader"></div>

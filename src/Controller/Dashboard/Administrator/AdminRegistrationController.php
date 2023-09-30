@@ -8,6 +8,8 @@
     use App\Form\AdminRegistrationOrganizerType;
     use App\Form\AdminRegistrationTypeAttendee;
     use App\Service\AppServices;
+    use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+    use Doctrine\ORM\EntityManagerInterface;
     use FOS\UserBundle\Event\FormEvent;
     use FOS\UserBundle\Event\GetResponseUserEvent;
     use FOS\UserBundle\FOSUserEvents;
@@ -28,10 +30,13 @@
         private $tokenStorage;
         private $services;
         
-        public function __construct(EventDispatcherInterface $eventDispatcher, UserManagerInterface $userManager, TokenStorageInterface $tokenStorage, AppServices $services)
+        private $entityManager;
+        
+        public function __construct(EntityManagerInterface $entityManager, EventDispatcherInterface $eventDispatcher, UserManagerInterface $userManager, TokenStorageInterface $tokenStorage, AppServices $services)
         {
             $this->eventDispatcher = $eventDispatcher;
             $this->userManager = $userManager;
+            $this->entityManager = $entityManager;
             $this->tokenStorage = $tokenStorage;
             $this->services = $services;
         }
@@ -56,22 +61,25 @@
             
             $form->handleRequest($request);
             
-            
             if ($form->isSubmitted() && $form->isValid()) {
-                $event = new FormEvent($form, $request);
-                if ($form->isValid()) {
-                    $this->eventDispatcher->dispatch(FOSUserEvents::REGISTRATION_SUCCESS, $event);
-                    $user->addRole('ROLE_ATTENDEE');
-                    $user->setEnabled(true);
-                    
-                    $this->userManager->updateUser($user);
-                    $this->addFlash('success', 'Attendee created');
-                    return $this->redirectToRoute("dashboard_index");
-                }
-                $this->eventDispatcher->dispatch(FOSUserEvents::REGISTRATION_FAILURE, $event);
-                $this->addFlash('error', 'Error. Contact admin.');
-                if (null !== $response = $event->getResponse()) {
-                    return $response;
+                try {
+                    $event = new FormEvent($form, $request);
+                    if ($form->isValid()) {
+                        $this->eventDispatcher->dispatch(FOSUserEvents::REGISTRATION_SUCCESS, $event);
+                        $user->addRole('ROLE_ATTENDEE');
+                        $user->setEnabled(true);
+                        
+                        $this->userManager->updateUser($user);
+                        $this->addFlash('success', 'Attendee created');
+                        return $this->redirectToRoute("dashboard_index");
+                    }
+                    $this->eventDispatcher->dispatch(FOSUserEvents::REGISTRATION_FAILURE, $event);
+                    $this->addFlash('error', 'Error. Contact admin.');
+                    if (null !== $response = $event->getResponse()) {
+                        return $response;
+                    }
+                } catch (UniqueConstraintViolationException $e) {
+                    $this->addFlash('error', 'This email is already in use. Please choose a different email.');
                 }
             }
             
@@ -100,25 +108,28 @@
             
             $form->handleRequest($request);
             
-            
             if ($form->isSubmitted() && $form->isValid()) {
-                $event = new FormEvent($form, $request);
-                if ($form->isValid()) {
-                    $this->eventDispatcher->dispatch(FOSUserEvents::REGISTRATION_SUCCESS, $event);
-                    $user->addRole('ROLE_ORGANIZER');
-                    $user->setEnabled(true);
-                    $creatorCategory = $form->get('organizer')->get('category')->getData();
-                    $user->getOrganizer()->setCategory($creatorCategory);
-                    $user->getOrganizer()->setUser($user);
-                    
-                    $this->userManager->updateUser($user);
-                    $this->addFlash('success', 'Organizer created');
-                    return $this->redirectToRoute("dashboard_index");
-                }
-                $this->eventDispatcher->dispatch(FOSUserEvents::REGISTRATION_FAILURE, $event);
-                $this->addFlash('error', 'Error. Contact admin.');
-                if (null !== $response = $event->getResponse()) {
-                    return $response;
+                try {
+                    $event = new FormEvent($form, $request);
+                    if ($form->isValid()) {
+                        $this->eventDispatcher->dispatch(FOSUserEvents::REGISTRATION_SUCCESS, $event);
+                        $user->addRole('ROLE_ORGANIZER');
+                        $user->setEnabled(true);
+                        $creatorCategory = $form->get('organizer')->get('category')->getData();
+                        $user->getOrganizer()->setCategory($creatorCategory);
+                        $user->getOrganizer()->setUser($user);
+                        
+                        $this->userManager->updateUser($user);
+                        $this->addFlash('success', 'Organizer created');
+                        return $this->redirectToRoute("dashboard_index");
+                    }
+                    $this->eventDispatcher->dispatch(FOSUserEvents::REGISTRATION_FAILURE, $event);
+                    $this->addFlash('error', 'Error. Contact admin.');
+                    if (null !== $response = $event->getResponse()) {
+                        return $response;
+                    }
+                } catch (UniqueConstraintViolationException $e) {
+                    $this->addFlash('error', 'This email is already in use. Please choose a different email.');
                 }
             }
             

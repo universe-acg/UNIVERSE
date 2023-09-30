@@ -1,60 +1,59 @@
 <?php
-/*
+    /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-
-namespace App\Repository;
-
-use App\Entity\HelpCenterCategory;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
-
-class HelpCenterCategoryRepository extends ServiceEntityRepository
-{
-
-    public function __construct(ManagerRegistry $registry)
+    
+    namespace App\Repository;
+    
+    use App\Entity\HelpCenterCategory;
+    use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+    use Doctrine\Persistence\ManagerRegistry;
+    
+    class HelpCenterCategoryRepository extends ServiceEntityRepository
     {
-        parent::__construct($registry, HelpCenterCategory::class);
-    }
-
-    public function getHelpCenterCategories($parent, $hidden, $keyword, $slug, $limit, $order, $sort)
-    {
-        $qb = $this->createQueryBuilder("c");
-        $qb->select("c");
-        if ($parent !== "all") {
-            if ($parent === "none") {
-                $qb->andWhere("c.parent IS NULL");
-            } else if ($parent === "notnull") {
-                $qb->andWhere("c.parent IS NOT NULL");
-            } else {
-                $qb->leftJoin("c.parent", "parentcategory");
-                $qb->andWhere("parentcategory.slug = :parentcategory");
-                $qb->setParameter("parentcategory", $parent);
+        
+        public function __construct(ManagerRegistry $registry)
+        {
+            parent::__construct($registry, HelpCenterCategory::class);
+        }
+        
+        public function getHelpCenterCategories($parent, $hidden, $keyword, $slug, $limit, $order, $sort)
+        {
+            $qb = $this->createQueryBuilder("c");
+            $qb->select("c");
+            if ($parent !== "all") {
+                if ($parent === "none") {
+                    $qb->andWhere("c.parent IS NULL");
+                } else if ($parent === "notnull") {
+                    $qb->andWhere("c.parent IS NOT NULL");
+                } else {
+                    $qb->leftJoin("c.parent", "parentcategory");
+                    $qb->andWhere("parentcategory.slug = :parentcategory");
+                    $qb->setParameter("parentcategory", $parent);
+                }
             }
+            if ($hidden !== "all") {
+                $qb->andWhere("c.hidden = :hidden")->setParameter("hidden", $hidden);
+            }
+            if ($keyword !== "all") {
+                $qb->andWhere("c.name LIKE :keyword or :keyword LIKE c.name")->setParameter("keyword", "%" . $keyword . "%");
+            }
+            if ($slug !== "all") {
+                $qb->andWhere("c.slug = :slug")->setParameter("slug", $slug);
+            }
+            if ($limit !== "all") {
+                $qb->setMaxResults($limit);
+            }
+            
+            if ($order == "articlescount") {
+                $qb->leftJoin("c.articles", "articles");
+                $qb->addSelect("COUNT(articles.id) AS HIDDEN articlescount");
+                $qb->orderBy("articlescount", "DESC");
+                $qb->groupBy("c.id");
+            } else {
+                $qb->orderBy($order, $sort);
+            }
+            
+            return $qb;
         }
-        if ($hidden !== "all") {
-            $qb->andWhere("c.hidden = :hidden")->setParameter("hidden", $hidden);
-        }
-        if ($keyword !== "all") {
-            $qb->andWhere("c.name LIKE :keyword or :keyword LIKE c.name")->setParameter("keyword", "%" . $keyword . "%");
-        }
-        if ($slug !== "all") {
-            $qb->andWhere("c.slug = :slug")->setParameter("slug", $slug);
-        }
-        if ($limit !== "all") {
-            $qb->setMaxResults($limit);
-        }
-
-        if ($order == "articlescount") {
-            $qb->leftJoin("c.articles", "articles");
-            $qb->addSelect("COUNT(articles.id) AS HIDDEN articlescount");
-            $qb->orderBy("articlescount", "DESC");
-            $qb->groupBy("c.id");
-        } else {
-            $qb->orderBy($order, $sort);
-        }
-
-        return $qb;
     }
-
-}

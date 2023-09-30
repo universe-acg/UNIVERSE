@@ -41,14 +41,10 @@
         private $user;
         /**
          * @ORM\Column(type="string", length=255)
-         * @Assert\NotBlank
-         * @Assert\Length(min = 2)
          */
         private $name;
         /**
          * @ORM\Column(type="string", length=255)
-         * @Assert\NotBlank
-         * @Assert\Length(min = 2)
          */
         private $content;
         /**
@@ -109,7 +105,6 @@
         private $views = 0;
         /**
          * @ORM\Column(type="boolean")
-         * @Assert\NotNull
          */
         private $hidden = false;
         /**

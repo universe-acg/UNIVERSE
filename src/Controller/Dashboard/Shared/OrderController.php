@@ -46,11 +46,10 @@
             $datefrom = ($request->query->get('datefrom')) == "" ? "all" : $request->query->get('datefrom');
             $dateto = ($request->query->get('dateto')) == "" ? "all" : $request->query->get('dateto');
             $status = ($request->query->get('status')) == "" ? "all" : $request->query->get('status');
-            $paymentgateway = ($request->query->get('paymentgateway')) == "" ? "all" : $request->query->get('paymentgateway');
             
             $authChecker->isGranted("ROLE_ATTENDEE") ? $status = "all" : $upcomingtickets = "all";
             
-            $ordersQuery = $services->getOrders(array("reference" => $reference, "event" => $event, "eventdate" => $eventdate, "eventticket" => $eventticket, "user" => $user, "organizer" => $organizer, "datefrom" => $datefrom, "dateto" => $dateto, "status" => $status, "paymentgateway" => $paymentgateway))->getQuery();
+            $ordersQuery = $services->getOrders(array("reference" => $reference, "event" => $event, "eventdate" => $eventdate, "eventticket" => $eventticket, "user" => $user, "organizer" => $organizer, "datefrom" => $datefrom, "dateto" => $dateto, "status" => $status))->getQuery();
 
 // Export current orders query results into Excel / Csv
             if (($authChecker->isGranted("ROLE_ADMINISTRATOR") || $authChecker->isGranted("ROLE_ORGANIZER")) && (($request->query->get('excel') == "1" || $request->query->get('csv') == "1" || $request->query->get('pdf') == "1"))) {
@@ -103,7 +102,7 @@
         /**
          * @Route("/organizer/manage-attendees", name="dashboard_organizer_attendees")
          */
-        public function attendees(Request $request, AppServices $services, PaginatorInterface $paginator, AuthorizationCheckerInterface $authChecker, OrderRepository $orderRepository, EventRepository $eventRepository)
+        public function attendees(Request $request, AppServices $services, PaginatorInterface $paginator, AuthorizationCheckerInterface $authChecker, EventRepository $eventRepository)
         {
 //$upcomingtickets = ($request->query->get('upcomingtickets')) == "" ? 1 : intval($request->query->get('upcomingtickets'));
             $reference = ($request->query->get('reference')) == "" ? "all" : $request->query->get('reference');
@@ -168,7 +167,7 @@
         /**
          * @Route("/administrator/manage-attendees-details/{eventid}", name="dashboard_administrator_attendees_details")
          */
-        public function attendeesAdminDetails(Request $request, AppServices $services, PaginatorInterface $paginator, AuthorizationCheckerInterface $authChecker)
+        public function attendeesAdminDetails()
         {
             return $this->render('Dashboard/Shared/Order/attendees-details.html.twig', [
                 'orders' => $ordersPagination,
@@ -179,7 +178,7 @@
         /**
          * @Route("/organizer/manage-attendees-details/{orderid}/{userslug}", name="dashboard_organizer_attendees_details")
          */
-        public function attendeesAdminDetailsasOrganizer($orderid, $userslug, OrderRepository $orderRepository, EventRepository $eventRepository, UserRepository $userRepository)
+        public function attendeesAdminDetailsasOrganizer($orderid, $userslug, OrderRepository $orderRepository, UserRepository $userRepository)
         {
             $order = $orderRepository->find($orderid);
             $user = $userRepository->getBySlug($userslug);
@@ -195,7 +194,7 @@
          * @Route("/organizer/recent-orders/{reference}", name="dashboard_organizer_order_details")
          * @Route("/administrator/manage-orders/{reference}", name="dashboard_administrator_order_details")
          */
-        public function details($reference, Request $request, AppServices $services)
+        public function details($reference, AppServices $services)
         {
             
             $order = $services->getOrders(array("reference" => $reference, "status" => "all"))->getQuery()->getOneOrNullResult();
@@ -222,7 +221,6 @@
          */
         public function cancel($reference, Request $request, AppServices $services)
         {
-            
             $order = $services->getOrders(array("reference" => $reference, "status" => "all"))->getQuery()->getOneOrNullResult();
             
             if (!$order) {
@@ -240,7 +238,7 @@
                 return $services->redirectToReferer('orders');
             }
             
-            $services->handleCanceledPayment($order->getReference(), $request->query->get('note'));
+            $services->cancelticket($order->getReference(), $request->query->get('note'));
             
             $this->addFlash('notice', 'The ticket has been canceled');
             
@@ -270,7 +268,7 @@
                 return $services->redirectToReferer('orders');
             }
             
-            $services->handleCanceledPayment($order->getReference(), $request->query->get('note'));
+            $services->cancelticket($order->getReference(), $request->query->get('note'));
             
             $this->addFlash('error', 'The ticket has been canceled');
             
@@ -282,7 +280,6 @@
          */
         public function delete($reference, Request $request, AppServices $services)
         {
-            
             $order = $services->getOrders(array("reference" => $reference, "status" => "all"))->getQuery()->getOneOrNullResult();
             if (!$order) {
                 $this->addFlash('error', 'The order can not be found');
@@ -294,13 +291,6 @@
                 $this->addFlash('error', 'The ticket is deleted');
             } else {
                 $this->addFlash('notice', 'The ticket has been deleted');
-            }
-            
-            if ($order->getPayment()) {
-                $order->getPayment()->setOrder(null);
-                $em->persist($order);
-                $em->persist($order->getPayment());
-                $em->flush();
             }
             
             $em->remove($order);
@@ -353,7 +343,7 @@
         /**
          * @Route("/administrator/manage-orders/{reference}/restore", name="dashboard_administrator_order_restore")
          */
-        public function restore($reference, Request $request, AppServices $services)
+        public function restore($reference, AppServices $services)
         {
             
             $order = $services->getOrders(array("reference" => $reference, "status" => "all"))->getQuery()->getOneOrNullResult();
@@ -510,7 +500,7 @@
          * @Route("/administrator/manage-orders/{reference}/validate", name="dashboard_administrator_order_validate")
          * @Route("/organizer/recent-orders/{reference}/validate", name="dashboard_organizer_order_validate")
          */
-        public function validate($reference, Request $request, AppServices $services)
+        public function validate($reference, AppServices $services)
         {
             
             $order = $services->getOrders(array("reference" => $reference, "status" => 0))->getQuery()->getOneOrNullResult();
@@ -525,7 +515,7 @@
                 return $services->redirectToReferer('orders');
             }
             
-            $services->handleSuccessfulPayment($order->getReference());
+            $services->orderticket($order->getReference());
             
             $this->addFlash('success', 'The order has been successfully validated');
             

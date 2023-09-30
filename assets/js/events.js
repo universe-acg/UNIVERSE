@@ -178,22 +178,6 @@ $(document).ready(function () {
         }
     }
 
-    $('#free-events-only').on('change', function () {
-        if ($(this).is(':checked')) {
-            $('.events-price-range-slider-wrapper').hide();
-            $('#pricemin').val('0');
-            $('#pricemin').trigger('change');
-            $('#pricemax').val('10000');
-            $('#pricemax').trigger('change');
-        } else {
-            $('.events-price-range-slider-wrapper').show();
-        }
-    });
-    if (getURLParameter('freeonly') == "1") {
-        $('#free-events-only').attr('checked', true);
-        $('#free-events-only').trigger('change');
-    }
-
     $('#filter-online-only').on('change', function () {
         if ($(this).is(':checked')) {
             $('.location-based-filters').hide();

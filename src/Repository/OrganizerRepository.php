@@ -19,13 +19,11 @@
      */
     class OrganizerRepository extends ServiceEntityRepository
     {
-        
         public function __construct(ManagerRegistry $registry)
         {
             parent::__construct($registry, Organizer::class);
         }
         
-        // Add this custom method to search organizers by keyword and category
         public function searchByKeywordAndCategory($keyword, $category)
         {
             $queryBuilder = $this->createQueryBuilder('o')
@@ -39,6 +37,18 @@
             }
             
             return $queryBuilder
+                ->getQuery()
+                ->getResult();
+        }
+        
+        public function findUsersFollowingOrganizer(Organizer $organizer)
+        {
+            return $this->createQueryBuilder('o')
+                ->select('u')
+                ->from(User::class, 'u')
+                ->innerJoin('u.following', 'f')
+                ->where('f.organizer = :organizer')
+                ->setParameter('organizer', $organizer)
                 ->getQuery()
                 ->getResult();
         }

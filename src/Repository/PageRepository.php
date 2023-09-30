@@ -1,30 +1,29 @@
 <?php
-/*
+    /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-
-namespace App\Repository;
-
-use App\Entity\Page;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
-
-class PageRepository extends ServiceEntityRepository
-{
-
-    public function __construct(ManagerRegistry $registry)
+    
+    namespace App\Repository;
+    
+    use App\Entity\Page;
+    use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+    use Doctrine\Persistence\ManagerRegistry;
+    
+    class PageRepository extends ServiceEntityRepository
     {
-        parent::__construct($registry, Page::class);
-    }
-
-    public function getPages($slug)
-    {
-        $qb = $this->createQueryBuilder("p");
-        $qb->select("p");
-        if ($slug !== "all") {
-            $qb->andWhere("p.slug = :slug")->setParameter("slug", $slug);
+        public function __construct(ManagerRegistry $registry)
+        {
+            parent::__construct($registry, Page::class);
         }
-        return $qb;
+        
+        public function getPages($slug)
+        {
+            $qb = $this->createQueryBuilder("p");
+            $qb->select("p");
+            if ($slug !== "all") {
+                $qb->andWhere("p.slug = :slug")->setParameter("slug", $slug);
+            }
+            return $qb;
+        }
+        
     }
-
-}

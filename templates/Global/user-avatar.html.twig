@@ -1,6 +1,6 @@
 {% if user.hasRole('ROLE_ATTENDEE') %}
-    <span class="avatar"{% if user.avatarName %}  style="background: url('{{ asset(user.getAvatarPath) }}');"{% elseif user.facebookProfilePicture %} style="background: url('{{ user.facebookProfilePicture }}');"{% endif %} {% if showusernametooltip is defined %}data-toggle="tooltip" title="{{ user.username }}" data-container="body"{% endif %} >
-        {% if not user.avatarName and not user.facebookProfilePicture %}
+    <span class="avatar"{% if user.avatarName %}  style="background: url('{{ asset(user.getAvatarPath) }}');" {% endif %} {% if showusernametooltip is defined %}data-toggle="tooltip" title="{{ user.username }}" data-container="body"{% endif %} >
+        {% if not user.avatarName %}
             <i class="far fa-user"></i>
         {% endif %}
     </span>

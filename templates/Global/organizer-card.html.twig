@@ -11,7 +11,7 @@
         </div>
         <figcaption class="p-2 align-self-center">
             <h6 class="tit le">{{ organizer.name }}</h6>
-            <a href="{{ path('organizer', { slug : organizer.slug }) }}">{{ "More details" }}</a>
+            <a href="{{ path('organizer', { slug : organizer.user.username }) }}">{{ "More details" }}</a>
         </figcaption>
     </figure>
 </div>

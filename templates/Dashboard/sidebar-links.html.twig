@@ -6,8 +6,6 @@
         <a href="{{ path('dashboard_index') }}"
            class="nav-link {% if routename == "dashboard_administrator_index" or routename == "dashboard_organizer_index" %}active{% endif %}">
             <i class="fas fa-tachometer-alt fa-fw"></i> {{ 'Dashboard' }}
-            {#            {% elseif is_granted("ROLE_ORGANIZER") %} #}
-            {#                <i class="fas fa-tachometer-alt fa-fw"></i> {{ 'Dashboard' }} #}
         </a>
     </li>
 {% endif %}
@@ -22,7 +20,7 @@
             <i class="fas fa-sliders-h fa-fw"></i> {{ 'Settings' }}
         </a>
         <ul id="settings-submenu-{{ random }}"
-            class="nav flex-column ml-3 collapse {% if routename == "dashboard_administrator_settings_homepage" or routename == "dashboard_administrator_settings_payment" or routename == "dashboard_administrator_settings_newsletter" or routename == "dashboard_administrator_settings_layout" or routename == "dashboard_administrator_settings_payment_gateways_add" or routename == "dashboard_administrator_settings_payment_gateways_edit" or routename == "dashboard_administrator_settings_checkout" or routename == "dashboard_administrator_settings_events_list_page" or routename == "dashboard_administrator_settings_blog" or routename == "dashboard_administrator_settings_venue_page" or routename == "dashboard_administrator_settings_mail_server" or routename == "dashboard_administrator_settings_google_recaptcha" or routename == "dashboard_administrator_settings_google_maps" or routename == "dashboard_administrator_settings_social_login" or routename == "dashboard_administrator_settings_menus" or routename == "dashboard_administrator_settings_menus_edit" or routename == "dashboard_administrator_currency" or routename == "dashboard_administrator_currency_add" or routename == "dashboard_administrator_currency_edit" %}show{% endif %}">
+            class="nav flex-column ml-3 collapse {% if routename == "dashboard_administrator_settings_homepage" or routename == "dashboard_administrator_settings_payment" or routename == "dashboard_administrator_settings_layout" or routename == "dashboard_administrator_settings_payment_gateways_add" or routename == "dashboard_administrator_settings_payment_gateways_edit" or routename == "dashboard_administrator_settings_checkout" or routename == "dashboard_administrator_settings_events_list_page" or routename == "dashboard_administrator_settings_blog" or routename == "dashboard_administrator_settings_mail_server" or routename == "dashboard_administrator_settings_google_recaptcha" or routename == "dashboard_administrator_settings_google_maps" or routename == "dashboard_administrator_settings_social_login" or routename == "dashboard_administrator_settings_menus" or routename == "dashboard_administrator_settings_menus_edit" or routename == "dashboard_administrator_currency" or routename == "dashboard_administrator_currency_add" or routename == "dashboard_administrator_currency_edit" %}show{% endif %}">
             <li class="nav-item">
                 <a class="nav-link {% if routename == "dashboard_administrator_settings_layout" %}active{% endif %}"
                    href="{{ path('dashboard_administrator_settings_layout') }}">{{ "Layout, parameters and SEO" }}</a>
@@ -64,7 +62,7 @@
             <i class="fas fa-calendar-alt fa-fw"></i> {{ 'Events' }}
         </a>
         <ul id="events-submenu-{{ random }}"
-            class="nav flex-column ml-3 collapse {% if routename == "dashboard_administrator_event" or routename == "dashboard_administrator_event_date_statistics" or routename == "dashboard_administrator_category" or routename == "dashboard_administrator_category_add" or routename == "dashboard_administrator_category_edit" or routename == "dashboard_administrator_country" or routename == "dashboard_administrator_country_add" or routename == "dashboard_administrator_country_edit" or routename == "dashboard_administrator_language" or routename == "dashboard_administrator_language_add" or routename == "dashboard_administrator_language_edit" or routename == "dashboard_administrator_audience" or routename == "dashboard_administrator_audience_add" or routename == "dashboard_administrator_audience_edit" %}show{% endif %}">
+            class="nav flex-column ml-3 collapse {% if routename == "dashboard_administrator_event" or routename == "dashboard_administrator_event_date_statistics" or routename == "dashboard_administrator_category" or routename == "dashboard_administrator_category_add" or routename == "dashboard_administrator_category_edit" %}show{% endif %}">
             <li class="nav-item">
                 <a class="nav-link {% if routename == "dashboard_administrator_event" or routename == "dashboard_administrator_event_date_statistics" %}active{% endif %}"
                    href="{{ path('dashboard_administrator_event') }}">{{ "Manage events" }}</a>
@@ -72,11 +70,6 @@
             <li class="nav-item">
                 <a class="nav-link {% if routename == "dashboard_administrator_category" or routename == "dashboard_administrator_category_add" or routename == "dashboard_administrator_category_edit" %}active{% endif %}"
                    href="{{ path('dashboard_administrator_category') }}">{{ "Categories" }}</a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link {% if routename == "dashboard_administrator_audience" or routename == "dashboard_administrator_audience_add" or routename == "dashboard_administrator_audience_edit" %}active{% endif %}"
-                   href="{{ path('dashboard_administrator_audience') }}">{{ "Audiences" }}</a>
             </li>
         </ul>
     </li>
@@ -256,41 +249,47 @@
         </a>
     </li>
 
-    {% if app.user.facebookId is null and app.user.googleId is null %}
 
-        <li class="nav-item">
-            <a href="#account-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu"
-               class="nav-link dropdown-toggle">
-                <i class="fas fa-user-cog fa-fw"></i> {{ 'Account' }}
-            </a>
-            <ul id="account-submenu-{{ random }}"
-                class="nav flex-column ml-3 collapse {% if routename == "dashboard_attendee_account_settings" or routename == "fos_user_change_password" %}show{% endif %}">
-                <li class="nav-item">
-                    <a href="{{ path('dashboard_attendee_account_settings') }}"
-                       class="nav-link {% if routename == "dashboard_attendee_account_settings" %}active{% endif %}">
-                        {{ 'Settings' }}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ path('fos_user_change_password') }}"
-                       class="nav-link {% if routename == "fos_user_change_password" %}active{% endif %}">
-                        {{ 'Change password' }}
-                    </a>
-                </li>
+    <li class="nav-item">
+        <a href="{{ path('attendeed_events') }}"
+           class="nav-link {% if routename == "attendeed_events" %}active{% endif %}">
+            <i class="far fa-heart fa-fw"></i> {{ 'My attended events' }}
+        </a>
+    </li>
 
-                <li class="nav-item">
-                    <a href="{{ path('email_change') }}"
-                       class="nav-link {% if routename == "email_change" %}active{% endif %}">
-                        {{ 'Change email' }}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ path('username_change') }}"
-                       class="nav-link {% if routename == "username_change" %}active{% endif %}">
-                        {{ 'Change username' }}
-                    </a>
-                </li>
-            </ul>
-        </li>
-    {% endif %}
+
+    <li class="nav-item">
+        <a href="#account-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu"
+           class="nav-link dropdown-toggle">
+            <i class="fas fa-user-cog fa-fw"></i> {{ 'Account' }}
+        </a>
+        <ul id="account-submenu-{{ random }}"
+            class="nav flex-column ml-3 collapse {% if routename == "dashboard_attendee_account_settings" or routename == "fos_user_change_password" %}show{% endif %}">
+            <li class="nav-item">
+                <a href="{{ path('dashboard_attendee_account_settings') }}"
+                   class="nav-link {% if routename == "dashboard_attendee_account_settings" %}active{% endif %}">
+                    {{ 'Settings' }}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ path('fos_user_change_password') }}"
+                   class="nav-link {% if routename == "fos_user_change_password" %}active{% endif %}">
+                    {{ 'Change password' }}
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{{ path('email_change') }}"
+                   class="nav-link {% if routename == "email_change" %}active{% endif %}">
+                    {{ 'Change email' }}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ path('username_change') }}"
+                   class="nav-link {% if routename == "username_change" %}active{% endif %}">
+                    {{ 'Change username' }}
+                </a>
+            </li>
+        </ul>
+    </li>
 {% endif %}

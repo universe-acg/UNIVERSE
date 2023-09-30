@@ -27,3 +27,32 @@ h1, h2, h3, h4, h5, h6, label, .col-form-label {
 .display-inline {
   float: right !important;
 }
+
+.accomplishment {
+  color: #00cc00; /* A brighter shade of green */
+  font-weight: bold;
+}
+
+.link-style {
+  color: #007bff; /* Set the text color to a blue shade (you can change the color to your preference) */
+  text-decoration: none; /* Remove the underline by default */
+  font-weight: bold; /* Optionally, make the text bold */
+}
+
+/* Define a hover effect for the hyperlink */
+.link-style:hover {
+  text-decoration: underline; /* Underline the text when hovering */
+}
+
+.grayed-out {
+  filter: grayscale(100%);
+  opacity: 0.6; /* Adjust the opacity as needed */
+}
+
+.attended-event {
+  cursor: pointer;
+}
+
+.info-wrap {
+  min-height: 100px !important;
+}

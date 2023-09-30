@@ -41,10 +41,6 @@
          */
         private $user;
         /**
-         * @ORM\OneToMany(targetEntity="Venue", mappedBy="organizer", cascade={"remove"})
-         */
-        private $venues;
-        /**
          * @ORM\OneToMany(targetEntity="Event", mappedBy="organizer", cascade={"remove"})
          */
         private $events;
@@ -57,7 +53,7 @@
          */
         private $categories;
         /**
-         * @ORM\ManyToMany(targetEntity="User", inversedBy="following", cascade={"persist", "merge"})
+         * @ORM\ManyToMany(targetEntity="User", inversedBy="following",  fetch = "EAGER", cascade={"persist", "merge"})
          * @ORM\JoinTable(name="universe_following",
          *   joinColumns={@ORM\JoinColumn(name="Organizer_id", referencedColumnName="id")},
          *   inverseJoinColumns={@ORM\JoinColumn(name="User_Id", referencedColumnName="id")}
@@ -225,28 +221,14 @@
          * @ORM\Column(type="boolean")
          * @Assert\NotNull
          */
-        private $showvenuesmap = true;
-        /**
-         * @ORM\Column(type="boolean")
-         * @Assert\NotNull
-         */
         private $showfollowers = true;
-        /**
-         * @ORM\Column(type="boolean")
-         * @Assert\NotNull
-         */
-        private $showreviews = true;
         
         public function __construct()
         {
             $this->events = new ArrayCollection();
-            $this->venues = new ArrayCollection();
             $this->followedby = new ArrayCollection();
             $this->events = new ArrayCollection();
             $this->views = 0;
-            $this->showvenuesmap = true;
-            $this->showfollowers = true;
-            $this->showreviews = true;
         }
         
         /**
@@ -552,37 +534,6 @@
             return $this;
         }
         
-        /**
-         * @return ArrayCollection
-         */
-        public function getVenues()
-        {
-            return $this->venues;
-        }
-        
-        public function addVenue($venue)
-        {
-            if (!$this->venues->contains($venue)) {
-                $this->venues[] = $venue;
-                $venue->setOrganizer($this);
-            }
-            
-            return $this;
-        }
-        
-        public function removeVenue($venue)
-        {
-            if ($this->venues->contains($venue)) {
-                $this->venues->removeElement($venue);
-// set the owning side to null (unless already changed)
-                if ($venue->getOrganizer() === $this) {
-                    $venue->setOrganizer(null);
-                }
-            }
-            
-            return $this;
-        }
-        
         public function getUser()
         {
             return $this->user;
@@ -752,18 +703,6 @@
             return $this;
         }
         
-        public function getShowvenuesmap()
-        {
-            return $this->showvenuesmap;
-        }
-        
-        public function setShowvenuesmap($showvenuesmap)
-        {
-            $this->showvenuesmap = $showvenuesmap;
-            
-            return $this;
-        }
-        
         /**
          * @return ArrayCollection
          */
@@ -798,18 +737,6 @@
         public function setShowfollowers($showfollowers)
         {
             $this->showfollowers = $showfollowers;
-            
-            return $this;
-        }
-        
-        public function getShowreviews()
-        {
-            return $this->showreviews;
-        }
-        
-        public function setShowreviews($showreviews)
-        {
-            $this->showreviews = $showreviews;
             
             return $this;
         }

@@ -28,40 +28,6 @@
             {% set eventsoncalendar = [] %}
             {% set eventsonmap = [] %}
 
-            {% for event in events %}
-                {% for eventdate in event.eventdates %}
-                    {% if eventdate.isOnSale %}
-                        {% if eventdate.venue and services.getSetting("show_map_button") == "yes" %}
-                            {% if eventdate.venue.lat and eventdate.venue.lng %}
-                                {% if eventsonmap|length == 0 %}
-                                    {% set eventsonmap = eventsonmap|merge([{"name": event.name, "image": event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder, "address": (eventdate.venue.name ~ ": " ~eventdate.venue.stringifyAddress),"date": (eventdate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format)), "price": (eventdate.isFree ? "" : eventdate.getCheapestTicket.getSalePrice), "lat":eventdate.venue.lat, "lng":eventdate.venue.lng, "link": (path('event', { slug: event.slug })) }]) %}
-                                {% else %}
-                                    {% for eventonmap in eventsonmap %}
-                                        {% if eventonmap.lat != eventdate.venue.lat and eventonmap.lng != eventdate.venue.lng %}
-                                            {% set eventsonmap = eventsonmap|merge([{"name": event.name, "image": event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder, "address": (eventdate.venue.name ~ ": " ~eventdate.venue.stringifyAddress),"date": (eventdate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format)), "price": (eventdate.isFree ? "" : eventdate.getCheapestTicket.getSalePrice), "lat":eventdate.venue.lat, "lng":eventdate.venue.lng, "link": (path('event', { slug: event.slug })) }]) %}
-                                        {% endif %}
-                                    {% endfor %}
-                                {% endif %}
-                            {% endif %}
-                        {% endif %}
-
-
-                        {% if services.getSetting("show_calendar_button") == "yes" %}
-                            {% set eventsoncalendar = eventsoncalendar|merge([{"title": event.name, "start":eventdate.startdate|date('Y-m-d H:i'), "end": (eventdate.enddate ? eventdate.enddate|date('Y-m-d H:i') : ''), "url": (path('event', {slug : event.slug})) }]) %}
-                        {% endif %}
-                    {% endif %}
-                {% endfor %}
-            {% endfor %}
-
-            {% if eventsonmap|length > 0 and services.getSetting("show_map_button") == "yes" and google_maps_api_key != "" %}
-                <div id="events-map" data-pin-path="{{ asset('assets/img/icons/pin.png') }}"
-                     data-events="{{ eventsonmap|json_encode() }}" class="mb-4 collapse vh-90"></div>
-            {% endif %}
-            {% if eventsoncalendar|length > 0 and services.getSetting("show_calendar_button") == "yes" %}
-                <div id="events-calendar" data-default-date="{{ "now"|date('Y-m-d') }}"
-                        {#                <div id="events-calendar" data-default-date="{{ "new DateTime(date())"|date('Y-m-d') }}" #}
-                     data-events="{{ eventsoncalendar|json_encode() }}" class="mb-4 collapse"></div>
-            {% endif %}
 
             <div class="box shadow-none bg-gray mb-4">
                 <div class="row">
@@ -118,7 +84,8 @@
                                     </header>
                                     <div class="filter-content collapse show" id="filter-category">
                                         <div class="card-body">
-                                            <select id="category" name="category" class="select2" data-sort-options="1">
+                                            <select id="category" name="category" class="select2 col"
+                                                    data-sort-options="1">
                                                 <option value="">&nbsp;</option>
                                                 <option value="all">All</option>
                                                 {% for category in services.getCategories({}).getQuery().getResult() %}
@@ -128,52 +95,6 @@
                                         </div>
                                     </div>
                                 </article>
-                            {% endif %}
-                            {% if services.getSetting("show_location_filter") == "yes" %}
-                                {#                                <article class="card-group-item"> #}
-                                {#                                    <header class="card-header"> #}
-                                {#                                        <a href="#" data-toggle="collapse" data-target="#filter-location"> #}
-                                {#                                            <i class="icon-action fa fa-chevron-down"></i> #}
-                                {#                                            <h6 class="title">{{ "Location" }}</h6> #}
-                                {#                                        </a> #}
-                                {#                                    </header> #}
-                                {#                                    <div class="filter-content collapse show" id="filter-location"> #}
-                                {#                                        <div class="card-body"> #}
-                                {#                                            <div class="custom-control custom-checkbox form-check-input"> #}
-                                {#                                                <div class="form-check mb-4 filter-online-container"> #}
-                                {#                                                    <input type="checkbox" class="custom-control-input" id="filter-online-only" name="onlineonly" value="1"> #}
-                                {#                                                    <label class="custom-control-label" for="filter-online-only">{{ "Online events only" }}</label> #}
-                                {#                                                </div> #}
-                                {#                                            </div> #}
-
-                                {#                                            <div class="location-based-filters"> #}
-                                {#                                                {% set userLocation = services.locateUser() %} #}
-                                {#                                                {% if userLocation %} #}
-                                {#                                                    <div class="custom-control custom-checkbox form-check-input"> #}
-                                {#                                                        <div class="form-check mb-4"> #}
-                                {#                                                            <input type="checkbox" class="custom-control-input" id="filter-local-only" name="localonly" value="1"> #}
-                                {#                                                            <label class="custom-control-label" for="filter-local-only">{{ "Local events only" }}</label> #}
-                                {#                                                        </div> #}
-                                {#                                                    </div> #}
-                                {#                                                    <p id="user-country" class="text-muted">{{ "Events in %countryname%" . ({"%countryname%" : userLocation['country'].name}) }} <span class="flag flag-{{userLocation['country'].code|lower}} ml-2"></span></p> #}
-                                {#                                                    {% endif %} #}
-                                {#                                                <div id="filter-country-container" class="mt-4"> #}
-                                {#                                                    <label for="country">{{ "Country" }}</label> #}
-                                {#                                                    <select id="country" class="select2" name="country" data-sort-options="1"> #}
-                                {#                                                        <option value="">&nbsp;</option> #}
-                                {#                                                        {% for country in services.getCountries({}).getQuery().getResult() %} #}
-                                {#                                                            <option value="{{ country.slug }}">{{ country.name }}</option> #}
-                                {#                                                        {% endfor %} #}
-                                {#                                                    </select> #}
-                                {#                                                </div> #}
-                                {#                                                <div id="filter-location-container" class="mt-4"> #}
-                                {#                                                    <label for="location">{{ "State / City" }}</label> #}
-                                {#                                                    <input id="location" name="location" type="text" class="form-control" value="{{ app.request.get('location') }}"> #}
-                                {#                                                </div> #}
-                                {#                                            </div> #}
-                                {#                                        </div> #}
-                                {#                                    </div> #}
-                                {#                                </article> #}
                             {% endif %}
                             {% if services.getSetting("show_date_filter") == "yes" %}
                                 <article class="card-group-item">
@@ -209,18 +130,6 @@
             </span>
                                                 <div class="clearfix"></div>
                                             </div>
-                                            {#                                            <div class="form-check"> #}
-                                            {#                                                <div class="float-left custom-control custom-radio form-check-input"> #}
-                                            {#                                                    <input type="radio" class="custom-control-input" #}
-                                            {#                                                           id="date-thisweekend" name="startdate" value="thisweekend"> #}
-                                            {#                                                    <label class="custom-control-label" #}
-                                            {#                                                           for="date-thisweekend">{{ "This weekend" }}</label> #}
-                                            {#                                                </div> #}
-                                            {#                                                <span class="float-right form-check-label"> #}
-                                            {#                <span class="badge badge-light round">{{ thisWeekEventCount }}</span> #}
-                                            {#            </span> #}
-                                            {#                                                <div class="clearfix"></div> #}
-                                            {#                                            </div> #}
                                             <div class="form-check">
                                                 <div class="float-left custom-control custom-radio form-check-input">
                                                     <input type="radio" class="custom-control-input" id="date-thisweek"
@@ -269,46 +178,10 @@
             </span>
                                                 <div class="clearfix"></div>
                                             </div>
-                                            {#                                            <div class="form-check"> #}
-                                            {#                                                <div class="float-left custom-control custom-radio form-check-input"> #}
-                                            {#                                                    <input type="radio" class="custom-control-input datepicker" #}
-                                            {#                                                           id="date-pickadate" name="startdate" value="all"> #}
-                                            {#                                                    <label class="custom-control-label" #}
-                                            {#                                                           for="date-pickadate">{{ "Pick a date" }}</label> #}
-                                            {#                                                </div> #}
-                                            {#                                                <div class="clearfix"></div> #}
-                                            {#                                            </div> #}
                                         </div>
                                     </div>
                                 </article>
                             {% endif %}
-
-                            {#                            {% if services.getSetting("show_audience_filter") == "yes" %} #}
-                            {#                                <article class="card-group-item"> #}
-                            {#                                    <header class="card-header"> #}
-                            {#                                        <a href="#" data-toggle="collapse" data-target="#filter-audience"> #}
-                            {#                                            <i class="icon-action fa fa-chevron-down"></i> #}
-                            {#                                            <h6 class="title">{{ "Audience" }}</h6> #}
-                            {#                                        </a> #}
-                            {#                                    </header> #}
-                            {#                                    <div class="filter-content collapse show" id="filter-audience"> #}
-                            {#                                        <div class="card-body"> #}
-                            {#                                            <div class="btn-group btn-group-toggle" data-toggle="buttons" #}
-                            {#                                            > #}
-                            {#                                                {% for audience in services.getAudiences({}).getQuery().getResult() %} #}
-                            {#                                                    <label class="btn btn-light btn-sm py-2 px-3" data-toggle="tooltip" #}
-                            {#                                                           title="{{ audience.name }}"> #}
-                            {#                                                        <input type="radio" name="audience" id="{{ audience.slug }}" #}
-                            {#                                                               value="{{ audience.slug }}"> #}
-                            {#                                                        <img src="{{ asset(audience.getImagePath) }}" class="img-15-15" #}
-                            {#                                                             alt="{{ audience.name }}"> #}
-                            {#                                                    </label> #}
-                            {#                                                {% endfor %} #}
-                            {#                                            </div> #}
-                            {#                                        </div> #}
-                            {#                                    </div> #}
-                            {#                                </article> #}
-                            {#                            {% endif %} #}
                             <div class="row">
                                 <div class="col-4">
                                     <article class="card-group-item">
@@ -329,31 +202,15 @@
                                     </article>
                                 </div>
                             </div>
-
-                            {#                            <article class="card-group-item"> #}
-                            {#                                <div class="card-body"> #}
-                            {#                                    <button class="btn btn-block btn-outline-primary"><i #}
-                            {#                                                class="fas fa-search"></i> {{ "Search" }}</button> #}
-                            {#                                </div> #}
-                            {#                                <div class="card-body"> #}
-                            {#                                    <a href="{{ path('events') }}" #}
-                            {#                                       class="btn btn-block btn-outline-primary btn-sm custom-smaller-width"> #}
-                            {#                                        {{ "Clear" }} #}
-                            {#                                    </a> #}
-                            {#                                </div> #}
-                            {#                            </article> #}
                         </form>
                     </div>
-                    {% if services.getSetting("newsletter_enabled") == "yes" and services.getSetting("mailchimp_api_key") and services.getSetting("mailchimp_list_id") %}
-                        {% include "Global/newsletter-box.html.twig" %}
-                    {% endif %}
                 </aside>
                 <div class="col-lg-9 order-1 order-lg-2">
                     {% if events.getTotalItemCount > 0 %}
                         <div class="row">
                             {% for event in events %}
                                 <div class="col-12 col-sm-6 col-lg-6 mb-3">
-                                    {% include "Global/event-card.html.twig" with {event: event} %}
+                                    {% include "Global/event-card.html.twig" with {event: event, attendeed: event.isAttnded} %}
                                 </div>
                             {% endfor %}
                         </div>

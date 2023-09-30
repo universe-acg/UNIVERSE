@@ -1,0 +1,8 @@
+FOS\UserBundle\Model\User:
+  properties:
+    username:
+      - NotBlank:
+          message: Please enter a username.
+    password:
+      - NotBlank:
+          message: Please enter a password.

@@ -15,8 +15,6 @@
                         <i class="fa fa-search"></i>
                         <input name="keyword" class="form-control top-search" placeholder="{{ "Search for events" }}"
                                type="text" id="search-input">
-                        {#                        <input name="keyword" class="form-control top-search" #}
-                        {#                               placeholder="{{ "Search for events" }}" type="text"> #}
                     </div>
                 </form>
             </div>
@@ -24,14 +22,6 @@
                 <div class="widgets-wrap d-flex justify-content-end">
 
                     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-
-                        {% if is_granted('ROLE_ATTENDEE') %}
-
-                            <div class="widget-header dropdown">
-                                {# Your Cart Dropdown Code Here #}
-                            </div>
-
-                        {% endif %}
 
                         <div class="widget-header dropdown">
                             <a href="#" class="ml-3 icontext" data-toggle="dropdown" onclick="openDashboardSideNav()">
@@ -124,7 +114,6 @@
                         {% if menuElement.link %}
                             {% set link =  menuElement.link %}
                         {% endif %}
-
                         {% if link == "categories_dropdown" %}
                             <li class="nav-item dropdown dropdown-hover {% if app.request.get('_route') == "categories" %}active{% endif %}">
                                 <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown"
@@ -139,7 +128,7 @@
                                 </div>
                             </li>
                         {% else %}
-                            {% if link != "/dashboard/attendee/my-tickets" and link != "/dashboard/organizer/my-events/add" and menuElement.customLink  != "https://universeacg.xyz/scanqr" %}
+                            {% if link != "/events" and link != "/dashboard/attendee/my-tickets" and link != "/dashboard/organizer/my-events/add" and menuElement.customLink  != "https://universeacg.xyz/scanqr" and menuElement.customLink  != "https://universeacg.xyz/open-events" %}
                                 <li class="nav-item {% if app.request.pathinfo == link %}active{% endif %}">
                                     <a class="nav-link" href="{{ link }}">
                                         {% if menuElement.icon %}
@@ -152,6 +141,30 @@
                                 </li>
                             {% else %}
                                 {% if link == "/dashboard/attendee/my-tickets" and is_granted('ROLE_ATTENDEE') %}
+                                    <li class="nav-item {% if app.request.pathinfo == link %}active{% endif %}">
+                                        <a class="nav-link" href="{{ link }}">
+                                            {% if menuElement.icon %}
+                                                <i class="{{ menuElement.icon }} fa-fw"></i>
+                                            {% endif %}
+                                            {% if menuElement.label %}
+                                                {{ menuElement.label }}
+                                            {% endif %}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% if link == "/events"  and  app.user %}
+                                    <li class="nav-item {% if app.request.pathinfo == link %}active{% endif %}">
+                                        <a class="nav-link" href="{{ link }}">
+                                            {% if menuElement.icon %}
+                                                <i class="{{ menuElement.icon }} fa-fw"></i>
+                                            {% endif %}
+                                            {% if menuElement.label %}
+                                                {{ menuElement.label }}
+                                            {% endif %}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% if menuElement.customLink == "https://universeacg.xyz/open-events"  and  app.user is empty %}
                                     <li class="nav-item {% if app.request.pathinfo == link %}active{% endif %}">
                                         <a class="nav-link" href="{{ link }}">
                                             {% if menuElement.icon %}

@@ -8,7 +8,6 @@
     use DateTime;
     use DateTimeImmutable;
     use Doctrine\Common\Collections\ArrayCollection;
-    use Doctrine\Common\Collections\Collection;
     use Doctrine\ORM\Mapping as ORM;
     use FOS\UserBundle\Model\User as BaseUser;
     use Gedmo\Mapping\Annotation as Gedmo;
@@ -38,23 +37,6 @@
          */
         protected $slug;
         /**
-         * @ORM\Column(name="facebook_id", type="string", length=255, nullable=true)
-         */
-        protected $facebook_id;
-        /**
-         * @ORM\Column(name="facebook_access_token", type="string", length=255, nullable=true)
-         */
-        protected $facebook_access_token;
-        /**
-         *
-         * @ORM\Column(name="google_id", type="string", length=255, nullable=true)
-         */
-        protected $google_id;
-        /**
-         * @ORM\Column(name="google_access_token", type="string", length=255, nullable=true)
-         */
-        protected $google_access_token;
-        /**
          * @ORM\Column(type="boolean")
          * @Assert\NotNull
          */
@@ -69,10 +51,7 @@
          * @ORM\OneToMany(targetEntity="Order", mappedBy="user", cascade={"remove"})
          */
         private $orders;
-        /**
-         * @ORM\OneToMany(targetEntity="Review", mappedBy="user", cascade={"remove"})
-         */
-        private $reviews;
+        
         /**
          * @ORM\ManyToMany(targetEntity="Event", mappedBy="addedtofavoritesby", fetch="LAZY", cascade={"remove"})
          */
@@ -169,10 +148,6 @@
          */
         private $avatarDimensions;
         /**
-         * @ORM\Column(type="string", length=255, nullable=true)
-         */
-        private $facebookProfilePicture;
-        /**
          * @var DateTime $createdAt
          *
          * @Gedmo\Timestampable(on="create")
@@ -199,10 +174,8 @@
         {
             parent::__construct();
             $this->orders = new ArrayCollection();
-            $this->reviews = new ArrayCollection();
             $this->favorites = new ArrayCollection();
             $this->following = new ArrayCollection();
-            $this->cartelements = new ArrayCollection();
             $this->ticketreservations = new ArrayCollection();
         }
         
@@ -270,77 +243,6 @@
                 $address .= $this->state . " ";
             }
             return $address;
-        }
-        
-        public function isEventticketInCart($eventticket)
-        {
-            foreach ($this->cartelements as $cartelement) {
-                if ($cartelement->getEventticket() == $eventticket) {
-                    return $cartelement->getQuantity();
-                }
-            }
-            return false;
-        }
-        
-        public function getCartelementByEventTicketReference($eventticketreference)
-        {
-            foreach ($this->cartelements as $cartelement) {
-                if ($cartelement->getEventticket()->getReference() == $eventticketreference) {
-                    return $cartelement;
-                }
-            }
-            return null;
-        }
-        
-        public function getTicketsInCartPriceSum($includeFees = false)
-        {
-            $sum = 0;
-            foreach ($this->cartelements as $cartelement) {
-                $sum += $cartelement->getPrice();
-            }
-            if ($includeFees) {
-                $sum += $this->getTotalFees();
-            }
-            return (float)$sum;
-        }
-        
-        public function getTotalFees()
-        {
-            $sum = 0;
-            $sum += $this->getTotalTicketFees();
-            return $sum;
-        }
-        
-        public function getTotalTicketFees()
-        {
-            if (!count($this->cartelements)) {
-                return 0;
-            }
-            $sum = 0;
-            foreach ($this->cartelements as $cartelement) {
-                $sum += $cartelement->getQuantity() * $cartelement->getTicketFee();
-            }
-            return (float)$sum;
-        }
-        
-        public function getNotFreeTicketsInCartQuantitySum()
-        {
-            $sum = 0;
-            foreach ($this->cartelements as $cartelement) {
-                if (!$cartelement->getEventticket()->getFree()) {
-                    $sum += $cartelement->getQuantity();
-                }
-            }
-            return $sum;
-        }
-        
-        public function getTicketsInCartQuantitySum()
-        {
-            $sum = 0;
-            foreach ($this->cartelements as $cartelement) {
-                $sum += $cartelement->getQuantity();
-            }
-            return $sum;
         }
         
         public function getAvatarFile()
@@ -510,54 +412,6 @@
             return $this;
         }
         
-        public function getFacebookId()
-        {
-            return $this->facebook_id;
-        }
-        
-        public function setFacebookId($facebook_id)
-        {
-            $this->facebook_id = $facebook_id;
-            
-            return $this;
-        }
-        
-        public function getFacebookAccessToken()
-        {
-            return $this->facebook_access_token;
-        }
-        
-        public function setFacebookAccessToken($facebook_access_token)
-        {
-            $this->facebook_access_token = $facebook_access_token;
-            
-            return $this;
-        }
-        
-        public function getGoogleId()
-        {
-            return $this->google_id;
-        }
-        
-        public function setGoogleId($google_id)
-        {
-            $this->google_id = $google_id;
-            
-            return $this;
-        }
-        
-        public function getGoogleAccessToken()
-        {
-            return $this->google_access_token;
-        }
-        
-        public function setGoogleAccessToken($google_access_token)
-        {
-            $this->google_access_token = $google_access_token;
-            
-            return $this;
-        }
-        
         public function getBirthdate()
         {
             return $this->birthdate;
@@ -626,38 +480,7 @@
         }
         
         /**
-         * @return Collection|Review[]
-         */
-        public function getReviews()
-        {
-            return $this->reviews;
-        }
-        
-        public function addReview($review)
-        {
-            if (!$this->reviews->contains($review)) {
-                $this->reviews[] = $review;
-                $review->setUser($this);
-            }
-            
-            return $this;
-        }
-        
-        public function removeReview($review)
-        {
-            if ($this->reviews->contains($review)) {
-                $this->reviews->removeElement($review);
-// set the owning side to null (unless already changed)
-                if ($review->getUser() === $this) {
-                    $review->setUser(null);
-                }
-            }
-            
-            return $this;
-        }
-        
-        /**
-         * @return Collection|Event[]
+         * @return ArrayCollection
          */
         public function getFavorites()
         {
@@ -685,7 +508,7 @@
         }
         
         /**
-         * @return Collection|Organizer[]
+         * @return ArrayCollection
          */
         public function getFollowing()
         {
@@ -720,37 +543,6 @@
         public function setIsorganizeronhomepageslider($isorganizeronhomepageslider)
         {
             $this->isorganizeronhomepageslider = $isorganizeronhomepageslider;
-            
-            return $this;
-        }
-        
-        /**
-         * @return Collection|CartElement[]
-         */
-        public function getCartelements()
-        {
-            return $this->cartelements;
-        }
-        
-        public function addCartelement($cartelement)
-        {
-            if (!$this->cartelements->contains($cartelement)) {
-                $this->cartelements[] = $cartelement;
-                $cartelement->setUser($this);
-            }
-            
-            return $this;
-        }
-        
-        public function removeCartelement($cartelement)
-        {
-            if ($this->cartelements->contains($cartelement)) {
-                $this->cartelements->removeElement($cartelement);
-// set the owning side to null (unless already changed)
-                if ($cartelement->getUser() === $this) {
-                    $cartelement->setUser(null);
-                }
-            }
             
             return $this;
         }
@@ -816,7 +608,7 @@
         }
         
         /**
-         * @return Collection|TicketReservation[]
+         * @return ArrayCollection
          */
         public function getTicketreservations()
         {
@@ -917,17 +709,4 @@
             
             return $this;
         }
-        
-        public function getFacebookProfilePicture()
-        {
-            return $this->facebookProfilePicture;
-        }
-        
-        public function setFacebookProfilePicture($facebookProfilePicture)
-        {
-            $this->facebookProfilePicture = $facebookProfilePicture;
-            
-            return $this;
-        }
-        
     }

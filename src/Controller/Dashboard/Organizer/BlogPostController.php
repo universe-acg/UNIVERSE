@@ -20,7 +20,7 @@
         /**
          * @Route("/manage-blog-posts-organizer", name="blog_post_organizer", methods="GET")
          */
-        public function index(Request $request, PaginatorInterface $paginator, Security $security, AppServices $services)
+        public function index(Request $request, PaginatorInterface $paginator, Security $security)
         {
             // Get the current user (user object)
             $user = $security->getUser();

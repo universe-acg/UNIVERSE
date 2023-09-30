@@ -1,18 +1,18 @@
 {% trans_default_domain 'FOSCommentBundle' %}
 
 {#
+This file is part of the FOSCommentBundle package.
 
- This file is part of the FOSCommentBundle package.
+(c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
 
- (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
-
- This source file is subject to the MIT license that is bundled
- with this source code in the file LICENSE.
-
+This source file is subject to the MIT license that is bundled
+with this source code in the file LICENSE.
 #}
 
 <div class="fos_comment_vote_form_holder mt-4 mb-4 text-right">
-    <form class="fos_comment_vote_form" action="{{ url('fos_comment_post_thread_comment_votes', {'id': id, 'commentId': commentId}) }}" data-score-holder="fos_comment_score_{{ commentId }}" method="POST">
+    <form class="fos_comment_vote_form"
+          action="{{ url('fos_comment_post_thread_comment_votes', {'id': id, 'commentId': commentId}) }}"
+          data-score-holder="fos_comment_score_{{ commentId }}" method="POST">
 
         {% block fos_comment_form_fields %}
             {{ form_errors(form) }}
@@ -27,6 +27,5 @@
                 <button class="btn btn-link"></button>
             {% endblock %}
         </div>
-
     </form>
 </div>

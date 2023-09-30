@@ -6,18 +6,31 @@
     namespace App\Repository;
     
     use App\Entity\Event;
+    use App\Entity\User;
+    use DateTime;
     use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
     use Doctrine\ORM\QueryBuilder;
     use Doctrine\Persistence\ManagerRegistry;
     
     class EventRepository extends ServiceEntityRepository
     {
-        
         public function __construct(ManagerRegistry $registry)
         {
             parent::__construct($registry, Event::class);
         }
         
+        public function findAttendedEventsByUser(User $user)
+        {
+            return $this->createQueryBuilder('e')
+                ->join('e.eventdates', 'ed') // Assuming events are related to event dates
+                ->join('ed.tickets', 'et') // Assuming event dates are related to event tickets
+                ->join('et.orderelements', 'oe') // Assuming event tickets are related to order elements
+                ->join('oe.order', 'o') // Assuming order elements are related to orders
+                ->where('o.user = :user')
+                ->andWhere('o.status = :status')
+                ->setParameter('user', $user)
+                ->setParameter('status', 2);
+        }
         
         public function findBySlug($slug)
         {
@@ -37,6 +50,22 @@
                 ->getOneOrNullResult();
         }
         
+        public function findUpcomingEvents(): array
+        {
+            $now = new DateTime();
+            
+            return $this->createQueryBuilder('e')
+                ->leftJoin('e.eventdates', 'eventdates')
+                ->where('e.published = :published')
+                ->andWhere('eventdates.startdate > :now')
+                ->setParameter('published', true)
+                ->setParameter('now', $now)
+                ->orderBy('eventdates.startdate', 'ASC')
+                ->setMaxResults(8)
+                ->getQuery()
+                ->getResult();
+        }
+        
         public function findById($id)
         {
             return $this->createQueryBuilder('e')
@@ -45,42 +74,8 @@
                 ->getQuery()
                 ->getOneOrNullResult();
         }
-
-//        public function getEvents($category, $venue, $country, $location, $organizer, $keyword, $slug, $freeonly, $onlineonly, $pricemin, $pricemax, $audience, $startdate, $startdatemin, $startdatemax, $published, $elapsed, $organizerEnabled, $addedtofavoritesby, $onsalebypos, $canbescannedby, $isOnHomepageSlider, $otherthan, $sort, $order, $limit, $count): QueryBuilder
-//        {
-//            $qb = $this->createQueryBuilder("e");
-//            if ($count) {
-//                $qb->select("COUNT(e)");
-//            } else {
-//                $qb->select("DISTINCT e");
-//            }
-//
-//            if ($category !== "all") {
-//                $qb->leftJoin("e.category", "category");
-//                $qb->andWhere("category.slug = :category")->setParameter("category", $category);
-//            }
-//
-//            // Update references to translation fields to use fields in the "event" table
-//            if ($keyword !== "all") {
-//                $qb->andWhere("e.name LIKE :keyword OR e.description LIKE :keyword OR e.tags LIKE :keyword OR e.artists LIKE :keyword")->setParameter("keyword", "%" . $keyword . "%");
-//            }
-//
-//            if ($slug !== "all") {
-//                $qb->andWhere("e.slug = :slug")->setParameter("slug", $slug);
-//            }
-//
-//            // Other conditions and joins...
-//
-//            $qb->orderBy($sort, $order);
-//
-//            if ($limit !== "all") {
-//                $qb->setMaxResults($limit);
-//            }
-//
-//            return $qb;
-//        }
         
-        public function getEvents($category, $venue, $country, $location, $organizer, $keyword, $slug, $freeonly, $onlineonly, $pricemin, $pricemax, $audience, $startdate, $startdatemin, $startdatemax, $published, $elapsed, $organizerEnabled, $addedtofavoritesby, $isOnHomepageSlider, $otherthan, $sort, $order, $limit, $count): QueryBuilder
+        public function getEvents($category, $organizer, $keyword, $slug, $onlineonly, $startdate, $startdatemin, $startdatemax, $published, $elapsed, $organizerEnabled, $addedtofavoritesby, $isOnHomepageSlider, $otherthan, $limit, $count): QueryBuilder
         {
             $qb = $this->createQueryBuilder("e");
             if ($count) {
@@ -89,29 +84,11 @@
                 $qb->select("DISTINCT e");
             }
             
+            $qb->leftJoin('e.eventdates', 'eventdates');
+            
             if ($category !== "all") {
                 $qb->leftJoin("e.category", "category");
                 $qb->andWhere("category.slug = :category")->setParameter("category", $category);
-            }
-            if ($venue !== "all" || $country !== "all" || $location !== "all" || $pricemin !== "all" || $pricemax !== "all" || $startdate != "all" || $startdatemin != "all" || $startdatemax != "all" || $sort === "eventdates.startdate" || $elapsed !== "all" || $onsalebypos !== "all" || $onlineonly !== "all") {
-                $qb->leftJoin("e.eventdates", "eventdates");
-                $qb->leftJoin("eventdates.venue", "venue");
-            }
-            if ($onlineonly == "1") {
-                $qb->andWhere("eventdates.online = 1");
-            }
-            if ($freeonly == "1" || $pricemin !== "all" || $pricemax !== "all") {
-                $qb->leftJoin("eventdates.tickets", "tickets");
-            }
-            if ($freeonly == "1") {
-                $qb->andWhere("tickets.free = 1");
-            } elseif ($pricemin !== "all" || $pricemax !== "all") {
-                if ($pricemin !== "all") {
-                    $qb->andWhere("(tickets.price >= :pricemin AND tickets.promotionalprice IS NULL) OR (tickets.promotionalprice >= :pricemin)")->setParameter("pricemin", $pricemin);
-                }
-                if ($pricemax !== "all") {
-                    $qb->andWhere("((tickets.price <= :pricemax OR tickets.price IS NULL) AND tickets.promotionalprice IS NULL) OR (tickets.promotionalprice <= :pricemax)")->setParameter("pricemax", $pricemax);
-                }
             }
             if ($startdate !== "all") {
                 $qb->andWhere("Date(eventdates.startdate) = :startdate")->setParameter("startdate", $startdate);
@@ -129,7 +106,14 @@
                 $qb->andWhere("organizer.slug = :organizer")->setParameter("organizer", $organizer);
             }
             if ($keyword !== "all") {
-                $qb->andWhere("e.name LIKE :keyword or :keyword LIKE e.name or e.description LIKE :keyword or :keyword LIKE e.description or e.tags LIKE :keyword or :keyword LIKE e.tags or e.artists LIKE :keyword or :keyword LIKE e.artists")->setParameter("keyword", "%" . $keyword . "%");
+                $keyword = "%" . $keyword . "%";
+                $qb->andWhere(
+                    $qb->expr()->orX(
+                        $qb->expr()->like('e.name', ':keyword'),
+                        $qb->expr()->like('e.description', ':keyword'),
+                        $qb->expr()->like('e.tags', ':keyword'),
+                    )
+                )->setParameter('keyword', $keyword);
             }
             if ($slug !== "all") {
                 $qb->andWhere("e.slug = :slug")->setParameter("slug", $slug);
@@ -197,12 +181,6 @@
                 ->join("e.organizer", "organizer")
                 ->andWhere("organizer.id = :organizerId")
                 ->setParameter("organizerId", $organizerId);
-        }
-        
-        public function getAllEventsQueryBuilder(): QueryBuilder
-        {
-            return $this->createQueryBuilder("e")
-                ->select("DISTINCT e");
         }
         
         public function findOneBySlug($slug)
