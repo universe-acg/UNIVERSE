@@ -51,8 +51,12 @@ dashboard_administrator_attendees_details:
   controller: 'App\Controller\Dashboard\Shared\OrderController::attendeesAdminDetails'
 
 dashboard_organizer_attendees_details:
-  path: /organizer/manage-attendees-details/{orderid}/{userslug}
+  path: /organizer/manage-attendees-details/{eventslug}
   controller: 'App\Controller\Dashboard\Shared\OrderController::attendeesAdminDetailsasOrganizer'
+
+attendace_details_see_attendeed_event_dates:
+  path: /organizer/manage-attendees-details-event-dates/{userid}/{eventid}
+  controller: 'App\Controller\Dashboard\Shared\OrderController::attendeesAdminDetailsasOrganizerEventdates'
 
 generate_attendees_pdf:
   path: /dashboard/generate-attendees-pdf

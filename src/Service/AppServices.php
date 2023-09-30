@@ -19,6 +19,7 @@
     use App\Entity\OrderTicket;
     use App\Entity\Page;
     use App\Entity\Settings;
+    use App\Entity\User;
     use DateTime;
     use DateTimeInterface;
     use Doctrine\ORM\EntityManagerInterface;
@@ -706,6 +707,29 @@
             return $this->em->getRepository("App\Entity\User")->getUsers($role, $keyword, $organizername, $organizerslug, $username, $email, $firstname, $lastname, $enabled, $slug, $followedby, $hasboughtticketforEvent, $hasboughtticketforOrganizer, $apiKey, $isOnHomepageSlider, $limit, $count);
         }
         
+        public function getUsersShuffled($criterias)
+        {
+            $role = array_key_exists('role', $criterias) ? $criterias['role'] : "all";
+            $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
+            $organizername = array_key_exists('organizername', $criterias) ? $criterias['organizername'] : "all";
+            $organizerslug = array_key_exists('organizerslug', $criterias) ? $criterias['organizerslug'] : "all";
+            $username = array_key_exists('username', $criterias) ? $criterias['username'] : "all";
+            $email = array_key_exists('email', $criterias) ? $criterias['email'] : "all";
+            $firstname = array_key_exists('firstname', $criterias) ? $criterias['firstname'] : "all";
+            $lastname = array_key_exists('lastname', $criterias) ? $criterias['lastname'] : "all";
+            $enabled = array_key_exists('enabled', $criterias) ? $criterias['enabled'] : true;
+            $followedby = array_key_exists('followedby', $criterias) ? $criterias['followedby'] : "all";
+            $apiKey = array_key_exists('apikey', $criterias) ? $criterias['apikey'] : "all";
+            $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
+            $hasboughtticketforEvent = array_key_exists('hasboughtticketfor', $criterias) ? $criterias['hasboughtticketfor'] : "all";
+            $hasboughtticketforOrganizer = array_key_exists('hasboughtticketfororganizer', $criterias) ? $criterias['hasboughtticketfororganizer'] : "all";
+            $isOnHomepageSlider = array_key_exists('isOnHomepageSlider', $criterias) ? $criterias['isOnHomepageSlider'] : "all";
+            $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
+            $count = array_key_exists('count', $criterias) ? $criterias['count'] : false;
+            
+            return $this->em->getRepository("App\Entity\User")->getUsersShuffled($role, $keyword, $organizername, $organizerslug, $username, $email, $firstname, $lastname, $enabled, $slug, $followedby, $hasboughtticketforEvent, $hasboughtticketforOrganizer, $apiKey, $isOnHomepageSlider, $limit, $count);
+        }
+        
         /**
          * @param $criterias
          * @return QueryBuilder
@@ -783,7 +807,6 @@
             $startDateMin = null;
             $startDateMax = null;
             
-            
             if ($startDateFilter === "today") {
                 $startDateMin = new DateTime('today');
                 $startDateMax = new DateTime('today');
@@ -814,10 +837,8 @@
             $queryBuilder
                 ->leftJoin('e.eventdates', 'eventdates');
             
-            
             if ($startDateMin && $startDateMax) {
                 $queryBuilder
-                    ->leftJoin('e.eventdates', 'eventdates')
                     ->andWhere('eventdates.startdate >= :startDateMin')
                     ->andWhere('eventdates.startdate <= :startDateMax')
                     ->setParameter('startDateMin', $startDateMin->format('Y-m-d H:i:s'))
@@ -1046,4 +1067,55 @@
             return $this->requestStack->getCurrentRequest()->getScheme();
         }
         
+        public function findEventDatesAttendedByUser(User $user, Event $event)
+        {
+            $qb = $this->em->getRepository(EventDate::class)->createQueryBuilder('ed');
+            
+            $qb
+                ->select('ed')
+                ->join('ed.tickets', 'et')
+                ->join('ed.event', 'e')
+                ->join('et.orderelements', 'oe')
+                ->join('oe.order', 'o')
+                ->join('o.user', 'u')
+                ->where('o.status = :status')
+                ->andWhere('u = :user')
+                ->andWhere('e = :event')
+                ->setParameter('status', 2)
+                ->setParameter('user', $user)
+                ->setParameter('event', $event);
+            
+            return $qb->getQuery()->getResult();
+        }
+        
+        
+        public function getEventDatesByEvent($event)
+        {
+            $qb = $this->em->getRepository(EventDate::class)->createQueryBuilder('ed');
+            
+            $qb
+                ->select('ed')
+                ->join('ed.event', 'e')
+                ->where('e = :event')
+                ->setParameter('event', $event);
+            
+            return $qb->getQuery()->getResult();
+        }
+        
+        
+        public function findUsersAttendeedByEventSlug($eventSlug)
+        {
+            $qb = $this->em->getRepository(User::class)->createQueryBuilder('u')
+                ->select('u')
+                ->innerJoin('u.orders', 'o')
+                ->innerJoin('o.orderelements', 'oe')
+                ->where('o.status = 2')
+                ->innerJoin('oe.eventticket', 'et')
+                ->innerJoin('et.eventdate', 'ed')
+                ->innerJoin('ed.event', 'e')
+                ->where('e.slug = :eventSlug')
+                ->setParameter('eventSlug', $eventSlug);
+            
+            return $qb->getQuery()->getResult();
+        }
     }

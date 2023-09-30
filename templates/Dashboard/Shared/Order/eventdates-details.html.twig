@@ -1,0 +1,171 @@
+{% extends "Global/layout.html.twig" %}
+
+{% set pagetitle = 'Event dates attended of: ' ~ user.getCrossRoleName() %}
+{% block title %}{{ pagetitle }}{% endblock %}
+
+{% block content %}
+
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 8px;
+        }
+
+        #attendanceFilter {
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+        }
+    </style>
+
+    {% set navigation = [{"current":(pagetitle)}] %}
+    {% include "Global/navigation.html.twig" with navigation %}
+
+    <section class="section-content padding-y bg-white">
+        <div class="{{ services.getSetting("app_layout") }}">
+            <div class="row">
+                <aside class="col-lg-3 pt-3 pt-lg-0">
+                    {% include "Dashboard/sidebar.html.twig" %}
+                </aside>
+                <div class="col-lg-8">
+                    <div class="row">
+                        <div class="col-12">
+                            <br>
+                            <div class="row">
+                                <div class="col-4 d-flex justify-content-start align-items-center">
+                                    <a id="generatePdfButton" class="text-dark mr-2">
+                                        <button type="button"
+                                                class="btn btn-primary btn-md">{{ "Print to PDF" }}</button>
+                                    </a>
+                                    <a id="generateExcelButton" class="text-dark pull-right">
+                                        <button type="button"
+                                                class="btn btn-primary btn-md">{{ "Print to Excel" }}</button>
+                                    </a>
+                                </div>
+                            </div>
+                            <br>
+
+                            <div>
+                                <label for="attendanceFilter">Attendance Filter:</label>
+                                <select id="attendanceFilter">
+                                    <option value="all">All</option>
+                                    <option value="attended">Attended</option>
+                                    <option value="not_attended">Not Attended</option>
+                                </select>
+                            </div>
+                            <br>
+                            <div class="table-responsive">
+                                <table id="tableToExport" class="table table-hover table-vcenter">
+                                    <thead>
+                                        <tr>
+                                            <th>{{ 'Full name' }}</th>
+                                            <th>{{ 'Email' }}</th>
+                                            <th>{{ 'Event Name' }}</th>
+                                            <th>{{ 'Event Date' }}</th>
+                                            <th>{{ 'Status' }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for eventdate in event.eventdates %}
+                                            <tr class="{{ eventdate.getAttendeedthiseventdate() == 1 ? 'attended' : 'not_attended' }}">
+                                                <td class="text-sm">
+                                                    {{ user.getCrossRoleName() }}
+                                                </td>
+                                                <td class="text-sm">
+                                                    {{ user.getEmail() }}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{ eventdate.event.name }}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{ eventdate.startdate|date('F j, Y H:i', 'Europe/Athens') }}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{ eventdate.getAttendeedthiseventdate() == 1 ? "Attended" : "Not Attended" }}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#attendanceFilter").change(function () {
+                var selectedValue = $(this).val();
+                $(".table tbody tr").hide();
+                if (selectedValue === "all") {
+                    $(".table tbody tr").show();
+                } else {
+                    $(".table tbody tr." + selectedValue).show();
+                }
+            });
+
+            function generatePDF() {
+                // Create a new jsPDF instance
+                var doc = new jsPDF()
+                doc.autoTable({html: '#tableToExport'})
+                doc.save('table.pdf')
+            }
+
+            function generateExcel() {
+                // Convert the table to a worksheet
+                var table = document.getElementById('tableToExport');
+                var ws = XLSX.utils.table_to_sheet(table);
+
+                // Create a new workbook and add the worksheet
+                var wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+                // Generate XLSX data as binary string
+                var xlsxData = XLSX.write(wb, {bookType: 'xlsx', type: 'binary'});
+
+                // Convert the binary string to an array buffer
+                var buf = new ArrayBuffer(xlsxData.length);
+                var view = new Uint8Array(buf);
+                for (var i = 0; i < xlsxData.length; i++) {
+                    view[i] = xlsxData.charCodeAt(i) & 0xFF;
+                }
+
+                // Create a Blob object from the array buffer
+                var blob = new Blob([buf], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+
+                // Create a temporary anchor element to trigger the download
+                var a = document.createElement('a');
+                a.href = window.URL.createObjectURL(blob);
+                a.download = 'table.xlsx';
+
+                // Trigger the click event on the anchor to start the download
+                a.click();
+
+                // Release the URL object
+                window.URL.revokeObjectURL(a.href);
+            }
+
+            document.getElementById("generatePdfButton").addEventListener("click", generatePDF);
+            document.getElementById("generateExcelButton").addEventListener("click", generateExcel);
+        });
+    </script>
+{% endblock %}

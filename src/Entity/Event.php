@@ -64,6 +64,8 @@
          * @Assert\Valid(groups={"create", "update"})
          */
         private $eventdates;
+        
+        private $eventDatesMulti;
         /**
          * @ORM\ManyToMany(targetEntity="User", inversedBy="favorites", cascade={"persist", "merge"})
          * @ORM\JoinTable(name="universe_favorites",
@@ -171,7 +173,6 @@
          * @ORM\Column(type="boolean")
          */
         private $published = false;
-        
         /**
          * @ORM\Column(type="boolean")
          */
@@ -194,6 +195,7 @@
         
         public function __construct()
         {
+            $this->eventDatesMulti = new ArrayCollection();
             $this->views = 0;
             $this->eventdates = new ArrayCollection();
             $this->images = new ArrayCollection();
@@ -215,6 +217,22 @@
             ]);
             
             return strlen($reference) > $length ? substr($reference, 0, $length) : $reference;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getEventDatesMulti()
+        {
+            return $this->eventDatesMulti;
+        }
+        
+        /**
+         * @param mixed $eventDatesMulti
+         */
+        public function setEventDatesMulti($eventDatesMulti): void
+        {
+            $this->eventDatesMulti = $eventDatesMulti;
         }
         
         /**
@@ -250,12 +268,13 @@
         }
         
         /**
-         * @return mixed
+         * @return bool
          */
         public function getIsPassed()
         {
             return $this->isPassed;
         }
+        
         
         /**
          * @param mixed $isPassed

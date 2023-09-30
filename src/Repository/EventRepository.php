@@ -19,17 +19,59 @@
             parent::__construct($registry, Event::class);
         }
         
-        public function findAttendedEventsByUser(User $user)
+        public function findAttendedEventsByUser(User $user, $category, $startdate)
         {
-            return $this->createQueryBuilder('e')
-                ->join('e.eventdates', 'ed') // Assuming events are related to event dates
-                ->join('ed.tickets', 'et') // Assuming event dates are related to event tickets
-                ->join('et.orderelements', 'oe') // Assuming event tickets are related to order elements
-                ->join('oe.order', 'o') // Assuming order elements are related to orders
-                ->where('o.user = :user')
-                ->andWhere('o.status = :status')
+            $startDateFilter = $startdate ?? "all";
+            
+            // Add date range filtering
+            $startDateMin = null;
+            $startDateMax = null;
+            
+            if ($startDateFilter === "today") {
+                $startDateMin = new DateTime('today');
+                $startDateMax = new DateTime('today');
+            } elseif ($startDateFilter === "tomorrow") {
+                $startDateMin = new DateTime('tomorrow');
+                $startDateMax = new DateTime('tomorrow');
+            } elseif ($startDateFilter === "thisweekend") {
+                $startDateMin = new DateTime('saturday this week');
+                $startDateMax = new DateTime('sunday this week');
+            } elseif ($startDateFilter === "thisweek") {
+                $startDateMin = new DateTime('monday this week');
+                $startDateMax = new DateTime('sunday this week');
+            } elseif ($startDateFilter === "nextweek") {
+                $startDateMin = new DateTime('monday next week');
+                $startDateMax = new DateTime('sunday next week');
+            } elseif ($startDateFilter === "thismonth") {
+                $startDateMin = new DateTime('first day of this month');
+                $startDateMax = new DateTime('last day of this month');
+            } elseif ($startDateFilter === "nextmonth") {
+                $startDateMin = new DateTime('first day of next month');
+                $startDateMax = new DateTime('last day of next month');
+            }
+            
+            $qb = $this->createQueryBuilder('e');
+            $qb->join('e.eventdates', 'ed') // Assuming events are related to event dates
+            ->join('ed.tickets', 'et') // Assuming event dates are related to event tickets
+            ->join('et.orderelements', 'oe') // Assuming event tickets are related to order elements
+            ->join('oe.order', 'o') // Assuming order elements are related to orders
+            ->where('o.user = :user');
+            
+            if ($startDateMin && $startDateMax) {
+                $qb
+                    ->andWhere('ed.startdate >= :startDateMin')
+                    ->andWhere('ed.startdate <= :startDateMax')
+                    ->setParameter('startDateMin', $startDateMin->format('Y-m-d H:i:s'))
+                    ->setParameter('startDateMax', $startDateMax->format('Y-m-d H:i:s'));
+            }
+            
+            $qb->andWhere('o.status = :status')
+                ->leftJoin("e.category", "category")
+                ->andWhere("category.slug like :category")->setParameter("category", $category != 'all' ? $category : '%')
                 ->setParameter('user', $user)
                 ->setParameter('status', 2);
+            
+            return $qb;
         }
         
         public function findBySlug($slug)

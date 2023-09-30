@@ -31,16 +31,16 @@
         public function buildForm(FormBuilderInterface $builder, array $options): void
         {
             $builder
-                ->add('userEvents', ChoiceType::class, [
-                    'label' => 'Select an event to prefill your inputs',
-                    'choices' => $options['user_choices'],
-                    'required' => false,
-                    'mapped' => false,
-                    'attr' => [
-                        'id' => 'form_userEvents',
-                    ],
-                    'help' => 'Select an event from the list to automatically fill in the form with its details.',
-                ])
+//                ->add('userEvents', ChoiceType::class, [
+//                    'label' => 'Select an event to prefill your inputs',
+//                    'choices' => $options['user_choices'],
+//                    'required' => false,
+//                    'help' => "Select an event from the list to automatically fill in the form with its details.",
+//                    'mapped' => false,
+//                    'attr' => [
+//                        'id' => 'form_userEvents',
+//                    ],
+//                ])
                 ->add('name', TextType::class, [
                     'purify_html' => true,
                     'label' => 'Title',
@@ -53,7 +53,6 @@
                     'attr' => ['class' => 'wysiwyg', 'id' => 'descriptionsummernote'],
                     'label' => 'Description',
                     'help' => 'Provide a detailed description of the event.',
-                    'attr' => ['placeholder' => 'Enter event description'],
                 ])
                 ->add('showattendees', ChoiceType::class, [
                     'required' => true,

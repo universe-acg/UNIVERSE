@@ -304,7 +304,7 @@
 
                                         {% include "Global/open-similar-event-card.html.twig" with {
                                             event: event,
-                                            past: currentTimeInEuropeAthens > eventEndTime
+                                            past: currentTimeInEuropeAthens < eventEndTime
                                         } %}
 
                                     {% endfor %}

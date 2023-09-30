@@ -144,7 +144,7 @@
 
                                 <div>
                                     <input type="hidden" name="reference" value="{{ event.id }}">
-                                    {% for eventDate in event.eventdates if eventDate.isOnSale %}
+                                    {% for eventDate in event.eventdates %}
                                         <div id="eventDate-{{ eventDate.reference }}-wrapper"
                                              class="event-eventDate-wrapper">
                                             <dl>
@@ -203,43 +203,45 @@
                                                                 </div>
                                                             {% endif %}
                                                             {% set eventenddate = eventDate.enddate|date('F d, Y H:i') %}
+                                                            <div class="clearfix"></div>
                                                         {% endif %}
-                                                        <div class="clearfix"></div>
-                                                        <a id="add-to-calendar-link" data-toggle="modal"
-                                                           data-target="#add-to-calendar-modal"
-                                                           href="javascript:void(0)" data-title="{{ event.name }}"
-                                                           data-start="{{ eventstartdate }}"
-                                                           data-end="{{ eventenddate }}"
-                                                           data-address="{{ eventlocation }}"
-                                                           data-description="{{ event.description|striptags|slice(0, 250)|raw|nl2br }}"><i
-                                                                    class="fas fa-calendar-plus"></i> {{ "Add to calendar" }}
-                                                        </a>
-                                                        <div class="modal fade" id="add-to-calendar-modal">
-                                                            <div class="modal-dialog modal-dialog-centered">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h4 class="modal-title"><i
-                                                                                    class="fas fa-calendar-plus"></i> {{ "Add to calendar" }}
-                                                                        </h4>
-                                                                        <button type="button" class="close"
-                                                                                data-dismiss="modal">&times;
-                                                                        </button>
+                                                        {% if  eventDate.isOnSale %}
+                                                            <a id="add-to-calendar-link" data-toggle="modal"
+                                                               data-target="#add-to-calendar-modal"
+                                                               href="javascript:void(0)" data-title="{{ event.name }}"
+                                                               data-start="{{ eventstartdate }}"
+                                                               data-end="{{ eventenddate }}"
+                                                               data-address="{{ eventlocation }}"
+                                                               data-description="{{ event.description|striptags|slice(0, 250)|raw|nl2br }}"><i
+                                                                        class="fas fa-calendar-plus"></i> {{ "Add to calendar" }}
+                                                            </a>
+                                                            <div class="modal fade" id="add-to-calendar-modal">
+                                                                <div class="modal-dialog modal-dialog-centered">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h4 class="modal-title"><i
+                                                                                        class="fas fa-calendar-plus"></i> {{ "Add to calendar" }}
+                                                                            </h4>
+                                                                            <button type="button" class="close"
+                                                                                    data-dismiss="modal">&times;
+                                                                            </button>
+                                                                        </div>
+                                                                        <div id="add-to-calendar" class="modal-body">
+                                                                        </div>
+                                                                        {#                                                                        <div class="modal-footer"> #}
+                                                                        {#                                                                            <button type="button" #}
+                                                                        {#                                                                                    disabled="{{ eventDate.tickets[0].isalreadybooked ? 'true' : 'false' }}" #}
+                                                                        {#                                                                                    class="btn btn-primary" #}
+                                                                        {#                                                                                    data-dismiss="modal">{{ "Book" }}</button> #}
+                                                                        {#                                                                        </div> #}
                                                                     </div>
-                                                                    <div id="add-to-calendar" class="modal-body">
-                                                                    </div>
-                                                                    {#                                                                        <div class="modal-footer"> #}
-                                                                    {#                                                                            <button type="button" #}
-                                                                    {#                                                                                    disabled="{{ eventDate.tickets[0].isalreadybooked ? 'true' : 'false' }}" #}
-                                                                    {#                                                                                    class="btn btn-primary" #}
-                                                                    {#                                                                                    data-dismiss="modal">{{ "Book" }}</button> #}
-                                                                    {#                                                                        </div> #}
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        {% endif %}
                                                     </div>
                                                 </dd>
                                             </dl>
-                                            {% if  is_granted('ROLE_ATTENDEE') %}
+                                            {% if  is_granted('ROLE_ATTENDEE') and eventDate.isOnSale %}
                                                 <hr class="hr-md">
                                                 <dl class="mt-5">
                                                     <dt class="text-muted">{{ "Tickets" }}</dt>

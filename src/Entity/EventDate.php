@@ -24,46 +24,42 @@
          */
         private $id;
         
+        private $attendeedthiseventdate = false;
         /**
          * @ORM\ManyToOne(targetEntity="Event", inversedBy="eventdates", cascade={"persist"})
          */
         private $event;
-        
         /**
          * @ORM\Column(type="boolean")
          */
         private $online = false;
         
+        // Add this method to mark an event date as attended by a user
         /**
          * @ORM\OneToMany(targetEntity="EventTicket", mappedBy="eventdate", cascade={"persist", "remove"}, fetch = "EAGER", orphanRemoval=true)
          * @ORM\OrderBy({"position" = "ASC"})
          * @Assert\Valid(groups={"create", "update"})
          */
         private $tickets;
-        
         /**
          * @ORM\Column(type="boolean")
          */
         private $active = true;
-        
         /**
          * @var string
          * @ORM\Column(type="string", length=255)
          */
         private $reference;
-        
         /**
          * @var string
          * @ORM\Column(type="string")
          */
         private $description;
-        
         /**
          * @var string
          * @ORM\Column(type="string", length=255)
          */
         private $title;
-        
         /**
          * @var DateTime
          * @ORM\Column(type="datetime", nullable=true)
@@ -96,6 +92,22 @@
                 bin2hex(random_bytes(2))
             ]);
             return strlen($reference) > $length ? substr($reference, 0, $length) : $reference;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getAttendeedthiseventdate()
+        {
+            return $this->attendeedthiseventdate;
+        }
+        
+        /**
+         * @param mixed $attendeedthiseventdate
+         */
+        public function setAttendeedthiseventdate($attendeedthiseventdate): void
+        {
+            $this->attendeedthiseventdate = $attendeedthiseventdate;
         }
         
         /**

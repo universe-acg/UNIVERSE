@@ -25,6 +25,8 @@ doctrine:
         class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
         enabled: false
     dql:
+      numeric_functions:
+        rand: DoctrineExtensions\Query\Mysql\Rand
       datetime_functions:
         date: DoctrineExtensions\Query\Mysql\Date
         now: DoctrineExtensions\Query\Mysql\Now

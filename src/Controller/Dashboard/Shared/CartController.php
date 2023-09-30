@@ -101,9 +101,9 @@
             
             // Persist the order to the database
             $entityManager = $this->getDoctrine()->getManager();
-
-//            $entityManager->persist($order);
-//            $entityManager->flush();
+            
+            $entityManager->persist($order);
+            $entityManager->flush();
             
             foreach ($order->getOrderelements() as $orderElement) {
                 $ticketreservation = new TicketReservation();
@@ -112,8 +112,8 @@
                 $ticketreservation->setOrderelement($orderElement);
                 $ticketreservation->setQuantity(1);
                 $orderElement->addTicketsReservation($ticketreservation);
-//                $em->persist($ticketreservation);
-//                $em->flush();
+                $em->persist($ticketreservation);
+                $em->flush();
             }
             
             $this->addFlash('success', 'Event has been booked');

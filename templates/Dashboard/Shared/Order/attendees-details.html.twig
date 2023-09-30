@@ -1,4 +1,37 @@
-{% set eventlink = "" %}
-<div class="table-responsive">
+{% extends "Global/layout.html.twig" %}
 
-</div>
+{% set pagetitle = 'Attendance details of event: ' ~ event.getName() %}
+{% block title %}{{ pagetitle }}{% endblock %}
+
+{% block content %}
+
+    {% set navigation = [{"current":(pagetitle)}] %}
+    {% include "Global/navigation.html.twig" with navigation %}
+
+    <section class="section-content padding-y bg-white">
+        <div class="{{ services.getSetting("app_layout") }}">
+            <div class="row">
+                <aside class="col-lg-3 pt-3 pt-lg-0">
+                    {% include "Dashboard/sidebar.html.twig" %}
+                </aside>
+                <div class="col-lg-8">
+                    <div class="row">
+                        <div class="col-12">
+                            {% for user in users %}
+                                <div class="card">
+                                    {% include "Dashboard/Shared/Order/attendance-details-manage-attendees-table.html.twig" with {user: user, event: event} %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+{% endblock %}

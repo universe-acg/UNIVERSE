@@ -1,5 +1,6 @@
 {% set runtimeConfig = {"thumbnail": {"size": [500, 250] }} %}
 {% set displayedEventDate = event.eventdates[0] %}
+{% set endedEventDate = event.eventdates[(event.eventdates | length )-1].enddate %}
 
 {% if customLink is defined %}
     {% set link = customLink %}

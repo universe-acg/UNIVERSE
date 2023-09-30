@@ -78,7 +78,7 @@
                 $qb->join("eventdate.event", "event");
             }
             if ($hasboughtticketforEvent !== "all") {
-                $qb->andWhere("orders.status = :statuspaid")->setParameter("statuspaid", 1);
+                $qb->andWhere("orders.status > :statuspaid")->setParameter("statuspaid", 1);
                 $qb->andWhere("event.slug = :hasboughtticketforevent")->setParameter("hasboughtticketforevent", $hasboughtticketforEvent);
             }
             
@@ -92,6 +92,82 @@
                 $qb->setMaxResults($limit);
             }
             $qb->andWhere("u.slug != :administrator")->setParameter("administrator", "administrator");
+            
+            return $qb;
+        }
+        
+        
+        public function getUsersShuffled($role, $keyword, $organizername, $organizerslug, $username, $email, $firstname, $lastname, $enabled, $slug, $followedby, $hasboughtticketforEvent, $hasboughtticketforOrganizer, $apiKey, $isOnHomepageSlider, $limit, $count)
+        {
+            $qb = $this->createQueryBuilder("u");
+            if ($count) {
+                $qb->select("COUNT(u)");
+            } else {
+                $qb->select("u");
+            }
+            if ($role !== "all") {
+                $qb->andWhere("u.roles LIKE :role")->setParameter("role", "%ROLE_" . strtoupper($role) . "%");
+            }
+            if ($keyword !== "all") {
+                $qb->andWhere("u.username LIKE :keyword or :keyword LIKE u.username or u.email LIKE :keyword or :keyword LIKE u.email or u.firstname LIKE :keyword or :keyword LIKE u.firstname or u.lastname LIKE :keyword or :keyword LIKE u.lastname")->setParameter("keyword", "%" . $keyword . "%");
+            }
+            if ($organizername !== "all" || $organizerslug || $followedby) {
+                $qb->leftJoin("u.organizer", "organizer");
+            }
+            if ($organizername !== "all") {
+                $qb->andWhere("organizer.name LIKE :organizername or :organizername LIKE organizer.name")->setParameter("organizername", "%" . $organizername . "%");
+            }
+            if ($organizerslug !== "all") {
+                $qb->andWhere("organizer.slug = :organizerslug")->setParameter("organizerslug", $organizerslug);
+            }
+            if ($username !== "all") {
+                $qb->andWhere("u.username = :username")->setParameter("username", $username);
+            }
+            if ($email !== "all") {
+                $qb->andWhere("u.email = :email")->setParameter("email", $email);
+            }
+            if ($firstname !== "all") {
+                $qb->andWhere("u.firstname LIKE :firstname or :firstname LIKE u.firstname")->setParameter("firstname", "%" . $firstname . "%");
+            }
+            if ($lastname !== "all") {
+                $qb->andWhere("u.lastname LIKE :lastname or :lastname LIKE u.lastname")->setParameter("lastname", "%" . $lastname . "%");
+            }
+            if ($enabled !== "all") {
+                $qb->andWhere("u.enabled = :enabled")->setParameter("enabled", $enabled);
+            }
+            if ($slug !== "all") {
+                $qb->andWhere("u.slug = :slug")->setParameter("slug", $slug);
+            }
+            if ($followedby !== "all") {
+                $qb->andWhere(":followedby MEMBER OF organizer.followedby")->setParameter("followedby", $followedby);
+            }
+            
+            if ($hasboughtticketforEvent !== "all" || $hasboughtticketforOrganizer != "all") {
+                $qb->join("u.orders", "orders");
+                $qb->join("orders.orderelements", "orderelements");
+                $qb->join("orderelements.eventticket", "eventticket");
+                $qb->join("eventticket.eventdate", "eventdate");
+                $qb->join("eventdate.event", "event");
+            }
+            if ($hasboughtticketforEvent !== "all") {
+                $qb->andWhere("orders.status > :statuspaid")->setParameter("statuspaid", 1);
+                $qb->andWhere("event.slug = :hasboughtticketforevent")->setParameter("hasboughtticketforevent", $hasboughtticketforEvent);
+            }
+            
+            if ($apiKey !== "all") {
+                $qb->andWhere("u.apiKey = :apiKey")->setParameter("apiKey", $apiKey);
+            }
+            if ($isOnHomepageSlider === true) {
+                $qb->andWhere("u.isorganizeronhomepageslider IS NOT NULL");
+            }
+            
+            $qb->andWhere("u.slug != :administrator")->setParameter("administrator", "administrator");
+            
+            // Add a random number as a parameter and order by it
+            $qb->orderBy('RAND()');
+            if ($limit !== "all") {
+                $qb->setMaxResults($limit);
+            }
             
             return $qb;
         }

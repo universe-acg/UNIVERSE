@@ -1,5 +1,6 @@
 {% set runtimeConfig = {"thumbnail": {"size": [500, 250] }} %}
-{% set displayedEventDate = event.getFirstOnSaleEventDate %}
+{% set displayedEventDate = event.eventdates[0] %}
+{% set endedEventDate = event.eventdates[(event.eventdates | length )-1].enddate %}
 
 {% if customLink is defined %}
     {% set link = customLink %}
@@ -43,14 +44,18 @@
 
             {% if displayedEventDate.startdate %}
                 {% set currentDate = "now"|date('F j, Y H:i', 'Europe/Athens') %}
-                {% if displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') <= currentDate %}
-                    {% if displayedEventDate.enddate is not null and displayedEventDate.enddate|date('F j, Y H:i', 'Europe/Athens') < currentDate %}
-                        {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }} | Event has ended
-                    {% else %}
-                        {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }} | Event has started
-                    {% endif %}
+                {% if attendeed %}
+                    <span class="accomplishment">✨Attended✨</span>
                 {% else %}
-                    {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }}
+                    {% if displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') <= currentDate %}
+                        {% if endedEventDate is not null and endedEventDate|date('F j, Y H:i', 'Europe/Athens') >= currentDate %}
+                            {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }} | Event is ongoing
+                        {% else %}
+                            {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }} | Event has ended
+                        {% endif %}
+                    {% else %}
+                        {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }}
+                    {% endif %}
                 {% endif %}
             {% endif %}
 

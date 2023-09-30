@@ -215,22 +215,21 @@
                 }
             }
             
-            if ($startdate !== "all") {
-                $selectedStartDate = $this->convertStartDateStringToDateTime($startdate);
-            } else {
-                $selectedStartDate = null; // Handle the "all" case as needed
-            }
-            
             $user = $this->getUser();
+            
             // Fetch attended events by the user
-            $attendedEvents = $eventRepository->findAttendedEventsByUser($user)->getQuery()->getResult();
+            if ($category != "all") {
+                $attendedEvents = $eventRepository->findAttendedEventsByUser($user, $category->getSlug(), "all")->getQuery()->getResult();
+            } else {
+                $attendedEvents = $eventRepository->findAttendedEventsByUser($user, "all", $startdate)->getQuery()->getResult();
+            }
 // Fetch upcoming events
             $eventsUpcoming = $services->getEventsHomepageIndex([
                 "elapsed" => false,
                 "category" => $category,
                 'keyword' => $keyword,
                 'published' => true,
-                'startdate' => $selectedStartDate,
+                'startdate' => $startdate,
                 'organizer' => $organizer,
             ])->getQuery()->getResult();
 
@@ -240,12 +239,13 @@
                 'published' => true,
                 "category" => $category,
                 'keyword' => $keyword,
-                'startdate' => $selectedStartDate,
+                'startdate' => $startdate,
                 'organizer' => $organizer,
             ])->getQuery()->getResult();
             foreach ($eventsOld as $event) {
                 $event->setIsPassed(true);
             }
+
 // Iterate through attended events and add them to the merged array
             $mergedEvents = [];
             
@@ -264,20 +264,15 @@
                 $mergedEvents[$event->getId()] = $event;
             }
 
+
 // Sort the merged events by startdate (ascending order)
             usort($mergedEvents, static function ($a, $b) {
                 return $b->getEventdates()[0]->getStartdate() <=> $a->getEventdates()[0]->getStartdate();
             });
 // Filter out events that are past the selected start date
-            if ($selectedStartDate !== null) {
-                $filteredEvents = array_filter($mergedEvents, function ($event) use ($selectedStartDate) {
-                    $eventStartDate = $event->getEventdates()[0]->getStartdate();
-                    return $eventStartDate >= $selectedStartDate;
-                });
-                
-                // Assign the filtered events back to $mergedEvents
-                $mergedEvents = $filteredEvents;
-            }
+            // Filter out events that are past the selected start date
+
+// Filter out events where the start date is in the past
 
 // Paginate the sorted merged events
             $eventsMergedPaginated = $paginator->paginate(
@@ -299,40 +294,10 @@
             ]);
         }
         
-        public function convertStartDateStringToDateTime($startdate)
-        {
-            $now = new DateTime();
-            
-            switch ($startdate) {
-                case "today":
-                    return $now->setTime(0, 0, 0);
-                case "tomorrow":
-                    return $now->modify('+1 day')->setTime(0, 0, 0);
-                case "thisweekend":
-                    return (new DateTime('saturday this week'))->setTime(0, 0, 0);
-                case "thisweek":
-                    return (new DateTime('monday this week'))->setTime(0, 0, 0);
-                case "nextweek":
-                    return (new DateTime('monday next week'))->setTime(0, 0, 0);
-                case "thismonth":
-                    return (new DateTime('first day of this month'))->setTime(0, 0, 0);
-                case "nextmonth":
-                    return (new DateTime('first day of next month'))->setTime(0, 0, 0);
-                case "pickadate":
-                    // Handle custom date selection logic here if needed
-                    $customDate = $criterias['custom_date'] ?? null;
-                    if ($customDate) {
-                        return (new DateTime($customDate))->setTime(0, 0, 0);
-                    }
-                default:
-                    throw new \InvalidArgumentException("Invalid startdate value: " . $startdate);
-            }
-        }
-        
         /**
          * @Route("/event/{slug}", name="event")
          */
-        public function event($slug, OrderElementRepository $orderElementRepository, OrderRepository $orderRepository, AppServices $services, EventTicketRepository $eventTicketRepository): Response
+        public function event($slug, OrderRepository $orderRepository, AppServices $services): Response
         {
             
             $event = $services->getEvents(array("slug" => $slug, "elapsed" => "all"))->getQuery()->getOneOrNullResult();
@@ -496,7 +461,7 @@
             $category = $request->query->get('category') ?: "all";
             $keyword = $request->query->get('keyword') == "" ? "all" : $request->query->get('keyword');
             $organizer = $request->query->get('organizer') == "" ? "all" : $request->query->get('organizer');
-            $startdate = $request->query->get('startdate') == "" ? "all" : $request->query->get('startdate');
+            $selectedStartDate = $request->query->get('startdate') == "" ? "all" : $request->query->get('startdate');
             
             if ($category != "all") {
                 $category = $services->getCategories(array("slug" => $category))->getQuery()->getOneOrNullresult();
@@ -506,7 +471,7 @@
                 }
             }
             
-            if ($startdate !== "all") {
+            if ($selectedStartDate !== "all") {
                 $selectedStartDate = $this->convertStartDateStringToDateTime($startdate);
             } else {
                 $selectedStartDate = null; // Handle the "all" case as needed
@@ -582,5 +547,35 @@
                 'thisMonthEventCount' => $thisMonthEventCount,
                 'nextMonthEventCount' => $nextMonthEventCount,
             ]);
+        }
+        
+        public function convertStartDateStringToDateTime($startdate)
+        {
+            $now = new DateTime();
+            
+            switch ($startdate) {
+                case "today":
+                    return $now->setTime(0, 0, 0);
+                case "tomorrow":
+                    return $now->modify('+1 day')->setTime(0, 0, 0);
+                case "thisweekend":
+                    return (new DateTime('saturday this week'))->setTime(0, 0, 0);
+                case "thisweek":
+                    return (new DateTime('monday this week'))->setTime(0, 0, 0);
+                case "nextweek":
+                    return (new DateTime('monday next week'))->setTime(0, 0, 0);
+                case "thismonth":
+                    return (new DateTime('first day of this month'))->setTime(0, 0, 0);
+                case "nextmonth":
+                    return (new DateTime('first day of next month'))->setTime(0, 0, 0);
+                case "pickadate":
+                    // Handle custom date selection logic here if needed
+                    $customDate = $criterias['custom_date'] ?? null;
+                    if ($customDate) {
+                        return (new DateTime($customDate))->setTime(0, 0, 0);
+                    }
+                default:
+                    throw new \InvalidArgumentException("Invalid startdate value: " . $startdate);
+            }
         }
     }

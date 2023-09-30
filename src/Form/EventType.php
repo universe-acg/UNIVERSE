@@ -33,15 +33,15 @@
         public function buildForm(FormBuilderInterface $builder, array $options): void
         {
             $builder
-                ->add('userEvents', ChoiceType::class, [
-                    'label' => 'Select an event to prefill your inputs',
-                    'choices' => $options['user_choices'],
-                    'required' => false, // Make it optional
-                    'mapped' => false, // This field won't be mapped to your entity
-                    'attr' => [
-                        'id' => 'form_userEvents',
-                    ],
-                ])
+//                ->add('userEvents', ChoiceType::class, [
+//                    'label' => 'Select an event to prefill your inputs',
+//                    'choices' => $options['user_choices'],
+//                    'required' => false, // Make it optional
+//                    'mapped' => false, // This field won't be mapped to your entity
+//                    'attr' => [
+//                        'id' => 'form_userEvents',
+//                    ],
+//                ])
                 ->add('name', TextType::class, [
                     'purify_html' => true,
                     'help' => "Editing the title after the event is saved won't change the event URL",
@@ -185,7 +185,6 @@
             $resolver->setDefined('user_choices'); // Define a custom option for user choices
             
             $resolver->setDefault('choices', function (Options $options) {
-                // Return the choices as an array
                 return $options['user_choices'];
             });
         }

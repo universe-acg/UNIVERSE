@@ -1,6 +1,7 @@
 {% set runtimeConfig = {"thumbnail": {"size": [500, 250] }} %}
 
-{% set displayedEventDate = event.eventdates[(event.eventdates | length )-1] %}
+{% set displayedEventDate = event.eventdates[0] %}
+{% set endedEventDate = event.eventdates[(event.eventdates | length )-1].enddate %}
 
 {% if customLink is defined %}
     {% set link = customLink %}
@@ -22,20 +23,16 @@
                 <a href="{{ link }}" class="text-dark">{{ event.name }} {{ event.isPassed }}</a>
             </h5>
 
-            {% if displayedEventDate.startdate %}
-                {% set currentDate = "now"|date('F j, Y H:i', 'Europe/Athens') %}
-                {% if attendeed %}
-                    <span class="accomplishment">✨Attended✨</span>
+            {% if attendeed %}
+                <span class="accomplishment">✨Attended✨</span>
+            {% elseif event.isPassed %}
+                {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }} | Event has ended
+            {% else %}
+                {% set currentDate = "now"|date('U', 'Europe/Athens') %}
+                {% if displayedEventDate.startdate|date('U') > currentDate %}
+                    Starts on: {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }}
                 {% else %}
-                    {% if displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') <= currentDate %}
-                        {% if displayedEventDate.enddate is not null and displayedEventDate.enddate|date('F j, Y H:i', 'Europe/Athens') < currentDate %}
-                            {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }} | Event has ended
-                        {% else %}
-                            {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }} | Event has started
-                        {% endif %}
-                    {% else %}
-                        {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }}
-                    {% endif %}
+                    {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }}| Event has started
                 {% endif %}
             {% endif %}
 
