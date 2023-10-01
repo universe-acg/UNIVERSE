@@ -1215,6 +1215,8 @@ $(document).ready(function () {
 
                 for (let j = 0; j < eventArrayLength; j++) {
                     if (i !== j && eventsDatesJsonArray[i].Date === eventsDatesJsonArray[j].Date) {
+                        console.dir(eventsDatesJsonArray[j]);
+                        console.dir(eventsDatesJsonArray[i]);
                         eventsDatesJsonArray[i].Title += ", " + eventsDatesJsonArray[j].Title;
                         eventsDatesJsonArray[i].Link += "|" + eventsDatesJsonArray[j].Link;
                         eventsDatesJsonArray.splice(j, 1);
@@ -1266,6 +1268,8 @@ $(document).ready(function () {
                 const eventDateReference = $(this).find(".cld-title > a").attr("href");
                 const eventDateHour = $(this).find(".cld-title > a").text();
 
+                console.dir($(this).find(".cld-number.eventday"));
+
                 if (eventDateReference.indexOf("|") == -1) {
                     $('.event-eventDate-wrapper').hide()
                     $("#eventDate-" + eventDateReference + "-wrapper").show();
@@ -1275,9 +1279,13 @@ $(document).ready(function () {
                     var eventDatesReferences = eventDateReference.split("|");
                     var eventDatesHours = eventDateHour.split(", ");
                     for (var i = 0; i < eventDatesReferences.length; i++) {
-                        var eventName = $('#add-to-calendar-link').data('title'); // Get the event.name value
+                        console.dir($('#add-to-calendar-link'));
+                        console.dir($('#add-to-calendar-link').data());
+                        var ticket = $('#add-to-calendar-link').data('ticket'); // Get the event.name value
+                        // var eventName = $('#eventDate-' + eventDateReference).find('.modal-body h6').text();
+                        // var eventName = eventDatesReferences[i]; // Get the ticket name for the current event date
                         eventDateHoursDialogContent += '<div>' +
-                            '<b class="float-left">' + eventName + ' @ ' + eventDatesHours[i] + ' </b>' +
+                            '<b class="float-left">' + ticket + ' @ ' + eventDatesHours[i] + ' </b>' +
                             '<button class="eventDate-hours-modal-tickets-button float-right btn btn-primary btn-sm" data-eventDate-reference="' + eventDatesReferences[i] + '" data-dismiss="modal">' + 'Book' + '</button>' +
                             '<div class="clearfix"></div>' +
                             '</div>';
