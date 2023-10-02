@@ -47,7 +47,7 @@ dashboard_administrator_attendees:
   controller: 'App\Controller\Dashboard\Shared\OrderController::attendeesAdmin'
 
 dashboard_administrator_attendees_details:
-  path: /administrator/manage-attendees-details/{eventid}/
+  path: /administrator/manage-attendees-details/{eventslug}/
   controller: 'App\Controller\Dashboard\Shared\OrderController::attendeesAdminDetails'
 
 dashboard_organizer_attendees_details:
@@ -57,6 +57,11 @@ dashboard_organizer_attendees_details:
 attendace_details_see_attendeed_event_dates:
   path: /organizer/manage-attendees-details-event-dates/{userid}/{eventid}
   controller: 'App\Controller\Dashboard\Shared\OrderController::attendeesAdminDetailsasOrganizerEventdates'
+
+admin_attendace_details_see_attendeed_event_dates:
+  path: /administrator/manage-attendees-details-event-dates/{userid}/{eventid}
+  controller: 'App\Controller\Dashboard\Shared\OrderController::attendeesAdminDetailsEventdates'
+
 
 generate_attendees_pdf:
   path: /dashboard/generate-attendees-pdf
@@ -88,6 +93,10 @@ dashboard_administrator_blog_post_edit:
 dashboard_organizer_event_delete_permanently_admin:
   path: '/administrator/my-events/{slug}/delete-permanently-admin'
   controller: App\Controller\Dashboard\Shared\EventController::deleteforadmin
+
+dashboard_organizer_event_prefill:
+  path: '/dashboard/organizer/my-events/{slug}/prefill'
+  controller: App\Controller\Dashboard\Shared\EventController::prefillEvent
 
 dashboard_organizer_profile_admin:
   path: '/profile/{id}'

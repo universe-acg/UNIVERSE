@@ -1,6 +1,6 @@
 {% extends "Global/layout.html.twig" %}
 
-{% set pagetitle = 'Event dates attended of: ' ~ user.getCrossRoleName() %}
+{% set pagetitle = 'Event dates attended by: ' ~ user.getCrossRoleName() %}
 {% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
@@ -53,12 +53,14 @@
                             </div>
                             <br>
 
+                            <p>Total event dates booked: <span id="totalEventDates"></span></p>
+                            <p>Total event dates attended: <span id="totalAttended"></span></p>
                             <div>
                                 <label for="attendanceFilter">Attendance Filter:</label>
                                 <select id="attendanceFilter">
                                     <option value="all">All</option>
                                     <option value="attended">Attended</option>
-                                    <option value="not_attended">Not Attended</option>
+                                    <option value="not_attended">Booked/Not Attended</option>
                                 </select>
                             </div>
                             <br>
@@ -68,7 +70,7 @@
                                         <tr>
                                             <th>{{ 'Full name' }}</th>
                                             <th>{{ 'Email' }}</th>
-                                            <th>{{ 'Event Name' }}</th>
+                                            <th>{{ 'Event Name - Ticket' }}</th>
                                             <th>{{ 'Event Date' }}</th>
                                             <th>{{ 'Status' }}</th>
                                         </tr>
@@ -83,13 +85,13 @@
                                                     {{ user.getEmail() }}
                                                 </td>
                                                 <td class="text-center">
-                                                    {{ eventdate.event.name }}
+                                                    {{ eventdate.event.name }} - {{ eventdate.tickets[0].name }}
                                                 </td>
                                                 <td class="text-center">
                                                     {{ eventdate.startdate|date('F j, Y H:i', 'Europe/Athens') }}
                                                 </td>
                                                 <td class="text-center">
-                                                    {{ eventdate.getAttendeedthiseventdate() == 1 ? "Attended" : "Not Attended" }}
+                                                    {{ eventdate.getAttendeedthiseventdate() == 1 ? "Attended" : "Booked Not Attended" }}
                                                 </td>
                                             </tr>
                                         {% endfor %}
@@ -167,5 +169,26 @@
             document.getElementById("generatePdfButton").addEventListener("click", generatePDF);
             document.getElementById("generateExcelButton").addEventListener("click", generateExcel);
         });
+
+
+        function updateTotals() {
+            var totalEventDates = 0;
+            var totalAttended = 0;
+
+            // Iterate through the table rows to count event dates and attended event dates
+            $("#tableToExport tbody tr").each(function () {
+                totalEventDates++;
+                if ($(this).hasClass("attended")) {
+                    totalAttended++;
+                }
+            });
+
+            // Update the content of the placeholders
+            $("#totalEventDates").text(totalEventDates);
+            $("#totalAttended").text(totalAttended);
+        }
+
+        // Call the updateTotals function initially
+        updateTotals();
     </script>
 {% endblock %}

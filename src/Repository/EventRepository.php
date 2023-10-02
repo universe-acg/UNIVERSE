@@ -6,6 +6,7 @@
     namespace App\Repository;
     
     use App\Entity\Event;
+    use App\Entity\Organizer;
     use App\Entity\User;
     use DateTime;
     use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -228,5 +229,30 @@
         public function findOneBySlug($slug)
         {
             return $this->findOneBy(['slug' => $slug]);
+        }
+        
+        
+        public function findTotalEventsAttendedByUser(User $user)
+        {
+            $qb = $this->createQueryBuilder('e')
+                ->join('e.eventdates', 'ed')
+                ->join('ed.tickets', 'et')
+                ->join('et.orderelements', 'oe')
+                ->join('oe.order', 'o')
+                ->where('o.user = :user')
+                ->andWhere('o.status = :status')
+                ->setParameter('user', $user)
+                ->setParameter('status', 2);
+            
+            return $qb->getQuery()->getResult();
+        }
+        
+        public function findEventsCreatedByOrganizer(Organizer $organizer)
+        {
+            return $this->createQueryBuilder('e')
+                ->andWhere('e.organizer = :organizer')
+                ->setParameter('organizer', $organizer)
+                ->getQuery()
+                ->getResult();
         }
     }

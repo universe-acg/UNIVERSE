@@ -47,7 +47,6 @@
          * @ORM\ManyToOne(targetEntity="Category", inversedBy="events")
          */
         private $category;
-        
         private $isPassed = false;
         private $isAttnded = false;
         /**
@@ -55,7 +54,7 @@
          */
         private $organizer;
         /**
-         * @ORM\OneToMany(targetEntity="EventImage", mappedBy="event", cascade={"persist", "remove"}, orphanRemoval=true)
+         * @ORM\OneToMany(targetEntity="EventImage", mappedBy="event", cascade={"persist", "remove"}, orphanRemoval=true, fetch = "EAGER")
          */
         private $images;
         /**
@@ -64,7 +63,6 @@
          * @Assert\Valid(groups={"create", "update"})
          */
         private $eventdates;
-        
         private $eventDatesMulti;
         /**
          * @ORM\ManyToMany(targetEntity="User", inversedBy="favorites", cascade={"persist", "merge"})
@@ -219,36 +217,146 @@
             return strlen($reference) > $length ? substr($reference, 0, $length) : $reference;
         }
         
-        /**
-         * @return mixed
-         */
-        public function getEventDatesMulti()
+        public function mapFromEvent(Event $oldEvent)
         {
-            return $this->eventDatesMulti;
+            // Copy properties from the old event to the current instance
+            $this->setName($oldEvent->getName());
+            $this->setDescription($oldEvent->getDescription());
+            $this->setSlug($this->generateUniqueSlug());
+            $this->setCategory($oldEvent->getCategory());
+            $this->setIsPassed($oldEvent->getIsPassed());
+            $this->setIsAttnded($oldEvent->isAttnded());
+            $this->setOrganizer($oldEvent->getOrganizer());
+            $this->setReference($oldEvent->getReference());
+            $this->setViews($oldEvent->getViews());
+            $this->setExternalLink($oldEvent->getExternalLink());
+            $this->setPhoneNumber($oldEvent->getPhoneNumber());
+            $this->setEmail($oldEvent->getEmail());
+            $this->setTags($oldEvent->getTags());
+            $this->setCommonValue($oldEvent->getCommonValue());
+            $this->setPublished($oldEvent->getPublished());
+            $this->setOpen($oldEvent->getOpen());
+            $this->setRepeatDays($oldEvent->getRepeatDays());
+            $this->setIsrepeat($oldEvent->isIsrepeat());
+            $this->setShowattendees($oldEvent->getShowattendees());
+            $this->setVolsneeded($oldEvent->isVolsneeded());
+            $this->setImageFile($oldEvent->getImageFile());
+            $this->setImageName($oldEvent->getImageName());
+            $this->setImageSize($oldEvent->getImageSize());
+            $this->setImageMimeType($oldEvent->getImageMimeType());
+            $this->setImageOriginalName($oldEvent->getImageOriginalName());
+            $this->setImageDimensions($oldEvent->getImageDimensions());
+            
+            // Copy images from the old event (assuming $images is a collection)
+            foreach ($oldEvent->getImages() as $image) {
+                $newImage = new EventImage();
+                $newImage->setImageFile($image->getImageFile());
+                $newImage->setImageName($image->getImageName());
+                $newImage->setImageSize($image->getImageSize());
+                $newImage->setImageMimeType($image->getImageMimeType());
+                $newImage->setImageOriginalName($image->getImageOriginalName());
+                $newImage->setImageDimensions($image->getImageDimensions());
+                $newImage->setPosition($image->getPosition());
+                $newImage->setUpdatedAt($image->getUpdatedAt());
+                $newImage->setEvent($this);
+                $this->addImage($newImage);
+            }
+            
+            // Copy event dates (assuming $eventdates is a collection)
+            foreach ($oldEvent->getEventDates() as $eventDate) {
+                $newEventDate = new EventDate();
+                $newEventDate->setOnline($eventDate->getOnline());
+                foreach ($eventDate->getTickets() as $oldticket) {
+                    $newEventTicket = new EventTicket();
+                    $newEventTicket->setAlreadyBooked($oldticket->isAlreadyBooked());
+                    $newEventTicket->setEventDate(null); // You may need to set this association
+                    $newEventTicket->setActive($oldticket->getActive());
+                    $newEventTicket->setReference($oldticket->getReference());
+                    $newEventTicket->setName($oldticket->getName());
+                    $newEventTicket->setDescription($oldticket->getDescription());
+                    $newEventTicket->setQuantity($oldticket->getQuantity());
+                    $newEventTicket->setTicketsPerAttendee($oldticket->getTicketsPerAttendee());
+                    $newEventTicket->setSalesStartdate($oldticket->getSalesStartdate());
+                    $newEventTicket->setSalesEnddate($oldticket->getSalesEnddate());
+                    $newEventTicket->setPosition($oldticket->getPosition());
+                    $newEventDate->addTicket($newEventTicket);
+                }
+                $newEventDate->setActive($eventDate->getActive());
+                $newEventDate->setReference($eventDate->getReference());
+                $newEventDate->setDescription($eventDate->getDescription());
+                $newEventDate->setTitle($eventDate->getTitle());
+                $newEventDate->setStartdate($eventDate->getStartdate());
+                $newEventDate->setEnddate($eventDate->getEnddate());
+                $this->addEventDate($newEventDate);
+            }
+            
+            // Ensure that the new event has its own unique properties set
+            $this->setId(null); // Reset the ID to create a new entity
+            $this->setReference($this->generateReference(10)); // Generate a new reference
+            $this->setViews(0); // Reset views count
+        }
+        
+        public function getName()
+        {
+            return $this->name;
+        }
+        
+        public function setName(string $name)
+        {
+            $this->name = $name;
+            
+            return $this;
+        }
+        
+        public function getDescription()
+        {
+            return $this->description;
+        }
+        
+        public function setDescription($description)
+        {
+            $this->description = $description;
+            
+            return $this;
+        }
+        
+        private function generateUniqueSlug()
+        {
+            $baseSlug = $this->getName();// Generate the base slug here, for example, from the title or some unique identifier.
+            $salt = uniqid('', true); // Generate a unique salt, you can use other methods if needed.
+            
+            // Combine the base slug and salt to create a unique slug.
+            // You can further sanitize or modify the uniqueSlug if needed.
+            
+            return $baseSlug . '-' . $salt;
+        }
+        
+        public function getCategory()
+        {
+            return $this->category;
+        }
+        
+        public function setCategory(Category $category)
+        {
+            $this->category = $category;
+            
+            return $this;
         }
         
         /**
-         * @param mixed $eventDatesMulti
+         * @return bool
          */
-        public function setEventDatesMulti($eventDatesMulti): void
+        public function getIsPassed()
         {
-            $this->eventDatesMulti = $eventDatesMulti;
+            return $this->isPassed;
         }
         
         /**
-         * @return false
+         * @param mixed $isPassed
          */
-        public function getOpen()
+        public function setIsPassed($isPassed): void
         {
-            return $this->open;
-        }
-        
-        /**
-         * @param mixed $open
-         */
-        public function setOpen($open): void
-        {
-            $this->open = $open;
+            $this->isPassed = $isPassed;
         }
         
         /**
@@ -267,41 +375,88 @@
             $this->isAttnded = $isAttnded;
         }
         
-        /**
-         * @return bool
-         */
-        public function getIsPassed()
+        public function getOrganizer()
         {
-            return $this->isPassed;
+            return $this->organizer;
         }
         
-        
-        /**
-         * @param mixed $isPassed
-         */
-        public function setIsPassed($isPassed): void
+        public function setOrganizer(Organizer $organizer)
         {
-            $this->isPassed = $isPassed;
+            $this->organizer = $organizer;
+            
+            return $this;
         }
         
-        public function getTotalOrderElementsQuantitySum($status = 1, $user = "all", $role = "all")
+        public function getReference()
         {
-            $sum = 0;
-            foreach ($this->eventdates as $eventDate) {
-                $sum += $eventDate->getOrderElementsQuantitySum($status, $user, $role);
-            }
-            return $sum;
+            return $this->reference;
         }
         
-        public function getTotalSalesPercentage()
+        public function setReference($reference)
         {
-            if (count($this->eventdates) == 0)
-                return 0;
-            $eventDatesSalesPercentageSum = 0;
-            foreach ($this->eventdates as $eventDate) {
-                $eventDatesSalesPercentageSum += $eventDate->getTotalSalesPercentage();
-            }
-            return round($eventDatesSalesPercentageSum / count($this->eventdates));
+            $this->reference = $reference;
+            
+            return $this;
+        }
+        
+        public function getViews()
+        {
+            return $this->views;
+        }
+        
+        public function setViews($views)
+        {
+            $this->views = $views;
+            
+            return $this;
+        }
+        
+        public function getExternallink()
+        {
+            return $this->externallink;
+        }
+        
+        public function setExternallink($externallink)
+        {
+            $this->externallink = $externallink;
+            
+            return $this;
+        }
+        
+        public function getPhonenumber()
+        {
+            return $this->phonenumber;
+        }
+        
+        public function setPhonenumber($phonenumber)
+        {
+            $this->phonenumber = $phonenumber;
+            
+            return $this;
+        }
+        
+        public function getEmail()
+        {
+            return $this->email;
+        }
+        
+        public function setEmail($email)
+        {
+            $this->email = $email;
+            
+            return $this;
+        }
+        
+        public function getTags()
+        {
+            return $this->tags;
+        }
+        
+        public function setTags($tags)
+        {
+            $this->tags = $tags;
+            
+            return $this;
         }
         
         /**
@@ -318,6 +473,34 @@
         public function setCommonvalue($commonvalue): void
         {
             $this->commonvalue = $commonvalue;
+        }
+        
+        public function getPublished()
+        {
+            return $this->published;
+        }
+        
+        public function setPublished($published)
+        {
+            $this->published = $published;
+            
+            return $this;
+        }
+        
+        /**
+         * @return false
+         */
+        public function getOpen()
+        {
+            return $this->open;
+        }
+        
+        /**
+         * @param mixed $open
+         */
+        public function setOpen($open): void
+        {
+            $this->open = $open;
         }
         
         public function getRepeatDays(): ?int
@@ -348,38 +531,14 @@
             $this->isrepeat = $isrepeat;
         }
         
-        public function getSlug()
+        public function getShowattendees()
         {
-            return $this->slug ?: "";
+            return $this->showattendees;
         }
         
-        public function setSlug($slug = null)
+        public function setShowattendees($showattendees)
         {
-            if ($slug === null) {
-                $slug = $this->generateUniqueSlug();
-            }
-            $this->slug = $slug;
-        }
-        
-        private function generateUniqueSlug()
-        {
-            $baseSlug = // Generate the base slug here, for example, from the title or some unique identifier.
-            $salt = uniqid('', true); // Generate a unique salt, you can use other methods if needed.
-            
-            // Combine the base slug and salt to create a unique slug.
-            // You can further sanitize or modify the uniqueSlug if needed.
-            
-            return $baseSlug . '-' . $salt;
-        }
-        
-        public function getDescription()
-        {
-            return $this->description;
-        }
-        
-        public function setDescription($description)
-        {
-            $this->description = $description;
+            $this->showattendees = $showattendees;
             
             return $this;
         }
@@ -398,107 +557,6 @@
         public function setVolsneeded(bool $volsneeded): void
         {
             $this->volsneeded = $volsneeded;
-        }
-        
-        public function isAddedToFavoritesBy($user)
-        {
-            return $this->addedtofavoritesby->contains($user);
-        }
-        
-        public function stringifyStatus()
-        {
-            if (!$this->organizer->getUser()->isEnabled()) {
-                return "Organizer is disabled";
-            }
-            
-            if (!$this->published) {
-                return "Event is not published";
-            }
-            
-            return "";
-        }
-        
-        public function stringifyStatusClass()
-        {
-            if (!$this->organizer->getUser()->isEnabled()) {
-                return "danger";
-            }
-            
-            if (!$this->published) {
-                return "warning";
-            }
-            
-            if (!$this->hasAnEventDateOnSale()) {
-                return "info";
-            }
-            
-            return "success";
-        }
-        
-        public function hasAnEventDateOnSale(): bool
-        {
-            foreach ($this->eventdates as $eventdate) {
-                if ($eventdate->isOnSale()) {
-                    return true;
-                }
-            }
-            return true;
-        }
-        
-        public function isOnSale()
-        {
-            return
-                $this->hasAnEventDateOnSale() &&
-                $this->organizer->getUser()->isEnabled() &&
-                $this->published;
-        }
-        
-        public function hasContactAndSocialMedia()
-        {
-            return ($this->externallink || $this->phonenumber || $this->email);
-        }
-        
-        public function getName()
-        {
-            return $this->name;
-        }
-        
-        public function setName(string $name)
-        {
-            $this->name = $name;
-            
-            return $this;
-        }
-        
-        public function viewed()
-        {
-            $this->views++;
-        }
-        
-        public function hasTwoOrMoreEventDatesOnSale()
-        {
-            $count = 0;
-            foreach ($this->eventdates as $eventdate) {
-                if ($eventdate->isOnSale()) {
-                    $count++;
-                }
-            }
-            return $count >= 2;
-        }
-        
-        public function getFirstOnSaleEventDate()
-        {
-            foreach ($this->eventdates as $eventdate) {
-                if ($eventdate->isOnSale()) {
-                    return $eventdate;
-                }
-            }
-            return null;
-        }
-        
-        public function getId()
-        {
-            return $this->id;
         }
         
         public function getImageFile()
@@ -524,56 +582,6 @@
 // otherwise the event listeners won't be called and the file is lost
                 $this->updatedAt = new DateTimeImmutable();
             }
-        }
-        
-        public function getImagePath()
-        {
-            return 'uploads/events/' . $this->imageName;
-        }
-        
-        public function getImagePlaceholder($size = "default")
-        {
-            if ($size == "small") {
-                return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAABGCAMAAABG8BK2AAAAXVBMVEUAAAD2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhHkayjUAAAAHnRSTlMABQ0PEBEcKixARkdJSk1WYmRmZ3R1eHl7f4WjsMpiv/ZRAAAAtUlEQVRYw+3X2Q7CIBCFYVqRLmoH3Oly3v8xvfCiJrYsSjRp578l+RJIIIMQHLfEMiKiYmKhICLKQhkJAHZiwQKAXC2zPWjTAsBg3hsAoDW6zj3KDWEdncoZSOBsEJ5jX/sIpp5ndASj5xkTwRhm/s101lcXwijv9VXMMPMzRlZj5edM9XKTemaYWTNT9mNXfm++YzQANMpX45m2Es1+iSZRcQlWTs7TuydRnn8GX3qXC45bXA+ADIuZ4XkIYQAAAABJRU5ErkJggg==";
-            }
-            
-            return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAV4AAAFeCAMAAAD69YcoAAAA9lBMVEUAAAD2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhEZWD6+AAAAUXRSTlMAAQIDBAYJDQ4QExQVFhcYGhseHyAhKi0uLzAxMjQ6Ozw+P0BERUZHSUpPUVVWV1hZYmRmcXN0dYOFiYuXmJq3ur7HyNHT1dfZ3Obo8fX3+fvgzUWiAAADeklEQVR42u3cSVNTQRSA0RcBgQhOKCg4MImoJPKCA+BAQGVUof//n3Gpm7iQCt3ver51qjo5i5fu26lUlSRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRdVdc/DGjrChbfGrT49Si8k2lA+1ew+P6gxSfx4sWLFy9evHjx4sWLFy9evHjx4sWLFy9evHjx4sWLFy9evHjHbj5a79S93+0M+oSnveF3OmjxnT9eVG+szbWvNcD23puj1NT2OuNF246+PkvNrj9bLG6r+yM1v4O7Zere/ppitD1SoO7LFKbjdnG6uylQF/OFPXY/pVitFsX7MSW+Q+tdilc5z4enAXXTRSnfbxPnEXnTcSH7s36K2XYRuk9S1Eo4v7XOwvIeFMC7nOJWwHznMDBvP7vuVIpc9vlvLzRvJzfvQWjevdz3Eyl2me/fpoPzZj4ZzwfnncvLux6cdy0vbzc470Ze3jo4b23bO8x6ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168/8J7st+kTprGu1g1qUW8ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168eIfQ5MplWsL791Yu9c8453jx4sWLFy9evHjx4sWLFy9evHjx4sWLFy9evHjx4sWLFy9evHjx4sWLFy9evHjx4sWLFy9evHjx4sWLFy9evHjx4sWLFy9evHjx4sWLFy9evHjx4sWLFy9evHjxNp136fwyfcebJbx48eLFixcvXrx48eLFixcvXrx48eLFixcvXrx48eLFixfvf8BbD3pfu4tNanfQx6jz8nZT7Dby8q4H513LyzsfnPdBXt7p4LztvLyjwXmvZd7SfAmtu5d7x9gLzdvJzTsVmnc8+4HnMLBuP/95cjkw72x+3tZZWN0vJYxDnoblnSli3NQPqrtTxjRv4jyk7vFI6dPSJnfRrkrpfUDehYKm/Z/C6a6WdJnS+hxM91lht1UfQj13F6rSehVoz9CuyuvOtyj73ZGqxFqbPyOchGeqUhvdbPoAoj9bFd39t0fNte1ONOAnL2O3Hr/o1r0mVXeeP7wxUkmSJEmSJEmSJEmSJEmSJEmSJEmSJEmSJEnSsPoFIVJb/voL1VsAAAAASUVORK5CYII=";
-        }
-        
-        public function getUpdatedAt()
-        {
-            return $this->updatedAt == $this->createdAt ? null : $this->updatedAt;
-        }
-        
-        public function setUpdatedAt($updatedAt)
-        {
-            $this->updatedAt = $updatedAt;
-            
-            return $this;
-        }
-        
-        public function getCategory()
-        {
-            return $this->category;
-        }
-        
-        public function setCategory(Category $category)
-        {
-            $this->category = $category;
-            
-            return $this;
-        }
-        
-        public function getOrganizer()
-        {
-            return $this->organizer;
-        }
-        
-        public function setOrganizer(Organizer $organizer)
-        {
-            $this->organizer = $organizer;
-            
-            return $this;
         }
         
         public function getImageName()
@@ -636,6 +644,216 @@
             return $this;
         }
         
+        /**
+         * @return ArrayCollection
+         */
+        public function getImages()
+        {
+            return $this->images;
+        }
+        
+        public function getUpdatedAt()
+        {
+            return $this->updatedAt == $this->createdAt ? null : $this->updatedAt;
+        }
+        
+        public function setUpdatedAt($updatedAt)
+        {
+            $this->updatedAt = $updatedAt;
+            
+            return $this;
+        }
+        
+        public function addImage($image)
+        {
+            if (!$this->images->contains($image)) {
+                $this->images[] = $image;
+                $image->setEvent($this);
+            }
+            
+            return $this;
+        }
+        
+        /**
+         * @return ArrayCollection
+         */
+        public function getEventdates()
+        {
+            return $this->eventdates;
+        }
+        
+        public function setEventdates($neweventdates)
+        {
+            $this->eventdates = $neweventdates;
+        }
+        
+        public function addEventdate($eventdate)
+        {
+            if (!$this->eventdates->contains($eventdate)) {
+                $this->eventdates[] = $eventdate;
+                $eventdate->setEvent($this);
+            }
+            
+            return $this;
+        }
+        
+        public function getSlug()
+        {
+            return $this->slug ?: "";
+        }
+        
+        public function setSlug($slug = null)
+        {
+            if ($slug === null) {
+                $slug = $this->generateUniqueSlug();
+            }
+            $this->slug = $slug;
+        }
+        
+        public function getId()
+        {
+            return $this->id;
+        }
+        
+        public function setId($id)
+        {
+            $this->id = $id;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getEventDatesMulti()
+        {
+            return $this->eventDatesMulti;
+        }
+        
+        /**
+         * @param mixed $eventDatesMulti
+         */
+        public function setEventDatesMulti($eventDatesMulti): void
+        {
+            $this->eventDatesMulti = $eventDatesMulti;
+        }
+        
+        public function getTotalOrderElementsQuantitySum($status = 1, $user = "all", $role = "all")
+        {
+            $sum = 0;
+            foreach ($this->eventdates as $eventDate) {
+                $sum += $eventDate->getOrderElementsQuantitySum($status, $user, $role);
+            }
+            return $sum;
+        }
+        
+        public function getTotalSalesPercentage()
+        {
+            if (count($this->eventdates) == 0)
+                return 0;
+            $eventDatesSalesPercentageSum = 0;
+            foreach ($this->eventdates as $eventDate) {
+                $eventDatesSalesPercentageSum += $eventDate->getTotalSalesPercentage();
+            }
+            return round($eventDatesSalesPercentageSum / count($this->eventdates));
+        }
+        
+        public function isAddedToFavoritesBy($user)
+        {
+            return $this->addedtofavoritesby->contains($user);
+        }
+        
+        public function stringifyStatus()
+        {
+            if (!$this->organizer->getUser()->isEnabled()) {
+                return "Organizer is disabled";
+            }
+            
+            if (!$this->published) {
+                return "Event is not published";
+            }
+            
+            return "";
+        }
+        
+        public function stringifyStatusClass()
+        {
+            if (!$this->organizer->getUser()->isEnabled()) {
+                return "danger";
+            }
+            
+            if (!$this->published) {
+                return "warning";
+            }
+            
+            if (!$this->hasAnEventDateOnSale()) {
+                return "info";
+            }
+            
+            return "success";
+        }
+        
+        public function hasAnEventDateOnSale(): bool
+        {
+            foreach ($this->eventdates as $eventdate) {
+                if ($eventdate->isOnSale()) {
+                    return true;
+                }
+            }
+            return true;
+        }
+        
+        public function isOnSale()
+        {
+            return
+                $this->hasAnEventDateOnSale() &&
+                $this->organizer->getUser()->isEnabled() &&
+                $this->published;
+        }
+        
+        public function hasContactAndSocialMedia()
+        {
+            return ($this->externallink || $this->phonenumber || $this->email);
+        }
+        
+        public function viewed()
+        {
+            $this->views++;
+        }
+        
+        public function hasTwoOrMoreEventDatesOnSale()
+        {
+            $count = 0;
+            foreach ($this->eventdates as $eventdate) {
+                if ($eventdate->isOnSale()) {
+                    $count++;
+                }
+            }
+            return $count >= 2;
+        }
+        
+        public function getFirstOnSaleEventDate()
+        {
+            foreach ($this->eventdates as $eventdate) {
+                if ($eventdate->isOnSale()) {
+                    return $eventdate;
+                }
+            }
+            return null;
+        }
+        
+        public function getImagePath()
+        {
+            return 'uploads/events/' . $this->imageName;
+        }
+        
+        public function getImagePlaceholder($size = "default")
+        {
+            if ($size == "small") {
+                return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAABGCAMAAABG8BK2AAAAXVBMVEUAAAD2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhHkayjUAAAAHnRSTlMABQ0PEBEcKixARkdJSk1WYmRmZ3R1eHl7f4WjsMpiv/ZRAAAAtUlEQVRYw+3X2Q7CIBCFYVqRLmoH3Oly3v8xvfCiJrYsSjRp578l+RJIIIMQHLfEMiKiYmKhICLKQhkJAHZiwQKAXC2zPWjTAsBg3hsAoDW6zj3KDWEdncoZSOBsEJ5jX/sIpp5ndASj5xkTwRhm/s101lcXwijv9VXMMPMzRlZj5edM9XKTemaYWTNT9mNXfm++YzQANMpX45m2Es1+iSZRcQlWTs7TuydRnn8GX3qXC45bXA+ADIuZ4XkIYQAAAABJRU5ErkJggg==";
+            }
+            
+            return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAV4AAAFeCAMAAAD69YcoAAAA9lBMVEUAAAD2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhEZWD6+AAAAUXRSTlMAAQIDBAYJDQ4QExQVFhcYGhseHyAhKi0uLzAxMjQ6Ozw+P0BERUZHSUpPUVVWV1hZYmRmcXN0dYOFiYuXmJq3ur7HyNHT1dfZ3Obo8fX3+fvgzUWiAAADeklEQVR42u3cSVNTQRSA0RcBgQhOKCg4MImoJPKCA+BAQGVUof//n3Gpm7iQCt3ver51qjo5i5fu26lUlSRJkiRJkiRJkiRJkiRJkiRJkiRJkiRJkiRdVdc/DGjrChbfGrT49Si8k2lA+1ew+P6gxSfx4sWLFy9evHjx4sWLFy9evHjx4sWLFy9evHjx4sWLFy9evHjHbj5a79S93+0M+oSnveF3OmjxnT9eVG+szbWvNcD23puj1NT2OuNF246+PkvNrj9bLG6r+yM1v4O7Zere/ppitD1SoO7LFKbjdnG6uylQF/OFPXY/pVitFsX7MSW+Q+tdilc5z4enAXXTRSnfbxPnEXnTcSH7s36K2XYRuk9S1Eo4v7XOwvIeFMC7nOJWwHznMDBvP7vuVIpc9vlvLzRvJzfvQWjevdz3Eyl2me/fpoPzZj4ZzwfnncvLux6cdy0vbzc470Ze3jo4b23bO8x6ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168/8J7st+kTprGu1g1qUW8ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168eIfQ5MplWsL791Yu9c8453jx4sWLFy9evHjx4sWLFy9evHjx4sWLFy9evHjx4sWLFy9evHjx4sWLFy9evHjx4sWLFy9evHjx4sWLFy9evHjx4sWLFy9evHjx4sWLFy9evHjx4sWLFy9evHjxNp136fwyfcebJbx48eLFixcvXrx48eLFixcvXrx48eLFixcvXrx48eLFixfvf8BbD3pfu4tNanfQx6jz8nZT7Dby8q4H513LyzsfnPdBXt7p4LztvLyjwXmvZd7SfAmtu5d7x9gLzdvJzTsVmnc8+4HnMLBuP/95cjkw72x+3tZZWN0vJYxDnoblnSli3NQPqrtTxjRv4jyk7vFI6dPSJnfRrkrpfUDehYKm/Z/C6a6WdJnS+hxM91lht1UfQj13F6rSehVoz9CuyuvOtyj73ZGqxFqbPyOchGeqUhvdbPoAoj9bFd39t0fNte1ONOAnL2O3Hr/o1r0mVXeeP7wxUkmSJEmSJEmSJEmSJEmSJEmSJEmSJEmSJEnSsPoFIVJb/voL1VsAAAAASUVORK5CYII=";
+        }
+        
         public function getCreatedAt()
         {
             return $this->createdAt;
@@ -660,42 +878,6 @@
             return $this;
         }
         
-        public function getPublished()
-        {
-            return $this->published;
-        }
-        
-        public function setPublished($published)
-        {
-            $this->published = $published;
-            
-            return $this;
-        }
-        
-        public function getReference()
-        {
-            return $this->reference;
-        }
-        
-        public function setReference($reference)
-        {
-            $this->reference = $reference;
-            
-            return $this;
-        }
-        
-        public function getViews()
-        {
-            return $this->views;
-        }
-        
-        public function setViews($views)
-        {
-            $this->views = $views;
-            
-            return $this;
-        }
-        
         public function getYoutubeurl()
         {
             return $this->youtubeurl;
@@ -708,42 +890,6 @@
             return $this;
         }
         
-        public function getExternallink()
-        {
-            return $this->externallink;
-        }
-        
-        public function setExternallink($externallink)
-        {
-            $this->externallink = $externallink;
-            
-            return $this;
-        }
-        
-        /**
-         * @return ArrayCollection
-         */
-        public function getEventdates()
-        {
-            return $this->eventdates;
-        }
-        
-        public function setEventdates($neweventdates)
-        {
-            $this->eventdates = $neweventdates;
-        }
-        
-        
-        public function addEventdate($eventdate)
-        {
-            if (!$this->eventdates->contains($eventdate)) {
-                $this->eventdates[] = $eventdate;
-                $eventdate->setEvent($this);
-            }
-            
-            return $this;
-        }
-        
         public function removeEventdate($eventdate)
         {
             if ($this->eventdates->contains($eventdate)) {
@@ -752,24 +898,6 @@
                 if ($eventdate->getEvent() === $this) {
                     $eventdate->setEvent(null);
                 }
-            }
-            
-            return $this;
-        }
-        
-        /**
-         * @return ArrayCollection
-         */
-        public function getImages()
-        {
-            return $this->images;
-        }
-        
-        public function addImage($image)
-        {
-            if (!$this->images->contains($image)) {
-                $this->images[] = $image;
-                $image->setEvent($this);
             }
             
             return $this;
@@ -800,18 +928,6 @@
             return $this;
         }
         
-        public function getTags()
-        {
-            return $this->tags;
-        }
-        
-        public function setTags($tags)
-        {
-            $this->tags = $tags;
-            
-            return $this;
-        }
-        
         public function getYear()
         {
             return $this->year;
@@ -820,42 +936,6 @@
         public function setYear($year)
         {
             $this->year = $year;
-            
-            return $this;
-        }
-        
-        public function getPhonenumber()
-        {
-            return $this->phonenumber;
-        }
-        
-        public function setPhonenumber($phonenumber)
-        {
-            $this->phonenumber = $phonenumber;
-            
-            return $this;
-        }
-        
-        public function getEmail()
-        {
-            return $this->email;
-        }
-        
-        public function setEmail($email)
-        {
-            $this->email = $email;
-            
-            return $this;
-        }
-        
-        public function getShowattendees()
-        {
-            return $this->showattendees;
-        }
-        
-        public function setShowattendees($showattendees)
-        {
-            $this->showattendees = $showattendees;
             
             return $this;
         }

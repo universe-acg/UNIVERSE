@@ -23,6 +23,9 @@ parameters:
   #asset.request_context.base_path: '%router.request_context.base_url%'
 
 services:
+  App\EventSubscriber\CustomLoginListener:
+    tags:
+      - { name: 'kernel.event_subscriber' }
   App\Validator\Constraints\UniqueEmailValidator:
     arguments:
       - '@doctrine.orm.entity_manager'

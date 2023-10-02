@@ -33,6 +33,7 @@
             // You can customize the data you want to send back to the client
             $responseData = [
                 'name' => $event->getName(),
+                'slug' => $event->getSlug(),
                 'description' => $event->getDescription(),
                 'email' => $event->getEmail(),
                 'phonenumber' => $event->getPhonenumber(),

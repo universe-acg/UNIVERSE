@@ -1088,6 +1088,75 @@
             return $qb->getQuery()->getResult();
         }
         
+        public function updateCreatorBadge(User $user)
+        {
+            $organizer = $user->getOrganizer();
+            $eventrepo = $this->em->getRepository(Event::class);
+            $events = $eventrepo->findEventsCreatedByOrganizer($organizer);
+            $totalpoints = 0;
+            $index = 1;
+            
+            foreach ($events as $event) {
+                // Replace this with your logic to get the total attendees for each event
+                $totalAttendees = count($this->findAttendeesOfEvent($event));
+                
+                $multiplier = 0.5; // Default multiplier
+                if ($totalAttendees > 5) {
+                    $multiplier = 1; // If total attendees > 5, set multiplier to 1
+                }
+                
+                $totalpoints += $multiplier * $index;
+                $index++;
+            }
+
+// Update points of the user with the calculated total points
+            $userrepo = $this->em->getRepository(User::class);
+            $userrepo->updateUserPoints($user, $totalpoints);
+        }
+        
+        public function findAttendeesOfEvent(Event $event)
+        {
+            $qb = $this->em->getRepository(User::class)->createQueryBuilder('u');
+            
+            $qb
+                ->select('u')
+                ->join('u.orders', 'o')
+                ->join('o.orderelements', 'oe')
+                ->join('oe.eventticket', 't')
+                ->join('t.eventdate', 'ed')
+                ->join('ed.event', 'e')
+                ->where('o.status = :status')
+                ->andWhere('e = :event')
+                ->setParameter('status', 2)
+                ->setParameter('event', $event);
+            
+            return $qb->getQuery()->getResult();
+        }
+        
+        public function updateAttendeeBadge(User $user)
+        {
+            $eventrepo = $this->em->getRepository(Event::class);
+            $eventscount = count($eventrepo->findTotalEventsAttendedByUser($user));
+
+//            dump($eventrepo(findTotalEventsAttendedByUser($user)));
+//            die();
+            
+            $userrepo = $this->em->getRepository(User::class);
+            
+            if ($eventscount >= 0 && $eventscount <= 5) {
+                $totalpoints = 1; // No points for 0-5 events attended.
+            } elseif ($eventscount >= 6 && $eventscount <= 11) {
+                $totalpoints = 2; // Points for 6-11 events attended.
+            } elseif ($eventscount >= 12 && $eventscount <= 20) {
+                $totalpoints = 3; // Points for 12-20 events attended.
+            } elseif ($eventscount >= 21 && $eventscount <= 30) {
+                $totalpoints = 4; // Points for 21-30 events attended.
+            } else {
+                $totalpoints = 5; // Set a default value or specify your logic.
+            }
+            
+            $userrepo->updateUserPoints($user, $totalpoints);
+        }
         
         public function getEventDatesByEvent($event)
         {
@@ -1101,7 +1170,6 @@
             
             return $qb->getQuery()->getResult();
         }
-        
         
         public function findUsersAttendeedByEventSlug($eventSlug)
         {
@@ -1117,5 +1185,30 @@
                 ->setParameter('eventSlug', $eventSlug);
             
             return $qb->getQuery()->getResult();
+        }
+        
+        private function generateUniqueSlug($title)
+        {
+            // Generate a slug based on the title
+            $baseSlug = strtolower(trim(preg_replace('/[^a-zA-Z0-9]+/', '-', $title), '-'));
+            
+            // Generate a random string (e.g., 6 characters) to append to the slug
+            $randomString = bin2hex(random_bytes(10)); // Adjust the number of bytes for desired length
+            
+            // Combine the base slug and random string
+            $uniqueSlug = $baseSlug . '-' . $randomString;
+            
+            // Check if the generated slug already exists in the database
+            $em = $this->getDoctrine()->getManager();
+            $repository = $em->getRepository(Event::class);
+            
+            // Keep incrementing the random string until you find a unique slug
+            $counter = 1;
+            while ($repository->findOneBy(['slug' => $uniqueSlug])) {
+                $counter++;
+                $uniqueSlug = $baseSlug . '-' . $randomString . '-' . $counter;
+            }
+            
+            return $uniqueSlug;
         }
     }

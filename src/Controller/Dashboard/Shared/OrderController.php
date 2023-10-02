@@ -165,12 +165,40 @@
         }
         
         /**
-         * @Route("/administrator/manage-attendees-details/{eventid}", name="dashboard_administrator_attendees_details")
+         * @Route("/administrator/manage-attendees-details/{eventslug}", name="dashboard_administrator_attendees_details")
          */
-        public function attendeesAdminDetails()
+        public function attendeesAdminDetails(AppServices $appServices, $eventslug, OrderRepository $orderRepository, UserRepository $userRepository, EventRepository $eventRepository)
         {
-            return $this->render('Dashboard/Shared/Order/attendees-details.html.twig', [
-                'orders' => $ordersPagination,
+            $users = $appServices->findUsersAttendeedByEventSlug($eventslug);
+            $event = $eventRepository->findBySlug($eventslug);
+            
+            foreach ($users as $user) {
+                $attendedDates = $appServices->findEventDatesAttendedByUser($user, $event);
+                $unattendedDates = $appServices->getEventDatesByEvent($event);
+                
+                foreach ($attendedDates as $attendedDate) {
+                    $attendedDate->setAttendeedthiseventdate(true);
+                }
+                
+                $allEventDates = array_merge($unattendedDates, $event->getEventdates()->toArray());
+                
+                // Define a custom callback function to filter duplicates by id
+                $seenIds = [];
+                $filteredEventDates = array_filter($allEventDates, static function ($eventDate) use (&$seenIds) {
+                    if (isset($seenIds[$eventDate->getId()])) {
+                        return false; // Duplicate, filter it out
+                    }
+                    $seenIds[$eventDate->getId()] = true;
+                    return true; // Not a duplicate, keep it
+                });
+                
+                $user->setAttendedevents($attendedDates);
+                $user->setAttendedeventscount(count($attendedDates));
+            }
+            
+            return $this->render('Dashboard/Shared/Order/admin-attendees-details.html.twig', [
+                'users' => $users,
+                'event' => $event
             ]);
         }
         
@@ -182,6 +210,30 @@
         {
             $users = $appServices->findUsersAttendeedByEventSlug($eventslug);
             $event = $eventRepository->findBySlug($eventslug);
+            
+            foreach ($users as $user) {
+                $attendedDates = $appServices->findEventDatesAttendedByUser($user, $event);
+                $unattendedDates = $appServices->getEventDatesByEvent($event);
+                
+                foreach ($attendedDates as $attendedDate) {
+                    $attendedDate->setAttendeedthiseventdate(true);
+                }
+                
+                $allEventDates = array_merge($unattendedDates, $event->getEventdates()->toArray());
+                
+                // Define a custom callback function to filter duplicates by id
+                $seenIds = [];
+                $filteredEventDates = array_filter($allEventDates, static function ($eventDate) use (&$seenIds) {
+                    if (isset($seenIds[$eventDate->getId()])) {
+                        return false; // Duplicate, filter it out
+                    }
+                    $seenIds[$eventDate->getId()] = true;
+                    return true; // Not a duplicate, keep it
+                });
+                
+                $user->setAttendedevents($attendedDates);
+                $user->setAttendedeventscount(count($attendedDates));
+            }
             
             return $this->render('Dashboard/Shared/Order/attendees-details.html.twig', [
                 'users' => $users,
@@ -197,8 +249,40 @@
         {
             $event = $eventRepository->find($eventid);
             $user = $userRepository->find($userid);
-//            $attendeddate = $appServices->findEventDatesAttendedByUserAndEventSlug($user, $event->getSlug());
-//            $alleventdates = $event->getEventdates();
+            
+            $attendedDates = $appServices->findEventDatesAttendedByUser($user, $event);
+            $unattendedDates = $appServices->getEventDatesByEvent($event);
+            
+            
+            foreach ($attendedDates as $attendedDate) {
+                $attendedDate->setAttendeedthiseventdate(true);
+            }
+            
+            $allEventDates = array_merge($unattendedDates, $event->getEventdates()->toArray());
+            
+            // Define a custom callback function to filter duplicates by id
+            $seenIds = [];
+            $filteredEventDates = array_filter($allEventDates, static function ($eventDate) use (&$seenIds) {
+                if (isset($seenIds[$eventDate->getId()])) {
+                    return false; // Duplicate, filter it out
+                }
+                $seenIds[$eventDate->getId()] = true;
+                return true; // Not a duplicate, keep it
+            });
+            return $this->render('Dashboard/Shared/Order/eventdates-details.html.twig', [
+                'user' => $user,
+                'event' => $event,
+                'eventdates' => $filteredEventDates
+            ]);
+        }
+        
+        /**
+         * @Route("/administrator/manage-attendees-details-event-dates/{userid}/{eventid}", name="admin_attendace_details_see_attendeed_event_dates")
+         */
+        public function attendeesAdminDetailsasEventdates($userid, $eventid, AppServices $appServices, OrderRepository $orderRepository, UserRepository $userRepository, EventRepository $eventRepository)
+        {
+            $event = $eventRepository->find($eventid);
+            $user = $userRepository->find($userid);
             
             $attendedDates = $appServices->findEventDatesAttendedByUser($user, $event);
             $unattendedDates = $appServices->getEventDatesByEvent($event);

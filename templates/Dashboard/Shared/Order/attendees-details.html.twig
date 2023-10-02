@@ -1,6 +1,6 @@
 {% extends "Global/layout.html.twig" %}
 
-{% set pagetitle = 'Attendance details of event: ' ~ event.getName() %}
+{% set pagetitle = 'All attendees of ' ~ event.getName() %}
 {% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
@@ -17,9 +17,61 @@
                 <div class="col-lg-8">
                     <div class="row">
                         <div class="col-12">
+                            <div class="mb-3">
+                                <label for="filterByAttendedEvents" class="form-label">Filter by Attended Event
+                                    Dates:</label>
+                                <input type="number" class="form-control" id="filterByAttendedEvents" min="0"
+                                       placeholder="Enter min number of event dates attended">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
                             {% for user in users %}
                                 <div class="card">
-                                    {% include "Dashboard/Shared/Order/attendance-details-manage-attendees-table.html.twig" with {user: user, event: event} %}
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-vcenter">
+                                            <thead>
+                                                <tr>
+                                                    <th>{{ 'Full name' }}</th>
+                                                    <th>{{ 'Email' }}</th>
+                                                    <th>{{ 'Attended Event Dates' }}</th>
+                                                    <th class="text-center"><i class="fas fa-cog"></i></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                                {% for user in users %}
+                                                    <tr style="cursor: pointer !important; z-index: 999 !important;"
+                                                        onclick="window.location='{{ url('attendace_details_see_attendeed_event_dates', { 'userid': user.getId(), 'eventid': event.getId() }) }}';">
+                                                        <td class="text-sm">
+                                                            {{ user.getCrossRoleName() }}
+                                                        </td>
+                                                        <td class="text-sm">
+                                                            {{ user.getEmail() }}
+                                                        </td>
+                                                        <td class="text-center">
+                                                            {{ user.getAttendedeventscount() }}
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <div class="item-action dropdown">
+                                                                <a href="javascript:void(0)" data-toggle="dropdown"
+                                                                   data-boundary="window" class="icon"><i
+                                                                            class="fas fa-ellipsis-v"></i></a>
+                                                                <div class="dropdown-menu dropdown-menu-right">
+                                                                    <a href="{{ url('attendace_details_see_attendeed_event_dates', { 'userid': user.getId(), 'eventid': event.getId() }) }}"
+                                                                       class="dropdown-item">
+                                                                        <i class="dropdown-icon fas fa-ticket-alt fa-fw text-muted"></i> {{ "Event dates attended" }}
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
                                 </div>
                             {% endfor %}
                         </div>
@@ -34,4 +86,25 @@
 {% endblock %}
 
 {% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script>
+        $("#filterByAttendedEvents").on("keyup", function () {
+            var exactAttendedEvents = parseInt($(this).val(), 10);
+
+            $("tbody tr").each(function () {
+                var attendedEventsCount = parseInt($(this).find(".text-center").eq(0).text(), 10);
+
+                if (isNaN(exactAttendedEvents) || attendedEventsCount !== exactAttendedEvents) {
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                }
+            });
+
+            // If input is empty, show all rows
+            if ($(this).val() === "") {
+                $("tbody tr").show();
+            }
+        });
+    </script>
 {% endblock %}

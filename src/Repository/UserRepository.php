@@ -96,6 +96,15 @@
             return $qb;
         }
         
+        public function updateUserPoints(User $user, int $points)
+        {
+            $user->setPoints($points);
+            
+            $entityManager = $this->getEntityManager();
+            $entityManager->persist($user);
+            $entityManager->flush();
+        }
+        
         
         public function getUsersShuffled($role, $keyword, $organizername, $organizerslug, $username, $email, $firstname, $lastname, $enabled, $slug, $followedby, $hasboughtticketforEvent, $hasboughtticketforOrganizer, $apiKey, $isOnHomepageSlider, $limit, $count)
         {

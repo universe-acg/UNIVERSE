@@ -82,22 +82,15 @@
                 url: '/api/get-event-details/' + eventId,
                 dataType: 'json',
                 success: function (data) {
-                    // Populate the other form fields with data received from the server
-                    $('#event_type_name').val(data.name);
-                    $('#event_type_email').val(data.email);
-                    $editableDiv.html(data.description);
-                    $('#event_type_description').val(data.description);
-                    $('#event_type_phonenumber').val(data.phonenumber);
-                    $('#event_type_tags').val(data.tags);
-                    $('#event_type_volsneeded').val(data.volsneeded);
-
-                    $('#event_type_multi_name').val(data.name);
-                    $('#event_type_multi_email').val(data.email);
-                    $editableDiv.html(data.description);
-                    $('#event_type_multi_description').val(data.description);
-                    $('#event_type_multi_phonenumber').val(data.phonenumber);
-                    $('#event_type_multi_tags').val(data.tags);
-                    $('#event_type_multi_volsneeded').val(data.volsneeded);
+                    // Check if the 'slug' field exists in the data
+                    if (data.slug) {
+                        // Construct the URL for redirection
+                        var redirectUrl = '/dashboard/organizer/my-events/' + data.slug + '/prefill';
+                        // Redirect to the new URL
+                        window.location.href = redirectUrl;
+                    } else {
+                        console.error('Slug not found in data');
+                    }
                 }
             });
         });

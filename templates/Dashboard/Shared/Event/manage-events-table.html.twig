@@ -67,6 +67,12 @@
                                        class="dropdown-item"><i
                                                 class="dropdown-icon fas fa-users fa-fw text-muted"></i> {{ "Attendees" }}
                                     </a>
+                                    {% if event.hasTwoOrMoreEventDatesOnSale %}
+                                        <a href="{{ path('dashboard_administrator_attendees_details', { eventslug : event.slug}) }}"
+                                           class="dropdown-item"><i
+                                                    class="dropdown-icon fas fa-users fa-fw text-muted"></i> {{ "Event Date Attendance Details" }}
+                                        </a>
+                                    {% endif %}
                                     {% if event.isrepeat %}
                                         <span data-target="{{ path('dashboard_organizer_event_delete_permanently_repeating_admin', { slug : event.slug }) }}"
                                               class="dropdown-item requires-confirmation-repeating"
@@ -87,10 +93,12 @@
                                        class="dropdown-item"><i
                                                 class="dropdown-icon fas fa-users fa-fw text-muted"></i> {{ "Attendees" }}
                                     </a>
-                                    <a href="{{ path('dashboard_organizer_attendees_details', { eventslug : event.slug}) }}"
-                                       class="dropdown-item"><i
-                                                class="dropdown-icon fas fa-users fa-fw text-muted"></i> {{ "Attendance Details" }}
-                                    </a>
+                                    {% if event.hasTwoOrMoreEventDatesOnSale %}
+                                        <a href="{{ path('dashboard_organizer_attendees_details', { eventslug : event.slug}) }}"
+                                           class="dropdown-item"><i
+                                                    class="dropdown-icon fas fa-users fa-fw text-muted"></i> {{ "Event Date Attendance Details" }}
+                                        </a>
+                                    {% endif %}
                                     {% if event.published %}
                                         <a href="{{ path('dashboard_organizer_event_draft', { slug : event.slug }) }}"
                                            class="dropdown-item"><i
