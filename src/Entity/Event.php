@@ -24,6 +24,7 @@
      */
     class Event
     {
+        
         /**
          * @ORM\Column(type="string", length=255, nullable=false)
          */
@@ -37,6 +38,11 @@
          * @ORM\Column(length=255, unique=true)
          */
         protected $slug;
+        private $repeatsweekly;
+        
+        private $repeatweeks;
+        private $repeatstartdate;
+        private $repeatenddate;
         /**
          * @ORM\Id()
          * @ORM\GeneratedValue()
@@ -190,7 +196,7 @@
          * @Assert\NotNull(groups={"create", "update"})
          */
         private $volsneeded = false;
-        
+
         public function __construct()
         {
             $this->eventDatesMulti = new ArrayCollection();
@@ -200,7 +206,7 @@
             $this->reference = $this->generateReference(10);
             $this->addedtofavoritesby = new ArrayCollection();
         }
-        
+
         /**
          * @throws Exception
          */
@@ -215,6 +221,70 @@
             ]);
             
             return strlen($reference) > $length ? substr($reference, 0, $length) : $reference;
+        }
+
+        /**
+         * @return mixed
+         */
+        public function getRepeatweeks()
+        {
+            return $this->repeatweeks;
+        }
+
+        /**
+         * @param mixed $repeatweeks
+         */
+        public function setRepeatweeks($repeatweeks): void
+        {
+            $this->repeatweeks = $repeatweeks;
+        }
+
+        /**
+         * @return mixed
+         */
+        public function getRepeatstartdate()
+        {
+            return $this->repeatstartdate;
+        }
+
+        /**
+         * @param mixed $repeatstartdate
+         */
+        public function setRepeatstartdate($repeatstartdate): void
+        {
+            $this->repeatstartdate = $repeatstartdate;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getRepeatenddate()
+        {
+            return $this->repeatenddate;
+        }
+        
+        /**
+         * @param mixed $repeatenddate
+         */
+        public function setRepeatenddate($repeatenddate): void
+        {
+            $this->repeatenddate = $repeatenddate;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getRepeatsweekly()
+        {
+            return $this->repeatsweekly;
+        }
+        
+        /**
+         * @param mixed $repeatsweekly
+         */
+        public function setRepeatsweekly($repeatsweekly): void
+        {
+            $this->repeatsweekly = $repeatsweekly;
         }
         
         public function mapFromEvent(Event $oldEvent)

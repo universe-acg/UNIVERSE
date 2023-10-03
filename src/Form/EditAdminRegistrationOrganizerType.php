@@ -30,7 +30,7 @@
                     ],
                     'attr' => [
                         'placeholder' => 'Enter First Name',
-                        'title' => 'Enter your first name.',
+                        'title' => 'Enter their first name.',
                     ],
                     'data' => $options['user'] ? $options['user']->getFirstname() : ''
                 ])
@@ -41,7 +41,7 @@
                     'required' => true,
                     'attr' => [
                         'placeholder' => 'Enter Last Name',
-                        'title' => 'Enter your last name.',
+                        'title' => 'Enter their last name.',
                     ],
                     'data' => $options['user'] ? $options['user']->getLastname() : ''
                 ])
@@ -66,12 +66,12 @@
                     ],
                     'attr' => [
                         'placeholder' => 'Enter Email',
-                        'title' => 'Enter your email address.',
+                        'title' => 'Enter their email address.',
                     ],
                     'data' => $options['user'] ? $options['user']->getEmail() : ''
                 ])
                 ->add('isbusinessweek', ChoiceType::class, [
-                    'label' => 'Are you a multi-ticket user?',
+                    'label' => 'Are they a multi-ticket user?',
                     'required' => true, 'constraints' => [
                         new NotNull(),
                     ],
@@ -81,10 +81,10 @@
                     ],
                     'expanded' => true, // Display as radio buttons
                     'data' => $options['user'] ? $options['user']->isIsbusinessweek() : false,
-                    'help' => 'Select "Yes" if you are a multi-ticket user.',
+                    'help' => 'Select "Yes" if they are a multi-ticket user.',
                 ])
                 ->add('organizer', OrganizerRegistrationType::class, [
-                    'help' => 'Complete organizer details if you are an organizer.'
+                    'help' => 'Complete organizer details if they are an organizer.'
                 ]);
         }
         
@@ -101,7 +101,7 @@
         public function configureOptions(OptionsResolver $resolver)
         {
             $resolver->setDefaults([
-                'data_class' => User::class, // Set the entity class for your user
+                'data_class' => User::class, // Set the entity class for their user
                 'user' => null, // Pass the user object when creating the form
             ]);
         }

@@ -7,6 +7,7 @@
     
     use DateTime;
     use DateTimeImmutable;
+    use Doctrine\Common\Collections\ArrayCollection;
     use Doctrine\ORM\Mapping as ORM;
     use Gedmo\Mapping\Annotation as Gedmo;
     use Symfony\Component\HttpFoundation\File\File;
@@ -44,7 +45,7 @@
          */
         private $name;
         /**
-         * @ORM\Column(type="string", length=255)
+         * @ORM\Column(type="string")
          */
         private $content;
         /**
@@ -175,7 +176,7 @@
         }
         
         /**
-         * @return mixed
+         * @return ArrayCollection
          */
         public function getTags()
         {

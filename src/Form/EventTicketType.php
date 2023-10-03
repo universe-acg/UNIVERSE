@@ -28,6 +28,15 @@
         public function buildForm(FormBuilderInterface $builder, array $options)
         {
             $builder
+                ->add('name', TextType::class, [
+                    'purify_html' => true,
+                    'required' => true,
+                    'label' => 'Ticket Name',
+                    'help' => 'Enter a name for the ticket (e.g., VIP Pass, General Admission)',
+                    'attr' => [
+                        'placeholder' => 'E.g., VIP Pass',
+                    ],
+                ])
                 ->add('quantity', TextType::class, [
                     'purify_html' => true,
                     'required' => true,

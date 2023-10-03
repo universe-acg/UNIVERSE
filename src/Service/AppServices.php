@@ -500,8 +500,8 @@
             $category = array_key_exists('category', $criterias) ? $criterias['category'] : "all";
             $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
             $otherthan = array_key_exists('otherthan', $criterias) ? $criterias['otherthan'] : "all";
-            $sort = array_key_exists('order', $criterias) ? $criterias['order'] : "name";
-            $order = array_key_exists('order', $criterias) ? $criterias['sort'] : "DESC";
+            $order = array_key_exists('order', $criterias) ? $criterias['order'] : "createdAt";
+            $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "DESC";
             
             return $this->em->getRepository(BlogPost::class)->getBlogPosts($selecttags, $hidden, $keyword, $slug, $category, $limit, $sort, $order, $otherthan);
         }

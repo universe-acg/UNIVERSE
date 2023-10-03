@@ -88,7 +88,7 @@
                             </header>
                             <div class="filter-content collapse show" id="collapsePopular">
                                 <div class="card-body">
-                                    {% set popularblogposts = services.getBlogPosts({"limit": 4, "sort": "views", "otherthan": blogpost.slug}).getQuery().getResult() %}
+                                    {% set popularblogposts = services.getBlogPosts({"limit": 4, "order": "views", "otherthan": blogpost.slug}).getQuery().getResult() %}
                                     {% set runtimeConfig = {"thumbnail": {"size": [79, 79] }} %}
                                     {% for popularblogpost in popularblogposts %}
                                         <article class="row align-items-center mb-3">

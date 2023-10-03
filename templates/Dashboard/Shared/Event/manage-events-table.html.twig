@@ -112,6 +112,10 @@
                                     {% endif %}
                                     {#                                {% if event.deletedAt %} #}
                                     {% if event.isrepeat %}
+                                        <a href="{{ path('dashboard_organizer_attendees_details', { eventslug : event.slug}) }}"
+                                           class="dropdown-item"><i
+                                                    class="dropdown-icon fas fa-users fa-fw text-muted"></i> {{ "Event Date Attendance Details" }}
+                                        </a>
                                         <span style="cursor: pointer !important;"
                                               data-target="{{ path('dashboard_organizer_event_delete_permanently_repeating_organizer', { slug : event.slug }) }}"
                                               class="dropdown-item requires-confirmation-repeating"

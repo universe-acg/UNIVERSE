@@ -135,8 +135,6 @@
         public function isUpvoteClickable($commentid)
         {
             $votes = $this->voteRepository->findVotesByCommentId($commentid);
-            dump($votes);
-            die();
             // votes of comment
             // if user id matches vote.voter.id
             // then return false;

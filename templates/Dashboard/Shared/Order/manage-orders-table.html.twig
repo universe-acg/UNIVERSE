@@ -12,7 +12,7 @@
         </thead>
         <tbody>
 
-            {% for order in orders %}
+            {% for order in orders if order.orderelements %}
                 {% if true %}
                     <tr>
                     <td class="text-sm">
@@ -44,7 +44,9 @@
                         </td>
                     {% endif %}
                     <td class="text-sm">
-                        {{ order.orderelements[0].eventticket.eventdate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}
+                        {% if order.orderelements | length > 0 %}
+                            {{ order.orderelements[0].eventticket.eventdate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}
+                        {% endif %}
                     </td>
                     <td class="text-sm">
                         {{ order.createdAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}

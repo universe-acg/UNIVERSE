@@ -33,7 +33,7 @@
             $favoriteEventsQueryBuilder = $services->getEvents(array("addedtofavoritesby" => $this->getUser()));
             
             // Get attended events as QueryBuilder
-            $attendedEventsQueryBuilder = $eventRepository->findAttendedEventsByUser($user);
+            $attendedEventsQueryBuilder = $eventRepository->findAttendedEventsByUser($user, "all", "all");
             
             // Convert QueryBuilder results to arrays
             $favoriteEvents = $favoriteEventsQueryBuilder->getQuery()->getResult();

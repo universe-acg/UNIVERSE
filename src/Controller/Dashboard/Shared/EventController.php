@@ -6,11 +6,14 @@
     namespace App\Controller\Dashboard\Shared;
     
     use App\Entity\Event;
+    use App\Entity\EventDate;
     use App\Form\EventType;
     use App\Form\EventTypeEdit;
     use App\Form\EventTypeMulti;
+    use App\Form\EventTypeMultiEdit;
     use App\Repository\CategoryRepository;
     use App\Repository\EventRepository;
+    use App\Repository\OrderRepository;
     use App\Repository\OrganizerRepository;
     use App\Service\AppServices;
     use Doctrine\ORM\NonUniqueResultException;
@@ -142,9 +145,47 @@
                 $newnewslug = $this->generateUniqueSlug($event->getName());
                 $event->setSlug($newnewslug); // Implement logic to generate unique slugs
                 $event->setCategory($category);
+                $event->setPublished(true);
                 $em->persist($event);
                 $em->flush();
+                
                 $this->processFormSubmission($event, $em, $services, $category, $newnewslug);
+                
+                if ($event->getRepeatsweekly()) {
+                    $repeatenddate = $event->getRepeatenddate(); // date of when the reps end... chosen by the user
+                    $copiesofevent = $event->getRepeatweeks(); // everyhowmany
+                    $repeatstartdate = $event->getEventdates()[0]->getStartdate(); // get when even starts
+                    $commonValue = $this->generateCommonValue();
+                    $event->setCommonvalue($commonValue);
+                    $newname = $event->getName();
+                    $event->setName($newname);
+                    $event->setIsrepeat(true);
+                    if ($repeatenddate) {
+                        $interval = $repeatstartdate->diff($repeatenddate);
+                        $actualWeeks = $interval->days / 7; // Assuming 7 days in a week
+                        
+                        // Adjust the number of weeks to repeat based on the actual number of weeks allowed by the chosen enddate
+                        if ($actualWeeks < $copiesofevent) {
+                            $copiesofevent = (int)ceil($actualWeeks);
+                        }
+                    }
+                    
+                    for ($index = 1; $index < $copiesofevent; $index++) {
+                        $neweventcopy = $this->copyEvent($event);
+                        $neweventcopy->setCommonvalue($commonValue);
+//                        $neweventcopy->setName($event->getName() . " | " . $neweventcopy->getEventdates()->get(0)->getStartdate()->modify("+7 days")->format('d F Y h:i A'));
+                        foreach ($neweventcopy->getEventdates() as $copyeventdate) {
+                            // TODO set event start and end dates
+                            $newstartdate = $this->setNewStartDateofeventdateAndReturnThatdate($copyeventdate, $copiesofevent, $index);
+                            $copyeventdate->setStartdate($newstartdate);
+                            $newendtdate = $this->setNewEndDateofeventdateAndReturnThatdate($copyeventdate, $copiesofevent, $index);
+                            $copyeventdate->setEnddate($newendtdate);
+                        }
+                        
+                        $this->saveCopiedEvent($neweventcopy, $em);
+                        $this->processFormSubmission($neweventcopy, $em, $services, $category, $neweventcopy->getSlug());
+                    }
+                }
                 
                 return $this->redirectToRouteAfterSubmission($authChecker);
             }
@@ -159,14 +200,12 @@
             return ($category === 'Club') ? 'Clubs' : (($category === 'Society') ? 'Societies' : ($category === 'Organization' ? 'Organizations' : 'Offices'));
         }
         
-        // Helper method to map category name
-        
         private function getCategoryByName($categoryName, $categoryRepository)
         {
             return $categoryRepository->findByName($categoryName);
         }
         
-        // Helper method to generate a unique slug
+        // Helper method to map category name
         
         private function getEventChoices($eventRepository, $organizer, $authChecker)
         {
@@ -191,6 +230,8 @@
             return $eventChoices;
         }
         
+        // Helper method to generate a unique slug
+        
         private function initializeEvent($slug)
         {
             if (!$slug) {
@@ -208,8 +249,6 @@
             return $event;
         }
         
-        // Helper method to get category by name
-        
         public function getEventBySlug($slug)
         {
             // Use the repository to find the event by its slug
@@ -221,6 +260,8 @@
             
             return $event;
         }
+        
+        // Helper method to get category by name
         
         private function generateCommonValue()
         {
@@ -266,8 +307,6 @@
             return $uniqueSlug;
         }
         
-        // Helper method to get event choices
-        
         private function processFormSubmission($event, $em, $services, $category, $slug)
         {
             // Save event images
@@ -308,7 +347,43 @@
             $em->flush();
         }
         
+        // Helper method to get event choices
+        
+        private function copyEvent(Event $event)
+        {
+            $newEvent = new Event();
+            $newEvent->mapFromEvent($event);
+            $newEvent->setPublished(false);
+            return $newEvent;
+        }
+        
         // Helper method to initialize the event
+        
+        private function setNewStartDateofeventdateAndReturnThatdate(EventDate $eventdate, int $everyxweeks, int $index)
+        {
+            $newstartdate = $eventdate->getStartdate();
+            $addeddays = ($index * $everyxweeks) * 7;
+            $newstartdate->modify("+$addeddays days");
+            $eventdate->setStartdate($newstartdate);
+            return $eventdate->getStartdate();
+        }
+        
+        private function setNewEndDateofeventdateAndReturnThatdate(EventDate $eventdate, int $everyxweeks, int $index)
+        {
+            $newendtdate = $eventdate->getEnddate();
+            $addeddays = ($index * $everyxweeks) * 7;
+            $newendtdate->modify("+$addeddays days");
+            $eventdate->setEnddate($newendtdate);
+            return $eventdate->getEnddate();
+        }
+        
+        // Helper method to process form submission
+        
+        private function saveCopiedEvent(Event $event, $em)
+        {
+            $em->persist($event);
+            $em->flush();
+        }
         
         private function redirectToRouteAfterSubmission($authChecker)
         {
@@ -325,7 +400,7 @@
             return $this->redirectToRoute("your_default_route");
         }
         
-        // Helper method to process form submission
+        // Helper method to initialize the event
         
         private function renderEventForm($event, $form)
         {
@@ -335,6 +410,8 @@
             ]);
         }
         
+        // Helper method to determine the redirection route after form submission
+        
         /**
          * @Route("/my-attendeed", name="attendeed_events")
          * @throws Exception
@@ -342,14 +419,13 @@
         public function index(Request $request, PaginatorInterface $paginator, EventRepository $eventRepository, AppServices $services)
         {
             $user = $this->getUser();
-            
-            $events = $paginator->paginate($events = $eventRepository->findAttendedEventsByUser($user)->getQuery(), $request->query->getInt('page', 1), 12, array('wrap-queries' => true));
+            $events = $paginator->paginate($events = $eventRepository->findAttendedEventsByUser($user, "all", "all")->getQuery(), $request->query->getInt('page', 1), 12, array('wrap-queries' => true));
             return $this->render('Dashboard/Attendee/attendeed.html.twig', [
                 'events' => $events
             ]);
         }
         
-        // Helper method to initialize the event
+        // Helper method to render the event form
         
         /**
          * @Route("/organizer/my-events/{slug}/edit", name="dashboard_organizer_event_edit", methods="GET|POST")
@@ -384,7 +460,7 @@
             }
             
             if ($this->getUser()->isIsbusinessweek()) {
-                $form = $this->createForm(EventTypeMulti::class, $event, [
+                $form = $this->createForm(EventTypeMultiEdit::class, $event, [
                     'validation_groups' => ['create', 'Default'],
                     'user_choices' => $eventChoices,
                 ]);
@@ -399,6 +475,7 @@
             $form->handleRequest($request);
             
             if ($form->isSubmitted() && $form->isValid()) {
+                
                 // if common value is not empty update all others too
                 $event->setOrganizer($this->getUser()->getOrganizer());
 //            $event->setSlug($this->generateUniqueSlug($event->getName())); // Implement logic to generate unique slugs
@@ -412,8 +489,6 @@
             
             return $this->renderEventForm($event, $form);
         }
-        
-        // Helper method to determine the redirection route after form submission
         
         /**
          * @Route("/organizer/my-events/{slug}/prefill", name="dashboard_organizer_event_prefill", methods="GET|POST")
@@ -473,8 +548,6 @@
             
             return $this->renderEventFormprefill($event, $form);
         }
-        
-        // Helper method to render the event form
         
         private function renderEventFormprefill($event, $form)
         {
@@ -540,10 +613,10 @@
             
             
             foreach ($eventsWithSameCommonValue as $eventToDelete) {
-                if ($event->getOrderElementsQuantitySum() > 0) {
-                    $this->addFlash('error', 'One or more events can not be deleted because they have one or more tickets');
-                    return $services->redirectToReferer('event');
-                }
+//                if ($event->getOrderElementsQuantitySum() > 0) {
+//                    $this->addFlash('error', 'One or more events can not be deleted because they have one or more tickets');
+//                    return $services->redirectToReferer('event');
+//                }
                 
                 $em->remove($eventToDelete);
             }
@@ -622,7 +695,7 @@
          * @Route("/organizer/my-events/{slug}/delete", name="dashboard_organizer_event_delete", methods="GET")
          * @throws InvalidDatabaseException|Exception
          */
-        public function delete(AppServices $services, $slug, AuthorizationCheckerInterface $authChecker)
+        public function delete(AppServices $services, OrderRepository $orderRepository, $slug, AuthorizationCheckerInterface $authChecker)
         {
             $organizer = "all";
             if ($authChecker->isGranted('ROLE_ORGANIZER')) {
@@ -641,8 +714,16 @@
                 $this->addFlash('notice', 'The event has been deleted');
             }
             $em = $this->getDoctrine()->getManager();
+            $orders = $orderRepository->findByEventId($event->getId());
+            dump($orders);
+            foreach ($orders as $order) {
+                dump($order);
+                $em->remove($order);
+                $em->flush();
+            }
             $em->remove($event);
             $em->flush();
+//            die();
             return $services->redirectToReferer('event');
         }
         

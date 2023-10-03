@@ -12,7 +12,7 @@
         </thead>
         <tbody>
 
-            {% for order in orders %}
+            {% for order in orders if order.orderelements %}
                 {% if true %}
                     <tr>
                     {% if not is_granted("ROLE_ATTENDEE") %}

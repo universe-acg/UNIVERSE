@@ -40,7 +40,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for order in orders %}
+        {% for order in orders if order.orderelements %}
             <tr>
                 <td class="custom-td">{{ order.user.getCrossRoleName }}</td>
                 <td class="custom-td">{{ order.createdAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>

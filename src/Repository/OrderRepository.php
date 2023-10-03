@@ -16,6 +16,20 @@
             parent::__construct($registry, Order::class);
         }
         
+        public function findByEventId($eventId)
+        {
+            return $this->createQueryBuilder('o')
+                ->join('o.orderelements', 'oe')
+                ->join('oe.ticketsReservations', 'oet')
+                ->join('oet.eventticket', 'et')
+                ->join('et.eventdate', 'ed')
+                ->join('ed.event', 'e')
+                ->where('e.id = :eventId')
+                ->setParameter('eventId', $eventId)
+                ->getQuery()
+                ->getResult();
+        }
+        
         public function getOrders($status, $user, $organizer, $event, $eventDate, $eventTicket, $reference, $upcomingtickets, $datefrom, $dateto, $sort, $order, $limit, $count, $ordersQuantityByDateStat, $sumOrderElements)
         {
             $qb = $this->createQueryBuilder("o");

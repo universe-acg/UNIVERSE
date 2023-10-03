@@ -11,6 +11,7 @@
     use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
     use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+    use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
     use Symfony\Component\Form\Extension\Core\Type\SubmitType;
     use Symfony\Component\Form\Extension\Core\Type\TextareaType;
     use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -139,6 +140,62 @@
                         'class' => 'form-collection eventdates-collection manual-init',
                     ],
                     'help' => 'Add the dates and times for your event.',
+                ])
+                ->add('repeatsweekly', ChoiceType::class, [
+                    'required' => true,
+                    'label' => 'Does this event repeat weekly/monthly?',
+                    'choices' => [
+                        'Yes' => 'yes',
+                        'No' => 'no',
+                    ],
+                    'expanded' => true, // Display as radio buttons
+                    'multiple' => false, // Allow only one selection
+                    'attr' => [
+                        'title' => 'Select whether the event repeats weekly or monthly.',
+                        'class' => 'repeats-weekly-field',
+                    ],
+                ])
+                ->add('repeatweeks', ChoiceType::class, [
+                    'required' => false,
+                    'label' => 'Repeat every week for how many weeks (after this current week ends)',
+                    'choices' => [
+                        'Every 1 Week' => 1,
+                        'Every 2 Weeks' => 2,
+                        'Every 3 Weeks' => 3,
+                        'Every 4 Weeks' => 4,
+                        'Every 5 Weeks' => 5,
+                        'Every 6 Weeks' => 6,
+                        'Every 7 Weeks' => 7,
+                        'Every 8 Weeks' => 8,
+                    ],
+                    'choice_attr' => function ($choice, $key, $value) {
+                        // Add attributes to group headings (months)
+                        if (is_array($value)) {
+                            return ['disabled' => 'disabled', 'class' => 'group-heading'];
+                        }
+                        // Add attributes to week options (e.g., '1 Week', '2 Weeks', etc.)
+                        return [];
+                    },
+                    'expanded' => false, // Set to true if you want radio buttons
+                    'multiple' => false, // Set to true if you want multiple selections
+                    'attr' => [
+                        'title' => 'Select the number of weeks for which the event should repeat.',
+                        'class' => 'repetition-options',
+                    ],
+                ])
+                ->add('repeatenddate', DateTimeType::class, [
+                    'required' => false,
+                    'label' => 'Repetition End Date ',
+                    'widget' => 'single_text',
+                    'html5' => false,
+                    'help' => 'The event repetitions will stop at the end of this day, even if you have set it for more weeks',
+                    'attr' => [
+                        'class' => 'datepicker repetition-options',
+                        'autocomplete' => 'off',
+                        'placeholder' => 'Select the Repetition End Date  (e.g., yyyy-MM-dd HH:mm)',
+                        'title' => 'Select the end date and time for the repetition of the event.',
+                    ],
+                    'format' => 'yyyy-MM-dd',
                 ])
                 ->add('save', SubmitType::class, [
                     'label' => 'Save',

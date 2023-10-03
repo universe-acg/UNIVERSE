@@ -339,7 +339,7 @@ $(document).ready(function () {
             styling: 'bootstrap4',
             icons: 'fontawesome5',
             hide: true,
-            delay: 8000,
+            delay: 4000,
             mouseReset: true,
             modules: {
                 Animate: {
