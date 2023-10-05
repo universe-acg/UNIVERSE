@@ -25,7 +25,7 @@
                 ->getSingleScalarResult();
         }
         
-        public function getUsers($role, $keyword, $organizername, $organizerslug, $username, $email, $firstname, $lastname, $enabled, $slug, $followedby, $hasboughtticketforEvent, $hasboughtticketforOrganizer, $apiKey, $isOnHomepageSlider, $limit, $count)
+        public function getUsers($role, $keyword, $organizername, $organizerslug, $username, $email, $firstname, $lastname, $enabled, $slug, $followedby, $hasboughtticketforEvent, $hasboughtticketforOrganizer, $hasbookedticketfor, $apiKey, $isOnHomepageSlider, $limit, $count)
         {
             $qb = $this->createQueryBuilder("u");
             if ($count) {
@@ -70,7 +70,7 @@
                 $qb->andWhere(":followedby MEMBER OF organizer.followedby")->setParameter("followedby", $followedby);
             }
             
-            if ($hasboughtticketforEvent !== "all" || $hasboughtticketforOrganizer != "all") {
+            if ($hasboughtticketforEvent !== "all" || $hasboughtticketforOrganizer != "all" || $hasbookedticketfor != "all") {
                 $qb->join("u.orders", "orders");
                 $qb->join("orders.orderelements", "orderelements");
                 $qb->join("orderelements.eventticket", "eventticket");
@@ -80,6 +80,11 @@
             if ($hasboughtticketforEvent !== "all") {
                 $qb->andWhere("orders.status > :statuspaid")->setParameter("statuspaid", 1);
                 $qb->andWhere("event.slug = :hasboughtticketforevent")->setParameter("hasboughtticketforevent", $hasboughtticketforEvent);
+            }
+            
+            if ($hasbookedticketfor !== "all") {
+                $qb->andWhere("orders.status >= :statuspaid")->setParameter("statuspaid", 1);
+                $qb->andWhere("event.slug = :hasbookedticketfor")->setParameter("hasbookedticketfor", $hasbookedticketfor);
             }
             
             if ($apiKey !== "all") {
@@ -106,7 +111,7 @@
         }
         
         
-        public function getUsersShuffled($role, $keyword, $organizername, $organizerslug, $username, $email, $firstname, $lastname, $enabled, $slug, $followedby, $hasboughtticketforEvent, $hasboughtticketforOrganizer, $apiKey, $isOnHomepageSlider, $limit, $count)
+        public function getUsersShuffled($role, $keyword, $organizername, $organizerslug, $username, $email, $firstname, $lastname, $enabled, $slug, $followedby, $hasboughtticketforEvent, $hasboughtticketforOrganizer, $hasbookedticketfor, $apiKey, $isOnHomepageSlider, $limit, $count)
         {
             $qb = $this->createQueryBuilder("u");
             if ($count) {
@@ -151,7 +156,7 @@
                 $qb->andWhere(":followedby MEMBER OF organizer.followedby")->setParameter("followedby", $followedby);
             }
             
-            if ($hasboughtticketforEvent !== "all" || $hasboughtticketforOrganizer != "all") {
+            if ($hasboughtticketforEvent !== "all" || $hasboughtticketforOrganizer != "all" || $hasbookedticketfor != "all") {
                 $qb->join("u.orders", "orders");
                 $qb->join("orders.orderelements", "orderelements");
                 $qb->join("orderelements.eventticket", "eventticket");
@@ -161,6 +166,11 @@
             if ($hasboughtticketforEvent !== "all") {
                 $qb->andWhere("orders.status > :statuspaid")->setParameter("statuspaid", 1);
                 $qb->andWhere("event.slug = :hasboughtticketforevent")->setParameter("hasboughtticketforevent", $hasboughtticketforEvent);
+            }
+            
+            if ($hasbookedticketfor !== "all") {
+                $qb->andWhere("orders.status >= :statuspaid")->setParameter("statuspaid", 1);
+                $qb->andWhere("event.slug = :hasbookedticketfor")->setParameter("hasbookedticketfor", $hasbookedticketfor);
             }
             
             if ($apiKey !== "all") {

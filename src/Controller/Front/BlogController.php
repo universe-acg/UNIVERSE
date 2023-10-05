@@ -20,35 +20,72 @@
          */
         public function blog(Request $request, PaginatorInterface $paginator, AppServices $services): Response
         {
-            $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
-            $tag = ($request->query->get('tag')) == "" ? "all" : $request->query->get('tag');
-            $category = ($request->query->get('category')) == "" ? "all" : $request->query->get('category');
-            $blogposts = $paginator->paginate($services->getBlogPosts([
+            // Get filter values from the request or set default values
+            $keyword = $this->getQueryParam($request, 'keyword') != '' ? $this->getQueryParam($request, 'keyword') : 'all';
+            $tag = $this->getQueryParam($request, 'tag') != '' ? $this->getQueryParam($request, 'tag') : 'all';
+            $category = $this->getQueryParam($request, 'category') != '' ? $this->getQueryParam($request, 'category') : 'all';
+            $sortedby = $this->getQueryParam($request, 'sortedby') != '' ? $this->getQueryParam($request, 'sortedby') : 'all';
+            
+            // Get paginated blog posts
+            $blogposts = $this->getPaginatedBlogPosts($services, $keyword, $category, $tag, $sortedby, $paginator, $request);
+            
+            // Get blog post categories
+            $blogpostcategories = $this->getBlogPostCategories($services);
+            
+            // Get tags from blog posts
+            $tags = $this->getTagsFromBlogPosts($services);
+            
+            return $this->render('Front/Blog/blog.html.twig', [
+                'blogposts' => $blogposts,
+                'blogpostcategories' => $blogpostcategories,
+                'tags' => $tags,
+                'sortedby' => $sortedby
+            ]);
+        }
+        
+        // Helper function to get query parameters with default values
+        private function getQueryParam(Request $request, $paramName)
+        {
+            return $request->query->get($paramName, 'all');
+        }
+        
+        // Helper function to get paginated blog posts
+        private function getPaginatedBlogPosts(AppServices $services, $keyword, $category, $tag, $sortedby, PaginatorInterface $paginator, Request $request)
+        {
+            $criteria = [
                 "category" => $category,
                 "keyword" => $keyword,
-                "selecttags" => $tag,  // Pass the tags filter
-            ])->getQuery(), $request->query->getInt('page', 1), $services->getSetting("blog_posts_per_page"), array('wrap-queries' => true));
+                "selecttags" => $tag,
+                'sortedby' => $sortedby
+            ];
             
-            $blogpostcategories = $services->getBlogPostCategories([
+            $query = $services->getBlogPosts($criteria)->getQuery();
+            
+            return $paginator->paginate($query, $request->query->getInt('page', 1), 16, ['wrap-queries' => true]);
+        }
+        
+        // Helper function to get blog post categories
+        private function getBlogPostCategories(AppServices $services)
+        {
+            $criteria = [
                 "hidden" => false,
                 "keyword" => "all",
                 "slug" => "all",
-                "limit" => "all",
-            ])->getQuery()->getResult();
+                "limit" => "all"
+            ];
             
-            $totalblogposts = $services->getBlogPosts(array())->getQuery()->getResult();
-            
+            return $services->getBlogPostCategories($criteria)->getQuery()->getResult();
+        }
+        
+        // Helper function to get tags from blog posts
+        private function getTagsFromBlogPosts(AppServices $services)
+        {
+            $totalblogposts = $services->getBlogPosts([])->getQuery()->getResult();
             $tags = [];
             
             foreach ($totalblogposts as $totalblogpost) {
-                
-                // Assuming $tagsString contains the comma-separated values
                 $tagsString = $totalblogpost->getTags();
-
-// Split the string into an array using commas as the delimiter
                 $tagsArray = explode(',', $tagsString);
-
-// Trim each element in the array to remove leading/trailing spaces
                 $tagsArray = array_map('trim', $tagsArray);
                 
                 foreach ($tagsArray as $tag) {
@@ -58,11 +95,7 @@
                 }
             }
             
-            return $this->render('Front/Blog/blog.html.twig', [
-                'blogposts' => $blogposts,
-                'blogpostcategories' => $blogpostcategories,
-                'tags' => $tags
-            ]);
+            return $tags;
         }
         
         /**
@@ -70,17 +103,34 @@
          */
         public function blogArticle($slug, AppServices $services): Response
         {
-            $blogpost = $services->getBlogPosts(array("slug" => $slug))->getQuery()->getOneOrNullResult();
+            // Get the blog post by slug
+            $blogpost = $this->getBlogPostBySlug($services, $slug);
+            
             if (!$blogpost) {
-                $this->addFlash('error', 'The blog post not be found');
+                // Add flash message and redirect if the blog post is not found
+                $this->addFlash('error', 'The blog post could not be found');
                 return $this->redirectToRoute('blog');
             }
+            
+            // Mark the blog post as viewed
+            $this->markBlogPostAsViewed($blogpost);
+            
+            // Render the blog article template
+            return $this->render('Front/Blog/blog-article.html.twig', ['blogpost' => $blogpost]);
+        }
+        
+        // Helper function to get a blog post by slug
+        private function getBlogPostBySlug(AppServices $services, $slug)
+        {
+            return $services->getBlogPosts(['slug' => $slug])->getQuery()->getOneOrNullResult();
+        }
+        
+        // Helper function to mark a blog post as viewed
+        private function markBlogPostAsViewed($blogpost)
+        {
             $blogpost->viewed();
             $em = $this->getDoctrine()->getManager();
             $em->persist($blogpost);
             $em->flush();
-            
-            return $this->render('Front/Blog/blog-article.html.twig', ["blogpost" => $blogpost]);
         }
-        
     }

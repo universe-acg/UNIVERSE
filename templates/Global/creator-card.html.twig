@@ -1,11 +1,5 @@
 {% set runtimeConfig = {"thumbnail": {"size": [500, 250] }} %}
 
-{% if customLink is defined %}
-    {% set link = customLink %}
-{% else %}
-    {% set link = path('event', { slug : creator.name }) %}
-{% endif %}
-
 <style>
     .image-container[data-src] {
         object-fit: contain !important;
@@ -14,13 +8,13 @@
 
 <a href="{{ path('organizer', {slug: (creator.user.username)}) }}" class="text-dark">
 
-    <div class="card card-event">
+    <div class="card card-event pb-2">
         <div class="img-wrap img-lazy-load image-container"
              style="height: 260px;"
              data-src="{{ creator.logoName ? asset(creator.getLogoPath) : creator.getLogoPlaceholder }}">
             <div class="loader"></div>
         </div>
-        <div class="info-wrap">
+        <div class="info-wrap" style="min-height: initial !important;">
             {% if (not is_granted('IS_AUTHENTICATED_REMEMBERED') or is_granted('ROLE_ATTENDEE')) and hideFavoriteButton is not defined %}
             {% endif %}
             <div class="event-info">
@@ -29,15 +23,33 @@
                        class="text-dark">{{ creator.name }}</a>
                 </h5>
             </div>
-            {% if orderReference is defined %}
-                <div class="order-reference">
-                    <a href="{{ path('dashboard_attendee_order_details', {reference: orderReference}) }}"><small>{{ "Order" }}
-                            #{{ orderReference }}</small></a>
-                </div>
-            {% endif %}
             <div class="clearfix"></div>
-        </div>
-        <span class="event-category">{{ creator.getCategory() }}</span>
+            <div class="text-black-50 small mb-1">
+                <p style="font-size: 12px; margin-bottom: 0">Events: {{ creator.getEventscount() }} |
+                    Followers: {{ creator.getFollowerscount() }} | News: {{ creator.getNewscount() }}</p>
+            </div>
+            <div class="clearfix"></div>
+            {% set maxAvatars = 6 %} {# Change this to the maximum number of avatars you want to display #}
+            {% set displayedAvatars = 0 %}
 
+            {% if creator.followedby|length ==0 %}
+                <p>No followers yet</p>
+            {% else %}
+                {% for follower in creator.followedby %}
+                    {% if displayedAvatars < maxAvatars %}
+                        {% include "Global/follower-avatar-events.html.twig" with { user: follower, showusernametooltip: true } %}
+                        {% set displayedAvatars = displayedAvatars + 1 %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+        </div>
+        <span style="text-align: right" class="event-category">
+               {% if user.organizer.category == "Club" or user.organizer.category == "Society" %}
+                   <span class="text-dark">{{ user.stringifypointslevel }}</span>
+                   <br>
+               {% endif %}
+            <p style="font-size: 12px; margin-bottom: 0">{{ creator.getCategory() }}</p>
+        </span>
     </div>
 </a>

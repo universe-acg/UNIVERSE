@@ -24,7 +24,7 @@
                             <div class="filter-content collapse show" id="filter-event-type">
                                 <div class="card-body">
                                     <ul class="list list-unstyled">
-                                        {% set helpcentercategories = services.getHelpCenterCategories({}).getQuery().getResult() %}
+                                        {% set helpcentercategories = services.getHelpCenterCategories({}) %}
                                         {% for helpcentercategory in helpcentercategories %}
                                             <li class="mb-2">
                                                 <a href="{{ path('help_center_category', {slug: helpcentercategory.slug}) }}"

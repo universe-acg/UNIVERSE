@@ -147,7 +147,7 @@
                                 <div>
                                     {% endif %}
                                     <input type="hidden" name="reference" value="{{ event.id }}">
-                                    {% for eventDate in event.eventdates if eventDate.isOnSale %}
+                                    {% for eventDate in event.eventdates %}
                                         <div id="eventDate-{{ eventDate.reference }}-wrapper"
                                              class="event-eventDate-wrapper">
                                             <dl>
@@ -243,41 +243,43 @@
                                                     </div>
                                                 </dd>
                                             </dl>
-                                            <hr class="hr-md">
-                                            <dl class="mt-5">
-                                                <dt class="text-muted">{{ "Tickets" }}</dt>
-                                                <dd class="mr-0">
-                                                    <div class="table-responsive">
-                                                        <table class="table table-hover table-condensed">
-                                                            <tbody>
-                                                                {% for ticket in eventDate.tickets %}
-                                                                    {% if ticket.active %}
-                                                                        <tr class="bg-gray">
-                                                                            <td class="border-top-white book-ticket btn btn-primary book-ticket"
-                                                                                data-event-id="{{ event.id }}"
-                                                                                data-event-date-id="{{ eventDate.reference }}"
-                                                                                data-ticket-id="{{ ticket.id }}"
-                                                                                data-is-already-booked="{{ ticket.isalreadybooked ? 'true' : 'false' }}"
-                                                                                style="width: 100%; border-radius: 5px !important; cursor: pointer">
-                                                                                <i class="fas fa-ticket-alt"></i>
-                                                                                Book: {{ ticket.name }}
-                                                                            </td>
-                                                                        </tr>
-                                                                    {% endif %}
-                                                                {% endfor %}
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </dd>
-                                            </dl>
+                                            {% if eventDate.isOnSale %}
+                                                <hr class="hr-md">
+                                                <dl class="mt-5">
+                                                    <dt class="text-muted">{{ "Tickets" }}</dt>
+                                                    <dd class="mr-0">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-hover table-condensed">
+                                                                <tbody>
+                                                                    {% for ticket in eventDate.tickets %}
+                                                                        {% if ticket.active %}
+                                                                            <tr class="bg-gray">
+                                                                                <td class="border-top-white book-ticket btn btn-primary book-ticket"
+                                                                                    data-event-id="{{ event.id }}"
+                                                                                    data-event-date-id="{{ eventDate.reference }}"
+                                                                                    data-ticket-id="{{ ticket.id }}"
+                                                                                    data-is-already-booked="{{ ticket.isalreadybooked ? 'true' : 'false' }}"
+                                                                                    style="width: 100%; border-radius: 5px !important; cursor: pointer">
+                                                                                    <i class="fas fa-ticket-alt"></i>
+                                                                                    Book: {{ ticket.name }}
+                                                                                </td>
+                                                                            </tr>
+                                                                        {% endif %}
+                                                                    {% endfor %}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </dd>
+                                                </dl>
+                                            {% endif %}
                                         </div>
 
                                     {% endfor %}
                                 </div>
                                 {% else %}
                                     {% include "Global/message.html.twig" with { type: 'info', icon: 'fas fa-info-circle', message: "No tickets at this moment" } %}
+                                    <hr class="hr-md">
                                 {% endif %}
-                                <hr class="hr-md">
 
                                 <dl class="mt-5 mb-5">
                                     <dt class="text-muted">
@@ -347,7 +349,7 @@
                                                             <div class="modal-body">
                                                                 <div class="card border-0 card-body overflow-auto text-nowrap">
                                                                     <div class="avatar-list py-4">
-                                                                        {% for user in services.getUsers({"hasboughtticketfor": event.slug, "role": "attendee"}).getQuery().getResult() %}
+                                                                        {% for user in services.getUsers({"hasbookedticketfor": event.slug, "role": "attendee"}).getQuery().getResult() %}
                                                                             {% include "Global/user-avatar.html.twig" with { user: user, showusernametooltip: true } %}
                                                                         {% endfor %}
                                                                     </div>
@@ -361,7 +363,7 @@
                                             <dd class="mr-0">
                                                 <div class="card border-0 card-body">
                                                     <div class="avatar-list avatar-list-stacked">
-                                                        {% for user in services.getUsers({"hasboughtticketfor": event.slug, "limit": 12, "role": "attendee"}).getQuery().getResult() %}
+                                                        {% for user in services.getUsers({"hasbookedticketfor": event.slug, "limit": 12, "role": "attendee"}).getQuery().getResult() %}
                                                             {% include "Global/user-avatar.html.twig" with { user: user, showusernametooltip: true } %}
                                                         {% endfor %}
                                                         {% if attendeescount > 12 %}
@@ -371,18 +373,18 @@
                                                 </div>
                                             </dd>
                                         </dl>
-                                        {% if event.volsneeded %}
-                                            <dl class="mt-5">
-                                                <a href="mailto:{{ event.email }}"
-                                                   class="btn btn-primary btn-block mb-2"
-                                                > Volunteer
-                                                </a>
-                                                <dt class="text-muted">The organizers are looking for volunteers to
-                                                    help.
-                                                </dt>
-                                            </dl>
-                                        {% endif %}
                                     {% endif %}
+                                {% endif %}
+                                {% if event.volsneeded %}
+                                    <dl class="mt-5">
+                                        <a href="mailto:{{ event.email }}"
+                                           class="btn btn-primary btn-block mb-2"
+                                        > Volunteer
+                                        </a>
+                                        <dt class="text-muted">The organizers are looking for volunteers to
+                                            help.
+                                        </dt>
+                                    </dl>
                                 {% endif %}
                             </div>
                         </div>

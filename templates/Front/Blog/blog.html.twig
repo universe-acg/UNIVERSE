@@ -13,15 +13,43 @@
         <div class="{{ services.getSetting("app_layout") }}">
 
             <div class="box shadow-none bg-gray mb-4">
-                <div class="row flex-wrap flex-md-nowrap"
-                     style="align-items: center;">
+                <div class="row flex-wrap flex-md-nowrap">
                     <div class="col-sm-12 col-md-2 mb-3 mb-lg-0">
                         <span class="center-lg-y text-muted">{{ "%resultsCount% post(s) found"  |trans ({'%resultsCount%': blogposts.getTotalItemCount}) }}</span>
                     </div>
 
-                    <div class="col-sm-12 col-md-10 offset-lg-1 text-right">
+                    <div class="col-sm-12 col-md-11 text-right">
                         <form method="get" action="{{ path('blog') }}" id="search-form">
-                            <div class="d-flex flex-wrap w-100">
+                            <div class="d-flex flex-wrap w-100 justify-content-center">
+                                <div class="col-md-2 col-sm-6">
+                                    <select class="form-control bg-white col-12" name="sortedby">
+                                        <option selected value="all">Sort By</option>
+                                        <option value="created_desc"
+                                                {% if app.request.get('sortedby') == 'created_desc' %}selected{% endif %}>
+                                            Created Recently
+                                        </option>
+                                        <option value="created_asc"
+                                                {% if app.request.get('sortedby') == 'created_asc' %}selected{% endif %}>
+                                            Created Lately
+                                        </option>
+                                        <option value="updated_desc"
+                                                {% if app.request.get('sortedby') == 'updated_desc' %}selected{% endif %}>
+                                            Updated Recently
+                                        </option>
+                                        <option value="updated_asc"
+                                                {% if app.request.get('sortedby') == 'updated_asc' %}selected{% endif %}>
+                                            Updated Lately
+                                        </option>
+                                        <option value="title_asc"
+                                                {% if app.request.get('sortedby') == 'title_asc' %}selected{% endif %}>
+                                            Title - Ascending
+                                        </option>
+                                        <option value="title_desc"
+                                                {% if app.request.get('sortedby') == 'title_desc' %}selected{% endif %}>
+                                            Title - Descending
+                                        </option>
+                                    </select>
+                                </div>
                                 <!-- Use d-flex and flex-wrap to control the wrapping on mobile -->
                                 <div class="col-md-2 col-sm-6">
                                     <select class="form-control bg-white col-12" name="tag">
@@ -32,7 +60,7 @@
                                         {% endfor %}
                                     </select>
                                 </div>
-                                <div class="col-md-3 col-sm-6">
+                                <div class="col-md-2 col-sm-6">
                                     <select class="form-control bg-white col-12" name="category">
                                         <option value="">All Categories</option>
                                         {% for category in blogpostcategories %}
@@ -41,7 +69,7 @@
                                         {% endfor %}
                                     </select>
                                 </div>
-                                <div class="col-md-4 col-sm-12">
+                                <div class="col-md-3 col-sm-12">
                                     <input type="text" class="form-control bg-white col-12" name="keyword"
                                            placeholder="{{ "Search news/blog posts" }}"
                                            value="{{ app.request.get('keyword') }}"/>
@@ -49,13 +77,13 @@
                                 <div class="col-md-2 col-sm-12 text-left mt-2 mt-sm-0">
                                     <button type="submit" class="btn btn-primary d-inline-block"><i
                                                 class="fas fa-search"></i></button>
-                                    <button type="reset" class="btn btn-primary d-inline-block" onclick="clearForm()"><i
+                                    <button type="reset" class="btn btn-primary d-inline-block"
+                                            onclick="clearForm()"><i
                                                 class="fas fa-eraser"></i>
                                     </button>
                                 </div>
                             </div>
                         </form>
-
                     </div>
                 </div>
             </div>

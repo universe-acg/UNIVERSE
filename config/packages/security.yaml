@@ -66,7 +66,7 @@ security:
     - { path: /dashboard/organizer, role: ROLE_ORGANIZER }
     - { path: /dashboard/attendee, role: ROLE_ATTENDEE }
     - { path: ^/$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/attendee-profile/, roles: ROLE_USER }
     - { path: ^/page/legal-notice, role: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/page/about-us, role: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/page/community-guidelines, role: IS_AUTHENTICATED_ANONYMOUSLY }

@@ -26,12 +26,12 @@
          */
         public function helpCenterCategory($slug, AppServices $services): Response
         {
-            $category = $services->getHelpCenterCategories(array("slug" => $slug))->getQuery()->getOneOrNullResult();
-            if (!$category) {
+            $category = $services->getHelpCenterCategoriesFront(array("slug" => $slug));
+            if (!isset($category[0])) {
                 $this->addFlash('error', 'The category not be found');
                 return $this->redirectToRoute('help_center');
             }
-            return $this->render('Front/HelpCenter/category.html.twig', ["category" => $category]);
+            return $this->render('Front/HelpCenter/category.html.twig', ["category" => $category[0]]);
         }
         
         /**
@@ -50,5 +50,4 @@
             $em->flush();
             return $this->render('Front/HelpCenter/article.html.twig', ["article" => $article]);
         }
-        
     }

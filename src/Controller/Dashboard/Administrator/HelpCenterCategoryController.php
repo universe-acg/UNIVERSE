@@ -42,7 +42,7 @@
             if (!$slug) {
                 $category = new HelpCenterCategory();
             } else {
-                $category = $services->getHelpCenterCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
+                $category = $services->getHelpCenterCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullresult();
                 if (!$category) {
                     $this->addFlash('error', 'The category can not be found');
                     return $services->redirectToReferer('help_center_category');
@@ -79,11 +79,12 @@
         public function delete(AppServices $services, $slug)
         {
             
-            $category = $services->getHelpCenterCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
+            $category = $services->getHelpCenterCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullresult();
             if (!$category) {
                 $this->addFlash('error', 'The category can not be found');
                 return $services->redirectToReferer('help_center_category');
             }
+            
             if (count($category->getArticles()) > 0) {
                 $this->addFlash('error', 'The category can not be deleted because it is linked with one or more help center articles');
                 return $services->redirectToReferer('help_center_category');
@@ -91,7 +92,7 @@
             if ($category->getDeletedAt() !== null) {
                 $this->addFlash('error', 'The category has been deleted');
             } else {
-                $this->addFlash('notice', 'The category has been disabled');
+                $this->addFlash('notice', 'The category has been deleted');
             }
             $em = $this->getDoctrine()->getManager();
             $category->setHidden(true);
@@ -108,7 +109,7 @@
         public function restore($slug, AppServices $services)
         {
             
-            $category = $services->getHelpCenterCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
+            $category = $services->getHelpCenterCategories(array('hidden' => 'all', 'slug' => $slug));
             if (!$category) {
                 $this->addFlash('error', 'The category can not be found');
                 return $services->redirectToReferer('help_center_category');
@@ -129,7 +130,7 @@
         public function showhide(AppServices $services, $slug)
         {
             
-            $category = $services->getHelpCenterCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
+            $category = $services->getHelpCenterCategories(array('hidden' => 'all', 'slug' => $slug));
             if (!$category) {
                 $this->addFlash('error', 'The category can not be found');
                 return $services->redirectToReferer('help_center_category');

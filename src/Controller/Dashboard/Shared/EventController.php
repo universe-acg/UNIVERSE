@@ -98,99 +98,48 @@
             AppServices                   $services,
                                           $slug = null,
             AuthorizationCheckerInterface $authChecker,
-            Swift_Mailer                  $mailer, Twig_Environment $templating,
+            Swift_Mailer                  $mailer,
+            Twig_Environment              $templating,
             CategoryRepository            $categoryRepository
         )
         {
             $organizer = $this->getUser()->getOrganizer();
             $organizerCategory = $organizer->getCategory();
-            
             $categoryName = $this->mapCategoryName($organizerCategory);
             $category = $this->getCategoryByName($categoryName, $categoryRepository);
             
-            if ($organizer->getCategory()) {
-                $eventChoices = $this->getEventChoices($eventRepository, $organizer, $authChecker);
-            } else {
+            $eventChoices = $this->getEventChoices($eventRepository, $organizer, $authChecker);
+            if (!$organizer->getCategory()) {
                 $eventChoices = $eventRepository->getAllEvents()->getQuery()->getResult();
             }
             
             $event = $this->initializeEvent($slug);
-            
-            if ($event == null) {
+            if ($event === null) {
                 return $services->redirectToReferer('event');
             }
             
-            if ($this->getUser()->isIsbusinessweek()) {
-                $form = $this->createForm(EventTypeMulti::class, $event, [
-                    'validation_groups' => ['create', 'Default'],
-                    'user_choices' => $eventChoices,
-                ]);
-            } else {
-                $form = $this->createForm(EventType::class, $event, [
-                    'validation_groups' => ['create', 'Default'],
-                    'user_choices' => $eventChoices,
-                ]);
-            }
+            $formType = $this->getUser()->isIsbusinessweek() ? EventTypeMulti::class : EventType::class;
+            $form = $this->createForm($formType, $event, [
+                'validation_groups' => ['create', 'Default'],
+                'user_choices' => $eventChoices,
+            ]);
             
             $em = $this->getDoctrine()->getManager();
-            
             $form->handleRequest($request);
             
             $commonValue = $this->generateCommonValue();
             $event->setCommonvalue($commonValue);
             
             if ($form->isSubmitted() && $form->isValid()) {
-                
-                $event->setOrganizer($this->getUser()->getOrganizer());
-                $newnewslug = $this->generateUniqueSlug($event->getName());
-                $event->setSlug($newnewslug); // Implement logic to generate unique slugs
-                $event->setCategory($category);
-                $event->setPublished(true);
-                $em->persist($event);
-                $em->flush();
-                
-                $this->processFormSubmission($event, $em, $services, $category, $newnewslug);
+                $this->processSubmittedEvent($event, $category, $commonValue, $em, $services, $authChecker);
                 
                 if ($event->getRepeatsweekly()) {
-                    $repeatenddate = $event->getRepeatenddate(); // date of when the reps end... chosen by the user
-                    $copiesofevent = $event->getRepeatweeks(); // everyhowmany
-                    $repeatstartdate = $event->getEventdates()[0]->getStartdate(); // get when even starts
-                    $commonValue = $this->generateCommonValue();
-                    $event->setCommonvalue($commonValue);
-                    $newname = $event->getName();
-                    $event->setName($newname);
-                    $event->setIsrepeat(true);
-                    if ($repeatenddate) {
-                        $interval = $repeatstartdate->diff($repeatenddate);
-                        $actualWeeks = $interval->days / 7; // Assuming 7 days in a week
-                        
-                        // Adjust the number of weeks to repeat based on the actual number of weeks allowed by the chosen enddate
-                        if ($actualWeeks < $copiesofevent) {
-                            $copiesofevent = (int)ceil($actualWeeks);
-                        }
-                    }
-                    
-                    for ($index = 1; $index < $copiesofevent; $index++) {
-                        $neweventcopy = $this->copyEvent($event);
-                        $neweventcopy->setCommonvalue($commonValue);
-//                        $neweventcopy->setName($event->getName() . " | " . $neweventcopy->getEventdates()->get(0)->getStartdate()->modify("+7 days")->format('d F Y h:i A'));
-                        foreach ($neweventcopy->getEventdates() as $copyeventdate) {
-                            // TODO set event start and end dates
-                            $newstartdate = $this->setNewStartDateofeventdateAndReturnThatdate($copyeventdate, $copiesofevent, $index);
-                            $copyeventdate->setStartdate($newstartdate);
-                            $newendtdate = $this->setNewEndDateofeventdateAndReturnThatdate($copyeventdate, $copiesofevent, $index);
-                            $copyeventdate->setEnddate($newendtdate);
-                        }
-                        
-                        $this->saveCopiedEvent($neweventcopy, $em);
-                        $this->processFormSubmission($neweventcopy, $em, $services, $category, $neweventcopy->getSlug());
-                    }
+                    $this->processRepeatingEvent($event, $category, $commonValue, $em, $services);
                 }
                 
                 return $this->redirectToRouteAfterSubmission($authChecker);
             }
             
-            // send email to all ofllowers
             return $this->renderEventForm($event, $form);
         }
         
@@ -204,8 +153,6 @@
         {
             return $categoryRepository->findByName($categoryName);
         }
-        
-        // Helper method to map category name
         
         private function getEventChoices($eventRepository, $organizer, $authChecker)
         {
@@ -230,8 +177,6 @@
             return $eventChoices;
         }
         
-        // Helper method to generate a unique slug
-        
         private function initializeEvent($slug)
         {
             if (!$slug) {
@@ -249,6 +194,8 @@
             return $event;
         }
         
+        // Helper method to map category name
+        
         public function getEventBySlug($slug)
         {
             // Use the repository to find the event by its slug
@@ -261,7 +208,7 @@
             return $event;
         }
         
-        // Helper method to get category by name
+        // Helper method to generate a unique slug
         
         private function generateCommonValue()
         {
@@ -281,6 +228,21 @@
             
             return $commonValue;
         }
+        
+        private function processSubmittedEvent($event, $category, $commonValue, $em, $services, $authChecker)
+        {
+            $event->setOrganizer($this->getUser()->getOrganizer());
+            $newSlug = $this->generateUniqueSlug($event->getName());
+            $event->setSlug($newSlug);
+            $event->setCategory($category);
+            $event->setPublished(true);
+            $em->persist($event);
+            $em->flush();
+            
+            $this->processFormSubmission($event, $em, $services, $category, $newSlug);
+        }
+        
+        // Helper method to get category by name
         
         private function generateUniqueSlug($title)
         {
@@ -347,6 +309,39 @@
             $em->flush();
         }
         
+        private function processRepeatingEvent($event, $category, $commonValue, $em, $services)
+        {
+            $repeatEndDate = $event->getRepeatenddate();
+            $copiesOfEvent = $event->getRepeatweeks();
+            $repeatStartDate = $event->getEventdates()[0]->getStartdate();
+            
+            $commonValue = $this->generateCommonValue();
+            $event->setCommonvalue($commonValue);
+            
+            if ($repeatEndDate) {
+                $interval = $repeatStartDate->diff($repeatEndDate);
+                $actualWeeks = $interval->days / 7;
+                if ($actualWeeks < $copiesOfEvent) {
+                    $copiesOfEvent = (int)ceil($actualWeeks);
+                }
+            }
+            
+            for ($index = 1; $index < $copiesOfEvent; $index++) {
+                $newEventCopy = $this->copyEvent($event);
+                $newEventCopy->setCommonvalue($commonValue);
+                
+                foreach ($newEventCopy->getEventdates() as $copyEventDate) {
+                    $newStartDate = $this->setNewStartDateOfEventDateAndReturnThatDate($copyEventDate, $copiesOfEvent, $index);
+                    $copyEventDate->setStartdate($newStartDate);
+                    $newEndDate = $this->setNewEndDateOfEventDateAndReturnThatDate($copyEventDate, $copiesOfEvent, $index);
+                    $copyEventDate->setEnddate($newEndDate);
+                }
+                
+                $this->saveCopiedEvent($newEventCopy, $em);
+                $this->processFormSubmission($newEventCopy, $em, $services, $category, $newEventCopy->getSlug());
+            }
+        }
+        
         // Helper method to get event choices
         
         private function copyEvent(Event $event)
@@ -362,7 +357,7 @@
         private function setNewStartDateofeventdateAndReturnThatdate(EventDate $eventdate, int $everyxweeks, int $index)
         {
             $newstartdate = $eventdate->getStartdate();
-            $addeddays = ($index * $everyxweeks) * 7;
+            $addeddays = $index * $everyxweeks * 7;
             $newstartdate->modify("+$addeddays days");
             $eventdate->setStartdate($newstartdate);
             return $eventdate->getStartdate();
@@ -371,7 +366,7 @@
         private function setNewEndDateofeventdateAndReturnThatdate(EventDate $eventdate, int $everyxweeks, int $index)
         {
             $newendtdate = $eventdate->getEnddate();
-            $addeddays = ($index * $everyxweeks) * 7;
+            $addeddays = $index * $everyxweeks * 7;
             $newendtdate->modify("+$addeddays days");
             $eventdate->setEnddate($newendtdate);
             return $eventdate->getEnddate();

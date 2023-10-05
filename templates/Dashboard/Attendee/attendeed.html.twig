@@ -22,14 +22,14 @@
                                 <div class="row">
                                     {% for event in events %}
                                         <div class="col-12 col-sm-6 col-lg-6 mb-3">
-                                            {% include "Global/event-card.html.twig" with {event: event, past: true, attendeed: true} %}
+                                            {% include "Global/attended-event-card.html.twig" with {event: event, past: true, attendeed: true} %}
                                         </div>
                                     {% endfor %}
                                 </div>
                             </div>
                         </div>
                     {% else %}
-                        {% include "Global/message.html.twig" with { type: "info", message: ('Add events to your favorites by clicking the heart button'), icon: "fas fa-exclamation-circle" } %}
+                        {% include "Global/message.html.twig" with { type: "info", message: ('Make sure to get your QR Code on your ticket scanned, in order to have the attended events show up here'), icon: "fas fa-exclamation-circle" } %}
                     {% endif %}
                     {{ knp_pagination_render(events, null, {}, {'align': 'center'}) }}
                 </div>

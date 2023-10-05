@@ -12,97 +12,130 @@
     </style>
     <section class="section-content bg-white padding-y">
         <div class="{{ services.getSetting("app_layout") }}">
+            <div class="box shadow-none bg-gray mb-4">
+                <div class="row flex-wrap flex-md-nowrap">
+                    <div class="col-sm-12 col-md-2 mb-3 mb-lg-0">
+                        <span class="center-lg-y text-muted">{{ "%resultsCount% creator(s) found"  |trans ({'%resultsCount%': creators.getTotalItemCount}) }}</span>
+                    </div>
 
-            <div class="row">
-                <aside class="col-lg-3 order-2 order-lg-1">
-                    <div class="card card-filter">
-                        <form method="post" action="{{ path('creators') }}">
-                            <article class="card-group-item">
-                                <header class="card-header">
-                                    <a href="#" data-toggle="collapse" data-target="#filter-keyword">
-                                        <i class="icon-action fa fa-chevron-down"></i>
-                                        <h6 class="title">{{ "Keyword" }}</h6>
-                                    </a>
-                                </header>
-                                <div class="filter-content collapse show" id="filter-keyword">
-                                    <div class="card-body">
-                                        <input id="keyword" name="keyword" type="text" class="form-control"
-                                               value="{{ keyword }}">
-                                    </div>
+                    <div class="col-sm-12 col-md-11 text-right">
+                        <form method="get" action="{{ path('creators') }}" id="search-form">
+                            <div class="d-flex flex-wrap w-100 justify-content-center">
+                                <div class="col-md-2 col-sm-6">
+                                    <select class="form-control bg-white col-12" name="sortedby">
+                                        <option selected value="all">Sort By</option>
+                                        <option value="mostevents"
+                                                {% if app.request.get('sortedby') == 'mostevents' %}selected{% endif %}>
+                                            Most Events
+                                        </option>
+                                        <option value="mostnews"
+                                                {% if app.request.get('sortedby') == 'mostnews' %}selected{% endif %}>
+                                            Most News
+                                        </option>
+                                        <option value="mostfollowers"
+                                                {% if app.request.get('sortedby') == 'mostfollowers' %}selected{% endif %}>
+                                            Most Followers
+                                        </option>
+                                        <option value="created_desc"
+                                                {% if app.request.get('sortedby') == 'created_desc' %}selected{% endif %}>
+                                            Created Recently
+                                        </option>
+                                        <option value="created_asc"
+                                                {% if app.request.get('sortedby') == 'created_asc' %}selected{% endif %}>
+                                            Created Lately
+                                        </option>
+                                        <option value="updated_desc"
+                                                {% if app.request.get('sortedby') == 'updated_desc' %}selected{% endif %}>
+                                            Updated Recently
+                                        </option>
+                                        <option value="updated_asc"
+                                                {% if app.request.get('sortedby') == 'updated_asc' %}selected{% endif %}>
+                                            Updated Lately
+                                        </option>
+                                        <option value="title_asc"
+                                                {% if app.request.get('sortedby') == 'title_asc' %}selected{% endif %}>
+                                            Name - Ascending
+                                        </option>
+                                        <option value="title_desc"
+                                                {% if app.request.get('sortedby') == 'title_desc' %}selected{% endif %}>
+                                            Name - Descending
+                                        </option>
+                                    </select>
                                 </div>
-                            </article>
-                            {% if services.getSetting("show_category_filter") == "yes" %}
-                                <article class="card-group-item">
-                                    <header class="card-header">
-                                        <a href="#" data-toggle="collapse" data-target="#filter-category">
-                                            <i class="icon-action fa fa-chevron-down"></i>
-                                            <h6 class="title">{{ "Category" }}</h6>
-                                        </a>
-                                    </header>
-                                    <div class="filter-content collapse show" id="filter-category">
-                                        <div class="card-body">
-                                            <select id="category" name="category" class="select2 col"
-                                                    data-sort-options="1">
-                                                <option value="">&nbsp;</option>
-                                                <option value="all">All
-                                                </option>
-                                                <option {% if selectedCategory == "Club" %}selected{% endif %}
-                                                        value="Clubs">Clubs
-                                                </option>
-                                                <option {% if  selectedCategory == "Society" %}selected{% endif %}
-                                                        value="Societies">Societies
-                                                </option>
-                                                <option {% if  selectedCategory == "Office" %}selected{% endif %}
-                                                        value="Offices">
-                                                    Offices
-                                                </option>
-                                                <option {% if  selectedCategory == "Organization" %}selected{% endif %}
-                                                        value="Organizations">Organizations
-                                                </option>
-
-                                            </select>
-                                        </div>
-                                    </div>
-                                </article>
-                            {% endif %}
-                            <div class="row">
-                                <div class="col-4">
-                                    <article class="card-group-item">
-                                        <div class="card-body">
-                                            <a href="{{ path('creators') }}" class="btn btn-outline-primary">
-                                                {{ "Clear" }}
-                                            </a>
-                                        </div>
-                                    </article>
+                                <div class="col-md-2 col-sm-6">
+                                    <select class="form-control bg-white col-12" name="level">
+                                        <option value="all">All Levels
+                                        </option>
+                                        <option {% if app.request.get('level') == "UniverseNewbie" %}selected{% endif %}
+                                                value="UniverseNewbie">Universe Newbie
+                                        </option>
+                                        <option {% if app.request.get('level') == "UniverseWannabe" %}selected{% endif %}
+                                                value="UniverseWannabe">Universe Wannabe
+                                        </option>
+                                        <option {% if  app.request.get('level') == "UniverseTryhard" %}selected{% endif %}
+                                                value="UniverseTryhard">Universe Tryhard
+                                        </option>
+                                        <option {% if  app.request.get('level') == "UniverseRunnerUp" %}selected{% endif %}
+                                                value="UniverseRunnerUp">
+                                            Universe Runner-up
+                                        </option>
+                                        <option {% if  app.request.get('level') == "UniverseMaster" %}selected{% endif %}
+                                                value="UniverseMaster">Universe Master
+                                        </option>
+                                    </select>
                                 </div>
-                                <div class="col-8">
-                                    <article class="card-group-item">
-                                        <div class="card-body">
-                                            <button class="btn btn-outline-primary"><i
-                                                        class="fas fa-search"></i> {{ "Search" }}</button>
-                                        </div>
-                                    </article>
+                                <!-- Use d-flex and flex-wrap to control the wrapping on mobile -->
+                                <div class="col-md-2 col-sm-6">
+                                    <select class="form-control bg-white col-12" name="category">
+                                        <option value="all">All Categories
+                                        </option>
+                                        <option {% if selectedCategory == "Club" %}selected{% endif %}
+                                                value="Clubs">Clubs
+                                        </option>
+                                        <option {% if  selectedCategory == "Society" %}selected{% endif %}
+                                                value="Societies">Societies
+                                        </option>
+                                        <option {% if  selectedCategory == "Office" %}selected{% endif %}
+                                                value="Offices">
+                                            Offices
+                                        </option>
+                                        <option {% if  selectedCategory == "Organization" %}selected{% endif %}
+                                                value="Organizations">Organizations
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 col-sm-12">
+                                    <input type="text" class="form-control bg-white col-12" name="keyword"
+                                           placeholder="{{ "Search creators" }}"
+                                           value="{{ app.request.get('keyword') }}"/>
+                                </div>
+                                <div class="col-md-2 col-sm-12 text-left mt-2 mt-sm-0">
+                                    <button type="submit" class="btn btn-primary d-inline-block"><i
+                                                class="fas fa-search"></i></button>
+                                    <button type="reset" class="btn btn-primary d-inline-block"
+                                            onclick="clearForm()"><i
+                                                class="fas fa-eraser"></i>
+                                    </button>
                                 </div>
                             </div>
                         </form>
                     </div>
-                </aside>
-
-
-                <div class="col-lg-9 order-1 order-lg-2">
-                    {% if creators.getTotalItemCount > 0 %}
-                        <div class="row">
-                            {% for creator in creators %}
-                                <div class="col-12 col-sm-4 col-lg-4 mb-3">
-                                    {% include "Global/creator-card.html.twig" with {event: creator.user} %}
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {% include "Global/message.html.twig" with { type: "info", message: ('No creators found'), icon: "fas fa-exclamation-circle" } %}
-                    {% endif %}
-                    {{ knp_pagination_render(creators, null, {}, {'align': 'center'}) }}
                 </div>
+            </div>
+
+            <div class="col-lg-12 order-1 order-lg-2">
+                {% if creators.getTotalItemCount > 0 %}
+                    <div class="row">
+                        {% for creator in creators %}
+                            <div class="col-12 col-sm-4 col-lg-3 mb-3">
+                                {% include "Global/creator-card.html.twig" with {user: creator.user, organizer: creator} %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {% include "Global/message.html.twig" with { type: "info", message: ('No creators found'), icon: "fas fa-exclamation-circle" } %}
+                {% endif %}
+                {{ knp_pagination_render(creators, null, {}, {'align': 'center'}) }}
             </div>
         </div>
     </section>
@@ -115,4 +148,9 @@
         </script>
         {% include "Global/event-info-box.html.twig" %}
     {% endif %}
+    <script>
+        function clearForm() {
+            window.location.href = "https://universeacg.xyz/creators";
+        }
+    </script>
 {% endblock %}

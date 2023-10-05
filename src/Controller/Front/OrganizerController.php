@@ -70,38 +70,196 @@
         }
         
         /**
-         * @Route("/creators", name="creators", methods="GET|POST")
+         * @Route("/creators", name="creators", methods={"GET", "POST"})
          */
-        public function creators(OrganizerRepository $organizerRepository, Request $request, PaginatorInterface $paginator): Response
+        public function creators(
+            OrganizerRepository $organizerRepository,
+            Request             $request,
+            AppServices         $appServices,
+            PaginatorInterface  $paginator
+        ): Response
         {
-            // Get the category and keyword from the request
-            $category = $request->request->get('category');
-            $keyword = $request->request->get('keyword');
-            if ($category == "Clubs") {
-                $category = "Club";
-            } elseif ($category == "Societies") {
-                $category = "Society";
-            } elseif ($category == "Offices") {
-                $category = "Office";
-            } elseif ($category == "Organizations") {
-                $category = "Organization";
-            } else {
-                $category = "";
+            $category = $request->get('category') ?? "all";
+            $keyword = $request->get('keyword') ?? "all";
+            $level = $request->get('level') ?? "all";
+            $sortedby = $request->get('sortedby') ?? "all";
+            
+            if ($category != "all") {
+                $category = $this->normalizeCategory($category);
             }
-            // Execute the query and fetch the results as an array of entities
-            $organizers = $organizerRepository->searchByKeywordAndCategory($keyword, $category);
-            shuffle($organizers);
+            
+            $criteria = [
+                "category" => $category,
+                "keyword" => $keyword,
+                "level" => $level,
+                'sortedby' => $sortedby
+            ];
+            
+            $organizers = $appServices->getCreators($criteria)->getQuery()->getResult();
+            
+            foreach ($organizers as $organizer) {
+                $organizer->setNewscount(count($this->getDoctrine()->getRepository(Organizer::class)->findNewsByUser($organizer->getUser())));
+                $organizer->setEventscount(count($appServices->getEvents(array("elapsed" => "all", "organizer" => $organizer->getSlug()))->getQuery()->getResult()));
+                $organizer->setFollowerscount(count($organizer->getFollowedby()));
+            }
+            
+            // remove all those offices and orgs if level is set
+            if ($level !== 'all') {
+                $categoriesToExclude = ["Office", "Organization"];
+
+// Filter the organizers array to remove those with excluded categories
+                $organizers = array_filter($organizers, static function ($organizer) use ($categoriesToExclude) {
+                    return !in_array($organizer->getCategory(), $categoriesToExclude, true);
+                });
+            }
+            
+            if ($sortedby == 'all') {
+                $organizers = $this->sortByPoints($organizers);
+            } elseif ($sortedby == 'mostevents') {
+                $organizers = $this->sortByMostEvents($organizers);
+            } elseif ($sortedby == 'mostnews') {
+                $organizers = $this->sortByMostNews($organizers);
+            } elseif ($sortedby == 'mostfollowers') {
+                $organizers = $this->sortByMostFollowers($organizers);
+            }
             
             $pagination = $paginator->paginate(
-                $organizers,               // Use the filtered $organizers array
+                $organizers,
                 $request->query->getInt('page', 1),
-                20
+                40
             );
             
             return $this->render('Front/Organizer/organizers.html.twig', [
                 'creators' => $pagination,
                 'selectedCategory' => $category,
                 'keyword' => $keyword,
+                'level' => $level
             ]);
+        }
+        
+        /**
+         * Normalizes a category value.
+         *
+         * @param string $category
+         *
+         * @return string
+         */
+        private function normalizeCategory(string $category): string
+        {
+            $categoryMappings = [
+                'Clubs' => 'Club',
+                'Societies' => 'Society',
+                'Offices' => 'Office',
+                'Organizations' => 'Organization',
+            ];
+            
+            // Use the mapping or return the original value if no mapping exists
+            return $categoryMappings[$category] ?? $category;
+        }
+        
+        private function sortByPoints($organizers)
+        {
+            $clubsAndSocieties = [];
+            $otherOrganizers = [];
+            
+            // Separate clubs and societies from other organizers
+            foreach ($organizers as $organizer) {
+                if ($organizer->getCategory() === 'Club' || $organizer->getCategory() === 'Society') {
+                    $clubsAndSocieties[] = $organizer;
+                } else {
+                    $otherOrganizers[] = $organizer;
+                }
+            }
+            
+            // Custom sorting function to sort clubs and societies by points in descending order
+            usort($clubsAndSocieties, static function ($a, $b) {
+                $pointsA = $a->getUser()->getPoints(); // Replace with the actual method to get points
+                $pointsB = $b->getUser()->getPoints(); // Replace with the actual method to get points
+                
+                // Sort in descending order (higher points first)
+                if ($pointsA > $pointsB) {
+                    return -1;
+                }
+                
+                if ($pointsA < $pointsB) {
+                    return 1;
+                }
+                
+                return 0;
+            });
+            
+            // Shuffle other organizers for random order
+            shuffle($otherOrganizers);
+            // Combine clubs and societies with other organizers
+            return array_merge($clubsAndSocieties, $otherOrganizers);
+        }
+        
+        /**
+         * Sort organizers by the count of events in descending order.
+         *
+         * @param Organizer[] $organizers
+         * @return Organizer[]
+         */
+        private function sortByMostEvents(array $organizers): array
+        {
+            usort($organizers, static function ($a, $b) {
+                return $b->getEventscount() <=> $a->getEventscount();
+            });
+            
+            return $organizers;
+        }
+        
+        /**
+         * Sort organizers by the count of news in descending order.
+         *
+         * @param Organizer[] $organizers
+         * @return Organizer[]
+         */
+        private function sortByMostNews(array $organizers): array
+        {
+            usort($organizers, static function ($a, $b) {
+                return $b->getNewscount() <=> $a->getNewscount();
+            });
+            
+            return $organizers;
+        }
+        
+        /**
+         * Sort organizers by the count of followers in descending order.
+         *
+         * @param Organizer[] $organizers
+         * @return Organizer[]
+         */
+        private function sortByMostFollowers(array $organizers): array
+        {
+            usort($organizers, static function ($a, $b) {
+                return $b->getFollowerscount() <=> $a->getFollowerscount();
+            });
+            
+            return $organizers;
+        }
+        
+        /**
+         * Calculate the count of news for an organizer.
+         *
+         * @param Organizer $organizer
+         * @return int
+         */
+        private function getNewsCountForOrganizer(Organizer $organizer): int
+        {
+            return count($this->getDoctrine()->getRepository(Organizer::class)->findNewsByUser($organizer->getUser()));
+        }
+        
+        /**
+         * Shuffles an array of organizers.
+         *
+         * @param array $organizers
+         *
+         * @return array
+         */
+        private function shuffleOrganizers(array $organizers): array
+        {
+            shuffle($organizers);
+            return $organizers;
         }
     }

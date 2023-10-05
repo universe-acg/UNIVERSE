@@ -228,6 +228,13 @@
     {# Attendee role sidebar links #}
 
     <li class="nav-item">
+        <a href="{{ path('profile_attendee', {slug: app.user.slug} ) }}"
+           class="nav-link">
+            <i class="fas fa-user fa-fw"></i> {{ 'My profile' }}
+        </a>
+    </li>
+
+    <li class="nav-item">
         <a href="{{ path('dashboard_attendee_orders') }}"
            class="nav-link {% if app.request.pathinfo == "/dashboard/attendee/my-tickets" %}active{% endif %}">
             <i class="fas fa-ticket-alt fa-fw"></i> {{ 'My tickets' }}

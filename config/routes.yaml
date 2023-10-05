@@ -14,6 +14,10 @@ fos_user_change_email:
   path: /dashboard/change-email
   controller: 'App\Controller\Api\EmailChangeController::changeEmail'
 
+profile_attendee:
+  path: /attendee-profile/{slug}
+  controller: 'App\Controller\Front\AttendeeController::viewprofile'
+
 open_events:
   path: /open-events
   controller: 'App\Controller\Front\EventController::openevents'

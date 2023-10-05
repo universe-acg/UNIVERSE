@@ -47,8 +47,8 @@
                     </div>
                 {% else %}
 
-                    {% for category in services.getHelpCenterCategories({"parent": "none"}).getQuery().getResult() %}
-                        <div class="col-md-6 mb-3">
+                    {% for category in services.getHelpCenterCategoriesFront({"parent": "none"}) %}
+                        <div class="col-md-4 mb-3">
                             <article class="box h-100 padding-y-lg">
                                 <figure class="itembox text-center">
                                     <span class="mt-2 icon-wrap rounded icon-lg bg-primary"><i
@@ -68,7 +68,7 @@
                                 {% endfor %}
 
                                 <a class="btn btn-outline-primary btn-block"
-                                   href="{{ path('help_center_category', { slug: category.slug }) }}">{{ "FAQs" }}
+                                   href="{{ path('help_center_category', { slug: category.slug }) }}">{{ "More" }}
                                     {% if app.request.locale == 'ar' %}
                                         <i class="fas fa-chevron-left mr-3"></i>
                                     {% else %}

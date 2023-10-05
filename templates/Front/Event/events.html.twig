@@ -210,7 +210,8 @@
                         <div class="row">
                             {% for event in events %}
                                 <div class="col-12 col-sm-6 col-lg-6 mb-3">
-                                    {% include "Global/event-card.html.twig" with {event: event, past: event.isPassed, attendeed: event.isAttnded} %}
+                                    {#                                    {% include "Global/event-card.html.twig" with {event: event, past: event.isPassed, attendeed: event.isAttnded} %} #}
+                                    {% include "Global/event-card.html.twig" with {event: event, past: event.isPassed} %}
                                 </div>
                             {% endfor %}
                         </div>

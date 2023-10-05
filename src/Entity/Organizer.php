@@ -201,6 +201,12 @@
          * @ORM\Column(type="datetime")
          */
         private $createdAt;
+        
+        private $newscount;
+        
+        private $eventscount;
+        
+        private $followerscount;
         /**
          * @var DateTime $updatedAt
          *
@@ -229,6 +235,54 @@
             $this->followedby = new ArrayCollection();
             $this->events = new ArrayCollection();
             $this->views = 0;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getNewscount()
+        {
+            return $this->newscount;
+        }
+        
+        /**
+         * @param mixed $newscount
+         */
+        public function setNewscount($newscount): void
+        {
+            $this->newscount = $newscount;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getEventscount()
+        {
+            return $this->eventscount;
+        }
+        
+        /**
+         * @param mixed $eventscount
+         */
+        public function setEventscount($eventscount): void
+        {
+            $this->eventscount = $eventscount;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getFollowerscount()
+        {
+            return $this->followerscount;
+        }
+        
+        /**
+         * @param mixed $followerscount
+         */
+        public function setFollowerscount($followerscount): void
+        {
+            $this->followerscount = $followerscount;
         }
         
         /**

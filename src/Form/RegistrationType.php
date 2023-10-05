@@ -60,6 +60,7 @@
                 ])
                 ->add('email', EmailType::class, [
                     'required' => true,
+                    'help' => 'Must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
                     'label' => 'Email',
                     'attr' => [
                         'placeholder' => 'Enter your email address',
@@ -74,6 +75,7 @@
                 ])
                 ->add('plainPassword', RepeatedType::class, array(
                     'type' => PasswordType::class,
+                    'help' => 'Must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
                     'options' => array(
                         'attr' => [
                             'placeholder' => 'Choose a password',

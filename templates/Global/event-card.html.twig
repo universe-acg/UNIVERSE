@@ -7,10 +7,12 @@
     {% set link = path('event', { slug : event.slug }) %}
 {% endif %}
 
-{% set past = past|default(false) %}
-{% set attendeed = attendeed|default(false) %}
-<div class="card card-event {{ attendeed ? 'attended-event' }}" style="z-index: 999 !important;">
-    <div class="img-wrap img-lazy-load {{ event.isPassed or past or  attendeed  ? 'grayed-out' : '' }}"
+ {% set past = past|default(false) %}
+{# {% set attendeed = attendeed|default(false) %} #}
+{#    <div class="card card-event {{ attendeed ? 'attended-event' }}" style="z-index: 999 !important;"> #}
+<div class="card card-event" style="z-index: 999 !important;">
+    {#    <div class="img-wrap img-lazy-load {{ event.isPassed or past or  attendeed  ? 'grayed-out' : '' }}" #}
+    <div class="img-wrap img-lazy-load {{ event.isPassed ? 'grayed-out' : '' }}"
          data-src="{{ event.imageName ? asset(event.getImagePath|imagine_filter('thumbnail', runtimeConfig)) : event.getImagePlaceholder }}">
         <a href="{{ link }}"></a>
         <div class="loader"></div>
@@ -41,9 +43,7 @@
                 <a href="{{ link }}" class="text-dark">{{ event.name }} {{ event.isPassed }}</a>
             </h5>
 
-            {% if attendeed %}
-                <span class="accomplishment">✨Attended✨</span>
-            {% elseif event.isPassed %}
+            {% if event.isPassed %}
                 {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }} | Event has ended
             {% else %}
                 {% set currentDate = "now"|date('U', 'Europe/Athens') %}
@@ -60,9 +60,14 @@
 
             {% if  is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                 <div class="mt-3">
-                    {% for user in services.getUsersShuffled({"hasboughtticketfor": event.slug, "limit": 8, "role": "attendee"}).getQuery().getResult() %}
-                        {% include "Global/user-avatar-events.html.twig" with { user: user, showusernametooltip: true } %}
-                    {% endfor %}
+                    {% set attendees = services.getUsersShuffled({"hasbookedticketfor": event.slug, "limit": 8, "role": "attendee"}).getQuery().getResult() %}
+                    {% if attendees | length > 0 %}
+                        {% for user in attendees %}
+                            {% include "Global/user-avatar-events.html.twig" with { user: user, showusernametooltip: true } %}
+                        {% endfor %}
+                    {% else %}
+                        <p>No attendees as of yet</p>
+                    {% endif %}
                 </div>
             {% endif %}
         </div>

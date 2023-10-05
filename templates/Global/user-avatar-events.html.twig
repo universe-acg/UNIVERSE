@@ -1,9 +1,11 @@
 <div style="float: left !important; margin: 3px">
-    {% if user.hasRole('ROLE_ATTENDEE') %}
-        <span class="avatar"{% if user.avatarName %}  style="background: url('{{ asset(user.getAvatarPath) }}');" {% endif %} {% if showusernametooltip is defined %}data-toggle="tooltip" title="{{ user.username }}" data-container="body"{% endif %} >
+    <a href="{{ path('profile_attendee', { slug : user.slug }) }}"><span
+        {% if user.hasRole('ROLE_ATTENDEE') %}
+            <span class="avatar"{% if user.avatarName %}  style="background: url('{{ asset(user.getAvatarPath) }}');" {% endif %} {% if showusernametooltip is defined %}data-toggle="tooltip" title="{{ user.username }}{{ user.stringifypointslevel }}" data-container="body"{% endif %} >
         {% if not user.avatarName %}
             <i class="far fa-user"></i>
         {% endif %}
     </span>
-    {% endif %}
+        {% endif %}
+    </a>
 </div>

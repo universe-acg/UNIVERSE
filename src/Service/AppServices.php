@@ -17,7 +17,7 @@
     use App\Entity\Menu;
     use App\Entity\Order;
     use App\Entity\OrderTicket;
-    use App\Entity\Page;
+    use App\Entity\Organizer;use App\Entity\Page;
     use App\Entity\Settings;
     use App\Entity\User;
     use DateTime;
@@ -444,7 +444,7 @@
             // Add help center pages urls
             $helpCenterPagesArray = array();
             $helpCenterPagesArray['Help Center page'] = $this->router->generate('help_center');
-            $helpCenterCategories = $this->getHelpCenterCategories(array())->getQuery()->getResult();
+            $helpCenterCategories = $this->getHelpCenterCategories(array());
             $helpCenterArticles = $this->getHelpCenterArticles(array())->getQuery()->getResult();
             foreach ($helpCenterCategories as $helpCenterCategory) {
                 $helpCenterPagesArray['Help Center Category' . ' - ' . $helpCenterCategory->getName()] = $this->router->generate('help_center_category', ['slug' => $helpCenterCategory->getSlug()]);
@@ -485,6 +485,7 @@
             $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
             $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "all";
             $order = array_key_exists('order', $criterias) ? $criterias['order'] : "ASC";
+            
             return $this->em->getRepository(Category::class)->getCategories($hidden, $keyword, $slug, $featured, $limit, $sort, $order);
         }
         
@@ -492,21 +493,48 @@
         
         public function getBlogPosts($criterias)
         {
-            
-            $selecttags = array_key_exists('selecttags', $criterias) ? $criterias['selecttags'] : false;
+            $selecttags = array_key_exists('selecttags', $criterias) ? $criterias['selecttags'] : "all";
             $hidden = array_key_exists('hidden', $criterias) ? $criterias['hidden'] : false;
             $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
             $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
             $category = array_key_exists('category', $criterias) ? $criterias['category'] : "all";
             $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
             $otherthan = array_key_exists('otherthan', $criterias) ? $criterias['otherthan'] : "all";
-            $order = array_key_exists('order', $criterias) ? $criterias['order'] : "createdAt";
-            $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "DESC";
+            $sortedby = array_key_exists('sortedby', $criterias) ? $criterias['sortedby'] : "all";
             
-            return $this->em->getRepository(BlogPost::class)->getBlogPosts($selecttags, $hidden, $keyword, $slug, $category, $limit, $sort, $order, $otherthan);
+            return $this->em->getRepository(BlogPost::class)->getBlogPosts($selecttags, $hidden, $keyword, $slug, $category, $limit, $sortedby, $otherthan);
         }
         
-        // Returns the event tickets after applying the specified search criterias
+        public function getCreators($criteria)
+        {
+            $selectedCategory = array_key_exists('category', $criteria) ? $criteria['category'] : 'all';
+            $keyword = array_key_exists('keyword', $criteria) ? $criteria['keyword'] : 'all';
+            $sortedBy = array_key_exists('sortedby', $criteria) ? $criteria['sortedby'] : 'all';
+            $level = array_key_exists('level', $criteria) ? $criteria['level'] : 'all';
+            $limit = array_key_exists('limit', $criteria) ? $criteria['limit'] : 'all';
+            
+            if ($level != "all"){
+               $level= $this->getPointsByName($level);
+            }
+            
+            // Call the repository method to fetch creators based on the criteria
+            return $this->em->getRepository(Organizer::class)->getCreators($level, $keyword,$selectedCategory , $limit, $sortedBy);
+        }
+
+        public function getPointsByName($name)
+        {
+            // Define a mapping of names to points
+            $nameToPointsMapping = [
+                "UniverseMaster" => 40,
+                "UniverseRunnerUp" => 30,
+                "UniverseTryhard" => 20,
+                "UniverseWannabe" => 10,
+                "UniverseNewbie" => 0,
+            ];
+        
+            // Check if the provided name exists in the mapping
+            return $nameToPointsMapping[$name] ?? "all";
+        }
         
         /**
          * @param $criterias
@@ -639,9 +667,34 @@
             return $queryBuilder;
         }
         
+           public function getHelpCenterCategoriesFront($criterias)
+                {
+                    $parent = array_key_exists('parent', $criterias) ? $criterias['parent'] : "all";
+                    $hidden = array_key_exists('hidden', $criterias) ? $criterias['hidden'] : false;
+                    $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
+                    $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
+                    $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
+                    $order = array_key_exists('order', $criterias) ? $criterias['order'] : "name";
+                    $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "ASC";
+                    
+                    $order = "articlescount";
+                    
+                    $cats = $this->em->getRepository(HelpCenterCategory::class)->getHelpCenterCategories($parent, $hidden, $keyword, $slug, $limit, $order, $sort)->getQuery()->getResult();
+                   
+                    usort($cats, static function ($a, $b) {
+                        $categoriesOrder = ['Attendee', 'Creator', 'Account'];
+                        
+                        $indexA = array_search($a->getName(), $categoriesOrder, true);
+                        $indexB = array_search($b->getName(), $categoriesOrder, true);
+                        
+                        return $indexA - $indexB;
+                    });
+                
+                    return $cats;
+                }
+        
         public function getHelpCenterCategories($criterias)
         {
-            
             $parent = array_key_exists('parent', $criterias) ? $criterias['parent'] : "all";
             $hidden = array_key_exists('hidden', $criterias) ? $criterias['hidden'] : false;
             $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
@@ -700,11 +753,12 @@
             $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
             $hasboughtticketforEvent = array_key_exists('hasboughtticketfor', $criterias) ? $criterias['hasboughtticketfor'] : "all";
             $hasboughtticketforOrganizer = array_key_exists('hasboughtticketfororganizer', $criterias) ? $criterias['hasboughtticketfororganizer'] : "all";
+            $hasbookedticketfor = array_key_exists('hasbookedticketfor', $criterias) ? $criterias['hasbookedticketfor'] : "all";
             $isOnHomepageSlider = array_key_exists('isOnHomepageSlider', $criterias) ? $criterias['isOnHomepageSlider'] : "all";
             $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
             $count = array_key_exists('count', $criterias) ? $criterias['count'] : false;
             
-            return $this->em->getRepository("App\Entity\User")->getUsers($role, $keyword, $organizername, $organizerslug, $username, $email, $firstname, $lastname, $enabled, $slug, $followedby, $hasboughtticketforEvent, $hasboughtticketforOrganizer, $apiKey, $isOnHomepageSlider, $limit, $count);
+            return $this->em->getRepository("App\Entity\User")->getUsers($role, $keyword, $organizername, $organizerslug, $username, $email, $firstname, $lastname, $enabled, $slug, $followedby, $hasboughtticketforEvent, $hasboughtticketforOrganizer, $hasbookedticketfor,$apiKey, $isOnHomepageSlider, $limit, $count);
         }
         
         public function getUsersShuffled($criterias)
@@ -723,11 +777,12 @@
             $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
             $hasboughtticketforEvent = array_key_exists('hasboughtticketfor', $criterias) ? $criterias['hasboughtticketfor'] : "all";
             $hasboughtticketforOrganizer = array_key_exists('hasboughtticketfororganizer', $criterias) ? $criterias['hasboughtticketfororganizer'] : "all";
+            $hasbookedticketfor = array_key_exists('hasbookedticketfor', $criterias) ? $criterias['hasbookedticketfor'] : "all";
             $isOnHomepageSlider = array_key_exists('isOnHomepageSlider', $criterias) ? $criterias['isOnHomepageSlider'] : "all";
             $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
             $count = array_key_exists('count', $criterias) ? $criterias['count'] : false;
             
-            return $this->em->getRepository("App\Entity\User")->getUsersShuffled($role, $keyword, $organizername, $organizerslug, $username, $email, $firstname, $lastname, $enabled, $slug, $followedby, $hasboughtticketforEvent, $hasboughtticketforOrganizer, $apiKey, $isOnHomepageSlider, $limit, $count);
+            return $this->em->getRepository("App\Entity\User")->getUsersShuffled($role, $keyword, $organizername, $organizerslug, $username, $email, $firstname, $lastname, $enabled, $slug, $followedby, $hasboughtticketforEvent, $hasboughtticketforOrganizer, $hasbookedticketfor, $apiKey, $isOnHomepageSlider, $limit, $count);
         }
         
         /**

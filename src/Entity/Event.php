@@ -196,7 +196,7 @@
          * @Assert\NotNull(groups={"create", "update"})
          */
         private $volsneeded = false;
-
+        
         public function __construct()
         {
             $this->eventDatesMulti = new ArrayCollection();
@@ -206,7 +206,7 @@
             $this->reference = $this->generateReference(10);
             $this->addedtofavoritesby = new ArrayCollection();
         }
-
+        
         /**
          * @throws Exception
          */
@@ -222,7 +222,7 @@
             
             return strlen($reference) > $length ? substr($reference, 0, $length) : $reference;
         }
-
+        
         /**
          * @return mixed
          */
@@ -230,7 +230,7 @@
         {
             return $this->repeatweeks;
         }
-
+        
         /**
          * @param mixed $repeatweeks
          */
@@ -238,7 +238,7 @@
         {
             $this->repeatweeks = $repeatweeks;
         }
-
+        
         /**
          * @return mixed
          */
@@ -246,7 +246,7 @@
         {
             return $this->repeatstartdate;
         }
-
+        
         /**
          * @param mixed $repeatstartdate
          */
@@ -418,7 +418,14 @@
          */
         public function getIsPassed()
         {
-            return $this->isPassed;
+            // Check if all event dates are in the past
+            foreach ($this->eventdates as $eventDate) {
+                if ($eventDate->getEnddate() > new DateTime()) {
+                    return false; // At least one event date is in the future
+                }
+            }
+            
+            return true; // All event dates are in the past
         }
         
         /**

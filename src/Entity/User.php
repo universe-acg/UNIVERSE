@@ -31,7 +31,6 @@
          * @ORM\Column(type="integer")
          */
         protected $id;
-        
         /**
          * @ORM\Column(type="float")
          */
@@ -41,6 +40,52 @@
          * @ORM\Column(length=255, unique=true)
          */
         protected $slug;
+        /**
+         * @ORM\Column(type="string", length=1000, nullable=true)
+         */
+        private $bio;
+        /**
+         * @ORM\Column(type="string", length=255, nullable=true)
+         */
+        private $website;
+        
+        /**
+         * @ORM\Column(type="string", length=255, nullable=true)
+         * @Assert\Length(min = 1)
+         */
+        private $phone;
+        /**
+         * @ORM\Column(type="string", length=255, nullable=true)
+         * @Assert\Length(max = 100)
+         */
+        private $facebook;
+        /**
+         * @ORM\Column(type="string", length=255, nullable=true)
+         * @Assert\Length(max = 100)
+         */
+        private $tiktok;
+        /**
+         * @ORM\Column(type="string", length=255, nullable=true)
+         * @Assert\Length(max = 100)
+         */
+        private $twitter;
+        /**
+         * @ORM\Column(type="string", length=255, nullable=true)
+         * @Assert\Length(max = 100)
+         */
+        private $instagram;
+        /**
+         * @ORM\Column(type="string", length=255, nullable=true)
+         * @Assert\Length(max = 100)
+         */
+        private $linkedin;
+        /**
+         * @var string
+         *
+         * @ORM\Column(type="string", length=255, nullable=true)
+         * @Assert\Length(max = 255)
+         */
+        private $youtubeurl;
         private $attendedevents;
         private $attendedeventscount;
         /**
@@ -48,6 +93,18 @@
          * @Assert\NotNull
          */
         private $isbusinessweek = true;
+        /**
+         * @ORM\Column(type="boolean")
+         */
+        private $showfavs;
+        /**
+         * @ORM\Column(type="boolean")
+         */
+        private $showattendeed;
+        /**
+         * @ORM\Column(type="boolean")
+         */
+        private $showcomments;
         /**
          * @ORM\OneToOne(targetEntity="Organizer", cascade={"persist", "remove"})
          * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
@@ -110,11 +167,7 @@
          * @ORM\Column(type="string", length=255, nullable=true)
          */
         private $postalcode;
-        /**
-         * @ORM\Column(type="string", length=255, nullable=true)
-         * @Assert\Length(min = 1)
-         */
-        private $phone;
+        
         /**
          * @ORM\Column(type="date", nullable=true)
          */
@@ -175,14 +228,512 @@
          * @ORM\Column(type="string", unique=true, nullable=true)
          */
         private $apiKey;
+        /**
+         * NOTE: This is not a mapped field of entity metadata, just a simple property.
+         *
+         * @Vich\UploadableField(mapping="organizer_logo", fileNameProperty="logoName", size="logoSize", mimeType="logoMimeType", originalName="logoOriginalName", dimensions="logoDimensions")
+         * @Assert\File(
+         *     maxSize = "2M",
+         *     mimeTypes = {"image/jpeg", "image/jpg", "image/gif", "image/png"},
+         *     mimeTypesMessage = "The file should be an image"
+         *     )
+         * @var File
+         */
+        private $logoFile;
+        /**
+         * @ORM\Column(type="string", length=255, nullable=true)
+         */
+        private $logoName;
+        /**
+         * @ORM\Column(type="integer", nullable=true)
+         *
+         * @var integer
+         */
+        private $logoSize;
+        /**
+         * @ORM\Column(type="string", length=255, nullable=true)
+         */
+        private $logoMimeType;
+        /**
+         * @ORM\Column(type="string", length=255, nullable=true)
+         */
+        private $logoOriginalName;
+        /**
+         * @ORM\Column(type="simple_array", nullable=true)
+         */
+        private $logoDimensions;
+        /**
+         * NOTE: This is not a mapped field of entity metadata, just a simple property.
+         *
+         * @Vich\UploadableField(mapping="organizer_cover", fileNameProperty="coverName", size="coverSize", mimeType="coverMimeType", originalName="coverOriginalName", dimensions="coverDimensions")
+         * @Assert\File(
+         *     maxSize = "2M",
+         *     mimeTypes = {"image/jpeg", "image/jpg", "image/gif", "image/png"},
+         *     mimeTypesMessage = "The file should be an image"
+         *     )
+         * @var File
+         */
+        private $coverFile;
+        /**
+         * @ORM\Column(type="string", length=255, nullable=true)
+         */
+        private $coverName;
+        /**
+         * @ORM\Column(type="integer", nullable=true)
+         *
+         * @var integer
+         */
+        private $coverSize;
+        /**
+         * @ORM\Column(type="string", length=255, nullable=true)
+         */
+        private $coverMimeType;
+        /**
+         * @ORM\Column(type="string", length=255, nullable=true)
+         */
+        private $coverOriginalName;
+        /**
+         * @ORM\Column(type="simple_array", nullable=true)
+         */
+        private $coverDimensions;
         
         public function __construct()
         {
             parent::__construct();
+            $this->points = 0;
+            $this->showattendeed = false;
+            $this->showfavs = false;
+            $this->showcomments = false;
             $this->orders = new ArrayCollection();
             $this->favorites = new ArrayCollection();
             $this->following = new ArrayCollection();
             $this->ticketreservations = new ArrayCollection();
+        }
+        
+        public function getLogoPath()
+        {
+            return 'uploads/organizers/' . $this->logoName;
+        }
+        
+        public function getLogoPlaceholder($size = "default")
+        {
+            if ($size == "small") {
+                return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAABGCAMAAABG8BK2AAAA4VBMVEUAAAD2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhH2dhFAEufoAAAASnRSTlMAAQIDBAUGBwkNDg8QERMUGx0fICUmKi04PT9BQ0ZHSUpMTVZXWVtiZGZndHV5e3+FiImMkZSanaOlsLK3ytPa3N7i6On19/n7/X4N0FUAAAFVSURBVFjD7ddpT8IwAAbglolDRQ4PwGMqHrTWA9AhTgERdWj//w9yCyauYe16LCTK3o99mydp2i4dAFmy/Mfkz4LUYopaWORlmSIN0o4p2mFRXFpm8wThTjh7iOczDIsORs5agnJD5XIpVK4kFbGzIa1QKljXsQLj8BmkwCA+gxUYrMb4g4eBb8qM6jAYh/WREdPL/TS5ngHzGOk8beYj+mlZ9XUZ9qQSXabClBVdpsCUBV3GZkpblykxZUmXaTJlU5d5gZEOjrWPH+Hvt9Jl+F3WKTVgaHe2W3aXGjGUei2n5cWMKzK8LD3zRBrV8nq52iDPuszn3Y4V6azd+y91ZnxgzdUrh6+KzDmMnQAvVJjpFnfK9lSe2eNPAfvSzBsQ5V2W6QuZvizjChl3wczEFWWyqDuV0msrpbdfSi9RcC2tECDKbSrK7J8hKego6Z8hS5Y/mG9fd7+lNzcPFwAAAABJRU5ErkJggg==";
+            }
+            
+            return "data:image/png;base64,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";
+        }
+        
+        /**
+         */
+        public function getLogoFile()
+        {
+            return $this->logoFile;
+        }
+        
+        /**
+         * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
+         * of 'UploadedFile' is injected into this setter to trigger the update. If this
+         * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
+         * must be able to accept an instance of 'File' as the bundle will inject one here
+         * during Doctrine hydration.
+         *
+         * @param File|null $logoFile
+         */
+        public function setLogoFile(File $logoFile = null)
+        {
+            $this->logoFile = $logoFile;
+            
+            if (null !== $logoFile) {
+// It is required that at least one field changes if you are using doctrine
+// otherwise the event listeners won't be called and the file is lost
+                $this->updatedAt = new DateTimeImmutable();
+            }
+        }
+        
+        
+        /**
+         * @return mixed
+         */
+        public function getLogoName()
+        {
+            return $this->logoName;
+        }
+        
+        /**
+         * @param mixed $logoName
+         */
+        public function setLogoName($logoName): void
+        {
+            $this->logoName = $logoName;
+        }
+        
+        /**
+         * @return int
+         */
+        public function getLogoSize(): int
+        {
+            return $this->logoSize;
+        }
+        
+        /**
+         * @param int $logoSize
+         */
+        public function setLogoSize(int $logoSize): void
+        {
+            $this->logoSize = $logoSize;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getLogoMimeType()
+        {
+            return $this->logoMimeType;
+        }
+        
+        /**
+         * @param mixed $logoMimeType
+         */
+        public function setLogoMimeType($logoMimeType): void
+        {
+            $this->logoMimeType = $logoMimeType;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getLogoOriginalName()
+        {
+            return $this->logoOriginalName;
+        }
+        
+        /**
+         * @param mixed $logoOriginalName
+         */
+        public function setLogoOriginalName($logoOriginalName): void
+        {
+            $this->logoOriginalName = $logoOriginalName;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getLogoDimensions()
+        {
+            return $this->logoDimensions;
+        }
+        
+        /**
+         * @param mixed $logoDimensions
+         */
+        public function setLogoDimensions($logoDimensions): void
+        {
+            $this->logoDimensions = $logoDimensions;
+        }
+        
+        /**
+         * @return File
+         */
+        public function getCoverFile()
+        {
+            return $this->coverFile;
+        }
+        
+        /**
+         * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
+         * of 'UploadedFile' is injected into this setter to trigger the update. If this
+         * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
+         * must be able to accept an instance of 'File' as the bundle will inject one here
+         * during Doctrine hydration.
+         *
+         * @param File|null $coverFile
+         */
+        public function setCoverFile(File $coverFile = null)
+        {
+            $this->coverFile = $coverFile;
+            
+            if (null !== $coverFile) {
+// It is required that at least one field changes if you are using doctrine
+// otherwise the event listeners won't be called and the file is lost
+                $this->updatedAt = new DateTimeImmutable();
+            }
+        }
+        
+        public function getCoverPath()
+        {
+            return 'uploads/organizers/covers/' . $this->coverName;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getCoverName()
+        {
+            return $this->coverName;
+        }
+        
+        /**
+         * @param mixed $coverName
+         */
+        public function setCoverName($coverName): void
+        {
+            $this->coverName = $coverName;
+        }
+        
+        /**
+         * @return int
+         */
+        public function getCoverSize(): int
+        {
+            return $this->coverSize;
+        }
+        
+        public function setCoverSize($coverSize)
+        {
+            $this->coverSize = $coverSize;
+            
+            return $this;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getCoverMimeType()
+        {
+            return $this->coverMimeType;
+        }
+        
+        /**
+         * @param mixed $coverMimeType
+         */
+        public function setCoverMimeType($coverMimeType): void
+        {
+            $this->coverMimeType = $coverMimeType;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getCoverOriginalName()
+        {
+            return $this->coverOriginalName;
+        }
+        
+        /**
+         * @param mixed $coverOriginalName
+         */
+        public function setCoverOriginalName($coverOriginalName): void
+        {
+            $this->coverOriginalName = $coverOriginalName;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getCoverDimensions()
+        {
+            return $this->coverDimensions;
+        }
+        
+        /**
+         * @param mixed $coverDimensions
+         */
+        public function setCoverDimensions($coverDimensions): void
+        {
+            $this->coverDimensions = $coverDimensions;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getBio()
+        {
+            return $this->bio;
+        }
+        
+        /**
+         * @param mixed $bio
+         */
+        public function setBio($bio): void
+        {
+            $this->bio = $bio;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getWebsite()
+        {
+            return $this->website;
+        }
+        
+        /**
+         * @param mixed $website
+         */
+        public function setWebsite($website): void
+        {
+            $this->website = $website;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getEmail()
+        {
+            return $this->email;
+        }
+        
+        /**
+         * @param mixed $email
+         */
+        public function setEmail($email): void
+        {
+            $this->email = $email;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getFacebook()
+        {
+            return $this->facebook;
+        }
+        
+        /**
+         * @param mixed $facebook
+         */
+        public function setFacebook($facebook): void
+        {
+            $this->facebook = $facebook;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getTiktok()
+        {
+            return $this->tiktok;
+        }
+        
+        /**
+         * @param mixed $tiktok
+         */
+        public function setTiktok($tiktok): void
+        {
+            $this->tiktok = $tiktok;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getTwitter()
+        {
+            return $this->twitter;
+        }
+        
+        /**
+         * @param mixed $twitter
+         */
+        public function setTwitter($twitter): void
+        {
+            $this->twitter = $twitter;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getInstagram()
+        {
+            return $this->instagram;
+        }
+        
+        /**
+         * @param mixed $instagram
+         */
+        public function setInstagram($instagram): void
+        {
+            $this->instagram = $instagram;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getLinkedin()
+        {
+            return $this->linkedin;
+        }
+        
+        /**
+         * @param mixed $linkedin
+         */
+        public function setLinkedin($linkedin): void
+        {
+            $this->linkedin = $linkedin;
+        }
+        
+        /**
+         * @return string
+         */
+        public function getYoutubeurl(): string
+        {
+            return $this->youtubeurl ?? "";
+        }
+        
+        /**
+         * @param string $youtubeurl
+         */
+        public function setYoutubeurl(string $youtubeurl): void
+        {
+            $this->youtubeurl = $youtubeurl;
+        }
+        
+        /**
+         * @return bool
+         */
+        public function isShowfavs(): bool
+        {
+            return $this->showfavs ?? false;
+        }
+        
+        /**
+         * @param bool $showfavs
+         */
+        public function setShowfavs(bool $showfavs): void
+        {
+            $this->showfavs = $showfavs;
+        }
+        
+        /**
+         * @return bool
+         */
+        public function isShowattendeed(): bool
+        {
+            return $this->showattendeed ?? false;
+        }
+        
+        /**
+         * @param bool $showattendeed
+         */
+        public function setShowattendeed(bool $showattendeed): void
+        {
+            $this->showattendeed = $showattendeed;
+        }
+        
+        /**
+         * @return bool
+         */
+        public function isShowcomments(): bool
+        {
+            return $this->showcomments ?? false;
+        }
+        
+        /**
+         * @param bool $showcomments
+         */
+        public function setShowcomments(bool $showcomments): void
+        {
+            $this->showcomments = $showcomments;
         }
         
         /**
@@ -346,6 +897,11 @@
             }
             
             return $this->firstname . " " . $this->lastname;
+        }
+        
+        public function hasSocialMedia()
+        {
+            return ($this->website || $this->email || $this->phone || $this->twitter || $this->instagram || $this->facebook || $this->linkedin);
         }
         
         public function getUpdatedAt()
@@ -721,50 +1277,54 @@
         public function stringifypointslevel()
         {
             if ($this->getRole() == "Organizer") {
+                if ($this->getOrganizer()->getCategory() == "Club" || $this->getOrganizer()->getCategory() == "Society") {
+                    $points = $this->getPoints();
+                    if ($points >= 40) {
+                        return "Universe Master";
+                    }
+                    
+                    if ($points >= 30) {
+                        return "Universe Runner-up";
+                    }
+                    
+                    if ($points >= 20) {
+                        return "Universe Tryhard";
+                    }
+                    
+                    if ($points >= 10) {
+                        return "Universe Wannabe";
+                    }
+                    
+                    if ($points >= 0) {
+                        return "Universe Newbie";
+                    }
+                } else {
+                    return "";
+                }
+            } elseif ($this->getRole() == "Attendee") {
                 $points = $this->getPoints();
-                if ($points >= 50) {
-                    return "Level 5";
+                
+                if ($points >= 0 && $points < 1) {
+                    return " - Learner";
                 }
                 
-                if ($points >= 40) {
-                    return "Level 4";
+                if ($points >= 1 && $points < 2) {
+                    return " - Learner of many things";
                 }
                 
-                if ($points >= 30) {
-                    return "Level 3";
+                if ($points >= 2 && $points < 3) {
+                    return " - Master of one";
                 }
                 
-                if ($points >= 20) {
-                    return "Level 2";
+                if ($points >= 3 && $points < 4) {
+                    return " - Master of most";
                 }
                 
-                if ($points >= 10) {
-                    return "Level 1";
-                }
-                
-            } elseif ($this->getRole() == "Attende") {
-                $points = $this->getPoints();
-                
-                if ($points === 1) {
-                    return "Level 1";
-                }
-                
-                if ($points === 2) {
-                    return "Level 2";
-                }
-                
-                if ($points === 3) {
-                    return "Level 3";
-                }
-                
-                if ($points === 4) {
-                    return "Level 4";
-                }
-                
-                if ($points === 5) {
-                    return "Level 5";
+                if ($points >= 4) {
+                    return " - Master of Universe";
                 }
             }
+            
             return "";
         }
         
@@ -785,6 +1345,18 @@
             return "N/A";
         }
         
+        public function getOrganizer()
+        {
+            return $this->organizer;
+        }
+        
+        public function setOrganizer($organizer)
+        {
+            $this->organizer = $organizer;
+            
+            return $this;
+        }
+        
         /**
          * @return mixed
          */
@@ -801,15 +1373,30 @@
             $this->points = $points;
         }
         
-        public function getOrganizer()
+        public function stringifypointslevelAttendee()
         {
-            return $this->organizer;
-        }
-        
-        public function setOrganizer($organizer)
-        {
-            $this->organizer = $organizer;
+            $points = $this->getPoints();
             
-            return $this;
+            if ($points >= 0 && $points < 1) {
+                return "Learner";
+            }
+            
+            if ($points >= 1 && $points < 2) {
+                return "Learner of many things";
+            }
+            
+            if ($points >= 2 && $points < 3) {
+                return "Master of one";
+            }
+            
+            if ($points >= 3 && $points < 4) {
+                return "Master of most";
+            }
+            
+            if ($points >= 4) {
+                return "Master of Universe";
+            }
+            
+            return "";
         }
     }
