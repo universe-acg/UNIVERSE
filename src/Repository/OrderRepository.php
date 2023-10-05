@@ -5,6 +5,7 @@
     
     namespace App\Repository;
     
+    use App\Entity\Event;
     use App\Entity\Order;
     use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
     use Doctrine\Persistence\ManagerRegistry;
@@ -28,6 +29,39 @@
                 ->setParameter('eventId', $eventId)
                 ->getQuery()
                 ->getResult();
+        }
+        
+        public function countOrdersWithStatusAboveOneForEventTicket($eventTicket)
+        {
+            $qb = $this->createQueryBuilder('o')
+                ->select('COUNT(o)')
+                ->leftJoin('o.orderelements', 'orderelement')
+                ->leftJoin('orderelement.eventticket', 'eventticket')
+                ->where('eventticket = :eventTicket')
+                ->andWhere('o.status >= 1')
+                ->setParameter('eventTicket', $eventTicket);
+            
+            return $qb->getQuery()->getSingleScalarResult();
+        }
+        
+        public function getOrdersForEvent($criterias, Event $event)
+        {
+            $qb = $this->createQueryBuilder("o");
+            
+            // Select clause
+            $qb->select("o");
+            
+            // Add filter for the specific event
+            $qb->leftJoin("o.orderelements", "orderelement")
+                ->leftJoin("orderelement.eventticket", "eventticket")
+                ->leftJoin("eventticket.eventdate", "eventdate")
+                ->leftJoin("eventdate.event", "event")
+                ->andWhere("event = :event")
+                ->setParameter("event", $event);
+            
+            $qb->orderBy("o.createdAt", "DESC");
+            
+            return $qb;
         }
         
         public function getOrders($status, $user, $organizer, $event, $eventDate, $eventTicket, $reference, $upcomingtickets, $datefrom, $dateto, $sort, $order, $limit, $count, $ordersQuantityByDateStat, $sumOrderElements)

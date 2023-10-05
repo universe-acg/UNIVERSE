@@ -34,7 +34,7 @@
          */
         private $eventdate;
         /**
-         * @ORM\OneToMany(targetEntity="OrderElement", mappedBy="eventticket", cascade={"remove"})
+         * @ORM\OneToMany(targetEntity="OrderElement", mappedBy="eventticket", cascade={"remove", "persist"})
          */
         private $orderelements;
         /**
@@ -50,8 +50,6 @@
          * @ORM\Column(type="string", length=255)
          */
         private $reference;
-
-//         * @Assert\NotNull(groups={"create", "update"})
         /**
          * @var string
          * @ORM\Column(type="string", length=255)
@@ -59,6 +57,8 @@
          * @Assert\Length(min = 2, groups={"create", "update"})
          */
         private $name;
+
+//         * @Assert\NotNull(groups={"create", "update"})
         /**
          * @var string
          * @ORM\Column(type="string", length=255, nullable=true)
@@ -80,24 +80,30 @@
          * @ORM\Column(type="datetime", nullable=false)
          */
         private $salesstartdate;
-
-//    * @Assert\LessThan(propertyPath="quantity", groups={"create", "update"})
         /**
          * @var DateTime
          * @ORM\Column(type="datetime", nullable=false)
          * @Assert\GreaterThan(propertyPath="salesstartdate", groups={"create", "update"})
          */
         private $salesenddate;
+
+//    * @Assert\LessThan(propertyPath="quantity", groups={"create", "update"})
         /**
          * @ORM\Column(name="position", type="integer")
          */
         private $position;
+        /**
+         * @ORM\Column(type="boolean")
+         */
+        private $informedcreator;
         
         /**
          * @throws Exception
          */
         public function __construct()
         {
+            $this->quantity = -1;
+            $this->informedcreator = false;
             $this->orderelements = new ArrayCollection();
             $this->reference = $this->generateReference(10);
             $this->ticketreservations = new ArrayCollection();
@@ -121,6 +127,42 @@
                 bin2hex(random_bytes(2))
             ]);
             return strlen($reference) > $length ? substr($reference, 0, $length) : $reference;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getInformedcreator()
+        {
+            return $this->informedcreator ?? false;
+        }
+        
+        /**
+         * @param mixed $informedcreator
+         */
+        public function setInformedcreator($informedcreator): void
+        {
+            $this->informedcreator = $informedcreator;
+        }
+        
+        public function haslimit()
+        {
+            return $this->getQuantity() != -1;
+        }
+        
+        public function getQuantity(): int
+        {
+            if ($this->quantity == null) {
+                return 0;
+            }
+            return $this->quantity;
+        }
+        
+        public function setQuantity($quantity)
+        {
+            $this->quantity = $quantity;
+            
+            return $this;
         }
         
         /**
@@ -161,21 +203,6 @@
                 }
             }
             return $sum;
-        }
-        
-        public function getQuantity(): int
-        {
-            if ($this->quantity == null) {
-                return 0;
-            }
-            return $this->quantity;
-        }
-        
-        public function setQuantity($quantity)
-        {
-            $this->quantity = $quantity;
-            
-            return $this;
         }
         
         public function getScannedTicketsCount(): int

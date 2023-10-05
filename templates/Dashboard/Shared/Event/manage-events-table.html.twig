@@ -6,14 +6,11 @@
                 {% if is_granted('ROLE_ADMINISTRATOR') %}
                     <th>{{ 'Organizer' }}</th>
                 {% endif %}
-                <th>{{ 'Status' }}</th>
                 <th class="text-center"><i class="fas fa-cog"></i></th>
             </tr>
         </thead>
         <tbody>
-
             {% for event in events %}
-
                 <tr>
                     <td>
                         <a class="fancybox"
@@ -32,30 +29,14 @@
                                title="{{ "View organizer" }}">{{ event.organizer.name }}</a>
                         </td>
                     {% endif %}
-                    <td>
-                        <div class="clearfix">
-                            <div class="float-left">
-                                <strong>{{ event.getTotalSalesPercentage }}%</strong>
-                            </div>
-                            <div class="float-right">
-                                <small class="text-muted">{{ event.getTotalOrderElementsQuantitySum }} {{ "ticket(s) booked" }}</small>
-                            </div>
-                        </div>
-                        <div class="progress progress-xs">
-                            <div class="progress-bar bg-yellow" role="progressbar"
-                                 style="width: {{ event.getTotalSalesPercentage }}%"
-                                 aria-valuenow="{{ event.getTotalSalesPercentage }}" aria-valuemin="0"
-                                 aria-valuemax="100"></div>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="badge badge-{{ event.stringifyStatusClass }}">{{ event.stringifyStatus }}</span>
-                        {% if event.deletedAt %}
+                    {% if event.deletedAt %}
+                        <td>
+                            <span class="badge badge-{{ event.stringifyStatusClass }}">{{ event.stringifyStatus }}</span>
                             <br>
                             <br>
                             <span class="badge badge-danger"><i class="fas fa-times fa-fw"></i> {{ "Deleted" }}</span>
-                        {% endif %}
-                    </td>
+                        </td>
+                    {% endif %}
                     <td class="text-center">
                         <div class="item-action dropdown">
                             <a href="javascript:void(0)" data-toggle="dropdown" data-boundary="window" class="icon"><i

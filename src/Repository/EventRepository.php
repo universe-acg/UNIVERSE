@@ -20,6 +20,18 @@
             parent::__construct($registry, Event::class);
         }
         
+        public function findEventsStartingOn(DateTime $date)
+        {
+            return $this->createQueryBuilder('e')
+                ->leftJoin('e.eventdates', 'eventdates')
+                ->where('eventdates.startdate >= :dateStart')
+                ->andWhere('eventdates.startdate < :dateEnd')
+                ->setParameter('dateStart', $date->format('Y-m-d 00:00:00'))
+                ->setParameter('dateEnd', $date->format('Y-m-d 23:59:59'))
+                ->getQuery()
+                ->getResult();
+        }
+        
         public function findAttendedEventsByUser(User $user, $category, $startdate)
         {
             $startDateFilter = $startdate ?? "all";

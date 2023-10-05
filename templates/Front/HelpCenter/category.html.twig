@@ -2,7 +2,7 @@
 
 {% set pagetitle = 'Support for' ~ " " ~ category.name %}
 
-{% block title %}{{pagetitle}}{% endblock %}
+{% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 
@@ -17,7 +17,8 @@
                         <div class="card-body">
                             <article class="h-100">
                                 <figure class="itembox text-center">
-                                    <span class="mt-2 icon-wrap rounded icon-lg bg-primary"><i class="{{ category.icon }}  white"></i></span>
+                                    <span class="mt-2 icon-wrap rounded icon-lg bg-primary"><i
+                                                class="{{ category.icon }}  white"></i></span>
                                     <figcaption class="text-wrap">
                                         <h5 class="title">{{ category.name }}</h5>
                                     </figcaption>
@@ -25,9 +26,11 @@
 
                                 <hr>
 
-                                {% for article in services.getHelpCenterArticles({"category":category.slug}).getQuery().getResult() %}
-                                    <p><a href="{{ path('help_center_article', {slug: article.slug}) }}">{{ article.title }}</a></p>
-                                    {% endfor %}
+                                {% for article in services.getHelpCenterArticles({"category":category.slug}).getQuery().getResult()|sortFaqs %}
+                                    <p>
+                                        <a href="{{ path('help_center_article', {slug: article.slug}) }}">{{ article.title }}</a>
+                                    </p>
+                                {% endfor %}
                             </article>
 
                         </div>

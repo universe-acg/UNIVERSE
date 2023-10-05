@@ -26,6 +26,18 @@ open_event:
   path: /open-event/{slug}
   controller: 'App\Controller\Front\EventController::openevent'
 
+dashboard_attendee_blog_post_delete:
+  path: /dashboard/attendee/manage-blog-posts/{slug}/delete
+  controller: 'App\Controller\Dashboard\Attendee\BlogPostController::delete'
+
+dashboard_attendee_blog_post_show:
+  path: /dashboard/attendee/manage-blog-posts/{slug}/show
+  controller: 'App\Controller\Dashboard\Attendee\BlogPostController::showhide'
+
+dashboard_attendee_blog_post_hide:
+  path: /dashboard/attendee/manage-blog-posts/{slug}/hide
+  controller: 'App\Controller\Dashboard\Attendee\BlogPostController::showhide'
+
 dashboard_organizer_blog_post_delete:
   path: /dashboard/organizer/manage-blog-posts/{slug}/delete
   controller: 'App\Controller\Dashboard\Organizer\BlogPostController::delete'
@@ -66,13 +78,12 @@ admin_attendace_details_see_attendeed_event_dates:
   path: /administrator/manage-attendees-details-event-dates/{userid}/{eventid}
   controller: 'App\Controller\Dashboard\Shared\OrderController::attendeesAdminDetailsEventdates'
 
-
 generate_attendees_pdf:
-  path: /dashboard/generate-attendees-pdf
+  path: /dashboard/generate-attendees-pdf/{event}
   controller: 'App\Controller\Dashboard\Shared\PdfController::generatePdf'
 
 generate_attendees_excel:
-  path: /dashboard/generate-attendees-excel
+  path: /dashboard/generate-attendees-excel/{event}
   controller: 'App\Controller\Dashboard\Shared\PdfController::generateExecl'
 
 get_event_details:
@@ -144,6 +155,11 @@ blog_post_category_add:
 blog_post_organizer:
   path: /dashboard/organizer/manage-blog-posts-organizer/
   controller: 'App\Controller\Dashboard\Organizer\BlogPostController::index'
+  methods: [ 'GET', 'POST' ]
+
+blog_post_attendee:
+  path: /dashboard/attendee/manage-blog-posts-attendee/
+  controller: 'App\Controller\Dashboard\Attendee\BlogPostController::index'
   methods: [ 'GET', 'POST' ]
 
 # Dashboard routes

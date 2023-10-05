@@ -8,6 +8,7 @@
     use App\Entity\Comment;
     use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
     use Doctrine\ORM\NonUniqueResultException;
+    use Doctrine\ORM\QueryBuilder;
     use Doctrine\Persistence\ManagerRegistry;
     
     /**
@@ -64,7 +65,7 @@
          * Find comments by author ID.
          *
          * @param int $authorId The ID of the author.
-         * @return Comment[]|null An array of comments by the author or null if not found.
+         * @return QueryBuilder An array of comments by the author or null if not found.
          */
         public function findByAuthor(int $authorId)
         {

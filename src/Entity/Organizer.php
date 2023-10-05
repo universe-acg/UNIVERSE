@@ -223,6 +223,8 @@
          * @ORM\Column(type="integer")
          */
         private $views;
+        
+        
         /**
          * @ORM\Column(type="boolean")
          * @Assert\NotNull
@@ -782,6 +784,7 @@
             
             return $this;
         }
+        
         
         public function getShowfollowers()
         {

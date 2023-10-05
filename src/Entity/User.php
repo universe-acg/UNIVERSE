@@ -23,8 +23,6 @@
      */
     class User extends BaseUser
     {
-        
-        
         /**
          * @ORM\Id()
          * @ORM\GeneratedValue(strategy="AUTO")
@@ -40,6 +38,8 @@
          * @ORM\Column(length=255, unique=true)
          */
         protected $slug;
+        private $getcreatorreminder;
+        private $getdailyreminders;
         /**
          * @ORM\Column(type="string", length=1000, nullable=true)
          */
@@ -48,7 +48,6 @@
          * @ORM\Column(type="string", length=255, nullable=true)
          */
         private $website;
-        
         /**
          * @ORM\Column(type="string", length=255, nullable=true)
          * @Assert\Length(min = 1)
@@ -167,7 +166,6 @@
          * @ORM\Column(type="string", length=255, nullable=true)
          */
         private $postalcode;
-        
         /**
          * @ORM\Column(type="date", nullable=true)
          */
@@ -302,12 +300,46 @@
             parent::__construct();
             $this->points = 0;
             $this->showattendeed = false;
+            $this->getcreatorreminder = true;
+            $this->getdailyreminders = true;
             $this->showfavs = false;
             $this->showcomments = false;
             $this->orders = new ArrayCollection();
             $this->favorites = new ArrayCollection();
             $this->following = new ArrayCollection();
             $this->ticketreservations = new ArrayCollection();
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getGetcreatorreminder()
+        {
+            return $this->getcreatorreminder ?? false;
+        }
+        
+        /**
+         * @param mixed $getcreatorreminder
+         */
+        public function setGetcreatorreminder($getcreatorreminder): void
+        {
+            $this->getcreatorreminder = $getcreatorreminder;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getGetdailyreminders()
+        {
+            return $this->getdailyreminders ?? false;
+        }
+        
+        /**
+         * @param mixed $getdailyreminders
+         */
+        public function setGetdailyreminders($getdailyreminders): void
+        {
+            $this->getdailyreminders = $getdailyreminders;
         }
         
         public function getLogoPath()

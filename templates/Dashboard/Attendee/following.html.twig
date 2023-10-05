@@ -29,7 +29,7 @@
                             </div>
                         </div>
                     {% else %}
-                        {% include "Global/message.html.twig" with { type: "info", message: ('You are not following any organizer'), icon: "fas fa-exclamation-circle" } %}
+                        {% include "Global/message.html.twig" with { type: "info", message: ('You are not following any creator'), icon: "fas fa-exclamation-circle" } %}
                     {% endif %}
                     {{ knp_pagination_render(users, null, {}, {'align': 'center'}) }}
                 </div>

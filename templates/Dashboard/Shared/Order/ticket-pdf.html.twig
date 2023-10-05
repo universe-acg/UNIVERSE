@@ -6,7 +6,7 @@
     </head>
     <body>
         <h2>{{ eventname }}</h2>
-        Ticket: <h4>{{ ticketname }}</h4>
+        Ticket: <h4>{{ ticketname }} {% if overbooked %} | Overbooked {% endif %}</h4>
         Reference: <h4>{{ order.reference }}</h4>
         Attendee: <h4>{{ order.user.firstname }} {{ order.user.lastname }}</h4>
         Booked at: <h4>{{ order.createdAt|date(date_format_date_only) }}</h4>

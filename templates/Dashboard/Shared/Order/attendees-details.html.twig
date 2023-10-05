@@ -20,60 +20,58 @@
                             <div class="mb-3">
                                 <label for="filterByAttendedEvents" class="form-label">Filter by Attended Event
                                     Dates:</label>
+                                <p class="text-muted">Here you see all the users that booked this event. Click on an
+                                    event date to see more details by event date</p>
                                 <input type="number" class="form-control" id="filterByAttendedEvents" min="0"
-                                       placeholder="Enter min number of event dates attended">
+                                       placeholder="Enter min number of event dates attended by a user">
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            {% for user in users %}
-                                <div class="card">
-                                    <div class="table-responsive">
-                                        <table class="table table-hover table-vcenter">
-                                            <thead>
-                                                <tr>
-                                                    <th>{{ 'Full name' }}</th>
-                                                    <th>{{ 'Email' }}</th>
-                                                    <th>{{ 'Attended Event Dates' }}</th>
-                                                    <th class="text-center"><i class="fas fa-cog"></i></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-
-                                                {% for user in users %}
-                                                    <tr style="cursor: pointer !important; z-index: 999 !important;"
-                                                        onclick="window.location='{{ url('attendace_details_see_attendeed_event_dates', { 'userid': user.getId(), 'eventid': event.getId() }) }}';">
-                                                        <td class="text-sm">
-                                                            {{ user.getCrossRoleName() }}
-                                                        </td>
-                                                        <td class="text-sm">
-                                                            {{ user.getEmail() }}
-                                                        </td>
-                                                        <td class="text-center">
-                                                            {{ user.getAttendedeventscount() }}
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <div class="item-action dropdown">
-                                                                <a href="javascript:void(0)" data-toggle="dropdown"
-                                                                   data-boundary="window" class="icon"><i
-                                                                            class="fas fa-ellipsis-v"></i></a>
-                                                                <div class="dropdown-menu dropdown-menu-right">
-                                                                    <a href="{{ url('attendace_details_see_attendeed_event_dates', { 'userid': user.getId(), 'eventid': event.getId() }) }}"
-                                                                       class="dropdown-item">
-                                                                        <i class="dropdown-icon fas fa-ticket-alt fa-fw text-muted"></i> {{ "Event dates attended" }}
-                                                                    </a>
-                                                                </div>
+                            <div class="card">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-vcenter">
+                                        <thead>
+                                            <tr>
+                                                <th>{{ 'Full name' }}</th>
+                                                <th>{{ 'Email' }}</th>
+                                                <th>{{ 'Attended Event Dates' }}</th>
+                                                <th class="text-center"><i class="fas fa-cog"></i></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for user in users %}
+                                                <tr style="cursor: pointer !important; z-index: 999 !important;"
+                                                    onclick="window.location='{{ url('attendace_details_see_attendeed_event_dates', { 'userid': user.getId(), 'eventid': event.getId() }) }}';">
+                                                    <td class="text-sm">
+                                                        {{ user.getCrossRoleName() }}
+                                                    </td>
+                                                    <td class="text-sm">
+                                                        {{ user.getEmail() }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{ user.getAttendedeventscount() }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <div class="item-action dropdown">
+                                                            <a href="javascript:void(0)" data-toggle="dropdown"
+                                                               data-boundary="window" class="icon"><i
+                                                                        class="fas fa-ellipsis-v"></i></a>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <a href="{{ url('attendace_details_see_attendeed_event_dates', { 'userid': user.getId(), 'eventid': event.getId() }) }}"
+                                                                   class="dropdown-item">
+                                                                    <i class="dropdown-icon fas fa-ticket-alt fa-fw text-muted"></i> {{ "Event dates attended" }}
+                                                                </a>
                                                             </div>
-                                                        </td>
-                                                    </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </div>
-
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
                                 </div>
-                            {% endfor %}
+                            </div>
                         </div>
                     </div>
 

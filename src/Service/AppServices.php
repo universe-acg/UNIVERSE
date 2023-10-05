@@ -17,7 +17,8 @@
     use App\Entity\Menu;
     use App\Entity\Order;
     use App\Entity\OrderTicket;
-    use App\Entity\Organizer;use App\Entity\Page;
+    use App\Entity\Organizer;
+    use App\Entity\Page;
     use App\Entity\Settings;
     use App\Entity\User;
     use DateTime;
@@ -200,7 +201,12 @@
                 $this->sendOrderConfirmationEmail($order, $order->getUser()->getEmail());
             }
         }
-        
+         public function getOrdersForEvent($criterias)
+                {
+                    $event = array_key_exists('event', $criterias) ? $criterias['event'] : "all";
+                    return $this->em->getRepository(Order::class)->getOrdersForEvent($criterias, $event);
+                }
+                
         public function getOrders($criterias)
         {
             $status = array_key_exists('status', $criterias) ? $criterias['status'] : "all";
@@ -299,6 +305,73 @@
             return ($setting ? ($setting->getValue()) : (null));
         }
         
+        /**
+         * @throws SyntaxError
+         * @throws RuntimeError
+         * @throws LoaderError|InvalidArgumentException
+         */
+        public function sendmaileventhasbeenupdate($event, $emailTo)
+        {
+            $message = "Important details of this event: " . $event->getName() . ", which you have booked have been changed.";
+            
+            $emaildata = [
+                $title =  $event->getName(),
+                $description = $event->getDescription(),
+                $startson = $event->getEventdates()[0]->getStartdate()->format('D j M Y, g:i A'),
+                $link = "https://universeacg.xyz/event/" . $event->getSlug(),
+            ];
+            
+            // send email to organizer and user
+            $email = (new Swift_Message($this->getSetting('website_name') . ' - ' . $event->getName() . ' event details udpated'))
+                ->setFrom($this->getSetting('no_reply_email'))
+                ->setTo($emailTo)
+                ->setBody(
+                    $this->templating->render('Dashboard/Shared/Order/event-updated-email.html.twig', ['data' => $emaildata, 'message' => $message]), 'text/html', 'UTF-8');
+            
+            try {
+                $result = $this->mailer->send($email);
+            } catch (Exception $e) {
+            }
+        }
+        
+          /**
+                 * @throws SyntaxError
+                 * @throws RuntimeError
+                 * @throws LoaderError|InvalidArgumentException
+                 */
+                public function sendmaileventhasbeencancelled($event, $emailTo)
+                {
+                    $message = "This event has been cancelled: " . $event->getName() . ".";
+                    
+                    $emaildata = [
+                        $title =  "We are informing you that the organizer has cancelled this event.",
+                    ];
+                    
+                    // send email to organizer and user
+                    $email = (new Swift_Message($this->getSetting('website_name') . ' - ' . $event->getName() . ' event details udpated'))
+                        ->setFrom($this->getSetting('no_reply_email'))
+                        ->setTo($emailTo)
+                        ->setBody(
+                            $this->templating->render('Dashboard/Shared/Order/event-cancelled-email.html.twig', ['data' => $emaildata, 'message' => $message]), 'text/html', 'UTF-8');
+                    
+                    try {
+                        $result = $this->mailer->send($email);
+                    } catch (Exception $e) {
+                    }
+                }
+        
+        public function getEventDates($criterias)
+        {
+            
+            $reference = array_key_exists('reference', $criterias) ? $criterias['reference'] : "all";
+            $organizer = array_key_exists('organizer', $criterias) ? $criterias['organizer'] : "all";
+            $event = array_key_exists('event', $criterias) ? $criterias['event'] : "all";
+            $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
+            $count = array_key_exists('count', $criterias) ? $criterias['count'] : false;
+            
+            return $this->em->getRepository(EventDate::class)->getEventDates($reference, $organizer, $event, $limit, $count);
+        }
+        
         public function cancelticket($orderReference, $note = null): void
         {
             $order = $this->getOrders(array('status' => 'all', 'reference' => $orderReference))->getQuery()->getOneOrNullResult();
@@ -314,12 +387,21 @@
             $this->em->flush();
         }
         
-        public function getBlogPostCategories($criterias)
+        public function getBlogPostCategoriesInForm($criterias)
         {
-            
             $hidden = array_key_exists('hidden', $criterias) ? $criterias['hidden'] : false;
             $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
-            $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
+            
+            if (!empty($this->security->getUser()->getOrganizer())) {
+                $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
+                $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
+                $order = array_key_exists('order', $criterias) ? $criterias['order'] : "name";
+                $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "ASC";
+                
+                return $this->em->getRepository(BlogPostCategory::class)->getBlogPostCategories($hidden, $keyword, $slug, $limit);
+            }
+            
+            $slug = "attendees";
             $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
             $order = array_key_exists('order', $criterias) ? $criterias['order'] : "name";
             $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "ASC";
@@ -331,16 +413,16 @@
         
         // Returns the users after applying the specified search criterias
         
-        public function getEventDates($criterias)
+        public function getBlogPostCategories($criterias)
         {
-            
-            $reference = array_key_exists('reference', $criterias) ? $criterias['reference'] : "all";
-            $organizer = array_key_exists('organizer', $criterias) ? $criterias['organizer'] : "all";
-            $event = array_key_exists('event', $criterias) ? $criterias['event'] : "all";
+            $hidden = array_key_exists('hidden', $criterias) ? $criterias['hidden'] : false;
+            $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
+            $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
             $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
-            $count = array_key_exists('count', $criterias) ? $criterias['count'] : false;
+            $order = array_key_exists('order', $criterias) ? $criterias['order'] : "name";
+            $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "ASC";
             
-            return $this->em->getRepository(EventDate::class)->getEventDates($reference, $organizer, $event, $limit, $count);
+            return $this->em->getRepository(BlogPostCategory::class)->getBlogPostCategories($hidden, $keyword, $slug, $limit);
         }
         
         public function getEventTickets($criterias)
@@ -505,37 +587,6 @@
             return $this->em->getRepository(BlogPost::class)->getBlogPosts($selecttags, $hidden, $keyword, $slug, $category, $limit, $sortedby, $otherthan);
         }
         
-        public function getCreators($criteria)
-        {
-            $selectedCategory = array_key_exists('category', $criteria) ? $criteria['category'] : 'all';
-            $keyword = array_key_exists('keyword', $criteria) ? $criteria['keyword'] : 'all';
-            $sortedBy = array_key_exists('sortedby', $criteria) ? $criteria['sortedby'] : 'all';
-            $level = array_key_exists('level', $criteria) ? $criteria['level'] : 'all';
-            $limit = array_key_exists('limit', $criteria) ? $criteria['limit'] : 'all';
-            
-            if ($level != "all"){
-               $level= $this->getPointsByName($level);
-            }
-            
-            // Call the repository method to fetch creators based on the criteria
-            return $this->em->getRepository(Organizer::class)->getCreators($level, $keyword,$selectedCategory , $limit, $sortedBy);
-        }
-
-        public function getPointsByName($name)
-        {
-            // Define a mapping of names to points
-            $nameToPointsMapping = [
-                "UniverseMaster" => 40,
-                "UniverseRunnerUp" => 30,
-                "UniverseTryhard" => 20,
-                "UniverseWannabe" => 10,
-                "UniverseNewbie" => 0,
-            ];
-        
-            // Check if the provided name exists in the mapping
-            return $nameToPointsMapping[$name] ?? "all";
-        }
-        
         /**
          * @param $criterias
          * @return QueryBuilder
@@ -667,32 +718,6 @@
             return $queryBuilder;
         }
         
-           public function getHelpCenterCategoriesFront($criterias)
-                {
-                    $parent = array_key_exists('parent', $criterias) ? $criterias['parent'] : "all";
-                    $hidden = array_key_exists('hidden', $criterias) ? $criterias['hidden'] : false;
-                    $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
-                    $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
-                    $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
-                    $order = array_key_exists('order', $criterias) ? $criterias['order'] : "name";
-                    $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "ASC";
-                    
-                    $order = "articlescount";
-                    
-                    $cats = $this->em->getRepository(HelpCenterCategory::class)->getHelpCenterCategories($parent, $hidden, $keyword, $slug, $limit, $order, $sort)->getQuery()->getResult();
-                   
-                    usort($cats, static function ($a, $b) {
-                        $categoriesOrder = ['Attendee', 'Creator', 'Account'];
-                        
-                        $indexA = array_search($a->getName(), $categoriesOrder, true);
-                        $indexB = array_search($b->getName(), $categoriesOrder, true);
-                        
-                        return $indexA - $indexB;
-                    });
-                
-                    return $cats;
-                }
-        
         public function getHelpCenterCategories($criterias)
         {
             $parent = array_key_exists('parent', $criterias) ? $criterias['parent'] : "all";
@@ -758,7 +783,64 @@
             $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
             $count = array_key_exists('count', $criterias) ? $criterias['count'] : false;
             
-            return $this->em->getRepository("App\Entity\User")->getUsers($role, $keyword, $organizername, $organizerslug, $username, $email, $firstname, $lastname, $enabled, $slug, $followedby, $hasboughtticketforEvent, $hasboughtticketforOrganizer, $hasbookedticketfor,$apiKey, $isOnHomepageSlider, $limit, $count);
+            return $this->em->getRepository("App\Entity\User")->getUsers($role, $keyword, $organizername, $organizerslug, $username, $email, $firstname, $lastname, $enabled, $slug, $followedby, $hasboughtticketforEvent, $hasboughtticketforOrganizer, $hasbookedticketfor, $apiKey, $isOnHomepageSlider, $limit, $count);
+        }
+        
+        public function getCreators($criteria)
+        {
+            $selectedCategory = array_key_exists('category', $criteria) ? $criteria['category'] : 'all';
+            $keyword = array_key_exists('keyword', $criteria) ? $criteria['keyword'] : 'all';
+            $sortedBy = array_key_exists('sortedby', $criteria) ? $criteria['sortedby'] : 'all';
+            $level = array_key_exists('level', $criteria) ? $criteria['level'] : 'all';
+            $limit = array_key_exists('limit', $criteria) ? $criteria['limit'] : 'all';
+            
+            if ($level != "all") {
+                $level = $this->getPointsByName($level);
+            }
+            
+            // Call the repository method to fetch creators based on the criteria
+            return $this->em->getRepository(Organizer::class)->getCreators($level, $keyword, $selectedCategory, $limit, $sortedBy);
+        }
+        
+        public function getPointsByName($name)
+        {
+            // Define a mapping of names to points
+            $nameToPointsMapping = [
+                "UniverseMaster" => 40,
+                "UniverseRunnerUp" => 30,
+                "UniverseTryhard" => 20,
+                "UniverseWannabe" => 10,
+                "UniverseNewbie" => 0,
+            ];
+            
+            // Check if the provided name exists in the mapping
+            return $nameToPointsMapping[$name] ?? "all";
+        }
+        
+        public function getHelpCenterCategoriesFront($criterias)
+        {
+            $parent = array_key_exists('parent', $criterias) ? $criterias['parent'] : "all";
+            $hidden = array_key_exists('hidden', $criterias) ? $criterias['hidden'] : false;
+            $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
+            $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
+            $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
+            $order = array_key_exists('order', $criterias) ? $criterias['order'] : "name";
+            $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "ASC";
+            
+            $order = "articlescount";
+            
+            $cats = $this->em->getRepository(HelpCenterCategory::class)->getHelpCenterCategories($parent, $hidden, $keyword, $slug, $limit, $order, $sort)->getQuery()->getResult();
+            
+            usort($cats, static function ($a, $b) {
+                $categoriesOrder = ['Attendee', 'Creator', 'Account'];
+                
+                $indexA = array_search($a->getName(), $categoriesOrder, true);
+                $indexB = array_search($b->getName(), $categoriesOrder, true);
+                
+                return $indexA - $indexB;
+            });
+            
+            return $cats;
         }
         
         public function getUsersShuffled($criterias)
@@ -1183,6 +1265,25 @@
                 ->where('o.status = :status')
                 ->andWhere('e = :event')
                 ->setParameter('status', 2)
+                ->setParameter('event', $event);
+            
+            return $qb->getQuery()->getResult();
+        }
+        
+        public function findBookedAttendeesOfEvent(Event $event)
+        {
+            $qb = $this->em->getRepository(User::class)->createQueryBuilder('u');
+            
+            $qb
+                ->select('u')
+                ->join('u.orders', 'o')
+                ->join('o.orderelements', 'oe')
+                ->join('oe.eventticket', 't')
+                ->join('t.eventdate', 'ed')
+                ->join('ed.event', 'e')
+                ->where('o.status >= :status')
+                ->andWhere('e = :event')
+                ->setParameter('status', 1)
                 ->setParameter('event', $event);
             
             return $qb->getQuery()->getResult();

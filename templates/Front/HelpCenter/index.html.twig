@@ -29,7 +29,6 @@
 
         <section class="padding-y-lg">
             <div class="row">
-
                 {% if app.request.get('keyword') %}
                     {% set searchresults = services.getHelpCenterArticles({"keyword":app.request.get('keyword')}).getQuery().getResult() %}
                     <div class="col-12 mb-3">
@@ -40,7 +39,8 @@
                                 {% for article in searchresults %}
                                     <p>
                                         <a href="{{ path('help_center_article', {slug: article.slug}) }}">{{ article.category.name }}
-                                            <i class="fas fa-chevron-right ml-1 mr-1"></i> {{ article.title }}</a></p>
+                                            <i class="fas fa-chevron-right ml-1 mr-1"></i> {{ article.title }}</a>
+                                    </p>
                                 {% endfor %}
                             {% endif %}
                         </article>
@@ -61,7 +61,7 @@
 
                                 <hr>
 
-                                {% for article in services.getHelpCenterArticles({"category":category.slug}).getQuery().getResult() %}
+                                {% for article in services.getHelpCenterArticles({"category":category.slug, "featured": true}).getQuery().getResult()|sortFaqs %}
                                     <p>
                                         <a href="{{ path('help_center_article', {slug: article.slug}) }}">{{ article.title }}</a>
                                     </p>

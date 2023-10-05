@@ -1,9 +1,9 @@
 <?php
-/*
+    /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-
-namespace App\Entity;
+    
+    namespace App\Entity;
     
     use DateTime;
     use Doctrine\ORM\Mapping as ORM;
@@ -35,7 +35,7 @@ namespace App\Entity;
         private $user;
         
         /**
-         * @ORM\ManyToOne(targetEntity="OrderElement", inversedBy="ticketsReservations")
+         * @ORM\ManyToOne(targetEntity="OrderElement", inversedBy="ticketsReservations", cascade={"persist"})
          */
         private $orderelement;
         

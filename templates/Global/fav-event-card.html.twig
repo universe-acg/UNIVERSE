@@ -1,0 +1,101 @@
+{% set runtimeConfig = {"thumbnail": {"size": [500, 250] }} %}
+{% set displayedEventDate = event.eventdates[0] %}
+{% set endedEventDate = event.eventdates[(event.eventdates | length )-1].enddate %}
+{% if customLink is defined %}
+    {% set link = customLink %}
+{% else %}
+    {% set link = path('event', { slug : event.slug }) %}
+{% endif %}
+
+ {% set past = past|default(false) %}
+{# {% set attendeed = attendeed|default(false) %} #}
+{#    <div class="card card-event {{ attendeed ? 'attended-event' }}" style="z-index: 999 !important;"> #}
+<div class="card card-event" style="z-index: 999 !important;">
+    {#    <div class="img-wrap img-lazy-load {{ event.isPassed or past or  attendeed  ? 'grayed-out' : '' }}" #}
+    <div class="img-wrap"
+         style="background: url('{{ event.imageName ? asset(event.getImagePath|imagine_filter('thumbnail', runtimeConfig)) : event.getImagePlaceholder }}')">
+        <a href="{{ link }}"></a>
+    </div>
+    <div class="info-wrap">
+        {% if (not is_granted('IS_AUTHENTICATED_REMEMBERED') or is_granted('ROLE_ATTENDEE')) and hideFavoriteButton is not defined %}
+            <div class="event-favorite">
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                    {% if event.isAddedToFavoritesBy(app.user) %}
+                        <button class="event-favorites-remove"
+                                data-target="{{ path('dashboard_attendee_favorites_remove', { slug : event.slug }) }}"
+                                data-toggle="tooltip" title="{{ "Remove from favorites" }}"><i class="fas fa-heart"></i>
+                        </button>
+                    {% else %}
+                        <button class="event-favorites-add"
+                                data-target="{{ path('dashboard_attendee_favorites_add', { slug : event.slug }) }}"
+                                data-toggle="tooltip" title="{{ "Add to favorites" }}"><i class="far fa-heart"></i>
+                        </button>
+                    {% endif %}
+                {% else %}
+                    <a href="{{ path('fos_user_security_login')~'?_target_path='~app.request.getPathInfo }}"
+                       data-toggle="tooltip" title="{{ "Add to favorites" }}"><i class="far fa-heart"></i></a>
+                {% endif %}
+            </div>
+        {% endif %}
+        <div class="event-info" style="width: 100%;">
+            <h5>
+                <a href="{{ link }}" class="text-dark">{{ event.name }} {{ event.isPassed }}</a>
+            </h5>
+
+            {% if event.isPassed %}
+                {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }} | Event has ended
+            {% else %}
+                {% set currentDate = "now"|date('U', 'Europe/Athens') %}
+                {% if displayedEventDate.startdate|date('U') > currentDate %}
+                    Starts on: {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }}
+                {% else %}
+                    {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }}| Event has started
+                {% endif %}
+            {% endif %}
+
+            <span style="float: right"><a
+                        href="{{ path('organizer', {slug: (event.getOrganizer().getUser().getUsername())}) }}"
+                        class="link-style text-dark">{{ (event.getOrganizer().getName()) }}</a></span>
+
+            {% if  is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                <div class="mt-3">
+                    {% set attendees = services.getUsersShuffled({"hasbookedticketfor": event.slug, "limit": 8, "role": "attendee"}).getQuery().getResult() %}
+                    {% if attendees | length > 0 %}
+                        {% for user in attendees %}
+                            {% include "Global/user-avatar-events.html.twig" with { user: user, showusernametooltip: true } %}
+                        {% endfor %}
+                    {% else %}
+                        <p>No attendees as of yet</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+        {% if orderReference is defined %}
+            <div class="order-reference">
+                <a href="{{ path('dashboard_attendee_order_details', {reference: orderReference}) }}"><small>{{ "Order" }}
+                        #{{ orderReference }}</small></a>
+            </div>
+        {% endif %}
+        <div class="clearfix"></div>
+    </div>
+    {% if displayedEventDate %}
+        {% if displayedEventDate.startdate %}
+            <div class="event-date text-center">
+                <div class="event-month bg-primary text-light">{{ displayedEventDate.startdate|localizeddate('none', 'none', app.request.locale, null, "MMM")|upper }}</div>
+                <div class="event-day bg-white">{{ displayedEventDate.startdate|localizeddate('none', 'none', app.request.locale, null, "d") }}</div>
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+<script>
+    //  Lazy loading images
+    var bLazy = new Blazy({
+        selector: '.img-lazy-load',
+        success: function (ele) {
+            $(ele).find('.loader').remove();
+        },
+        error: function (ele, msg) {
+            $(ele).find('.loader').remove();
+        }
+    });
+</script>

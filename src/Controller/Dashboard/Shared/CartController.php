@@ -76,6 +76,9 @@
             $event = $em->getRepository(Event::class)->findOneBy(['id' => $id]);
             
             $eventticket = $eventTicketRepository->findById($eventicketid);
+
+//            find how many have booked this ticket
+            $countOrdersForTicket = $eventTicketRepository->countOrdersForTicket($eventticket);
             
             if (!$event) {
                 $this->addFlash('error', 'The event can not be found');
@@ -98,7 +101,9 @@
             
             $order->setReference($this->generateReference(15)); // Generate a unique order reference.
             $order->setStatus(1); // Set the initial status (e.g., waiting for payment).
-            
+            if (($countOrdersForTicket + 1) > $eventticket->getQuantity()) {
+                $order->setOverbook(true);
+            }
             // Persist the order to the database
             $entityManager = $this->getDoctrine()->getManager();
             
@@ -137,7 +142,7 @@
             
             // send email to organizer and user
             $email = (new Swift_Message($services->getSetting('website_name') . ' - ' . $event->getName() . ' event booked' . ' #' . $eventticket->getReference()))
-                ->setFrom($services->getSetting('no_reply_email'), $services->getSetting('website_name'))
+                ->setFrom($services->getSetting('no_reply_email'))
                 ->setTo($this->getUser()->getEmail())
                 ->setBody(
                     $templating->render('Dashboard/Shared/Order/ticket-booked-email.html.twig', ['data' => $emaildata, 'message' => $message]), 'text/html', 'UTF-8');
@@ -159,6 +164,36 @@
             } catch (Exception $e) {
                 $this->addFlash('danger', "The event booking reminder email could not be sent");
             }
+            
+            $attendeedpeopleinthisevnet = $orderRepository->countOrdersWithStatusAboveOneForEventTicket($eventticket);
+            
+            if (!$eventticket->getInformedcreator() && $attendeedpeopleinthisevnet >= 0.75 * $eventticket->getQuantity()) {
+                
+                $eventticket->setInformedcreator(true);
+                // if the tickets booked or more than 0.75 of quantity... inform teh creator
+                $emaildata = [
+                    $title = $event->getName(),
+                    $startdate = $eventticket->getEventdate()->getStartdate()->format('Y-m-d H:i:s'),
+                    $link = $request->headers->get('referer')
+                ];
+                
+                $message = "The event you created: " . $title . ", on the event date of: " . $eventticket->getEventdate()->getStartdate()->format('Y-m-d H:i:s') . " is filling up. More than 75% of capacity is booked.";
+                
+                // send email to organizer and user
+                $email = (new Swift_Message($services->getSetting('website_name') . ' - ' . $event->getName() . ' event booked' . ' #' . $eventticket->getReference()))
+                    ->setFrom($services->getSetting('no_reply_email'))
+                    ->setTo($event->getOrganizer()->getEmail())
+                    ->setBody(
+                        $templating->render('Dashboard/Shared/Order/ticket-booked-email.html.twig', ['data' => $emaildata, 'message' => $message]), 'text/html', 'UTF-8');
+                
+                try {
+                    $result = $mailer->send($email);
+                } catch (Exception $e) {
+                }
+            }
+            
+            $em->persist($eventticket);
+            $em->flush();
             
             return $this->redirectToRoute("dashboard_index");
         }

@@ -252,7 +252,7 @@
                                                             <table class="table table-hover table-condensed">
                                                                 <tbody>
                                                                     {% for ticket in eventDate.tickets %}
-                                                                        {% if ticket.active %}
+                                                                        {% if ticket.active and app.user.hasRole('ROLE_ATTENDEE') %}
                                                                             <tr class="bg-gray">
                                                                                 <td class="border-top-white book-ticket btn btn-primary book-ticket"
                                                                                     data-event-id="{{ event.id }}"
@@ -264,6 +264,8 @@
                                                                                     Book: {{ ticket.name }}
                                                                                 </td>
                                                                             </tr>
+                                                                        {% else %}
+                                                                            <p>Only attendees can book events</p>
                                                                         {% endif %}
                                                                     {% endfor %}
                                                                 </tbody>
@@ -362,8 +364,8 @@
                                             </dt>
                                             <dd class="mr-0">
                                                 <div class="card border-0 card-body">
-                                                    <div class="avatar-list avatar-list-stacked">
-                                                        {% for user in services.getUsers({"hasbookedticketfor": event.slug, "limit": 12, "role": "attendee"}).getQuery().getResult() %}
+                                                    <div class="avatar-list">
+                                                        {% for user in services.getUsersShuffled({"hasbookedticketfor": event.slug, "limit": 12, "role": "attendee"}).getQuery().getResult() %}
                                                             {% include "Global/user-avatar.html.twig" with { user: user, showusernametooltip: true } %}
                                                         {% endfor %}
                                                         {% if attendeescount > 12 %}
@@ -375,16 +377,18 @@
                                         </dl>
                                     {% endif %}
                                 {% endif %}
-                                {% if event.volsneeded %}
-                                    <dl class="mt-5">
-                                        <a href="mailto:{{ event.email }}"
-                                           class="btn btn-primary btn-block mb-2"
-                                        > Volunteer
-                                        </a>
-                                        <dt class="text-muted">The organizers are looking for volunteers to
-                                            help.
-                                        </dt>
-                                    </dl>
+                                {% if is_granted('ROLE_ATTENDEE') %}
+                                    {% if event.volsneeded %}
+                                        <dl class="mt-5">
+                                            <a href="mailto:{{ event.email }}"
+                                               class="btn btn-primary btn-block mb-2"
+                                            > Volunteer
+                                            </a>
+                                            <dt class="text-muted">The organizers are looking for volunteers to
+                                                help.
+                                            </dt>
+                                        </dl>
+                                    {% endif %}
                                 {% endif %}
                             </div>
                         </div>
@@ -439,7 +443,7 @@
 
                     if (isAlreadyBooked === 'true') {
                         // The ticket is already booked, so don't perform any action
-                        alert("You have arleady booked this ticket");
+                        alert("You have already booked this ticket");
                         return;
                     }
 

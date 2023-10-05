@@ -73,6 +73,7 @@
                                             <th>{{ 'Event Name - Ticket' }}</th>
                                             <th>{{ 'Event Date' }}</th>
                                             <th>{{ 'Status' }}</th>
+                                            <th>{{ 'Overbook' }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -92,6 +93,14 @@
                                                 </td>
                                                 <td class="text-center">
                                                     {{ eventdate.getAttendeedthiseventdate() == 1 ? "Attended" : "Booked Not Attended" }}
+                                                </td>
+                                                <td class="text-center">
+                                                    {% set order = services.getOrders({"eventTicket": eventdate.tickets[0]}).getQuery().getResult()[0] %}
+                                                    {% if order.overbook %}
+                                                        True
+                                                    {% else %}
+                                                        False
+                                                    {% endif %}
                                                 </td>
                                             </tr>
                                         {% endfor %}

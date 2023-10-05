@@ -242,6 +242,13 @@
     </li>
 
     <li class="nav-item">
+        <a href="{{ path('blog_post_attendee') }}"
+           class="nav-link {% if routename == "blog_post_attendee" %}active{% endif %}">
+            <i class="fas fa-newspaper fa-fw"></i> {{ 'Posts' }}
+        </a>
+    </li>
+
+    <li class="nav-item">
         <a href="{{ path('dashboard_attendee_following') }}"
            class="nav-link {% if routename == "dashboard_attendee_following" %}active{% endif %}">
             <i class="fas fa-address-book fa-fw"></i> {{ 'Creators Following' }}
@@ -260,7 +267,7 @@
     <li class="nav-item">
         <a href="{{ path('attendeed_events') }}"
            class="nav-link {% if routename == "attendeed_events" %}active{% endif %}">
-            <i class="far fa-heart fa-fw"></i> {{ 'My attended events' }}
+            <i class="fa fa-qrcode fa-fw"></i> {{ 'My attended events' }}
         </a>
     </li>
 

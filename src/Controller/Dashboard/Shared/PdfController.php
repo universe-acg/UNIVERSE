@@ -6,6 +6,8 @@
     namespace App\Controller\Dashboard\Shared;
     
     use App\Entity\EventDate;
+    use App\Repository\EventRepository;
+    use App\Repository\OrderRepository;
     use App\Service\AppServices;
     use Dompdf\Dompdf;
     use Dompdf\Options;
@@ -26,12 +28,11 @@
         // Helper function to get selected event dates (modify as needed)
         
         /**
-         * @Route("/generate-attendees-pdf/", name="generate_attendees_pdf")
+         * @Route("/generate-attendees-pdf/{event}", name="generate_attendees_pdf")
          */
-        public function generatePdf(Request $request, AppServices $services)
+        public function generatePdf(Request $request, $event, AppServices $services, EventRepository $eventRepository, OrderRepository $orderRepository)
         {
             $reference = ($request->query->get('reference')) == "" ? "all" : $request->query->get('reference');
-            $event = ($request->query->get('event')) == "" ? "all" : $request->query->get('event');
             $eventdate = ($request->query->get('eventdate')) == "" ? "all" : $request->query->get('eventdate');
             $eventticket = ($request->query->get('eventticket')) == "" ? "all" : $request->query->get('eventticket');
             $user = ($request->query->get('user')) == "" ? "all" : $request->query->get('user');
@@ -39,10 +40,9 @@
             $datefrom = ($request->query->get('datefrom')) == "" ? "all" : $request->query->get('datefrom');
             $dateto = ($request->query->get('dateto')) == "" ? "all" : $request->query->get('dateto');
             $status = 1;
-            $paymentgateway = ($request->query->get('paymentgateway')) == "" ? "all" : $request->query->get('paymentgateway');
             
-            $ordersQuery = $services->getOrders(array("reference" => $reference, "event" => $event, "eventdate" => $eventdate, "eventticket" => $eventticket, "user" => $user, "organizer" => $organizer, "datefrom" => $datefrom, "dateto" => $dateto, "status" => $status, "paymentgateway" => $paymentgateway))->getQuery();
-
+            $fullevent = $eventRepository->findBySlug($event);
+            $ordersQuery = $services->getOrdersForEvent(array("event" => $fullevent, "reference" => $reference, "eventdate" => $eventdate, "eventticket" => $eventticket, "user" => $user, "organizer" => $organizer, "datefrom" => $datefrom, "dateto" => $dateto, "status" => $status))->getQuery();
 // Export current orders query results into Excel / Csv
             $orders = $ordersQuery->getResult();
             
@@ -81,12 +81,11 @@
         }
         
         /**
-         * @Route("/generate-attendees-excel/", name="generate_attendees_excel")
+         * @Route("/generate-attendees-excel/{event}", name="generate_attendees_excel")
          */
-        public function generateExcel(Request $request, AppServices $services)
+        public function generateExcel(EventRepository $eventRepository, $event, OrderRepository $orderRepository, Request $request, AppServices $services)
         {
             $reference = ($request->query->get('reference')) == "" ? "all" : $request->query->get('reference');
-            $event = ($request->query->get('event')) == "" ? "all" : $request->query->get('event');
             $eventdate = ($request->query->get('eventdate')) == "" ? "all" : $request->query->get('eventdate');
             $eventticket = ($request->query->get('eventticket')) == "" ? "all" : $request->query->get('eventticket');
             $user = ($request->query->get('user')) == "" ? "all" : $request->query->get('user');
@@ -94,9 +93,9 @@
             $datefrom = ($request->query->get('datefrom')) == "" ? "all" : $request->query->get('datefrom');
             $dateto = ($request->query->get('dateto')) == "" ? "all" : $request->query->get('dateto');
             $status = ($request->query->get('status')) == "" ? "all" : $request->query->get('status');
-            $paymentgateway = ($request->query->get('paymentgateway')) == "" ? "all" : $request->query->get('paymentgateway');
             
-            $ordersQuery = $services->getOrders(array("reference" => $reference, "event" => $event, "eventdate" => $eventdate, "eventticket" => $eventticket, "user" => $user, "organizer" => $organizer, "datefrom" => $datefrom, "dateto" => $dateto, "status" => $status, "paymentgateway" => $paymentgateway))->getQuery();
+            $fullevent = $eventRepository->findBySlug($event);
+            $ordersQuery = $services->getOrdersForEvent(array("event" => $fullevent, "reference" => $reference, "eventdate" => $eventdate, "eventticket" => $eventticket, "user" => $user, "organizer" => $organizer, "datefrom" => $datefrom, "dateto" => $dateto, "status" => $status))->getQuery();
 
 // Export current orders query results into Excel / Csv
             $orders = $ordersQuery->getResult();
@@ -109,7 +108,7 @@
                 $sheet = $spreadsheet->getActiveSheet();
                 
                 // Set headers for your Excel file
-                $headers = ['Full name', 'Date Booked', 'Status']; // Replace with your column names
+                $headers = ['Full name', 'Date Booked', 'Status', 'Overbook']; // Replace with your column names
                 $columnIndex = 1;
                 foreach ($headers as $header) {
                     $sheet->setCellValueByColumnAndRow($columnIndex, 1, $header);
@@ -122,6 +121,7 @@
                     $sheet->setCellValueByColumnAndRow(1, $rowIndex, $order->getUser()->getCrossRoleName()); // Replace with actual fields
                     $sheet->setCellValueByColumnAndRow(2, $rowIndex, $order->getCreatedAt()->format('D d M Y, h:i A'));
                     $sheet->setCellValueByColumnAndRow(3, $rowIndex, $order->getStatusStringified());
+                    $sheet->setCellValueByColumnAndRow(4, $rowIndex, $order->getOverbookStringified());
                     $rowIndex++;
                 }
                 

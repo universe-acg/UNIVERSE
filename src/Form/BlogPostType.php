@@ -15,6 +15,7 @@
     use Symfony\Component\Form\Extension\Core\Type\TextType;
     use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\OptionsResolver\OptionsResolver;
+    use Symfony\Component\Validator\Constraints\NotBlank;
     use Vich\UploaderBundle\Form\Type\VichImageType;
     
     class BlogPostType extends AbstractType
@@ -32,13 +33,14 @@
             $builder
                 ->add('category', EntityType::class, [
                     'required' => true,
+                    'constraints' => array(new NotBlank()),
                     'class' => BlogPostCategory::class,
                     'choice_label' => 'name',
                     'label' => 'Category',
                     'help' => 'Select the appropriate category to help users find your post.',
                     'placeholder' => 'Select a Category',
                     'query_builder' => function () {
-                        return $this->services->getBlogPostCategories(array());
+                        return $this->services->getBlogPostCategoriesInForm(array());
                     },
                     'invalid_message' => 'Please select a category.',
                 ])
@@ -46,11 +48,13 @@
                     'purify_html' => true,
                     'required' => false,
                     'label' => 'Title',
+                    'constraints' => array(new NotBlank()),
                     'help' => 'Enter a Title (e.g., "A Travel Adventure")',
                 ])
                 ->add('content', TextareaType::class, [
                     'required' => false,
                     'label' => 'Content',
+                    'constraints' => array(new NotBlank()),
                     'attr' => ['class' => 'wysiwyg'],
                     'help' => 'Write your content here...',
                 ])

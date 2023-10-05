@@ -40,8 +40,8 @@
                 if ($slug !== "all") {
                     $qb->andWhere("a.slug = :slug")->setParameter("slug", $slug);
                 }
+                $qb->leftJoin("a.category", "category");
                 if ($category !== "all") {
-                    $qb->leftJoin("a.category", "category");
                     $qb->andWhere("category.slug = :category")->setParameter("category", $category);
                 }
                 if ($limit !== "all") {
@@ -50,7 +50,8 @@
                 if ($otherthan !== "all") {
                     $qb->andWhere("a.slug != :otherthan")->setParameter("otherthan", $otherthan);
                 }
-                $qb->orderBy("a." . $order, $sort);
+                $qb->orderBy("category.slug", 'ASC'); // Add this line to sort by category slug
+                $qb->addOrderBy("a.title", 'ASC');
             } else {
                 $qb->select("SUBSTRING_INDEX(GROUP_CONCAT(a.tags SEPARATOR ','), ',', 8)");
             }

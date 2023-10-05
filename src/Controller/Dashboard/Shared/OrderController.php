@@ -7,6 +7,8 @@
     
     use App\Repository\EventDateRepository;
     use App\Repository\EventRepository;
+    use App\Repository\EventTicketRepository;
+    use App\Repository\OrderElementRepository;
     use App\Repository\OrderRepository;
     use App\Repository\UserRepository;
     use App\Service\AppServices;
@@ -102,7 +104,7 @@
         /**
          * @Route("/organizer/manage-attendees", name="dashboard_organizer_attendees")
          */
-        public function attendees(Request $request, AppServices $services, PaginatorInterface $paginator, AuthorizationCheckerInterface $authChecker, EventRepository $eventRepository)
+        public function attendees(OrderRepository $orderRepository, Request $request, AppServices $services, PaginatorInterface $paginator, AuthorizationCheckerInterface $authChecker, EventRepository $eventRepository)
         {
 //$upcomingtickets = ($request->query->get('upcomingtickets')) == "" ? 1 : intval($request->query->get('upcomingtickets'));
             $reference = ($request->query->get('reference')) == "" ? "all" : $request->query->get('reference');
@@ -117,19 +119,17 @@
             $status = 1;
             $authChecker->isGranted("ROLE_ATTENDEE") ? $status = "all" : 1;
             
-            $ordersQuery = $services->getOrders(array("reference" => $reference, "eventdate" => $eventdate, "eventticket" => $eventticket, "user" => $user, "organizer" => $organizer, "datefrom" => $datefrom, "dateto" => $dateto, "status" => $status))->getQuery();
-
-// Export current orders query results into Excel / Csv
-            
+            $fullevent = $eventRepository->findBySlug($event);
+            $ordersQuery = $services->getOrdersForEvent(array("event" => $fullevent, "reference" => $reference, "eventdate" => $eventdate, "eventticket" => $eventticket, "user" => $user, "organizer" => $organizer, "datefrom" => $datefrom, "dateto" => $dateto, "status" => $status))->getQuery();
             $ordersPagination = $paginator->paginate($ordersQuery, $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
             
-            $fullevent = $eventRepository->findBySlug($event);
             $eventname = $fullevent->getName();
             $ismultiticketevent = $fullevent->getOrganizer()->getUser()->isIsbusinessweek() ?: false;
             
             return $this->render('Dashboard/Shared/Order/attendees.html.twig', [
                 'orders' => $ordersPagination,
                 'title' => $eventname,
+                'event' => $fullevent,
                 'ismultiticketevent' => $ismultiticketevent
             ]);
         }
@@ -154,7 +154,6 @@
             $authChecker->isGranted("ROLE_ATTENDEE") ? $status = "all" : $upcomingtickets = "all";
             
             $ordersQuery = $services->getOrders(array("reference" => $reference, "event" => $event, "eventdate" => $eventdate, "eventticket" => $eventticket, "user" => $user, "organizer" => $organizer, "datefrom" => $datefrom, "dateto" => $dateto, "status" => $status, "paymentgateway" => $paymentgateway))->getQuery();
-
 // Export current orders query results into Excel / Csv
             
             $ordersPagination = $paginator->paginate($ordersQuery, $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
@@ -209,6 +208,7 @@
         public function attendeesAdminDetailsasOrganizer(AppServices $appServices, $eventslug, OrderRepository $orderRepository, UserRepository $userRepository, EventRepository $eventRepository)
         {
             $users = $appServices->findUsersAttendeedByEventSlug($eventslug);
+            
             $event = $eventRepository->findBySlug($eventslug);
             
             foreach ($users as $user) {
@@ -253,7 +253,6 @@
             $attendedDates = $appServices->findEventDatesAttendedByUser($user, $event);
             $unattendedDates = $appServices->getEventDatesByEvent($event);
             
-            
             foreach ($attendedDates as $attendedDate) {
                 $attendedDate->setAttendeedthiseventdate(true);
             }
@@ -269,6 +268,7 @@
                 $seenIds[$eventDate->getId()] = true;
                 return true; // Not a duplicate, keep it
             });
+            
             return $this->render('Dashboard/Shared/Order/eventdates-details.html.twig', [
                 'user' => $user,
                 'event' => $event,
@@ -286,7 +286,6 @@
             
             $attendedDates = $appServices->findEventDatesAttendedByUser($user, $event);
             $unattendedDates = $appServices->getEventDatesByEvent($event);
-            
             
             foreach ($attendedDates as $attendedDate) {
                 $attendedDate->setAttendeedthiseventdate(true);
@@ -400,24 +399,35 @@
         /**
          * @Route("/attendee/manage-orders/{reference}/delete", name="dashboard_attendee_order_delete")
          */
-        public function delete($reference, Request $request, AppServices $services)
+        public function delete($reference, Request $request, AppServices $services, OrderElementRepository $orderElementRepository, OrderRepository $orderRepository, EventTicketRepository $eventTicketRepository)
         {
             $order = $services->getOrders(array("reference" => $reference, "status" => "all"))->getQuery()->getOneOrNullResult();
             if (!$order) {
                 $this->addFlash('error', 'The order can not be found');
                 return $services->redirectToReferer('orders');
             }
+            
             $em = $this->getDoctrine()->getManager();
+            
+            $eventticketid = $orderElementRepository->findEventTicketsByOrder($order)[0]->getEventticket();
+            $eventticket = $eventTicketRepository->findById($eventticketid);
+            
+            $attendeedpeopleinthisevnet = $orderRepository->countOrdersWithStatusAboveOneForEventTicket($eventticket);
+            
+            if (($attendeedpeopleinthisevnet - 1) < 0.75 * $eventticket->getQuantity()) {
+                $eventticket->setInformedcreator(false);
+            }
+            
+            $em->persist($eventticket);
+            $em->flush();
+            $em->remove($order);
+            $em->flush();
             
             if ($order->getDeletedAt()) {
                 $this->addFlash('error', 'The ticket is deleted');
             } else {
                 $this->addFlash('notice', 'The ticket has been deleted');
             }
-            
-            $em->remove($order);
-            $em->flush();
-            
             if ($request->query->get('forceRedirect') == "1") {
                 return $this->redirectToRoute("dashboard_administrator_orders");
             }
@@ -528,6 +538,8 @@
             $eventname = $order->getOrderelements()[0]->getEventticket()->getEventdate()->getEvent()->getName();
             $ticketname = $order->getOrderelements()[0]->getEventticket()->getName();
             
+            $overbook = $order->getOverbook();
+            
             $html = $this->renderView('Dashboard/Shared/Order/ticket-pdf.html.twig', [
                 'order' => $order,
                 'eventname' => $eventname,
@@ -535,6 +547,7 @@
                 'startdate' => $startdate,
                 'eventDateTicketReference' => $eventDateTicketReference,
                 'qrCodeImage' => $qrCodeBase64,
+                'overbooked' => $overbook,
             ]);
             
             $dompdf->loadHtml($html);

@@ -7,6 +7,7 @@
     
     use App\Entity\EventTicket;
     use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+    use Doctrine\ORM\Query\ResultSetMappingBuilder;
     use Doctrine\Persistence\ManagerRegistry;
     
     class EventTicketRepository extends ServiceEntityRepository
@@ -14,6 +15,24 @@
         public function __construct(ManagerRegistry $registry)
         {
             parent::__construct($registry, EventTicket::class);
+        }
+        
+        public function countOrdersForTicket(EventTicket $ticket)
+        {
+            $em = $this->getEntityManager();
+            $rsm = new ResultSetMappingBuilder($em);
+            $rsm->addScalarResult('orderCount', 'orderCount');
+            
+            $query = $em->createNativeQuery('
+        SELECT COUNT(DISTINCT oe.order_id) AS orderCount
+        FROM universe_event_date_ticket et
+        LEFT JOIN universe_order_element oe ON et.id = oe.eventticket_id
+        WHERE et.id = :ticketId
+    ', $rsm);
+            
+            $query->setParameter('ticketId', $ticket->getId());
+            
+            return (int)$query->getSingleScalarResult();
         }
         
         public function getEventTickets($reference, $organizer, $event, $eventdate, $limit)

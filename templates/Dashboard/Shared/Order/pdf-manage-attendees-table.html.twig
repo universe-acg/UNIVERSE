@@ -37,6 +37,7 @@
             <th>Full name</th>
             <th>Date booked</th>
             <th>Status</th>
+            <th>Overbook</th>
         </tr>
     </thead>
     <tbody>
@@ -45,10 +46,17 @@
                 <td class="custom-td">{{ order.user.getCrossRoleName }}</td>
                 <td class="custom-td">{{ order.createdAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
                 <td class="custom-td">
-                    {% if order.status == 1 or order.status == 2 %}
-                        Booked/Not attended
+                    {% if order.status == 1 %}
+                        Booked - Not attended
                     {% elseif order.status == 2 %}
                         Attended
+                    {% endif %}
+                </td>
+                <td class="custom-td">
+                    {% if order.overbook %}
+                        True
+                    {% else %}
+                        False
                     {% endif %}
                 </td>
             </tr>

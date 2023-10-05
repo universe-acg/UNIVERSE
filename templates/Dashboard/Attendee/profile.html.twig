@@ -97,20 +97,30 @@
                                     <ul class="list-inline mb-0">
                                         <li class="list-inline-item mr-3">
                                             <h5 class="font-weight-bold mb-0 d-block">{{ attendedEvents | length }}</h5>
-                                            <small class="text-muted"> <i
-                                                        class="fas fa-calendar-alt fa-fw mr-1"></i>{{ "Attended Events" }}
+                                            <small class="text-muted">
+                                                {#                                                <i class="fas fa-calendar-alt fa-fw mr-1"></i> #}
+                                                {{ "Attended Events" }}
                                             </small>
                                         </li>
                                         <li class="list-inline-item">
                                             <h5 class="font-weight-bold mb-0 d-block">{{ favoriteEvents | length }}</h5>
-                                            <small class="text-muted"> <i
-                                                        class="fas fa-newspaper mr-1"></i>{{ "Favorite Events" }}
+                                            <small class="text-muted">
+                                                {#                                                <i class="fas fa-newspaper mr-1"></i> #}
+                                                {{ "Favorite Events" }}
+                                            </small>
+                                        </li>
+                                        <li class="list-inline-item mr-3">
+                                            <h5 class="font-weight-bold mb-0 d-block">{{ posts | length }}</h5>
+                                            <small class="text-muted">
+                                                {#                                                <i class="fas fa-calendar-alt fa-fw mr-1"></i> #}
+                                                {{ "Posts" }}
                                             </small>
                                         </li>
                                         <li class="list-inline-item">
                                             <h5 class="font-weight-bold mb-0 d-block">{{ comments|length }}</h5>
-                                            <small class="text-muted"> <i
-                                                        class="fas fa-folder-plus mr-1"></i>{{ "Comments" }}
+                                            <small class="text-muted">
+                                                {#                                                <i class="fas fa-folder-plus mr-1"></i> #}
+                                                {{ "Comments" }}
                                             </small>
                                         </li>
                                         {#                                        <li class="list-inline-item ml-3"> #}
@@ -140,62 +150,83 @@
 
                                 {% set attendedEventscount = attendedEvents | length %}
                                 {% set favoriteEventscount = favoriteEvents | length %}
-                                {% set commentscount = comments | length %}
+                                {#                                {% set commentscount = comments | length %} #}
+                                {% set postscount = posts | length %}
+
                                 <div class="py-4 px-4">
                                     <ul class="nav nav-pills mb-3">
                                         <li class="nav-item">
                                             <a class="nav-link active" data-toggle="pill"
-                                               href="#attendee-onsale-events" role="tab"
+                                               href="#attendee-attended-events" role="tab"
                                                aria-controls="attendee-onsale-events"
                                                aria-selected="true">{{ "Attended Events" }}
                                                 ({{ attendedEventscount }})</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" data-toggle="pill"
-                                               href="#attendee-past-events" role="tab"
+                                               href="#attendee-favorite-events" role="tab"
                                                aria-controls="attendee-past-events"
                                                aria-selected="true">{{ "Favorite Events" }}
                                                 ({{ favoriteEventscount }})</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" data-toggle="pill"
-                                               href="#attendee-news" role="tab"
+                                               href="#attendee-posts" role="tab"
                                                aria-controls="attendee-news"
-                                               aria-selected="true">{{ "Comments" }}
-                                                ({{ commentscount }})</a>
+                                               aria-selected="true">{{ "Posts" }}
+                                                ({{ postscount }})</a>
                                         </li>
+                                        {#                                        <li class="nav-item"> #}
+                                        {#                                            <a class="nav-link" data-toggle="pill" #}
+                                        {#                                               href="#attendee-comments" role="tab" #}
+                                        {#                                               aria-controls="attendee-news" #}
+                                        {#                                               aria-selected="true">{{ "Comments" }} #}
+                                        {#                                                ({{ commentscount }})</a> #}
+                                        {#                                        </li> #}
                                     </ul>
                                     <div class="tab-content">
-                                        <div class="tab-pane fade show active" id="attendee-onsale-events"
-                                             role="tabpanel" aria-labelledby="attendee-onsale-events-tab">
+                                        <div class="tab-pane show active" id="attendee-attended-events"
+                                             role="tabpanel" aria-labelledby="attendee-attended-events-tab">
                                             {% if attendedEventscount > 0 %}
                                                 {% for event in attendedEvents %}
                                                     {% include "Global/event-card.html.twig" with {event: event} %}
                                                 {% endfor %}
                                             {% else %}
-                                                {% include "Global/message.html.twig" with { type: "info", message: ('This user prefers an air of mystery around their attendeed events') } %}
+                                                {% include "Global/message.html.twig" with { type: "info", message: ('This has either not attended any events or just prefers an air of mystery around their attendeed events') } %}
                                             {% endif %}
                                         </div>
-                                        <div class="tab-pane fade active" id="attendee-past-events"
-                                             role="tabpanel" aria-labelledby="attendee-past-events-tab">
+                                        <div class="tab-pane fade " id="attendee-favorite-events"
+                                             role="tabpanel" aria-labelledby="attendee-favorite-events-tab">
                                             {% if favoriteEventscount > 0 %}
                                                 {% for event in favoriteEvents %}
-                                                    {% include "Global/event-card.html.twig" with {event: event} %}
+                                                    {% include "Global/fav-event-card.html.twig" with {event: event} %}
                                                 {% endfor %}
                                             {% else %}
-                                                {% include "Global/message.html.twig" with { type: "info", message: ('This user prefers an air of mystery around their favorite events') } %}
+                                                {% include "Global/message.html.twig" with { type: "info", message: ('This has either not favorited any events or just prefers an air of mystery around their favorite events') } %}
                                             {% endif %}
                                         </div>
-                                        <div class="tab-pane fade active" id="attendee-news"
-                                             role="tabpanel" aria-labelledby="attendee-news-tab">
-                                            {% if commentscount > 0 %}
-                                                {% for comment in comments %}
-                                                    {#                                                    {% include "Global/new-card.html.twig" with {new: new} %} #}
+                                        <div class="tab-pane fade " id="attendee-posts"
+                                             role="tabpanel" aria-labelledby="attendee-posts-tab">
+                                            {% if postscount > 0 %}
+                                                {% for post in posts %}
+                                                    {% include "Global/attendee-new-card.html.twig" with {new: post} %}
                                                 {% endfor %}
                                             {% else %}
-                                                {% include "Global/message.html.twig" with { type: "info", message: ('This user prefers an air of mystery around their comments') } %}
+                                                {% include "Global/message.html.twig" with { type: "info", message: ('This has either not made any posts or just prefers an air of mystery around their comments') } %}
                                             {% endif %}
                                         </div>
+                                        {#                                        <div class="tab-pane fade active" id="attendee-comments" #}
+                                        {#                                             role="tabpanel" aria-labelledby="attendee-comments-tab"> #}
+                                        {#                                            {% if commentscount > 0 %} #}
+                                        {#                                                {% for comment in comments %} #}
+                                        {#                                                    <div> #}
+                                        {#                                                        <p>{{ comment.body }} <a href="">({{ comment }})</a></p> #}
+                                        {#                                                    </div> #}
+                                        {#                                                {% endfor %} #}
+                                        {#                                            {% else %} #}
+                                        {#                                                {% include "Global/message.html.twig" with { type: "info", message: ('This has either not made any comments or just prefers an air of mystery around their comments') } %} #}
+                                        {#                                            {% endif %} #}
+                                        {#                                        </div> #}
                                     </div>
                                 </div>
 
@@ -227,29 +258,29 @@
                 src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap">
         </script>
         <script>
-            // Add an event listener to the tabs to handle tab switching
-            document.querySelectorAll('.nav-pills .nav-link').forEach(function (tab) {
-                tab.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    // Remove the 'active' class from all tab links
-                    document.querySelectorAll('.nav-pills .nav-link').forEach(function (link) {
-                        link.classList.remove('active');
-                    });
-                    // Add the 'active' class to the clicked tab link
-                    this.classList.add('active');
-
-                    // Remove the 'show' class from all tab panes
-                    document.querySelectorAll('.tab-pane').forEach(function (pane) {
-                        pane.classList.remove('show', 'active');
-                    });
-                    // Add the 'show' class to the clicked tab's associated pane
-                    const targetId = this.getAttribute('href').replace('#', '');
-                    document.getElementById(targetId).classList.add('show', 'active');
-                });
-            });
-
-            // Show the first tab by default
-            document.querySelector('.nav-pills .nav-link:first-child').classList.add('show', 'active');
+            // // Add an event listener to the tabs to handle tab switching
+            // document.querySelectorAll('.nav-pills .nav-link').forEach(function (tab) {
+            //     tab.addEventListener('click', function (e) {
+            //         e.preventDefault();
+            //         // Remove the 'active' class from all tab links
+            //         document.querySelectorAll('.nav-pills .nav-link').forEach(function (link) {
+            //             link.classList.remove('active');
+            //         });
+            //         // Add the 'active' class to the clicked tab link
+            //         this.classList.add('active');
+            //
+            //         // Remove the 'show' class from all tab panes
+            //         document.querySelectorAll('.tab-pane').forEach(function (pane) {
+            //             pane.classList.remove('show', 'active');
+            //         });
+            //         // Add the 'show' class to the clicked tab's associated pane
+            //         const targetId = this.getAttribute('href').replace('#', '');
+            //         document.getElementById(targetId).classList.add('show', 'active');
+            //     });
+            // });
+            //
+            // // Show the first tab by default
+            // document.querySelector('.nav-pills .nav-link:first-child').classList.add('show', 'active');
         </script>
 
         {#        {% include "Global/organ-info-box.html.twig" %} #}
@@ -261,5 +292,4 @@
             display: none;
         }
     </style>
-
 {% endblock %}

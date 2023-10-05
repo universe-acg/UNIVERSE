@@ -41,10 +41,10 @@
         /**
          * @Route("/attendee-profile/{slug}", name="profile_attendee", methods="GET")
          */
-        public function viewprofile(Request $request, PaginatorInterface $paginator, AppServices $services): Response
+        public function viewprofile(Request $request, PaginatorInterface $paginator, $slug, AppServices $services): Response
         {
             $referer = $request->headers->get('referer');
-            $attendee = $this->appServices->getUsers(array('slug' => $this->getUser()->getSlug()))->getQuery()->getOneOrNullresult();
+            $attendee = $this->appServices->getUsers(array('slug' => $slug))->getQuery()->getOneOrNullresult();
             if (!$attendee) {
                 $this->addFlash('error', 'The user could not be found');
                 return $services->redirectToReferer($referer);
@@ -74,12 +74,15 @@
                 $attendedEvents = [];
             }
             
+            $posts = $this->blogPostRepository->getBlogPostsByUserId($attendee->getId())->getQuery()->getResult();
+            
             return $this->render('Dashboard/Attendee/profile.html.twig', [
                 'attendee' => $attendee,
                 'blogposts' => $blogposts,
                 'level' => $level,
                 'favoriteEvents' => $favoriteEvents,
                 'attendedEvents' => $attendedEvents,
+                'posts' => $posts,
                 'comments' => $comments,
             ]);
         }

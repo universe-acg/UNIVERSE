@@ -202,8 +202,7 @@
                 ])
                 ->add('showattendeed', ChoiceType::class, [
                     'required' => false,
-                    'data' => false,
-                    'label' => 'Show Attendees',
+                    'label' => 'Show Attended Events',
                     'choices' => [
                         'Yes' => true,
                         'No' => false,
@@ -219,7 +218,7 @@
                 ->add('showfavs', ChoiceType::class, [
                     'required' => false,
                     'empty_data' => false,
-                    'label' => 'Show Favorites',
+                    'label' => 'Show Favorite Events',
                     'choices' => [
                         'Yes' => true,
                         'No' => false,
@@ -227,23 +226,53 @@
                     'placeholder' => false,
                     'expanded' => true,
                     'help' => 'Select Yes show favorites events publicly on your profile',
-                    'data' => false,
                     'multiple' => false,
                     'attr' => [
                         'class' => 'custom-switch-input', // You can add custom CSS classes if needed
                     ],
                 ])
-                ->add('showcomments', ChoiceType::class, [
+//                ->add('showcomments', ChoiceType::class, [
+//                    'required' => false,
+//                    'label' => 'Show Comments',
+//                    'choices' => [
+//                        'Yes' => true,
+//                        'No' => false,
+//                    ],
+//                    'placeholder' => false,
+//                    'expanded' => true,
+//                    'help' => 'Select Yes show comments publicly on your profile',
+//                    'multiple' => false,
+//                    'attr' => [
+//                        'class' => 'custom-switch-input', // You can add custom CSS classes if needed
+//                    ],
+//                ])
+                ->add('getdailyreminders', ChoiceType::class, [
                     'required' => false,
-                    'label' => 'Show Comments',
+                    'empty_data' => true,
+                    'label' => 'Do you want to get reminded by email when an event is soon to start?',
                     'choices' => [
                         'Yes' => true,
                         'No' => false,
                     ],
-                    'data' => false,
                     'placeholder' => false,
                     'expanded' => true,
-                    'help' => 'Select Yes show comments publicly on your profile',
+                    'help' => 'You will get reminded at least 24 hours prior',
+                    'multiple' => false,
+                    'attr' => [
+                        'class' => 'custom-switch-input', // You can add custom CSS classes if needed
+                    ],
+                ])
+                ->add('getcreatorreminder', ChoiceType::class, [
+                    'required' => false,
+                    'empty_data' => true,
+                    'label' => 'Do you want to get informed by email when important event changes take place?',
+                    'choices' => [
+                        'Yes' => true,
+                        'No' => false,
+                    ],
+                    'placeholder' => false,
+                    'expanded' => true,
+                    'help' => 'Such important event changes are: event cancellations, start date and time changes, etc...',
                     'multiple' => false,
                     'attr' => [
                         'class' => 'custom-switch-input', // You can add custom CSS classes if needed

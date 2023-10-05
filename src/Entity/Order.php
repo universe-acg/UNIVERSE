@@ -25,34 +25,33 @@
         private $id;
         
         /**
+         * @ORM\Column(type="boolean")
+         */
+        private $overbook;
+        /**
          * @ORM\ManyToOne(targetEntity="User", inversedBy="orders")
          */
         private $user;
-        
         /**
          * @ORM\OneToMany(targetEntity="OrderElement", cascade={"persist", "remove"}, mappedBy="order", fetch="EAGER")
          */
         private $orderelements;
-        
         /**
          * @var string
          * @ORM\Column(type="string", length=255)
          */
         private $reference;
-        
         /**
          * @var string
          * @ORM\Column(type="string", length=255, nullable=true)
          */
         private $note;
-        
         /**
          * -2: failed / -1: cancel / 0: waiting for payment / 1: paid
          * @var integer
          * @ORM\Column(type="integer")
          */
         private $status;
-        
         /**
          * @var DateTime $createdAt
          *
@@ -60,7 +59,6 @@
          * @ORM\Column(type="datetime")
          */
         private $createdAt;
-        
         /**
          * @var DateTime $updatedAt
          *
@@ -68,16 +66,41 @@
          * @ORM\Column(type="datetime", nullable=true)
          */
         private $updatedAt;
-        
         /**
          * @ORM\Column(type="datetime", nullable=true)
          */
         private $deletedAt;
         
+        
         public function __construct()
         {
             $this->status = 0;
             $this->orderelements = new ArrayCollection();
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getOverbook()
+        {
+            return $this->overbook;
+        }
+        
+        /**
+         * @param mixed $overbook
+         */
+        public function setOverbook($overbook): void
+        {
+            $this->overbook = $overbook;
+        }
+        
+        
+        public function getOverbookStringified()
+        {
+            if ($this->overbook) {
+                return "True";
+            }
+            return "False";
         }
         
         public function containsEvent($event)
@@ -119,7 +142,7 @@
                     return "Canceled";
                     break;
                 case 1:
-                    return "Booked";
+                    return "Booked - Not Attended";
                 case 2:
                     return "Attendeed";
                     break;

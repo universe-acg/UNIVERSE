@@ -475,14 +475,25 @@
                 $event->setOrganizer($this->getUser()->getOrganizer());
 //            $event->setSlug($this->generateUniqueSlug($event->getName())); // Implement logic to generate unique slugs
                 $event->setOrganizer($this->getUser()->getOrganizer());
-                $em->persist($event);
-                $em->flush();
+//                $em->persist($event);
+//                $em->flush();
                 $this->processFormSubmission($event, $em, $services, $category, $slug);
+                
+                $this->informAttendeesEventhasbeenupdated($event, $services);
                 
                 return $this->redirectToRouteAfterSubmission($authChecker);
             }
             
             return $this->renderEventForm($event, $form);
+        }
+        
+        private function informAttendeesEventhasbeenupdated($event, $appservices)
+        {
+            // get attendeees
+            $attendees = $appservices->findBookedAttendeesOfEvent($event);
+            foreach ($attendees as $attendee) {
+                $appservices->sendmaileventhasbeenupdate($event, $attendee->getEmail());
+            }
         }
         
         /**
@@ -710,16 +721,26 @@
             }
             $em = $this->getDoctrine()->getManager();
             $orders = $orderRepository->findByEventId($event->getId());
-            dump($orders);
+//            dump($orders);
             foreach ($orders as $order) {
-                dump($order);
-                $em->remove($order);
-                $em->flush();
+//                dump($order);
+//                $em->remove($order);
+//                $em->flush();
             }
-            $em->remove($event);
-            $em->flush();
+//            $em->remove($event);
+//            $em->flush();
 //            die();
+            $this->informAttendeesEventhasbeencancelled($event, $services);
             return $services->redirectToReferer('event');
+        }
+        
+        private function informAttendeesEventhasbeencancelled($event, $appservices)
+        {
+            // get attendeees
+            $attendees = $appservices->findBookedAttendeesOfEvent($event);
+            foreach ($attendees as $attendee) {
+                $appservices->sendmaileventhasbeencancelled($event, $attendee->getEmail());
+            }
         }
         
         /**
@@ -786,7 +807,7 @@
                 
                 foreach ($filteredFollowers as $follower) {
                     $email = (new Swift_Message($services->getSetting('website_name') . ' - ' . $event->getName()))
-                        ->setFrom($services->getSetting('no_reply_email'), $services->getSetting('website_name'))
+                        ->setFrom($services->getSetting('no_reply_email'))
                         ->setTo($follower->getEmail())
                         ->setBody(
                             $templating->render('Dashboard/Shared/Order/new-event-email.html.twig', ['data' => $emaildata, 'message' => $message]), 'text/html');

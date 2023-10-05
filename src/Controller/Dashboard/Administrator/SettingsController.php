@@ -526,7 +526,7 @@
         {
             
             $email = new Swift_Message("Mail server test email");
-            $email->setFrom($services->getSetting('no_reply_email'), $services->getSetting('website_name'))
+            $email->setFrom($services->getSetting('no_reply_email'))
                 ->setTo($request->query->get('email'))
                 ->setBody($templating->render('Dashboard/Administrator/Settings/mail-server-test-email.html.twig'), 'text/html');
             try {

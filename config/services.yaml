@@ -23,6 +23,7 @@ parameters:
   #asset.request_context.base_path: '%router.request_context.base_url%'
 
 services:
+  App\Twig\SortFaqsExtension: ~
   App\EventSubscriber\CustomLoginListener:
     tags:
       - { name: 'kernel.event_subscriber' }
@@ -108,12 +109,6 @@ services:
 
   app.services:
     alias: App\Service\AppServices
-
-  DrewM\MailChimp\MailChimp: '@welp_mailchimp.mailchimp_master'
-
-  universe_mailchimp_fos_subscriber_provider:
-    class: Welp\MailchimpBundle\Provider\FosSubscriberProvider
-    arguments: [ "@fos_user.user_manager" ]
 
   coresphere_console.controller:
     class: CoreSphere\ConsoleBundle\Controller\ConsoleController

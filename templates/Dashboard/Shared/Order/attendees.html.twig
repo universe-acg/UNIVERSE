@@ -24,11 +24,12 @@
 
                     <div class="row">
                         <div class="col-4 d-flex justify-content-start align-items-center">
-                            <a href="{{ path('generate_attendees_pdf') }}" class="text-dark mr-2">
+                            <a href="{{ path('generate_attendees_pdf', {event: event.slug}) }}" class="text-dark mr-2">
                                 <button type="submit"
                                         class="btn btn-primary btn-md">{{ "Print to PDF" }}</button>
                             </a>
-                            <a href="{{ path('generate_attendees_excel') }}" class="text-dark pull-right">
+                            <a href="{{ path('generate_attendees_excel', {event: event.slug}) }}"
+                               class="text-dark pull-right">
                                 <button type="submit"
                                         class="btn btn-primary btn-md">{{ "Print to Excel" }}</button>
                             </a>

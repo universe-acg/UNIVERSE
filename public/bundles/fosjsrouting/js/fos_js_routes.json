@@ -1,13 +1,25 @@
 {
   "base_url": "",
   "routes": {
-    "dashboard_attendee_bookevent": {
+    "dashboard_attendee_cart": {
       "tokens": [
         [
           "text",
-          "\/dashboard\/attendee\/bookevent"
+          "\/dashboard\/attendee\/cart"
+        ],
+        [
+          "variable",
+          "\/",
+          "en|zh|es|fr|ar|",
+          "_locale"
         ]
       ],
+      "defaults": {
+        "_locale": []
+      },
+      "requirements": {
+        "_locale": "en|zh|es|fr|ar|"
+      },
       "hosttokens": [],
       "methods": [],
       "schemes": []
@@ -17,15 +29,61 @@
         [
           "text",
           "\/api\/get-events"
+        ],
+        [
+          "variable",
+          "\/",
+          "en|zh|es|fr|ar|",
+          "_locale"
         ]
       ],
+      "defaults": {
+        "_locale": []
+      },
+      "requirements": {
+        "_locale": "en|zh|es|fr|ar|"
+      },
       "hosttokens": [],
       "methods": [],
       "schemes": []
     },
-    "prefix": "",
-    "host": "127.0.0.1:8000",
-    "port": "",
-    "scheme": "http"
-  }
+    "bazinga_jstranslation_js": {
+      "tokens": [
+        [
+          "variable",
+          ".",
+          "js|json",
+          "_format"
+        ],
+        [
+          "variable",
+          "\/",
+          "[\\w]+",
+          "domain"
+        ],
+        [
+          "text",
+          "\/translations"
+        ]
+      ],
+      "defaults": {
+        "domain": "messages",
+        "_format": "js"
+      },
+      "requirements": {
+        "_format": "js|json",
+        "domain": "[\\w]+"
+      },
+      "hosttokens": [],
+      "methods": [
+        "GET"
+      ],
+      "schemes": []
+    }
+  },
+  "prefix": "",
+  "host": "127.0.0.1:8000",
+  "port": "",
+  "scheme": "http",
+  "locale": []
 }
