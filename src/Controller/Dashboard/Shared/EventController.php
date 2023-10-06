@@ -529,17 +529,10 @@
             }
             $newEvent = new Event();
             $newEvent->mapFromEvent($event);
-            if ($this->getUser()->isIsbusinessweek()) {
-                $form = $this->createForm(EventTypeMulti::class, $newEvent, [
-                    'validation_groups' => ['create', 'Default'],
-                    'user_choices' => $eventChoices,
-                ]);
-            } else {
-                $form = $this->createForm(EventTypeEdit::class, $newEvent, [
-                    'validation_groups' => ['create', 'Default'],
-                    'user_choices' => $eventChoices,
-                ]);
-            }
+            $form = $this->createForm(EventTypeMulti::class, $newEvent, [
+                'validation_groups' => ['create', 'Default'],
+                'user_choices' => $eventChoices,
+            ]);
             
             $em = $this->getDoctrine()->getManager();
             $form->handleRequest($request);

@@ -57,12 +57,12 @@
                 ])
                 ->add('tickets', CollectionType::class, [
                     'label' => 'Event Ticket',
-                    'entry_type' => EventTicketTypeMulti::class,
+                    'entry_type' => EventTicketType::class,
                     'allow_add' => true,
                     'allow_delete' => true,
                     'prototype' => true,
                     'prototype_name' => '__eventticket__',
-                    'required' => true,
+                    'required' => false,
                     'by_reference' => false,
                     'attr' => [
                         'class' => 'form-collection eventtickets-collection manual-init',
