@@ -109,7 +109,6 @@
             $this->ticketreservations = new ArrayCollection();
             $this->salesstartdate = new DateTime();
             $this->salesenddate = new DateTime();
-            $this->alreadybooked = false;
             $this->name = "Ticket";
             $this->description = "";
         }

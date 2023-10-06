@@ -164,10 +164,10 @@
                 // Remove the association from both sides
                 $organizer->setUser(null);
                 $user->setOrganizer(null);
-                
-                // Remove the organizer entity (if cascade={"remove"} is configured)
-                $em->remove($organizer);
+                $em->persist();
+                $em->flush();
             }
+            $em->remove($user);
             
             if ($user->getDeletedAt() !== null) {
                 $this->addFlash('error', 'The user has been permanently deleted');
@@ -176,7 +176,6 @@
             }
 
 // Remove the user entity itself
-            $em->remove($user);
             $em->flush();
             
             return $services->redirectToReferer('user');

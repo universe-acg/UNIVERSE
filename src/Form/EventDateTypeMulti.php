@@ -43,7 +43,7 @@
                     'format' => 'yyyy-MM-dd HH:mm',
                 ])
                 ->add('enddate', DateTimeType::class, [
-                    'required' => true,
+                    'required' => false,
                     'label' => 'End Date and Time',
                     'widget' => 'single_text',
                     'html5' => false,

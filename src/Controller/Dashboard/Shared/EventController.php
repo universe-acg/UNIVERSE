@@ -721,26 +721,14 @@
             }
             $em = $this->getDoctrine()->getManager();
             $orders = $orderRepository->findByEventId($event->getId());
-//            dump($orders);
             foreach ($orders as $order) {
-//                dump($order);
-//                $em->remove($order);
-//                $em->flush();
+                $em->remove($order);
+                $em->flush();
             }
-//            $em->remove($event);
-//            $em->flush();
-//            die();
-            $this->informAttendeesEventhasbeencancelled($event, $services);
+            $em->remove($event);
+            $em->flush();
+//            $this->informAttendeesEventhasbeencancelled($event, $services);
             return $services->redirectToReferer('event');
-        }
-        
-        private function informAttendeesEventhasbeencancelled($event, $appservices)
-        {
-            // get attendeees
-            $attendees = $appservices->findBookedAttendeesOfEvent($event);
-            foreach ($attendees as $attendee) {
-                $appservices->sendmaileventhasbeencancelled($event, $attendee->getEmail());
-            }
         }
         
         /**
@@ -849,5 +837,14 @@
             return $this->render('Dashboard/Shared/Event/details.html.twig', [
                 'event' => $event,
             ]);
+        }
+        
+        private function informAttendeesEventhasbeencancelled($event, $appservices)
+        {
+            // get attendeees
+            $attendees = $appservices->findBookedAttendeesOfEvent($event);
+            foreach ($attendees as $attendee) {
+                $appservices->sendmaileventhasbeencancelled($event, $attendee->getEmail());
+            }
         }
     }

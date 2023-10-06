@@ -145,9 +145,10 @@
                     'required' => true,
                     'label' => 'Does this event repeat weekly/monthly?',
                     'choices' => [
-                        'Yes' => 'yes',
-                        'No' => 'no',
+                        'Yes' => true,
+                        'No' => false,
                     ],
+                    'data' => false,
                     'expanded' => true, // Display as radio buttons
                     'multiple' => false, // Allow only one selection
                     'attr' => [

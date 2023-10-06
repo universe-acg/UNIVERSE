@@ -91,7 +91,7 @@
          * @ORM\Column(type="boolean")
          * @Assert\NotNull
          */
-        private $isbusinessweek = true;
+        private $isbusinessweek;
         /**
          * @ORM\Column(type="boolean")
          */
@@ -105,8 +105,8 @@
          */
         private $showcomments;
         /**
-         * @ORM\OneToOne(targetEntity="Organizer", cascade={"persist", "remove"})
-         * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
+         * @ORM\OneToOne(targetEntity="Organizer", cascade={"remove"})
+         * @ORM\JoinColumn(onDelete="CASCADE")
          * @Assert\Valid()
          */
         private $organizer;
@@ -302,6 +302,7 @@
             $this->showattendeed = false;
             $this->getcreatorreminder = true;
             $this->getdailyreminders = true;
+            $this->isbusinessweek = true;
             $this->showfavs = false;
             $this->showcomments = false;
             $this->orders = new ArrayCollection();

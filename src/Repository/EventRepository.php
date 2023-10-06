@@ -32,6 +32,21 @@
                 ->getResult();
         }
         
+        public function getTicketsBookedByUser(User $user)
+        {
+            return $this->createQueryBuilder('e')
+                ->join('e.eventdates', 'ed')
+                ->join('ed.tickets', 'et')
+                ->join('et.ticketreservations', 'tr')
+                ->join('tr.orderelement', 'or')
+                ->join('or.order', 'o')
+                ->join('o.user', 'u')
+                ->where('u = :user')
+                ->setParameter('user', $user)
+                ->getQuery()
+                ->getResult();
+        }
+        
         public function findAttendedEventsByUser(User $user, $category, $startdate)
         {
             $startDateFilter = $startdate ?? "all";

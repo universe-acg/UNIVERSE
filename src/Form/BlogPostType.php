@@ -15,6 +15,7 @@
     use Symfony\Component\Form\Extension\Core\Type\TextType;
     use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\OptionsResolver\OptionsResolver;
+    use Symfony\Component\Security\Core\Security;
     use Symfony\Component\Validator\Constraints\NotBlank;
     use Vich\UploaderBundle\Form\Type\VichImageType;
     
@@ -22,9 +23,12 @@
     {
         private $services;
         
-        public function __construct(AppServices $services)
+        private $security;
+        
+        public function __construct(AppServices $services, Security $security)
         {
             $this->services = $services;
+            $this->security = $security;
         }
         
         public function buildForm(FormBuilderInterface $builder, array $options)
@@ -40,7 +44,7 @@
                     'help' => 'Select the appropriate category to help users find your post.',
                     'placeholder' => 'Select a Category',
                     'query_builder' => function () {
-                        return $this->services->getBlogPostCategoriesInForm(array());
+                        return $this->services->getBlogPostCategoriesInForm(array(), $this->security->getUser());
                     },
                     'invalid_message' => 'Please select a category.',
                 ])

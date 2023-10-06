@@ -30,11 +30,11 @@
             $builder
                 ->add('name', TextType::class, [
                     'purify_html' => true,
-                    'required' => true,
+                    'required' => false,
                     'label' => 'Ticket Name',
-                    'help' => 'Enter a name for the ticket (e.g., VIP Pass, General Admission)',
+                    'help' => 'Enter a name for the ticket (e.g., Ticket, General Admission,)',
                     'attr' => [
-                        'placeholder' => 'E.g., VIP Pass',
+                        'placeholder' => 'E.g., Ticket, General Admission',
                     ],
                 ])
                 ->add('quantity', TextType::class, [

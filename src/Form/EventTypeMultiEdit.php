@@ -17,6 +17,7 @@
     use Symfony\Component\Form\Extension\Core\Type\TextType;
     use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\OptionsResolver\OptionsResolver;
+    use Symfony\Component\Validator\Constraints\NotNull;
     use Vich\UploaderBundle\Form\Type\VichImageType;
     
     class EventTypeMultiEdit extends AbstractType
@@ -138,11 +139,15 @@
                     ],
                 ])
                 ->add('repeatsweekly', ChoiceType::class, [
+                    'constraints' => array(
+                        new NotNull()
+                    ),
+                    'data' => false,
                     'required' => false,
                     'label' => 'Does this event repeat weekly/monthly?',
                     'choices' => [
-                        'Yes' => 'yes',
-                        'No' => 'no',
+                        'Yes' => true,
+                        'No' => false,
                     ],
                     'expanded' => true, // Display as radio buttons
                     'multiple' => false, // Allow only one selection

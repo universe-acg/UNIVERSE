@@ -47,7 +47,7 @@
                 <td class="custom-td">{{ order.createdAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
                 <td class="custom-td">
                     {% if order.status == 1 %}
-                        Booked - Not attended
+                        Booked (Not Attended)
                     {% elseif order.status == 2 %}
                         Attended
                     {% endif %}

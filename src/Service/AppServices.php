@@ -21,6 +21,7 @@
     use App\Entity\Page;
     use App\Entity\Settings;
     use App\Entity\User;
+    use App\Repository\OrganizerRepository;
     use DateTime;
     use DateTimeInterface;
     use Doctrine\ORM\EntityManagerInterface;
@@ -62,7 +63,9 @@
         private $templating;
         private $urlMatcherInterface;
         
-        public function __construct(EntityManagerInterface $entityManager, AuthorizationCheckerInterface $authChecker, RequestStack $requestStack, KernelInterface $kernel, AdapterInterface $cache, UrlGeneratorInterface $router, Security $security, Swift_Mailer $mailer, ParameterBagInterface $params, Twig_Environment $templating, UrlMatcherInterface $urlMatcherInterface)
+        private $organizerRepository;
+        
+        public function __construct(EntityManagerInterface $entityManager, AuthorizationCheckerInterface $authChecker, RequestStack $requestStack, KernelInterface $kernel, AdapterInterface $cache, UrlGeneratorInterface $router, Security $security, Swift_Mailer $mailer, ParameterBagInterface $params, Twig_Environment $templating, UrlMatcherInterface $urlMatcherInterface, OrganizerRepository $organizerRepository)
         {
             $this->em = $entityManager;
             $this->authChecker = $authChecker;
@@ -75,6 +78,7 @@
             $this->params = $params;
             $this->templating = $templating;
             $this->urlMatcherInterface = $urlMatcherInterface;
+            $this->organizerRepository = $organizerRepository;
         }
         
         // Redirects to the referer page when available, if not, redirects to the dashboard index
@@ -201,12 +205,7 @@
                 $this->sendOrderConfirmationEmail($order, $order->getUser()->getEmail());
             }
         }
-         public function getOrdersForEvent($criterias)
-                {
-                    $event = array_key_exists('event', $criterias) ? $criterias['event'] : "all";
-                    return $this->em->getRepository(Order::class)->getOrdersForEvent($criterias, $event);
-                }
-                
+        
         public function getOrders($criterias)
         {
             $status = array_key_exists('status', $criterias) ? $criterias['status'] : "all";
@@ -252,8 +251,6 @@
             return strlen($reference) > $length ? substr($reference, 0, $length) : $reference;
         }
         
-        // Sends the tickets to the attendee
-        
         /**
          * @throws SyntaxError
          * @throws RuntimeError
@@ -284,6 +281,8 @@
             return 1;
         }
         
+        // Sends the tickets to the attendee
+        
         /**
          * @throws InvalidArgumentException
          */
@@ -305,6 +304,12 @@
             return ($setting ? ($setting->getValue()) : (null));
         }
         
+        public function getOrdersForEvent($criterias)
+        {
+            $event = array_key_exists('event', $criterias) ? $criterias['event'] : "all";
+            return $this->em->getRepository(Order::class)->getOrdersForEvent($criterias, $event);
+        }
+        
         /**
          * @throws SyntaxError
          * @throws RuntimeError
@@ -315,7 +320,7 @@
             $message = "Important details of this event: " . $event->getName() . ", which you have booked have been changed.";
             
             $emaildata = [
-                $title =  $event->getName(),
+                $title = $event->getName(),
                 $description = $event->getDescription(),
                 $startson = $event->getEventdates()[0]->getStartdate()->format('D j M Y, g:i A'),
                 $link = "https://universeacg.xyz/event/" . $event->getSlug(),
@@ -334,32 +339,6 @@
             }
         }
         
-          /**
-                 * @throws SyntaxError
-                 * @throws RuntimeError
-                 * @throws LoaderError|InvalidArgumentException
-                 */
-                public function sendmaileventhasbeencancelled($event, $emailTo)
-                {
-                    $message = "This event has been cancelled: " . $event->getName() . ".";
-                    
-                    $emaildata = [
-                        $title =  "We are informing you that the organizer has cancelled this event.",
-                    ];
-                    
-                    // send email to organizer and user
-                    $email = (new Swift_Message($this->getSetting('website_name') . ' - ' . $event->getName() . ' event details udpated'))
-                        ->setFrom($this->getSetting('no_reply_email'))
-                        ->setTo($emailTo)
-                        ->setBody(
-                            $this->templating->render('Dashboard/Shared/Order/event-cancelled-email.html.twig', ['data' => $emaildata, 'message' => $message]), 'text/html', 'UTF-8');
-                    
-                    try {
-                        $result = $this->mailer->send($email);
-                    } catch (Exception $e) {
-                    }
-                }
-        
         public function getEventDates($criterias)
         {
             
@@ -370,6 +349,32 @@
             $count = array_key_exists('count', $criterias) ? $criterias['count'] : false;
             
             return $this->em->getRepository(EventDate::class)->getEventDates($reference, $organizer, $event, $limit, $count);
+        }
+        
+        /**
+         * @throws SyntaxError
+         * @throws RuntimeError
+         * @throws LoaderError|InvalidArgumentException
+         */
+        public function sendmaileventhasbeencancelled($event, $emailTo)
+        {
+            $message = "This event has been cancelled: " . $event->getName() . ".";
+            
+            $emaildata = [
+                $title = "We are informing you that the organizer has cancelled this event.",
+            ];
+            
+            // send email to organizer and user
+            $email = (new Swift_Message($this->getSetting('website_name') . ' - ' . $event->getName() . ' event details udpated'))
+                ->setFrom($this->getSetting('no_reply_email'))
+                ->setTo($emailTo)
+                ->setBody(
+                    $this->templating->render('Dashboard/Shared/Order/event-cancelled-email.html.twig', ['data' => $emaildata, 'message' => $message]), 'text/html', 'UTF-8');
+            
+            try {
+                $result = $this->mailer->send($email);
+            } catch (Exception $e) {
+            }
         }
         
         public function cancelticket($orderReference, $note = null): void
@@ -387,13 +392,28 @@
             $this->em->flush();
         }
         
-        public function getBlogPostCategoriesInForm($criterias)
+        public function getBlogPostCategoriesInForm($criterias, $user)
         {
             $hidden = array_key_exists('hidden', $criterias) ? $criterias['hidden'] : false;
             $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
             
+            // if user is org
             if (!empty($this->security->getUser()->getOrganizer())) {
                 $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
+                
+                // return the users cate
+                $orgofuser = $this->organizerRepository->findBy(array("id" => $user->getOrganizer()->getId()))[0]->getCategory();
+                
+                if ($orgofuser == "Club") {
+                    $slug = "club-news";
+                } elseif ($orgofuser == "Organization") {
+                    $slug = "organizations-news";
+                } elseif ($orgofuser == "Office") {
+                    $slug = "offices-news";
+                } elseif ($orgofuser == "Society") {
+                    $slug = "societies-news";
+                }
+                
                 $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
                 $order = array_key_exists('order', $criterias) ? $criterias['order'] : "name";
                 $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "ASC";
@@ -401,11 +421,18 @@
                 return $this->em->getRepository(BlogPostCategory::class)->getBlogPostCategories($hidden, $keyword, $slug, $limit);
             }
             
+            if ($this->authChecker->isGranted("ROLE_ADMINISTRATOR")) {
+                $slug = "all";
+                $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
+                $order = array_key_exists('order', $criterias) ? $criterias['order'] : "name";
+                $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "ASC";
+                return $this->em->getRepository(BlogPostCategory::class)->getBlogPostCategories($hidden, $keyword, $slug, $limit);
+            }
+            
             $slug = "attendees";
             $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
             $order = array_key_exists('order', $criterias) ? $criterias['order'] : "name";
             $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "ASC";
-            
             return $this->em->getRepository(BlogPostCategory::class)->getBlogPostCategories($hidden, $keyword, $slug, $limit);
         }
         
@@ -947,24 +974,38 @@
             if ($startDateFilter === "today") {
                 $startDateMin = new DateTime('today');
                 $startDateMax = new DateTime('today');
+                $startDateMin->setTime(0, 0, 0);
+                $startDateMax->setTime(23, 59, 59);
             } elseif ($startDateFilter === "tomorrow") {
                 $startDateMin = new DateTime('tomorrow');
                 $startDateMax = new DateTime('tomorrow');
+                $startDateMin->setTime(0, 0, 0);
+                $startDateMax->setTime(23, 59, 59);
             } elseif ($startDateFilter === "thisweekend") {
                 $startDateMin = new DateTime('saturday this week');
                 $startDateMax = new DateTime('sunday this week');
+                $startDateMin->setTime(0, 0, 0);
+                $startDateMax->setTime(23, 59, 59);
             } elseif ($startDateFilter === "thisweek") {
                 $startDateMin = new DateTime('monday this week');
                 $startDateMax = new DateTime('sunday this week');
+                $startDateMin->setTime(0, 0, 0);
+                $startDateMax->setTime(23, 59, 59);
             } elseif ($startDateFilter === "nextweek") {
                 $startDateMin = new DateTime('monday next week');
                 $startDateMax = new DateTime('sunday next week');
+                $startDateMin->setTime(0, 0, 0);
+                $startDateMax->setTime(23, 59, 59);
             } elseif ($startDateFilter === "thismonth") {
                 $startDateMin = new DateTime('first day of this month');
                 $startDateMax = new DateTime('last day of this month');
+                $startDateMin->setTime(0, 0, 0);
+                $startDateMax->setTime(23, 59, 59);
             } elseif ($startDateFilter === "nextmonth") {
                 $startDateMin = new DateTime('first day of next month');
                 $startDateMax = new DateTime('last day of next month');
+                $startDateMin->setTime(0, 0, 0);
+                $startDateMax->setTime(23, 59, 59);
             }
             
             if ($otherthan !== "all") {
@@ -975,11 +1016,29 @@
                 ->leftJoin('e.eventdates', 'eventdates');
             
             if ($startDateMin && $startDateMax) {
+                // Get the current date and time
+                $now = new DateTime();
+                
+                // Set the initial time to midnight (00:00:00) and max time to 23:59:59
+                $todayStart = clone $now->setTime(0, 0, 0);
+                $todayEnd = clone $now->setTime(23, 59, 59);
                 $queryBuilder
-                    ->andWhere('eventdates.startdate >= :startDateMin')
-                    ->andWhere('eventdates.startdate <= :startDateMax')
+                    ->andWhere(
+                        $queryBuilder->expr()->orX(
+                            $queryBuilder->expr()->andX(
+                                'eventdates.startdate >= :startDateMin',
+                                'eventdates.enddate <= :startDateMax'
+                            ),
+                            $queryBuilder->expr()->andX(
+                                'eventdates.startdate <= :todayStart',
+                                'eventdates.enddate >= :todayEnd'
+                            )
+                        )
+                    )
                     ->setParameter('startDateMin', $startDateMin->format('Y-m-d H:i:s'))
-                    ->setParameter('startDateMax', $startDateMax->format('Y-m-d H:i:s'));
+                    ->setParameter('startDateMax', $startDateMax->format('Y-m-d H:i:s'))
+                    ->setParameter('todayStart', $todayStart->format('Y-m-d H:i:s'))
+                    ->setParameter('todayEnd', $todayEnd->format('Y-m-d H:i:s'));
             }
             if ($elapsed !== "all") {
                 if ($elapsed === true || $elapsed == "1") {
@@ -1134,16 +1193,38 @@
         SELECT COUNT(DISTINCT e.id)
         FROM App\Entity\Event e
         LEFT JOIN App\Entity\EventDate ed WITH e.id = ed.event
-        WHERE ed.startdate >= :startDate AND ed.enddate <= :endDate and e.published = 1
+        WHERE ed.enddate <= :endDate and ed.startdate <= :startDate and e.published = 1
     ');
             
             $query->setParameters([
-                'startDate' => $startDate,
                 'endDate' => $endDate,
+                'startDate' => $startDate,
             ]);
             
             return (int)$query->getSingleScalarResult();
         }
+//
+//           public function getEventCountForDateRange($duration, DateTimeInterface $startDate, DateTimeInterface $endDate): int
+//                {
+//                    $query = $this->em->createQuery('
+//                 SELECT COUNT(DISTINCT e.id)
+//                        FROM App\Entity\Event e
+//                        LEFT JOIN App\Entity\EventDate ed WITH e.id = ed.event
+//                        WHERE ed.enddate <= :endDate
+//                            AND ed.startdate <= :startDate
+//                            AND e.published = 1
+//                                       AND DATE_DIFF(ed.startdate, ed.enddate) <= :duration
+//            ');
+//
+//                    $query->setParameters([
+//                        'endDate' => $endDate,
+//                        'startDate' => $startDate,
+//                                'duration' => $duration,
+//                    ]);
+//
+//                    return (int)$query->getSingleScalarResult();
+//                }
+//
         
         // Generates a list of pages to be cho $services->getEvents(array("slug" => $slug, "elapsed" => "all", "published" => "all"))->getQuery()sen in a menu element
         

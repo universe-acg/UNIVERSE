@@ -59,31 +59,29 @@
                 $qb->andWhere("b.id != :otherthan")->setParameter("otherthan", $otherthan);
             }
             
-            if ($sortedby !== "all") {
-                switch ($sortedby) {
-                    case 'created_asc':
-                        $qb->orderBy("b.createdAt", 'ASC');
-                        break;
-                    case 'created_desc':
-                        $qb->orderBy("b.createdAt", 'DESC');
-                        break;
-                    case 'updated_asc':
-                        $qb->orderBy("b.updatedAt", 'ASC');
-                        break;
-                    case 'updated_desc':
-                        $qb->orderBy("b.updatedAt", 'DESC');
-                        break;
-                    case 'title_asc':
-                        $qb->orderBy("b.name", 'ASC');
-                        break;
-                    case 'title_desc':
-                        $qb->orderBy("b.name", 'DESC');
-                        break;
-                    default:
-                        // Default sorting by created date in descending order
-                        $qb->orderBy("b.createdAt", 'DESC');
-                        break;
-                }
+            switch ($sortedby) {
+                case 'created_asc':
+                    $qb->orderBy("b.createdAt", 'ASC');
+                    break;
+                case 'created_desc':
+                    $qb->orderBy("b.createdAt", 'DESC');
+                    break;
+                case 'updated_asc':
+                    $qb->orderBy("b.updatedAt", 'ASC');
+                    break;
+                case 'updated_desc':
+                    $qb->orderBy("b.updatedAt", 'DESC');
+                    break;
+                case 'title_asc':
+                    $qb->orderBy("b.name", 'ASC');
+                    break;
+                case 'title_desc':
+                    $qb->orderBy("b.name", 'DESC');
+                    break;
+                default:
+                    // Default sorting by created date in descending order
+                    $qb->orderBy("b.createdAt", 'DESC');
+                    break;
             }
             
             return $qb;

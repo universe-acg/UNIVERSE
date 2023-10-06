@@ -1,11 +1,25 @@
-<div style="float: left !important; margin-top: 3px">
+{# <div style="float: left !important; margin-top: 3px; margin-right: 2px"> #}
+{#    {% if user.hasRole('ROLE_ATTENDEE') %} #}
+{#        <a href="{{ path('profile_attendee', { slug : user.slug }) }}"> #}
+
+{#        <span class="avatar"{% if user.avatarName %}  style="background: url('{{ asset(user.getAvatarPath) }}');" {% endif %} {% if showusernametooltip is defined %}data-toggle="tooltip" title="{{ user.username }}{{ user.stringifypointslevel }}" data-container="body"{% endif %} > #}
+
+{#        {% if not user.avatarName %} #}
+{#            <i class="far fa-user"></i> #}
+{#        {% endif %} #}
+
+{#    </span> #}
+{#        </a> #}
+{#    {% endif %} #}
+{# </div> #}
+<div style="float: left !important; margin-top: 3px; margin-right: 2px">
     {% if user.hasRole('ROLE_ATTENDEE') %}
         <a href="{{ path('profile_attendee', { slug : user.slug }) }}">
-        <span class="avatar"{% if user.avatarName %}  style="background: url('{{ asset(user.getAvatarPath) }}');" {% endif %} {% if showusernametooltip is defined %}data-toggle="tooltip" title="{{ user.username }}{{ user.stringifypointslevel }}" data-container="body"{% endif %} >
-        {% if not user.avatarName %}
-            <i class="far fa-user"></i>
-        {% endif %}
-    </span>
+            <span class="avatar" {% if showusernametooltip is defined %}data-toggle="tooltip"
+                  title="{{ user.username }}{{ user.stringifypointslevel }}" data-container="body"{% endif %}>
+                <img src="{{ user.logoName ? asset(user.getLogoPath) : user.getLogoPlaceholder }}" alt="Profile Image"
+                     style="width: 23px; height: 23px; border-radius: 50%; object-fit: cover;">
+            </span>
         </a>
     {% endif %}
 </div>

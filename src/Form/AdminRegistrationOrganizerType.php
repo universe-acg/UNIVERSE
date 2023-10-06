@@ -8,7 +8,6 @@
     use App\Validator\Constraints\AcgEmailDomain;
     use FOS\UserBundle\Form\Type\RegistrationFormType;
     use Symfony\Component\Form\AbstractType;
-    use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
     use Symfony\Component\Form\Extension\Core\Type\EmailType;
     use Symfony\Component\Form\Extension\Core\Type\PasswordType;
     use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -16,7 +15,6 @@
     use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\Validator\Constraints\Length;
     use Symfony\Component\Validator\Constraints\NotBlank;
-    use Symfony\Component\Validator\Constraints\NotNull;
     use Symfony\Component\Validator\Constraints\Regex;
     
     class AdminRegistrationOrganizerType extends AbstractType
@@ -69,22 +67,6 @@
                             'message' => 'Invalid email domain. Please use an @acg.edu email address.',
                         ]),],
                     'help' => 'Please enter their email address for communication.',
-                ])
-                ->add('isbusinessweek', ChoiceType::class, [
-                    'label' => 'Are they a multi-ticket user?',
-                    'required' => true,
-                    'choices' => [
-                        'Yes' => true,
-                        'No' => false,
-                    ],
-                    'constraints' => [
-                        new NotNull(),
-                    ],
-                    'expanded' => true, // Display as radio buttons
-                    'data' => false, // Set the default value based on the user's status
-                    'attr' => [
-                        'help' => 'Select "Yes" if they are a multi-ticket user, otherwise select "No".',
-                    ],
                 ])
                 ->add('plainPassword', RepeatedType::class, [
                     'type' => PasswordType::class,

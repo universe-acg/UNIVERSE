@@ -127,7 +127,8 @@
                     } else {
                         $this->addFlash('success', 'The blog post has been successfully updated');
                     }
-                    return $this->redirectToRoute("dashboard_index");
+                    
+                    return $this->redirectToRoute("blog_post_organizer");
                 }
                 
                 $this->addFlash('error', 'The form contains invalid data');

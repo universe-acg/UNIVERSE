@@ -171,10 +171,11 @@
                 ])
                 ->add('repeatsweekly', ChoiceType::class, [
                     'required' => true,
+                    'data' => false,
                     'label' => 'Does this event repeat weekly/monthly?',
                     'choices' => [
-                        'Yes' => 'yes',
-                        'No' => 'no',
+                        'Yes' => true,
+                        'No' => false,
                     ],
                     'expanded' => true, // Display as radio buttons
                     'multiple' => false, // Allow only one selection

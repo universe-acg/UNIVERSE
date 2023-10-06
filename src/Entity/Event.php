@@ -798,7 +798,7 @@
         }
         
         /**
-         * @return mixed
+         * @return ArrayCollection
          */
         public function getEventDatesMulti()
         {

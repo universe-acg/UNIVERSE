@@ -216,13 +216,7 @@
             }
             
             $user = $this->getUser();
-            
-            // Fetch attended events by the user
-            if ($category != "all") {
-                $attendedEvents = $eventRepository->findAttendedEventsByUser($user, $category->getSlug(), "all")->getQuery()->getResult();
-            } else {
-                $attendedEvents = $eventRepository->findAttendedEventsByUser($user, "all", $startdate)->getQuery()->getResult();
-            }
+
 // Fetch upcoming events
             $eventsUpcoming = $services->getEventsHomepageIndex([
                 "elapsed" => false,
@@ -248,11 +242,6 @@
 
 // Iterate through attended events and add them to the merged array
             $mergedEvents = [];
-            
-            foreach ($attendedEvents as $event) {
-                $event->setIsAttnded(true);
-                $mergedEvents[$event->getId()] = $event;
-            }
 
 // Iterate through upcoming events and add them to the merged array
             foreach ($eventsUpcoming as $event) {

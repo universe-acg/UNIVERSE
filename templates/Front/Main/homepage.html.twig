@@ -106,17 +106,6 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-lg-3 col-sm-12">
-                                                    <label for="hero-search-country"
-                                                           class="form-label text-dark">{{ "In" }}</label>
-                                                    <select id="hero-search-country" class="select2" name="country"
-                                                            data-sort-options="1">
-                                                        <option value>{{ "Anywhere" }}</option>
-                                                        {% for country in services.getCountries({}).getQuery().getResult() %}
-                                                            <option value="{{ country.slug }}">{{ country.name }}</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </div>
-                                                <div class="col-lg-3 col-sm-12">
                                                     <label for="hero-search-stardate"
                                                            class="form-label text-dark">{{ "When" }}</label>
                                                     <select id="hero-search-stardate" class="select2" name="startdate">

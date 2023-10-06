@@ -147,13 +147,13 @@
                                 <div>
                                     {% endif %}
                                     <input type="hidden" name="reference" value="{{ event.id }}">
+                                    <dt class="text-muted">
+                                        <span>{{ "Dates" }}</span>
+                                    </dt>
                                     {% for eventDate in event.eventdates %}
                                         <div id="eventDate-{{ eventDate.reference }}-wrapper"
                                              class="event-eventDate-wrapper">
                                             <dl>
-                                                <dt class="text-muted">
-                                                    <span>{{ "Dates" }}</span>
-                                                </dt>
                                                 <dd>
                                                     <div class="text-center">
                                                         {# for the add to calendar link #}
@@ -246,7 +246,6 @@
                                             {% if eventDate.isOnSale %}
                                                 <hr class="hr-md">
                                                 <dl class="mt-5">
-                                                    <dt class="text-muted">{{ "Tickets" }}</dt>
                                                     <dd class="mr-0">
                                                         <div class="table-responsive">
                                                             <table class="table table-hover table-condensed">

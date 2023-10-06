@@ -16,6 +16,7 @@
             parent::__construct($registry, EventDate::class);
         }
         
+        
         public function findById($id)
         {
             return $this->createQueryBuilder('e')
@@ -44,7 +45,7 @@
                 $qb->andWhere("organizer.slug = :organizer")->setParameter("organizer", $organizer);
             }
             if ($event !== "all") {
-                $qb->andWhere("slug = :event")->setParameter("event", $event);
+                $qb->andWhere("event.slug = :event")->setParameter("event", $event);
             }
             $qb->orderBy("e.startdate", "ASC");
             if ($limit !== "all") {

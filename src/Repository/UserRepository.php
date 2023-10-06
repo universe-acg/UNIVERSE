@@ -217,4 +217,14 @@
                 ->getQuery()
                 ->getResult();
         }
+        
+        public function getUsersByRole($role)
+        {
+            return $this->createQueryBuilder('u')
+                ->andWhere('u.roles LIKE :role')
+                ->setParameter('role', '%ROLE_' . strtoupper($role) . '%')
+                ->getQuery()
+                ->getResult();
+        }
+        
     }

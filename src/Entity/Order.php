@@ -142,7 +142,7 @@
                     return "Canceled";
                     break;
                 case 1:
-                    return "Booked - Not Attended";
+                    return "Booked (Not Attended)";
                 case 2:
                     return "Attendeed";
                     break;

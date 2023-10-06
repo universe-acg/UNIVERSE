@@ -11,7 +11,7 @@
 {% set past = past|default(false) %}
 {% set attendeed = attendeed|default(false) %}
 <div class="card card-event">
-    <div class="img-wrap img-lazy-load {{ event.isPassed or past or attendeed  ? 'grayed-out' : '' }}"
+    <div class="img-wrap img-lazy-load"
          data-src="{{ event.imageName ? asset(event.getImagePath|imagine_filter('thumbnail', runtimeConfig)) : event.getImagePlaceholder }}">
         <a href="{{ link }}"></a>
         <div class="loader"></div>

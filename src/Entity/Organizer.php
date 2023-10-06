@@ -40,6 +40,7 @@
          * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
          */
         private $user;
+        
         /**
          * @ORM\OneToMany(targetEntity="Event", mappedBy="organizer", cascade={"remove"})
          */
