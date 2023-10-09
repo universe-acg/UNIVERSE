@@ -40,26 +40,6 @@
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text border-0"> <i class="fas fa-user"></i> </span>
-                            </div>
-                            {{ form_widget(form.firstname, {'attr': {'placeholder': 'Enter their first name'}}) }}
-                        </div>
-                        {{ form_errors(form.firstname) }}
-                        <small class="form-text text-muted">Please enter their first name.</small>
-                    </div>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text border-0"> <i class="fas fa-user"></i> </span>
-                            </div>
-                            {{ form_widget(form.lastname, {'attr': {'placeholder': 'Enter their last name'}}) }}
-                        </div>
-                        {{ form_errors(form.lastname) }}
-                        <small class="form-text text-muted">Please enter their last name.</small>
-                    </div>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
                                 <span class="input-group-text border-0"> <i class="fas fa-user-tag"></i> </span>
                             </div>
                             {{ form_widget(form.username, {'attr': {'placeholder': 'Choose a username'}}) }}
@@ -76,17 +56,6 @@
                         </div>
                         {{ form_errors(form.email) }}
                         <small class="form-text text-muted">Please enter their email address.</small>
-                    </div>
-                    <p>Is this a multi-ticket user?</p>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-prepend mr-3">
-                                <span class="input-group-text border-0"> <i class="fas fa-user"></i> </span>
-                            </div>
-                            {{ form_widget(form.isbusinessweek) }}
-                        </div>
-                        {{ form_errors(form.isbusinessweek) }}
-                        <small class="form-text text-muted">Please indicate if this is a multi-ticket user.</small>
                     </div>
                     <div class="form-group">
                         <div class="input-group">

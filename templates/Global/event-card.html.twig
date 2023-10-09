@@ -60,7 +60,7 @@
 
             {% if  is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                 <div class="mt-3">
-                    {% set attendees = services.getUsersShuffled({"hasbookedticketfor": event.slug, "limit": 8, "role": "attendee"}).getQuery().getResult() %}
+                    {% set attendees = services.getUsersShuffled({"hasbookedticketfor": event.slug, "limit": 14, "role": "attendee"}).getQuery().getResult() %}
                     {% if attendees | length > 0 %}
                         {% for user in attendees %}
                             {% include "Global/user-avatar-events.html.twig" with { user: user, showusernametooltip: true } %}

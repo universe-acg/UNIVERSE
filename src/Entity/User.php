@@ -105,7 +105,7 @@
          */
         private $showcomments;
         /**
-         * @ORM\OneToOne(targetEntity="Organizer", cascade={"remove"})
+         * @ORM\OneToOne(targetEntity="Organizer", cascade={"persist", "remove"})
          * @ORM\JoinColumn(onDelete="CASCADE")
          * @Assert\Valid()
          */
@@ -136,14 +136,10 @@
         private $gender;
         /**
          * @ORM\Column(type="string", length=255, nullable=true)
-         * @Assert\NotBlank
-         * @Assert\Length(min = 2)
          */
         private $firstname;
         /**
          * @ORM\Column(type="string", length=255, nullable=true)
-         * @Assert\NotBlank
-         * @Assert\Length(min = 2)
          */
         private $lastname;
         /**

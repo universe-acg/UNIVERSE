@@ -7,6 +7,7 @@
     
     use App\Entity\Event;
     use App\Service\AppServices;
+    use App\Validator\Constraints\TagLimitConstraint;
     use FOS\RestBundle\Controller\Annotations\Options;
     use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -93,6 +94,9 @@
                     'label' => 'Tags',
                     'help' => 'Enter keywords separated by commas to help attendees find your event quickly (press Enter after each entry).',
                     'attr' => ['class' => 'tags-input', 'placeholder' => 'Enter event tags'],
+                    'constraints' => [
+                        new TagLimitConstraint(),
+                    ],
                 ])
                 ->add('imageFile', VichImageType::class, [
                     'required' => true,

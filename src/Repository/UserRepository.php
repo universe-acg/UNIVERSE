@@ -25,6 +25,15 @@
                 ->getSingleScalarResult();
         }
         
+        public function getById($userId)
+        {
+            return $this->createQueryBuilder('u')
+                ->andWhere('u.id = :userId')
+                ->setParameter('userId', $userId)
+                ->getQuery()
+                ->getOneOrNullResult();
+        }
+        
         public function getUsers($role, $keyword, $organizername, $organizerslug, $username, $email, $firstname, $lastname, $enabled, $slug, $followedby, $hasboughtticketforEvent, $hasboughtticketforOrganizer, $hasbookedticketfor, $apiKey, $isOnHomepageSlider, $limit, $count)
         {
             $qb = $this->createQueryBuilder("u");
@@ -186,6 +195,25 @@
             $qb->orderBy('RAND()');
             if ($limit !== "all") {
                 $qb->setMaxResults($limit);
+            }
+            
+            return $qb;
+        }
+        
+        public function getAttendeesBookedOfEvent($hasbookedticketfor)
+        {
+            $qb = $this->createQueryBuilder("u");
+            $qb->select("COUNT(u)");
+            
+            $qb->join("u.orders", "orders");
+            $qb->join("orders.orderelements", "orderelements");
+            $qb->join("orderelements.eventticket", "eventticket");
+            $qb->join("eventticket.eventdate", "eventdate");
+            $qb->join("eventdate.event", "event");
+            
+            if ($hasbookedticketfor !== "all") {
+                $qb->andWhere("orders.status >= :statuspaid")->setParameter("statuspaid", 1);
+                $qb->andWhere("event.slug = :hasbookedticketfor")->setParameter("hasbookedticketfor", $hasbookedticketfor);
             }
             
             return $qb;

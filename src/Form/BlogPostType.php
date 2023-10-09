@@ -8,6 +8,7 @@
     use App\Entity\BlogPost;
     use App\Entity\BlogPostCategory;
     use App\Service\AppServices;
+    use App\Validator\Constraints\TagLimitConstraint;
     use Symfony\Bridge\Doctrine\Form\Type\EntityType;
     use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -68,6 +69,9 @@
                     'purify_html' => true,
                     'help' => 'Enter tags and press Enter',
                     'attr' => ['class' => 'tags-input'],
+                    'constraints' => [
+                        new TagLimitConstraint(),
+                    ],
                 ])
                 ->add('imageFile', VichImageType::class, [
                     'required' => false,

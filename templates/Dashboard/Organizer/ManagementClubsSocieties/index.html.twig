@@ -1,0 +1,141 @@
+{% extends "Global/layout.html.twig" %}
+
+{% set pagetitle = 'Manage members' %}
+
+{% block title %}{{ pagetitle }}{% endblock %}
+
+{% block content %}
+
+    {% set navigation = [{ "dashboard_index": ('Dashboard' ), "current":(pagetitle) }] %}
+    {% include "Global/navigation.html.twig" with navigation %}
+
+    <section class="section-content padding-y bg-white">
+        <div class="{{ services.getSetting("app_layout") }}">
+            <div class="row">
+                <aside class="col-lg-3 pt-3 pt-lg-0">
+                    {% include "Dashboard/sidebar.html.twig" %}
+                </aside>
+                <div class="col-lg-9 mt-4 mt-lg-0">
+                    <div class="box shadow-none bg-gray mb-4">
+                        <div class="row">
+                            <div class="col-sm-12 col-lg-2  mb-3 mb-lg-0">
+                                <span class="center-lg-y text-muted">{{ "%resultsCount% result(s) found" |trans ({'%resultsCount%': associations.getTotalItemCount}) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label for="statusFilter">Filter by Status:</label>
+                                <select id="statusFilter" name="role" class="form-select form-control bg-white select2">
+                                    <option value="all">All</option>
+                                    <option value="Member">Approved - Member</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Not Approved">Not Approved</option>
+                                </select>
+                            </div>
+                            <div class="card">
+                                <div class="table-responsive">
+                                    <table class="table table-vcenter">
+                                        <thead>
+                                            <tr>
+                                                <th>{{ 'Name' }}</th>
+                                                <th>{{ 'Date of invitation' }}</th>
+                                                <th>{{ 'Initiated by' }}</th>
+                                                <th>{{ 'Status' }}</th>
+                                                <th class="text-center"><i class="fas fa-cog"></i></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            {% for association in associations %}
+                                                <tr>
+                                                    <td class="text-sm">
+                                                        <a href="{{ path('profile_attendee', { slug : association.user.slug }) }}"
+                                                           data-toggle="tooltip">{{ association.user.getCrossRoleName }}</a>
+                                                    </td>
+                                                    <td class="text-sm">
+                                                        {{ association.createdAt|date('D j M Y, g:i A') }}
+                                                    </td>
+
+                                                    <td class="text-sm">
+                                                        {% if association.initiatedBy.organizer %}
+                                                            <a href="{{ path('organizer', { slug : association.org.user.username }) }}"
+                                                               data-toggle="tooltip">{{ association.initiatedBy.organizer.name }}</a>
+                                                        {% else %}
+                                                            <a href="{{ path('profile_attendee', { slug : association.user.slug }) }}"
+                                                               data-toggle="tooltip">{{ association.initiatedBy.getCrossRoleName }}</a>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="text-sm">
+                                                        {{ association.stringifystatus }}
+                                                    </td>
+
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <div class="item-action dropdown">
+                                                            <a href="javascript:void(0)" data-toggle="dropdown"
+                                                               data-boundary="window" class="icon"><i
+                                                                        class="fas fa-ellipsis-v"></i></a>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                {% if managementClubsSocietiesService.isinitiatedbyme(association.id, app.user.id) %}
+                                                                    <a href="{{ path('app_dashboard_organizer_join_cancelnotxml',  { organizerid: app.user.organizer.id, attendeeid: association.user.id }) }}"
+                                                                       class="dropdown-item"><i
+                                                                                class="dropdown-icon fas fa-times fa-fw text-muted"></i> {{ "Cancel" }}
+                                                                    </a>
+                                                                {% else %}
+                                                                    {% if managementClubsSocietiesService.ismemberof(association.user.id, app.user.organizer.id) %}
+                                                                        <a href="{{ path('app_dashboard_organizer_join_kick', { organizerid: app.user.organizer.id, attendeeid: association.user.id }) }}"
+                                                                           class="dropdown-item"><i
+                                                                                    class="dropdown-icon fas fa-users fa-fw text-muted"></i> {{ "Kick" }}
+                                                                        </a>
+                                                                    {% else %}
+                                                                        {% if managementClubsSocietiesService.isrejected(association.user.id, app.user.organizer.id) %}
+                                                                            <a href="{{ path('app_dashboard_organizer_join_kick', { organizerid: app.user.organizer.id, attendeeid: association.user.id }) }}"
+                                                                               class="dropdown-item"><i
+                                                                                        class="dropdown-icon fas fa-window-close fa-fw text-muted"></i> {{ "Delete" }}
+                                                                            </a>
+                                                                        {% else %}
+                                                                            <a href="{{ path('app_dashboard_organizer_join_accept', { organizerid: app.user.organizer.id, attendeeid: association.user.id }) }}"
+                                                                               class="dropdown-item"><i
+                                                                                        class="dropdown-icon fas fa-users fa-fw text-muted"></i> {{ "Accept" }}
+                                                                            </a>
+                                                                            <a href="{{ path('app_dashboard_organizer_join_kick',  { organizerid: app.user.organizer.id, attendeeid: association.user.id }) }}"
+                                                                               class="dropdown-item"><i
+                                                                                        class="dropdown-icon fas fa-window-close fa-fw text-muted"></i> {{ "Reject" }}
+                                                                            </a>
+                                                                        {% endif %}
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            {{ knp_pagination_render(associations, null, {}, {'align': 'center'}) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        $(document).ready(function () {
+            $('#statusFilter').on('change', function () {
+                var selectedStatus = $(this).val();
+                if (selectedStatus !== 'all') {
+                    $('tbody tr').hide(); // Hide all rows
+                    $('tbody tr td:nth-child(4):contains("' + selectedStatus + '")').parent().show(); // Show rows with selected status
+                } else {
+                    $('tbody tr').show(); // Show all rows when "All" is selected
+                }
+            });
+        });
+    </script>
+
+{% endblock %}

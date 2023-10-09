@@ -54,65 +54,90 @@
 
     <!-- Initialize the datepicker -->
     <script>
+        $("#event_type_multi_userEvents").parent().hide();
         $(document).ready(function () {
-            $('.datepicker').datepicker({
-                multidate: true, // Allow multiple date selections
-                format: 'yyyy-mm-dd', // Customize the date format
+            $('#event_type_multi_userEvents').change(function () {
+                var eventId = $(this).val();
+                // Make an AJAX request to fetch event details based on the selected event ID
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/get-event-details/' + eventId,
+                    dataType: 'json',
+                    success: function (data) {
+                        // Check if the 'slug' field exists in the data
+                        if (data.slug) {
+                            // Construct the URL for redirection
+                            var redirectUrl = '/dashboard/organizer/my-events/' + data.slug + '/prefill';
+                            // Redirect to the new URL
+                            window.location.href = redirectUrl;
+                        } else {
+                            console.error('Slug not found in data');
+                        }
+                    }
+                });
             });
-        });
-    </script>
+            $('#event_type_multi_repeatsweekly').on('change', function () {
+                const yes = $('#event_type_multi_repeatsweekly_0:checked').val();
+                if (yes) {
+                    $('.repetition-options').parent().show();
+                } else {
+                    $('.repetition-options').parent().hide();
+                }
+            });
 
-    <script>
-        $(document).ready(function () {
+
+            const yes = $('#event_type_multi_repeatsweekly_0:checked').val();
+            if (yes) {
+                $('.repetition-options').parent().show();
+            } else {
+                $('.repetition-options').parent().hide();
+            }
+
+
+            $('#event_repeatsweekly').on('change', function () {
+                const yes = $('#event_repeatsweekly_0:checked').val();
+                if (yes) {
+                    $('.repetition-options').parent().show();
+                } else {
+                    $('.repetition-options').parent().hide();
+                }
+            });
+
+
+            const yes1 = $('#event_repeatsweekly_0:checked').val();
+            if (yes1) {
+                $('.repetition-options').parent().show();
+            } else {
+                $('.repetition-options').parent().hide();
+            }
+
+
             // Initialize DateRangePicker on the input field with the 'date-range-picker' class
             $('.date-range-picker').daterangepicker({
                 // Configuration options here
                 opens: 'left', // Adjust this according to your layout
                 // Other configuration options as needed
             });
-        });
 
-        const $editableDiv = $('.note-editable');
+            const $editableDiv = $('.note-editable');
 
-        $('#event_type_multi_userEvents').change(function () {
-            var eventId = $(this).val();
-            // Make an AJAX request to fetch event details based on the selected event ID
-            $.ajax({
-                type: 'GET',
-                url: '/api/get-event-details/' + eventId,
-                dataType: 'json',
-                success: function (data) {
-                    // Check if the 'slug' field exists in the data
-                    if (data.slug) {
-                        // Construct the URL for redirection
-                        var redirectUrl = '/dashboard/organizer/my-events/' + data.slug + '/prefill';
-                        // Redirect to the new URL
-                        window.location.href = redirectUrl;
-                    } else {
-                        console.error('Slug not found in data');
-                    }
+
+            {% if event.id %}
+            {% for eventDate in event.eventdates %}
+            {% for eventDateTicket in eventDate.tickets if eventDateTicket.isOnSale and eventDateTicket.getOrderElementsQuantitySum() > 0 %}
+            $('.event-date-ticket-reference').each(function () {
+                if ($(this).val() == "{{ eventDateTicket.reference }}") {
+                    $(this).closest("fieldset").find('.event-date-ticket-quantity').trigger("touchspin.updatesettings", {min: {{ eventDateTicket.getOrderElementsQuantitySum() }}});
+                    $(this).closest("fieldset").find('.event-date-ticket-quantity').attr("data-min", {{ eventDateTicket.getOrderElementsQuantitySum() }});
                 }
             });
+            {% endfor %}
+            {% endfor %}
+            {% endif %}
+
+            $(document).on('submit', 'form[name="event"]', function () {
+                $('form[name="event"]').find('fieldset').prop('disabled', false);
+            });
         });
-
-
-        {% if event.id %}
-        {% for eventDate in event.eventdates %}
-        {% for eventDateTicket in eventDate.tickets if eventDateTicket.isOnSale and eventDateTicket.getOrderElementsQuantitySum() > 0 %}
-        $('.event-date-ticket-reference').each(function () {
-            if ($(this).val() == "{{ eventDateTicket.reference }}") {
-                $(this).closest("fieldset").find('.event-date-ticket-quantity').trigger("touchspin.updatesettings", {min: {{ eventDateTicket.getOrderElementsQuantitySum() }}});
-                $(this).closest("fieldset").find('.event-date-ticket-quantity').attr("data-min", {{ eventDateTicket.getOrderElementsQuantitySum() }});
-            }
-        });
-        {% endfor %}
-        {% endfor %}
-        {% endif %}
-
-        $(document).on('submit', 'form[name="event"]', function () {
-            $('form[name="event"]').find('fieldset').prop('disabled', false);
-        });
-
     </script>
-
 {% endblock %}

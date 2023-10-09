@@ -70,6 +70,7 @@
          * @Assert\NotBlank(groups={"create", "update"})
          */
         private $quantity;
+        
         /**
          * @var int
          * @ORM\Column(type="integer", nullable=true)
@@ -80,10 +81,12 @@
          * @ORM\Column(type="datetime", nullable=false)
          */
         private $salesstartdate;
+
+
+//    * @Assert\GreaterThan(propertyPath="salesstartdate", groups={"create", "update"})
         /**
          * @var DateTime
          * @ORM\Column(type="datetime", nullable=false)
-         * @Assert\GreaterThan(propertyPath="salesstartdate", groups={"create", "update"})
          */
         private $salesenddate;
 

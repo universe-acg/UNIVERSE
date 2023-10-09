@@ -20,7 +20,13 @@
                         {{ user.getRole }}
                     </td>
                     <td class="text-sm">
-                        <span>{{ user.getCrossRoleName }}</span>
+                        {% if user.organizer %}
+                            <a href="{{ path('organizer', { slug : user.username }) }}"
+                               data-toggle="tooltip">{{ user.organizer.name }}</a>
+                        {% else %}
+                            <a href="{{ path('profile_attendee', { slug : user.slug }) }}"
+                               data-toggle="tooltip">{{ user.getCrossRoleName }}</a>
+                        {% endif %}
                     </td>
                     <td class="text-sm">
                         {{ user.username }}<br>{{ user.email }}

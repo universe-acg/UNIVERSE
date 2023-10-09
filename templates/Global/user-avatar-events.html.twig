@@ -12,13 +12,14 @@
 <div style="float: left !important; margin: 3px">
     <a href="{{ path('profile_attendee', { slug : user.slug }) }}">
         {% if user.hasRole('ROLE_ATTENDEE') %}
-            <span class="avatar" {% if showusernametooltip is defined %}data-toggle="tooltip"
-                  title="{{ user.username }}{{ user.stringifypointslevel }}" data-container="body"{% endif %}>
+            <span class="avatar" style="width: 23px; height: 23px;" class="avatar"
+                  {% if showusernametooltip is defined %}data-toggle="tooltip"
+                  title="{{ user.getCrossRoleName }}{{ user.stringifypointslevel }}" data-container="body"{% endif %}>
                 <img src="{{ user.logoName ? asset(user.getLogoPath) : user.getLogoPlaceholder }}"
-                     alt="Profile Image" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+                     alt="Profile Image" style="width: 23px; height: 23px; border-radius: 50%; object-fit: cover;">
             </span>
         {% else %}
-            <span class="avatar">
+            <span class="avatar" style="width: 23px; height: 23px;">
                 <i class="far fa-user"></i>
             </span>
         {% endif %}

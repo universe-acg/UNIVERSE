@@ -118,7 +118,7 @@
                 return $services->redirectToReferer('event');
             }
             
-            $formType = $this->getUser()->isIsbusinessweek() ? EventTypeMulti::class : EventType::class;
+            $formType = EventTypeMulti::class;
             $form = $this->createForm($formType, $event, [
                 'validation_groups' => ['create', 'Default'],
                 'user_choices' => $eventChoices,
@@ -131,10 +131,13 @@
             $event->setCommonvalue($commonValue);
             
             if ($form->isSubmitted() && $form->isValid()) {
-                $this->processSubmittedEvent($event, $category, $commonValue, $em, $services, $authChecker);
                 
                 if ($event->getRepeatsweekly()) {
+                    $event->setIsrepeat(true);
+                    $this->processSubmittedEvent($event, $category, $commonValue, $em, $services, $authChecker);
                     $this->processRepeatingEvent($event, $category, $commonValue, $em, $services);
+                } else {
+                    $this->processSubmittedEvent($event, $category, $commonValue, $em, $services, $authChecker);
                 }
                 
                 return $this->redirectToRouteAfterSubmission($authChecker);
@@ -273,7 +276,10 @@
         {
             // Save event images
             foreach ($event->getImages() as $image) {
-                $image->setEvent($event);
+                $newimage = $image->getEvent($event);
+                $newimage->setEvent($event);
+                $em->persist($newimage);
+                $em->flush();
             }
             
             // Set references for event dates and tickets
@@ -305,8 +311,7 @@
             $event->setCategory($category);
             
             // Persist and flush changes to the database
-            $em->persist($event);
-            $em->flush();
+            return $event;
         }
         
         private function processRepeatingEvent($event, $category, $commonValue, $em, $services)
@@ -315,30 +320,34 @@
             $copiesOfEvent = $event->getRepeatweeks();
             $repeatStartDate = $event->getEventdates()[0]->getStartdate();
             
-            $commonValue = $this->generateCommonValue();
             $event->setCommonvalue($commonValue);
             
-            if ($repeatEndDate) {
-                $interval = $repeatStartDate->diff($repeatEndDate);
-                $actualWeeks = $interval->days / 7;
-                if ($actualWeeks < $copiesOfEvent) {
-                    $copiesOfEvent = (int)ceil($actualWeeks);
-                }
-            }
+            // Calculate the time interval between start and end dates
+            $interval = $repeatStartDate->diff($repeatEndDate);
+
+// Calculate the total number of weeks within the interval
+            $totalWeeks = $interval->days / 7;
+
+// Calculate the number of times the event repeats
+            $numberOfRepeats = round($totalWeeks / $copiesOfEvent);
             
-            for ($index = 1; $index < $copiesOfEvent; $index++) {
+            $copiesOfEvent = (int)$numberOfRepeats;
+            
+            for ($index = 1; $index <= $copiesOfEvent; $index++) {
                 $newEventCopy = $this->copyEvent($event);
                 $newEventCopy->setCommonvalue($commonValue);
+                $newEventCopy->setPublished(true);
                 
                 foreach ($newEventCopy->getEventdates() as $copyEventDate) {
-                    $newStartDate = $this->setNewStartDateOfEventDateAndReturnThatDate($copyEventDate, $copiesOfEvent, $index);
+                    $newStartDate = $this->setNewStartDateOfEventDateAndReturnThatDate($copyEventDate, $event->getRepeatweeks(), $index);
                     $copyEventDate->setStartdate($newStartDate);
-                    $newEndDate = $this->setNewEndDateOfEventDateAndReturnThatDate($copyEventDate, $copiesOfEvent, $index);
+                    $newEndDate = $this->setNewEndDateOfEventDateAndReturnThatDate($copyEventDate, $event->getRepeatweeks(), $index);
                     $copyEventDate->setEnddate($newEndDate);
+                    $newEventCopy->addEventdate($copyEventDate);
                 }
                 
-                $this->saveCopiedEvent($newEventCopy, $em);
-                $this->processFormSubmission($newEventCopy, $em, $services, $category, $newEventCopy->getSlug());
+                $neweventtobesaved = $this->processFormSubmission($newEventCopy, $em, $services, $category, $newEventCopy->getSlug());
+                $this->saveCopiedEvent($neweventtobesaved, $em);
             }
         }
         
@@ -357,7 +366,7 @@
         private function setNewStartDateofeventdateAndReturnThatdate(EventDate $eventdate, int $everyxweeks, int $index)
         {
             $newstartdate = $eventdate->getStartdate();
-            $addeddays = $index * $everyxweeks * 7;
+            $addeddays = $everyxweeks * 7;
             $newstartdate->modify("+$addeddays days");
             $eventdate->setStartdate($newstartdate);
             return $eventdate->getStartdate();
@@ -366,7 +375,7 @@
         private function setNewEndDateofeventdateAndReturnThatdate(EventDate $eventdate, int $everyxweeks, int $index)
         {
             $newendtdate = $eventdate->getEnddate();
-            $addeddays = $index * $everyxweeks * 7;
+            $addeddays = $everyxweeks * 7;
             $newendtdate->modify("+$addeddays days");
             $eventdate->setEnddate($newendtdate);
             return $eventdate->getEnddate();
@@ -529,18 +538,26 @@
             }
             $newEvent = new Event();
             $newEvent->mapFromEvent($event);
-            $form = $this->createForm(EventTypeMulti::class, $newEvent, [
+            $formType = EventTypeMulti::class;
+            $form = $this->createForm($formType, $event, [
                 'validation_groups' => ['create', 'Default'],
                 'user_choices' => $eventChoices,
             ]);
             
             $em = $this->getDoctrine()->getManager();
             $form->handleRequest($request);
+            
+            $commonValue = $this->generateCommonValue();
+            $event->setCommonvalue($commonValue);
+            
             if ($form->isSubmitted() && $form->isValid()) {
-                $newEvent->setPublished(false);
-                $em->persist($newEvent);
-                $em->flush();
-                $this->processFormSubmission($newEvent, $em, $services, $category, $slug);
+                $this->processSubmittedEvent($event, $category, $commonValue, $em, $services, $authChecker);
+                
+                if ($event->isIsrepeat()) {
+                    if ($event->getRepeatsweekly()) {
+                        $this->processRepeatingEvent($event, $category, $commonValue, $em, $services);
+                    }
+                }
                 
                 return $this->redirectToRouteAfterSubmission($authChecker);
             }
@@ -586,7 +603,7 @@
             $em->remove($event);
             $em->flush();
             
-            $this->addFlash('notice', 'The event(s) has/have been deleted');
+            $this->addFlash('success', 'The event(s) has/have been deleted');
             return $services->redirectToReferer('event');
         }
         
@@ -622,7 +639,7 @@
             $em->remove($event);
             $em->flush();
             
-            $this->addFlash('notice', 'The event(s) has/have been deleted');
+            $this->addFlash('success', 'The event(s) has/have been deleted');
             return $services->redirectToReferer('event');
         }
         
@@ -654,7 +671,7 @@
                 $em->remove($eventToDelete);
             }
             
-            $this->addFlash('notice', 'The event(s) has/have been deleted');
+            $this->addFlash('success', 'The event(s) has/have been deleted');
             return $services->redirectToReferer('event');
         }
         
@@ -679,7 +696,7 @@
             if ($event->getDeletedAt() !== null) {
                 $this->addFlash('error', 'The event has been deleted permanently');
             } else {
-                $this->addFlash('notice', 'The event has been deleted');
+                $this->addFlash('success', 'The event has been deleted');
             }
             $em = $this->getDoctrine()->getManager();
             $em->remove($event);
@@ -710,8 +727,9 @@
             if ($event->getDeletedAt() !== null) {
                 $this->addFlash('error', 'The event has been deleted permanently');
             } else {
-                $this->addFlash('notice', 'The event has been deleted');
+                $this->addFlash('success', 'The event has been deleted');
             }
+            
             $em = $this->getDoctrine()->getManager();
             $orders = $orderRepository->findByEventId($event->getId());
             foreach ($orders as $order) {
@@ -765,7 +783,7 @@
             }
             if ($event->getPublished() === true) {
                 $event->setPublished(false);
-                $this->addFlash('notice', 'The event has been unpublished and will not be included in the search results');
+                $this->addFlash('success', 'The event has been unpublished and will not be included in the search results');
             } else {
                 $event->setPublished(true);
                 // send to followers

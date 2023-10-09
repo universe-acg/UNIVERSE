@@ -1,0 +1,34 @@
+{% set runtimeConfig = {"thumbnail": {"size": [500, 250] }} %}
+    {% set link = "https://universeacg.xyz/blog-article/dfgdfsgfdsdfgfdsgsd" ~ new.slug %}
+
+<div class="col-12 col-lg-6">
+    <div class="card mb-4 shadow-none blog-post-card">
+        <a href="{{ path('blog_article', { slug : new.slug }) }}">
+            <img class="card-img-top img-lazy-load" src="{{ asset('assets/img/loader.svg') }}"
+                 data-src="{{ new.imageName ? (new.getImagePath|imagine_filter('thumbnail', runtimeConfig)) : new.getImagePlaceholder }}"
+                 alt="{{ new.name }}">
+        </a>
+        <div class="card-body">
+            <p class="card-text">
+                {% if new.user %}
+                    <small class="text-muted mr-3"><a href={{ "/organizer/" ~ new.user.username }} class="text-dark"><i
+                                    class="fas fa-user"></i> {{ new.user.username }}</a></small>
+                {% endif %}
+                {% if new.category %}
+                    <small class="text-muted mr-3"><a href="{{ path('blog', { category: new.category.slug }) }}"
+                                                      class="text-dark"><i
+                                    class="fas fa-sitemap"></i> {{ new.category.name }}</a></small>
+                {% endif %}
+                {% if showdate is defined %}
+                    <small class="text-muted mr-3"><i class="far fa-clock"></i> {{ new.createdAt|ago }}</small>
+                {% endif %}
+                {% if new.readtime %}
+                    <small class="text-muted"><i class="fas fa-book-reader"></i> {{ new.readtime }} {{ "min read" }}
+                    </small>
+                {% endif %}
+            </p>
+            <h5 class="card-title"><a href="{{ path('blog_article', { slug : new.slug }) }}"
+                                      class="text-dark">{{ new.name }}</a></h5>
+        </div>
+    </div>
+</div>

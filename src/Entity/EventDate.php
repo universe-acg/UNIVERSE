@@ -358,7 +358,7 @@
         
         public function getEnddate(): Datetime
         {
-            return $this->enddate;
+            return $this->enddate ?: (clone $this->startdate)->modify("+1 hour");
         }
         
         public function setEnddate($enddate)

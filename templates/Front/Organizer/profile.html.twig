@@ -106,7 +106,7 @@
                                                 <div class="avatar-list py-4">
                                                     {% for user in organizer.followedby %}
                                                         {% if user.id != organizer.user.id %}
-                                                            {% include "Global/user-avatar.html.twig" with { user: user, showusernametooltip: true } %}
+                                                            {% include "Global/user-avatar-events.html.twig" with { user: user, showusernametooltip: true } %}
                                                         {% endif %}
                                                     {% endfor %}
                                                 </div>
@@ -152,28 +152,61 @@
                                                         class="fas fa-folder-plus mr-1"></i>{{ "Followers" }}
                                             </small>
                                         </li>
-                                        <li class="list-inline-item ml-3">
+                                        <li class="list-inline-item">
                                             {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') or is_granted('ROLE_ATTENDEE') %}
                                                 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                                                     {% if organizer.isFollowedBy(app.user) %}
                                                         <button class="organizer-unfollow btn btn-outline-primary btn-sm btn-block"
                                                                 data-target="{{ path('app_dashboard_attendee_following_remove', { slug : organizer.slug }) }}">
-                                                            <i class="fas fa-folder-minus"></i> {{ "Unfollow" }}
+                                                            <i class="fas fa-bell-slash"></i>
                                                         </button>
                                                     {% else %}
                                                         <button class="organizer-follow btn btn-outline-primary btn-sm btn-block"
                                                                 data-target="{{ path('app_dashboard_attendee_following_add', { slug : organizer.slug }) }}"
                                                         >
-                                                            <i class="fas fa-folder-plus"></i> {{ "Follow" }}
+                                                            <i class="fas fa-bell"></i>
                                                         </button>
                                                     {% endif %}
                                                 {% else %}
                                                     <a href="{{ path('fos_user_security_login')~'?_target_path='~app.request.getPathInfo }}"
                                                        class="btn btn-outline-primary btn-sm btn-block"><i
-                                                                class="fas fa-folder-plus"></i> {{ "Follow" }}</a>
+                                                                class="fas fa-bell"></i></a>
                                                 {% endif %}
                                             {% endif %}
                                         </li>
+                                        {% if organizer.category == 'Club' %}
+                                            <li class="list-inline-item">
+                                                {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') or is_granted('ROLE_ATTENDEE') %}
+                                                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                                                        {% if managementClubsSocietiesService.isaccepted(app.user.id, organizer.id) %}
+                                                            <button class="organizer-leave btn btn-outline-primary btn-sm btn-block"
+                                                                    data-target="{{ path('app_dashboard_attendee_join_leave', { organizerid: organizer.id, attendeeid : app.user.id }) }}">
+                                                                <i class="fas fa-folder-minus"></i> {{ "Leave" }}
+                                                            </button>
+                                                        {% elseif managementClubsSocietiesService.isrejected(app.user.id, organizer.id) %}
+                                                            <button class="organizer-join btn btn-outline-primary btn-sm btn-block"
+                                                                    data-target="{{ path('app_dashboard_attendee_join_add', { organizerid: organizer.id, attendeeid : app.user.id }) }}">
+                                                                <i class="fas fa-folder-plus"></i> {{ "Join" }}
+                                                            </button>
+                                                        {% elseif managementClubsSocietiesService.ispending(app.user.id, organizer.id) %}
+                                                            <button class="organizer-cancel btn btn-outline-primary btn-sm btn-block"
+                                                                    data-target="{{ path('app_dashboard_attendee_join_cancel', { organizerid: organizer.id, attendeeid : app.user.id }) }}">
+                                                                <i class="fas fa-folder-minus"></i> {{ "Cancel pending request" }}
+                                                            </button>
+                                                        {% else %}
+                                                            <button class="organizer-join btn btn-outline-primary btn-sm btn-block"
+                                                                    data-target="{{ path('app_dashboard_attendee_join_add', { organizerid: organizer.id, attendeeid : app.user.id }) }}">
+                                                                <i class="fas fa-folder-plus"></i> {{ "Join" }}
+                                                            </button>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <a href="{{ path('fos_user_security_login')~'?_target_path='~app.request.getPathInfo }}"
+                                                           class="btn btn-outline-primary btn-sm btn-block"><i
+                                                                    class="fas fa-folder-plus"></i> {{ "Join" }}</a>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </li>
+                                        {% endif %}
                                     </ul>
                                 </div>
 
@@ -208,9 +241,11 @@
                                         <div class="tab-pane fade show active" id="organizer-onsale-events"
                                              role="tabpanel" aria-labelledby="organizer-onsale-events-tab">
                                             {% if onsaleeventscount > 0 %}
-                                                {% for event in currentevnts %}
-                                                    {% include "Global/event-card.html.twig" with {event: event} %}
-                                                {% endfor %}
+                                                <div class="row">
+                                                    {% for event in currentevnts %}
+                                                        {% include "Global/profile/profile-event-card.html.twig" with {event: event} %}
+                                                    {% endfor %}
+                                                </div>
                                             {% else %}
                                                 {% include "Global/message.html.twig" with { type: "info", message: ('No active events for now') } %}
                                             {% endif %}
@@ -218,9 +253,11 @@
                                         <div class="tab-pane fade active" id="organizer-past-events"
                                              role="tabpanel" aria-labelledby="organizer-past-events-tab">
                                             {% if pasteventscount > 0 %}
-                                                {% for event in pastevents %}
-                                                    {% include "Global/event-card.html.twig" with {event: event} %}
-                                                {% endfor %}
+                                                <div class="row">
+                                                    {% for event in pastevents %}
+                                                        {% include "Global/profile/profile-event-card.html.twig" with {event: event} %}
+                                                    {% endfor %}
+                                                </div>
                                             {% else %}
                                                 {% include "Global/message.html.twig" with { type: "info", message: ('No past events') } %}
                                             {% endif %}
@@ -228,9 +265,11 @@
                                         <div class="tab-pane fade active" id="organizer-news"
                                              role="tabpanel" aria-labelledby="organizer-news-tab">
                                             {% if newscount > 0 %}
-                                                {% for new in news %}
-                                                    {% include "Global/new-card.html.twig" with {new: new} %}
-                                                {% endfor %}
+                                                <div class="row">
+                                                    {% for new in news %}
+                                                        {% include "Global/profile/profile-new-card.html.twig" with {new: new} %}
+                                                    {% endfor %}
+                                                </div>
                                             {% else %}
                                                 {% include "Global/message.html.twig" with { type: "info", message: ('No news/articles published yet') } %}
                                             {% endif %}

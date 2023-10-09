@@ -41,7 +41,6 @@
                 ->getResult();
         }
         
-        
         public function findByExampleField($value)
         {
             return $this->createQueryBuilder('o')

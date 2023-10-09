@@ -185,6 +185,15 @@
             }
         }
         
+        public function getById($id)
+        {
+            return $this->createQueryBuilder('o')
+                ->andWhere('o.id = :id')
+                ->setParameter('id', $id)
+                ->getQuery()
+                ->getOneOrNullResult();
+        }
+        
         public function findOneBySomeField($value): ?Organizer
         {
             return $this->createQueryBuilder('o')

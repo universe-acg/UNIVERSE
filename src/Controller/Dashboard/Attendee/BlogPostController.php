@@ -55,7 +55,7 @@
             if ($blogpost->getDeletedAt() !== null) {
                 $this->addFlash('error', 'The blog post has been deleted');
             } else {
-                $this->addFlash('notice', 'The blog post has been disabled');
+                $this->addFlash('notice', 'The blog post has been deleted');
             }
             $em = $this->getDoctrine()->getManager();
             $blogpost->setHidden(true);

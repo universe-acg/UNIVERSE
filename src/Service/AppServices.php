@@ -870,6 +870,11 @@
             return $cats;
         }
         
+        public function getAttendeesBookedOfEvent($slug)
+        {
+            return $this->em->getRepository("App\Entity\User")->getAttendeesBookedOfEvent($slug)->getQuery()->getResult();
+        }
+        
         public function getUsersShuffled($criterias)
         {
             $role = array_key_exists('role', $criterias) ? $criterias['role'] : "all";
@@ -896,7 +901,7 @@
         
         /**
          * @param $criterias
-         * @return QueryBuilder
+         * @return void
          * @throws Exception
          */
         public function getEventsHomepageIndex($criterias)
@@ -907,11 +912,12 @@
             $open = $criterias['open'] ?? "all";
             $keyword = $criterias['keyword'] ?? "all";
             $onlineonly = $criterias['onlineonly'] ?? false;
-            $startDateFilter = $criterias['startdate'] ?? "all";
+            $startDateFilter = $criterias['startdate'] ?? null;
+            $endDateFilter = $criterias['enddate'] ?? null;
             $slug = $criterias['slug'] ?? "all";
             $otherthan = $criterias['otherthan'] ?? "all";
             $published = $criterias['published'] ?? "all";
-            $sort = $criterias['sort'] ?? "eventdates.startdate";
+            $sortedBy = $criterias['sortedby'] ?? "all";
             $order = $criterias['order'] ?? "ASC";
             $limit = $criterias['limit'] ?? "all";
             $count = $criterias['count'] ?? false;
@@ -967,47 +973,6 @@
                     ->setParameter('keyword', $keyword);
             }
             
-            // Add date range filtering
-            $startDateMin = null;
-            $startDateMax = null;
-            
-            if ($startDateFilter === "today") {
-                $startDateMin = new DateTime('today');
-                $startDateMax = new DateTime('today');
-                $startDateMin->setTime(0, 0, 0);
-                $startDateMax->setTime(23, 59, 59);
-            } elseif ($startDateFilter === "tomorrow") {
-                $startDateMin = new DateTime('tomorrow');
-                $startDateMax = new DateTime('tomorrow');
-                $startDateMin->setTime(0, 0, 0);
-                $startDateMax->setTime(23, 59, 59);
-            } elseif ($startDateFilter === "thisweekend") {
-                $startDateMin = new DateTime('saturday this week');
-                $startDateMax = new DateTime('sunday this week');
-                $startDateMin->setTime(0, 0, 0);
-                $startDateMax->setTime(23, 59, 59);
-            } elseif ($startDateFilter === "thisweek") {
-                $startDateMin = new DateTime('monday this week');
-                $startDateMax = new DateTime('sunday this week');
-                $startDateMin->setTime(0, 0, 0);
-                $startDateMax->setTime(23, 59, 59);
-            } elseif ($startDateFilter === "nextweek") {
-                $startDateMin = new DateTime('monday next week');
-                $startDateMax = new DateTime('sunday next week');
-                $startDateMin->setTime(0, 0, 0);
-                $startDateMax->setTime(23, 59, 59);
-            } elseif ($startDateFilter === "thismonth") {
-                $startDateMin = new DateTime('first day of this month');
-                $startDateMax = new DateTime('last day of this month');
-                $startDateMin->setTime(0, 0, 0);
-                $startDateMax->setTime(23, 59, 59);
-            } elseif ($startDateFilter === "nextmonth") {
-                $startDateMin = new DateTime('first day of next month');
-                $startDateMax = new DateTime('last day of next month');
-                $startDateMin->setTime(0, 0, 0);
-                $startDateMax->setTime(23, 59, 59);
-            }
-            
             if ($otherthan !== "all") {
                 $queryBuilder->andWhere("e.slug != :otherthan")->setParameter("otherthan", $otherthan);
             }
@@ -1015,30 +980,10 @@
             $queryBuilder
                 ->leftJoin('e.eventdates', 'eventdates');
             
-            if ($startDateMin && $startDateMax) {
-                // Get the current date and time
-                $now = new DateTime();
-                
-                // Set the initial time to midnight (00:00:00) and max time to 23:59:59
-                $todayStart = clone $now->setTime(0, 0, 0);
-                $todayEnd = clone $now->setTime(23, 59, 59);
-                $queryBuilder
-                    ->andWhere(
-                        $queryBuilder->expr()->orX(
-                            $queryBuilder->expr()->andX(
-                                'eventdates.startdate >= :startDateMin',
-                                'eventdates.enddate <= :startDateMax'
-                            ),
-                            $queryBuilder->expr()->andX(
-                                'eventdates.startdate <= :todayStart',
-                                'eventdates.enddate >= :todayEnd'
-                            )
-                        )
-                    )
-                    ->setParameter('startDateMin', $startDateMin->format('Y-m-d H:i:s'))
-                    ->setParameter('startDateMax', $startDateMax->format('Y-m-d H:i:s'))
-                    ->setParameter('todayStart', $todayStart->format('Y-m-d H:i:s'))
-                    ->setParameter('todayEnd', $todayEnd->format('Y-m-d H:i:s'));
+            if ($startDateFilter && $endDateFilter) {
+                $queryBuilder->andWhere("eventdates.startdate >= :startDateFilter")->setParameter("startDateFilter", $startDateFilter);
+                $queryBuilder->andWhere("eventdates.startdate <= :endDateFilter")->setParameter("endDateFilter", $endDateFilter);
+                $queryBuilder->andWhere("e.published = 1");
             }
             if ($elapsed !== "all") {
                 if ($elapsed === true || $elapsed == "1") {
@@ -1047,8 +992,34 @@
                     $queryBuilder->andWhere("eventdates.enddate >= CURRENT_TIMESTAMP()");
                 }
             }
+            
+            switch ($sortedBy) {
+                case 'created_asc':
+                    $queryBuilder->orderBy("e.createdAt", 'ASC');
+                    break;
+                case 'created_desc':
+                    $queryBuilder->orderBy("e.createdAt", 'DESC');
+                    break;
+                case 'updated_asc':
+                    $queryBuilder->orderBy("e.updatedAt", 'ASC');
+                    break;
+                case 'updated_desc':
+                    $queryBuilder->orderBy("e.updatedAt", 'DESC');
+                    break;
+                case 'title_asc':
+                    $queryBuilder->orderBy("e.name", 'ASC');
+                    break;
+                case 'title_desc':
+                    $queryBuilder->orderBy("e.name", 'DESC');
+                    break;
+                default:
+                    // Default sorting by created date in descending order
+                    $queryBuilder->orderBy("eventdates.startdate", 'ASC');
+                    break;
+            }
+            
             // Execute the query
-            return $queryBuilder->orderBy('eventdates.startdate', 'ASC');
+            return $queryBuilder;
         }
         
         /**
@@ -1193,12 +1164,12 @@
         SELECT COUNT(DISTINCT e.id)
         FROM App\Entity\Event e
         LEFT JOIN App\Entity\EventDate ed WITH e.id = ed.event
-        WHERE ed.enddate <= :endDate and ed.startdate <= :startDate and e.published = 1
+        WHERE ed.startdate >= :startDate and ed.startdate <= :endDate and e.published = 1
     ');
             
             $query->setParameters([
-                'endDate' => $endDate,
                 'startDate' => $startDate,
+                'endDate' => $endDate,
             ]);
             
             return (int)$query->getSingleScalarResult();

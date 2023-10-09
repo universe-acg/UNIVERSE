@@ -22,28 +22,6 @@
         public function buildForm(FormBuilderInterface $builder, array $options)
         {
             $builder
-                ->add('firstname', TextType::class, [
-                    'required' => true,
-                    'label' => 'First Name',
-                    'attr' => [
-                        'placeholder' => 'Enter their first name',
-                    ],
-                    'constraints' => [
-                        new NotBlank(),
-                    ],
-                    'help' => 'Please enter their first name.',
-                ])
-                ->add('lastname', TextType::class, [
-                    'required' => true,
-                    'label' => 'Last Name',
-                    'attr' => [
-                        'placeholder' => 'Enter their last name',
-                    ],
-                    'constraints' => [
-                        new NotBlank(),
-                    ],
-                    'help' => 'Please enter their last name.',
-                ])
                 ->add('username', TextType::class, [
                     'required' => true,
                     'label' => 'Username',

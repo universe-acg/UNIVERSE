@@ -8,6 +8,7 @@
     use DateTime;
     use DateTimeImmutable;
     use Doctrine\Common\Collections\ArrayCollection;
+    use Doctrine\Common\Collections\Collection;
     use Doctrine\ORM\Mapping as ORM;
     use Exception;
     use Gedmo\Mapping\Annotation as Gedmo;
@@ -50,13 +51,14 @@
          */
         private $id;
         /**
-         * @ORM\ManyToOne(targetEntity="Category", inversedBy="events")
+         * @ORM\ManyToOne(targetEntity="Category", inversedBy="events", fetch = "EAGER")
          */
         private $category;
         private $isPassed = false;
         private $isAttnded = false;
+        
         /**
-         * @ORM\ManyToOne(targetEntity="Organizer", inversedBy="events")
+         * @ORM\ManyToOne(targetEntity="Organizer", inversedBy="events", fetch = "EAGER")
          */
         private $organizer;
         /**
@@ -772,6 +774,27 @@
             }
             
             return $this;
+        }
+        
+        public function getLatestEndDate(): ?DateTime
+        {
+            $latestEndDate = null;
+            
+            // Assuming you have a property like $eventDates that holds the collection of EventDates
+            /** @var Collection|EventDate[] $eventDates */
+            $eventDates = $this->getEventdates();
+            
+            foreach ($eventDates as $eventDate) {
+                $endDate = $eventDate->getEnddate();
+                
+                if ($endDate !== null) {
+                    if ($latestEndDate === null || $endDate > $latestEndDate) {
+                        $latestEndDate = $endDate;
+                    }
+                }
+            }
+            
+            return $latestEndDate;
         }
         
         public function getSlug()

@@ -3,7 +3,7 @@
 {% if category != "all" %}
     {% set pagetitle = category.name %}
 {% else %}
-    {% set pagetitle = 'Events' %}
+    {% set pagetitle = 'Events taking place in the ACG community' %}
 {% endif %}
 
 {% block title %}{{ pagetitle }}{% endblock %}
@@ -20,47 +20,58 @@
         {% set navigation = [{"current" : (pagetitle)}] %}
     {% endif %}
 
+    <style>
+        /* Add this CSS to your stylesheet */
+        @media (max-width: 767px) {
+            .order-1,
+            .order-2 {
+                order: initial; /* Reset the order for smaller screens */
+            }
+
+            .col-lg-3,
+            .col-lg-9 {
+                width: 100%; /* Full width on smaller screens */
+            }
+        }
+
+        @media (max-width: 767px) {
+            .filters-section {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .filter-item {
+                margin-bottom: 10px; /* Add spacing between filter items */
+            }
+        }
+    </style>
+
     {% include "Global/navigation.html.twig" with navigation %}
     <section class="section-content bg-white padding-y">
-        {#        <div class="{{ services.getSetting("app_layout") }}"> #}
-        <div style="overflow-x: hidden; padding: 4px; min-height: 100vh">
+        <div class="{{ services.getSetting("app_layout") }}">
 
             {% set eventsoncalendar = [] %}
             {% set eventsonmap = [] %}
 
 
-            <div class="box shadow-none bg-gray mb-4">
-                <div class="row">
-                    <div class="col-sm-12 col-lg-2  mb-3 mb-lg-0">
-                        <span class="center-lg-y text-muted">{{ "%resultsCount% event(s) found"  |trans ({'%resultsCount%': events.getTotalItemCount}) }}</span>
-                    </div>
-                    {% if events.getTotalItemCount > 0 %}
-                        <div class="col-sm-12 col-lg-6 ">
-                            {% if eventsonmap|length > 0 and services.getSetting("show_map_button") == "yes" and google_maps_api_key != "" %}
-                                <a href="#events-map" class="btn btn-primary has-tooltip" data-toggle="collapse"
-                                   title="{{ "Show events on map" }}" aria-expanded="false"
-                                   aria-controls="events-map"><i class="fas fa-map-marked-alt fa-fw"></i></a>
-                            {% endif %}
-                            {% if eventsoncalendar|length > 0 and services.getSetting("show_calendar_button") == "yes" %}
-                                <a href="#events-calendar" class="btn btn-primary has-tooltip" data-toggle="collapse"
-                                   title="{{ "Show events calendar" }}" aria-expanded="false"
-                                   aria-controls="events-calendar"><i class="far fa-calendar fa-fw"></i></a>
-                            {% endif %}
-                            {% if services.getSetting("show_rss_feed_button") == "yes" %}
-                                <a href="{{ services.getSetting("website_url")~"/rss" }}" class="btn btn-primary"
-                                   data-toggle="tooltip" title="{{ "Events RSS feed" }}" target="_blank"><i
-                                            class="fas fa-rss fa-fw"></i></a>
-                            {% endif %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
+            {#            <div class="box shadow-none bg-gray mb-4"> #}
+            {#                <div class="row"> #}
+            {#                    <div class="col-sm-12 col-lg-2  mb-3 mb-lg-0"> #}
+            {#                        <span class="center-lg-y text-muted">{{ "%resultsCount% event(s) found"  |trans ({'%resultsCount%': events.getTotalItemCount}) }}</span> #}
+            {#                    </div> #}
+            {#                    <div class="col-sm-12 col-lg-6 "> #}
+            {#                        <a href="#events-calendar" class="btn btn-primary has-tooltip" data-toggle="collapse" #}
+            {#                           title="{{ "Show events calendar" }}" aria-expanded="false" #}
+            {#                           aria-controls="events-calendar"><i class="far fa-calendar fa-fw"></i></a> #}
+            {#                    </div> #}
+            {#                </div> #}
+            {#            </div> #}
 
             <div class="row" style="">
                 <aside class="col-lg-3 order-2 order-lg-1">
-                    <div class="card card-filter" style="position: fixed; width: 25%; z-index: 100 !important;">
+                    <div class="card card-filter filters-section">
                         <form method="get">
-                            <article class="card-group-item">
+                            <article class="card-group-item filter-item">
                                 <header class="card-header">
                                     <a href="#" data-toggle="collapse" data-target="#filter-keyword">
                                         <i class="icon-action fa fa-chevron-down"></i>
@@ -75,7 +86,7 @@
                                 </div>
                             </article>
                             {% if services.getSetting("show_category_filter") == "yes" %}
-                                <article class="card-group-item">
+                                <article class="card-group-item filter-item">
                                     <header class="card-header">
                                         <a href="#" data-toggle="collapse" data-target="#filter-category">
                                             <i class="icon-action fa fa-chevron-down"></i>
@@ -97,7 +108,7 @@
                                 </article>
                             {% endif %}
                             {% if services.getSetting("show_date_filter") == "yes" %}
-                                <article class="card-group-item">
+                                <article class="card-group-item filter-item">
                                     <header class="card-header">
                                         <a href="#" data-toggle="collapse" data-target="#filter-date">
                                             <i class="icon-action fa fa-chevron-down"></i>
@@ -166,25 +177,108 @@
             </span>
                                                 <div class="clearfix"></div>
                                             </div>
-                                            {#                                            <div class="form-check"> #}
-                                            {#                                                <div class="float-left custom-control custom-radio form-check-input"> #}
-                                            {#                                                    <input type="radio" class="custom-control-input" id="date-nextmonth" #}
-                                            {#                                                           name="startdate" value="nextmonth"> #}
-                                            {#                                                    <label class="custom-control-label" #}
-                                            {#                                                           for="date-nextmonth">{{ "Next month" }}</label> #}
-                                            {#                                                </div> #}
-                                            {#                                                <span class="float-right form-check-label"> #}
-                                            {#                <span class="badge badge-light round">{{ nextMonthEventCount }}</span> #}
-                                            {#            </span> #}
-                                            {#                                                <div class="clearfix"></div> #}
-                                            {#                                            </div> #}
+                                            <div class="form-check">
+                                                <div class="float-left custom-control custom-radio form-check-input">
+                                                    <input type="radio" class="custom-control-input" id="date-nextmonth"
+                                                           name="startdate" value="nextmonth">
+                                                    <label class="custom-control-label"
+                                                           for="date-nextmonth">{{ "Next month" }}</label>
+                                                </div>
+                                                <span class="float-right form-check-label">
+                                                            <span class="badge badge-light round">{{ nextMonthEventCount }}</span>
+                                                        </span>
+                                                <div class="clearfix"></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </article>
                             {% endif %}
+                            <article class="card-group-item filter-item">
+                                <div class="card-body">
+                                    <div class="custom-control custom-checkbox form-check-input ml-0 mb-4">
+                                        <input {% if hide_repeating %}checked{% endif %} type="checkbox"
+                                               class="custom-control-input" id="hide-repeating"
+                                               name="hide-repeating" value="1">
+                                        <label class="custom-control-label" for="hide-repeating">
+                                            Show all repeating events
+                                        </label>
+                                    </div>
+                                </div>
+                            </article>
+                            <article class="card-group-item filter-item">
+                                <div class="card-body">
+                                    <div class="custom-control custom-checkbox form-check-input ml-0 mb-4">
+                                        <input {% if open_events_only %}checked{% endif %} type="checkbox"
+                                               class="custom-control-input" id="open-events-only"
+                                               name="open-events-only" value="1">
+                                        <label class="custom-control-label" for="open-events-only">
+                                            Open events only
+                                        </label>
+                                    </div>
+                                </div>
+                            </article>
+                            <article class="card-group-item filter-item">
+                                <div class="card-body">
+                                    <div class="custom-control custom-checkbox form-check-input ml-0 mb-4">
+                                        <input {% if help_events_only %}checked{% endif %} type="checkbox"
+                                               class="custom-control-input" id="help-events-only"
+                                               name="help-events-only" value="1">
+                                        <label class="custom-control-label" for="help-events-only">
+                                            Events that need help/volunteers to organize
+                                        </label>
+                                    </div>
+                                </div>
+                            </article>
+                            <article class="card-group-item filter-item">
+                                <header class="card-header">
+                                    <a href="#" data-toggle="collapse" data-target="#filter-sort">
+                                        <i class="icon-action fa fa-chevron-down"></i>
+                                        <h6 class="title">{{ "Sort" }}</h6>
+                                    </a>
+                                </header>
+                                <div class="filter-content collapse show" id="filter-sort">
+                                    <div class="card-body">
+                                        <select class="form-control bg-white col-12" name="sortedby">
+                                            <option selected value="all">Sort By</option>
+                                            <option value="mostbooked"
+                                                    {% if sortedby == 'mostbooked' %}selected{% endif %}>
+                                                Most Booked First
+                                            </option>
+                                            <option value="leastbooked"
+                                                    {% if sortedby == 'leastbooked' %}selected{% endif %}>
+                                                Least Booked First
+                                            </option>
+                                            <option value="title_desc"
+                                                    {% if sortedby == 'title_desc' %}selected{% endif %}>
+                                                Title - Descending
+                                            </option>
+                                            <option value="title_asc"
+                                                    {% if sortedby == 'title_asc' %}selected{% endif %}>
+                                                Title - Ascending
+                                            </option>
+                                            <option value="created_desc"
+                                                    {% if sortedby == 'created_desc' %}selected{% endif %}>
+                                                Created Recently
+                                            </option>
+                                            <option value="created_asc"
+                                                    {% if sortedby == 'created_asc' %}selected{% endif %}>
+                                                Created Lately
+                                            </option>
+                                            <option value="updated_desc"
+                                                    {% if sortedby == 'updated_desc' %}selected{% endif %}>
+                                                Updated Recently
+                                            </option>
+                                            <option value="updated_asc"
+                                                    {% if sortedby == 'updated_asc' %}selected{% endif %}>
+                                                Updated Lately
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </article>
                             <div class="row">
                                 <div class="col-4">
-                                    <article class="card-group-item">
+                                    <article class="card-group-item filter-item">
                                         <div class="card-body">
                                             <a href="{{ path('events') }}"
                                                class="btn btn-outline-primary">
@@ -194,7 +288,7 @@
                                     </article>
                                 </div>
                                 <div class="col-8">
-                                    <article class="card-group-item">
+                                    <article class="card-group-item filter-item">
                                         <div class="card-body">
                                             <button class="btn btn-outline-primary"><i
                                                         class="fas fa-search"></i> {{ "Search" }}</button>
@@ -202,15 +296,31 @@
                                     </article>
                                 </div>
                             </div>
+                            <article class="card-group-item filter-item" id="tagsart">
+                                <header class="card-header">
+                                    <a href="#" data-toggle="collapse" data-target="#collapseTags">
+                                        <i class="icon-action fa fa-chevron-down"></i>
+                                        <h6 class="title">Tags</h6>
+                                    </a>
+                                </header>
+                                <div class="filter-content collapse show" id="collapseTags">
+                                    <div class="card-body">
+                                        {% for tag in tags %}
+                                            <a href="https://universeacg.xyz/events?keyword={{ tag }}"
+                                               class="btn btn-sm btn-default mr-2 mb-2 mt-2">{{ tag }}</a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </article>
                         </form>
                     </div>
                 </aside>
-                <div class="col-lg-9 order-1 order-lg-2">
+                <div class="col-lg-9 order-1 order-lg-2 mt-4 mt-md-0 ">
                     {% if events.getTotalItemCount > 0 %}
                         <div class="row" style="overflow-y: scroll">
                             {% for event in events %}
                                 {#                            <div class="col-12 col-sm-6 col-lg-6 mb-3"> #}
-                                <div class="col-12 col-sm-6 col-lg-4 mb-3">
+                                <div class="col-12 col-sm-6 col-lg-6 mb-3">
                                     {#                                    {% include "Global/event-card.html.twig" with {event: event, past: event.isPassed, attendeed: event.isAttnded} %} #}
                                     {% include "Global/event-card.html.twig" with {event: event, past: event.isPassed} %}
                                 </div>
@@ -232,6 +342,27 @@
         <script async defer
                 src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap">
         </script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         {% include "Global/event-info-box.html.twig" %}
     {% endif %}
+
+    <script>
+        $(document).ready(function () {
+            toggleFiltersVisibility();
+        });
+        // Check screen size on window resize
+        $(window).on('resize', function () {
+            toggleFiltersVisibility();
+        });
+
+        function toggleFiltersVisibility() {
+            var screenWidth = $(window).width();
+
+            if (screenWidth <= 767) {
+                $('#tagsart').css('display', 'none');
+            } else {
+                $('#tagsart').css('display', 'block');
+            }
+        }
+    </script>
 {% endblock %}

@@ -36,7 +36,7 @@
          */
         private $id;
         /**
-         * @ORM\ManyToOne(targetEntity="App\Entity\User", fetch="EAGER")
+         * @ORM\ManyToOne(targetEntity="App\Entity\User", fetch="EAGER",cascade={"persist"})
          * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
          */
         private $user;

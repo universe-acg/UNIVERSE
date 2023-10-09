@@ -137,7 +137,7 @@
         /**
          * @Route("/administrator/manage-attendees", name="dashboard_administrator_attendees")
          */
-        public function attendeesAdmin(Request $request, AppServices $services, PaginatorInterface $paginator, AuthorizationCheckerInterface $authChecker)
+        public function attendeesAdmin(Request $request, AppServices $services, PaginatorInterface $paginator, AuthorizationCheckerInterface $authChecker, EventRepository $eventRepository)
         {
 //$upcomingtickets = ($request->query->get('upcomingtickets')) == "" ? 1 : intval($request->query->get('upcomingtickets'));
             $reference = ($request->query->get('reference')) == "" ? "all" : $request->query->get('reference');
@@ -158,8 +158,11 @@
             
             $ordersPagination = $paginator->paginate($ordersQuery, $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
             
+            $event = $eventRepository->findBySlug($event);
+            
             return $this->render('Dashboard/Shared/Order/attendees.html.twig', [
                 'orders' => $ordersPagination,
+                'event' => $event
             ]);
         }
         

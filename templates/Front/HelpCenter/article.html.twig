@@ -24,7 +24,7 @@
                             <div class="filter-content collapse show" id="filter-event-type">
                                 <div class="card-body">
                                     <ul class="list list-unstyled">
-                                        {% set helpcentercategories = services.getHelpCenterCategories({}) %}
+                                        {% set helpcentercategories = services.getHelpCenterCategories({}).getQuery().getResult() %}
                                         {% for helpcentercategory in helpcentercategories %}
                                             <li class="mb-2">
                                                 <a href="{{ path('help_center_category', {slug: helpcentercategory.slug}) }}"
@@ -50,7 +50,7 @@
                             <header class="card-header">
                                 <a href="#" data-toggle="collapse" data-target="#collapsePopular">
                                     <i class="icon-action fa fa-chevron-down"></i>
-                                    <h6 class="title">{{ "Popular" }}</h6>
+                                    <h6 class="title">{{ "Relevant" }}</h6>
                                 </a>
                             </header>
                             <div class="filter-content collapse show" id="collapsePopular">

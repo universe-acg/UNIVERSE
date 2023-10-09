@@ -5,6 +5,7 @@
     
     namespace App\Controller\Front;
     
+    use App\Entity\Event;
     use App\Repository\EventRepository;
     use App\Repository\EventTicketRepository;
     use App\Repository\OrderElementRepository;
@@ -149,53 +150,36 @@
 //                'nextMonthEventCount' => $nextMonthEventCount,
 //            ]);
 //        }
-        
         /**
          * @Route("/events", name="events")
          * @throws InvalidDatabaseException|InvalidArgumentException
          */
         public function events(Request $request, EventRepository $eventRepository, PaginatorInterface $paginator, AppServices $services): Response
         {
-            // Get the current date and time
             $now = new DateTime();
-
-// Set the initial time to midnight (00:00:00) and max time to 23:59:59
-            $todayStart = clone $now->setTime(0, 0, 0);
-            $todayEnd = clone $now->setTime(23, 59, 59);
-
-// Move to tomorrow
-            $tomorrow = $now->modify('+1 day');
-// Set the initial time to midnight (00:00:00) and max time to 23:59:59
-            $tomorrowStart = clone $tomorrow->setTime(0, 0, 0);
-            $tomorrowEnd = clone $tomorrow->setTime(23, 59, 59);
-
-// Start of this week (assuming Monday is the start of the week)
-            $thisWeekStartDate = clone (new DateTime())->modify('previous Monday');
-// End of this week (assuming Sunday is the end of the week)
-            $thisWeekEndDate = clone (new DateTime())->modify('next Sunday')->setTime(23, 59, 59);
-
-// Start of next week
-            $nextWeekStartDate = clone (new DateTime())->modify('next Monday')->modify('+7 days');
-// End of next week
-            $nextWeekEndDate = clone (new DateTime())->modify('next Sunday')->modify('+7 days')->setTime(23, 59, 59);
-
-// Start of this month
-            $thisMonthStartDate = clone (new DateTime())->modify('first day of this month');
-// End of this month
-            $thisMonthEndDate = clone (new DateTime())->modify('last day of this month')->setTime(23, 59, 59);
-
-// Start of next month
-            $nextMonthStartDate = clone (new DateTime())->modify('first day of next month');
-// End of next month
-            $nextMonthEndDate = clone (new DateTime())->modify('last day of next month')->setTime(23, 59, 59);
-
-// Get event counts for the date ranges
-            $todayEventCount = $services->getEventCountForDateRange($todayStart, $todayEnd);
-            $tomorrowEventCount = $services->getEventCountForDateRange($tomorrowStart, $tomorrowEnd);
-            $thisWeekEventCount = $services->getEventCountForDateRange($thisWeekStartDate, $thisWeekEndDate);
-            $nextWeekEventCount = $services->getEventCountForDateRange($nextWeekStartDate, $nextWeekEndDate);
-            $thisMonthEventCount = $services->getEventCountForDateRange($thisMonthStartDate, $thisMonthEndDate);
-            $nextMonthEventCount = $services->getEventCountForDateRange($nextMonthStartDate, $nextMonthEndDate);
+            $sortedby = $request->get('sortedby');
+            
+            $todayRange = $this->getDateRange('today');
+            $tomorrowRange = $this->getDateRange('tomorrow');
+            $thisWeekRange = $this->getDateRange('previous Monday', 'next Sunday');
+            $nextWeekRange = $this->getDateRange('Monday next week', ' next Sunday');
+            $thisMonthRange = $this->getDateRange('first day of this month', 'last day of this month');
+            $nextMonthRange = $this->getDateRange('first day of next month', 'last day of this month');
+            
+            $todayEventCount = $services->getEventCountForDateRange($todayRange['start'], $todayRange['end']);
+            $tomorrowEventCount = $services->getEventCountForDateRange($tomorrowRange['start'], $tomorrowRange['end']);
+            $thisWeekEventCount = $services->getEventCountForDateRange($thisWeekRange['start'], $thisWeekRange['end']);
+            $nextWeekEventCount = $services->getEventCountForDateRange($nextWeekRange['start'], $nextWeekRange['end']);
+            $thisMonthEventCount = $services->getEventCountForDateRange($thisMonthRange['start'], $thisMonthRange['end']);
+            $nextMonthEventCount = $services->getEventCountForDateRange($nextMonthRange['start'], $nextMonthRange['end']);
+            
+            // Get the current date
+            $currentDate = new DateTime();
+            
+            $tomorrow = clone $currentDate;
+            $tomorrow->modify('+1 day');
+            
+            $tomorrow->setTime(0, 0, 0);
             
             $startDateMin = clone $tomorrow;
             $startDateMin->setTime(0, 0, 0); // Set to midnight
@@ -207,6 +191,40 @@
             $organizer = $request->query->get('organizer') == "" ? "all" : $request->query->get('organizer');
             $startdate = $request->query->get('startdate') == "" ? "all" : $request->query->get('startdate');
             
+            $now = new DateTime();
+            
+            switch ($startdate) {
+                case "today":
+                    $start = clone $now->setTime(0, 0, 0);
+                    $end = clone $now->setTime(23, 59, 59);
+                    break;
+                case "tomorrow":
+                    $tomorrow = $now->modify('+1 day');
+                    $start = clone $tomorrow->setTime(0, 0, 0);
+                    $end = clone $tomorrow->setTime(23, 59, 59);
+                    break;
+                case "thisweek":
+                    $start = clone (new DateTime())->modify('previous Monday');
+                    $end = clone (new DateTime())->modify('next Sunday')->setTime(23, 59, 59);
+                    break;
+                case "nextweek":
+                    $start = clone (new DateTime())->modify('Monday next week');
+                    $end = clone (new DateTime())->modify('Sunday next week')->setTime(23, 59, 59);
+                    break;
+                case "thismonth":
+                    $start = clone (new DateTime())->modify('first day of this month');
+                    $end = clone (new DateTime())->modify('last day of this month')->setTime(23, 59, 59);
+                    break;
+                case "nextmonth":
+                    $start = clone (new DateTime())->modify('first day of next month');
+                    $end = clone (new DateTime())->modify('last day of next month')->setTime(23, 59, 59);
+                    break;
+                default:
+                    $start = null;
+                    $end = null;
+                    break;
+            }
+            
             if ($category != "all") {
                 $category = $services->getCategories(array("slug" => $category))->getQuery()->getOneOrNullresult();
                 if (!$category) {
@@ -215,57 +233,147 @@
                 }
             }
             
-            $user = $this->getUser();
-
-// Fetch upcoming events
-            $eventsUpcoming = $services->getEventsHomepageIndex([
-                "elapsed" => false,
+            $events = $services->getEventsHomepageIndex([
+                "elapsed" => "all",
                 "category" => $category,
                 'keyword' => $keyword,
                 'published' => true,
-                'startdate' => $startdate,
+                'startdate' => $start,
+                'enddate' => $end,
                 'organizer' => $organizer,
+                'sortedby' => $sortedby
             ])->getQuery()->getResult();
-
-// Fetch old events
-            $eventsOld = $services->getEventsHomepageIndex([
-                "elapsed" => true,
+            
+            if ($sortedby == 'mostbooked') {
+                $events = $this->sortByMostAttendees($events, $services);
+            } elseif ($sortedby == 'leastbooked') {
+                $events = $this->sortByLeastAttendees($events, $services);
+            }
+            
+            $eventsall = $services->getEventsHomepageIndex([
+                "elapsed" => "all",
                 'published' => true,
-                "category" => $category,
-                'keyword' => $keyword,
-                'startdate' => $startdate,
-                'organizer' => $organizer,
             ])->getQuery()->getResult();
-            foreach ($eventsOld as $event) {
-                $event->setIsPassed(true);
+            
+            
+            $totaltags = [];
+            // Loop through the events and split the 'tags' string into an array
+            foreach ($eventsall as $event) {
+                $tags = explode(',', $event->getTags()); // Assuming 'getTags()' method exists in your entity
+                
+                // Add the non-empty tags from this event to the $totaltags array
+                foreach ($tags as $tag) {
+                    $tag = trim($tag); // Remove leading/trailing spaces
+                    if (!empty($tag)) {
+                        $totaltags[] = $tag;
+                    }
+                }
+            }
+            
+            $open_events_only = $request->query->get('open-events-only'); // open
+            $hide_repeating = $request->query->get('hide-repeating'); // isrepeat
+            $help_events_only = $request->query->get('help-events-only'); // volsneeded
+            
+            if ($open_events_only) {
+                $events = array_filter($events, static function ($event) {
+                    return $event->getOpen() === true;
+                });
+            }
+            
+            if (!$hide_repeating) {
+                $eventsToRemove = [];
+                $eventsByCommonValue = [];
+                
+                // Step 1: Iterate through each event
+                foreach ($events as $event) {
+                    if ($event->isIsrepeat()) {
+                        $commonValue = $event->getCommonvalue();
+                        
+                        
+                        // Step 2: Create an array of events with the same common value
+                        if (!isset($eventsByCommonValue[$commonValue])) {
+                            $eventsByCommonValue[$commonValue] = [];
+                        }
+                        $eventsByCommonValue[$commonValue][] = $event;
+                    }
+                }
+                
+                // Step 3: Filter and sort events for each common value
+                foreach ($eventsByCommonValue as $commonValue => $commonEvents) {
+                    $filteredEvents = array_filter($commonEvents, static function ($event) {
+                        return $event->getLatestEndDate() >= new DateTime();
+                    });
+                    
+                    // Sort the events based on the latest event date
+                    usort($filteredEvents, static function ($eventA, $eventB) {
+                        $latestEventDateA = $eventA->getLatestEndDate();
+                        $latestEventDateB = $eventB->getLatestEndDate();
+                        
+                        if ($latestEventDateA === null && $latestEventDateB === null) {
+                            return 0;
+                        }
+                        
+                        if ($latestEventDateA === null) {
+                            return 1;
+                        }
+                        
+                        if ($latestEventDateB === null) {
+                            return -1;
+                        }
+                        
+                        return $latestEventDateA <=> $latestEventDateB;
+                    });
+                    
+                    // Step 4: Add the first event to the removal list
+                    if (count($filteredEvents) > 1) {
+                        $eventsToRemove = array_merge($eventsToRemove, array_slice($filteredEvents, 1));
+                    }
+                }
+                
+                // Step 5: Remove events with the same common value
+                $events = array_filter($events, static function ($event) use ($eventsToRemove) {
+                    return !in_array($event, $eventsToRemove, true);
+                });
+            }
+            
+            if ($help_events_only) {
+                $events = array_filter($events, static function ($event) {
+                    return $event->isVolsneeded() == true;
+                });
+            }
+            
+            if (!$sortedby || $sortedby == "all") {
+                $currentDateTime = new DateTime();
+
+// Separate future and past events
+                $futureEvents = [];
+                $pastEvents = [];
+                
+                foreach ($events as $event) {
+                    if ($this->getLatestEventDateEndDate($event) >= $currentDateTime) {
+                        $futureEvents[] = $event;
+                    } else {
+                        $pastEvents[] = $event;
+                    }
+                }
+
+// Sort each group separately based on your sorting criteria
+                usort($futureEvents, function ($a, $b) {
+                    // Sorting logic for future events (e.g., most recent first)
+                    return $this->getLatestEventDateEndDate($a) <=> $this->getLatestEventDateEndDate($b);
+                });
+                
+                usort($pastEvents, function ($a, $b) {
+                    // Sorting logic for past events (e.g., most recent first)
+                    return $this->getLatestEventDateEndDate($b) <=> $this->getLatestEventDateEndDate($a);
+                });
+                $sortedEvents = array_merge($futureEvents, $pastEvents);
             }
 
-// Iterate through attended events and add them to the merged array
-            $mergedEvents = [];
-
-// Iterate through upcoming events and add them to the merged array
-            foreach ($eventsUpcoming as $event) {
-                $mergedEvents[$event->getId()] = $event;
-            }
-
-// Iterate through old events and add them to the merged array
-            foreach ($eventsOld as $event) {
-                $mergedEvents[$event->getId()] = $event;
-            }
-
-
-// Sort the merged events by startdate (ascending order)
-            usort($mergedEvents, static function ($a, $b) {
-                return $b->getEventdates()[0]->getStartdate() <=> $a->getEventdates()[0]->getStartdate();
-            });
-// Filter out events that are past the selected start date
-            // Filter out events that are past the selected start date
-
-// Filter out events where the start date is in the past
-
-// Paginate the sorted merged events
+// Combine the two sorted arrays, placing future events before past events
+            
             $eventsMergedPaginated = $paginator->paginate(
-                $mergedEvents,
+                $sortedEvents ?? $events,
                 $request->query->getInt('page', 1),
                 $services->getSetting("events_per_page"),
                 ['wrap-queries' => true]
@@ -274,6 +382,11 @@
             return $this->render('Front/Event/events.html.twig', [
                 'events' => $eventsMergedPaginated,
                 'category' => $category,
+                'tags' => $totaltags,
+                'sortedby' => $sortedby,
+                'help_events_only' => $help_events_only,
+                'open_events_only' => $open_events_only,
+                'hide_repeating' => $hide_repeating,
                 'todayEventCount' => $todayEventCount,
                 'tomorrowEventCount' => $tomorrowEventCount,
                 'thisWeekEventCount' => $thisWeekEventCount,
@@ -281,6 +394,68 @@
                 'thisMonthEventCount' => $thisMonthEventCount,
                 'nextMonthEventCount' => $nextMonthEventCount,
             ]);
+        }
+        
+        public function getDateRange($startDateModifier, $endDateModifier = null)
+        {
+            $now = new DateTime();
+            $startDate = clone $now->modify($startDateModifier);
+            
+            // Check if an end date modifier is provided, otherwise set it to the end of today
+            if ($endDateModifier === null) {
+                $endDateModifier = 'today +1 day -1 second';
+            }
+            
+            $endDate = clone $now->modify($endDateModifier);
+            $endDate->setTime(23, 59, 59);
+            
+            return ['start' => $startDate, 'end' => $endDate];
+        }
+        
+        /**
+         * Sort events by the count of attendees in descending order.
+         *
+         * @param Event[] $events
+         * @return Event[]
+         */
+        private function sortByMostAttendees(array $events, $services): array
+        {
+            usort($events, function ($a, $b) use ($services) {
+                return $services->getAttendeesBookedOfEvent($b->getSlug()) <=> $services->getAttendeesBookedOfEvent($a->getSlug());
+            });
+            
+            return $events;
+        }
+        
+        /**
+         * Sort events by the count of attendees in ascending order (least attendees first).
+         *
+         * @param Event[] $events
+         * @return Event[]
+         */
+        private function sortByLeastAttendees(array $events, $services): array
+        {
+            usort($events, function ($a, $b) use ($services) {
+                return $services->getAttendeesBookedOfEvent($a->getSlug()) <=> $services->getAttendeesBookedOfEvent($b->getSlug());
+            });
+            
+            return $events;
+        }
+        
+        public function getLatestEventDateEndDate($event)
+        {
+            $latestEndDate = null;
+            
+            foreach ($event->getEventdates() as $eventDate) {
+                // Assuming there's a `getEndDate` method on your EventDate entity
+                $endDate = $eventDate->getEnddate();
+                
+                if ($latestEndDate === null || $endDate > $latestEndDate) {
+                    $latestEndDate = $endDate;
+                }
+            }
+            
+            return $latestEndDate;
         }
         
         /**

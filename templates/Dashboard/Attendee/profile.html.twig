@@ -87,6 +87,7 @@
                                             {{ attendee.bio|raw|nl2br }}
                                         </div>
                                     {% endif %}
+                                    <br>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-8 bg-light">
@@ -94,57 +95,59 @@
                                 {% set publishedeventscount = services.getEvents({"count": true, elapsed: "all", attendee: attendee.slug}).getQuery().getResult() | length %}
 
                                 <div class="p-4 d-flex justify-content-end text-center">
-                                    <ul class="list-inline mb-0">
+                                    <ul class="list-inline mb-0"
+                                        style="display: flex; justify-content: center; align-items: center;">
                                         <li class="list-inline-item mr-3">
                                             <h5 class="font-weight-bold mb-0 d-block">{{ attendedEvents | length }}</h5>
                                             <small class="text-muted">
-                                                {#                                                <i class="fas fa-calendar-alt fa-fw mr-1"></i> #}
-                                                {{ "Attended Events" }}
+                                                {{ "Attended" }}
                                             </small>
                                         </li>
                                         <li class="list-inline-item">
                                             <h5 class="font-weight-bold mb-0 d-block">{{ favoriteEvents | length }}</h5>
                                             <small class="text-muted">
-                                                {#                                                <i class="fas fa-newspaper mr-1"></i> #}
-                                                {{ "Favorite Events" }}
+                                                {{ "Favorites" }}
                                             </small>
                                         </li>
                                         <li class="list-inline-item mr-3">
                                             <h5 class="font-weight-bold mb-0 d-block">{{ posts | length }}</h5>
                                             <small class="text-muted">
-                                                {#                                                <i class="fas fa-calendar-alt fa-fw mr-1"></i> #}
                                                 {{ "Posts" }}
                                             </small>
                                         </li>
                                         <li class="list-inline-item">
                                             <h5 class="font-weight-bold mb-0 d-block">{{ comments|length }}</h5>
                                             <small class="text-muted">
-                                                {#                                                <i class="fas fa-folder-plus mr-1"></i> #}
                                                 {{ "Comments" }}
                                             </small>
                                         </li>
-                                        {#                                        <li class="list-inline-item ml-3"> #}
-                                        {#                                            {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') or is_granted('ROLE_ATTENDEE') %} #}
-                                        {#                                                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %} #}
-                                        {#                                                    {% if attendee.isFollowedBy(app.attendee) %} #}
-                                        {#                                                        <button class="attendee-unfollow btn btn-outline-primary btn-sm btn-block" #}
-                                        {#                                                                data-target="{{ path('app_dashboard_attendee_following_remove', { slug : attendee.slug }) }}"> #}
-                                        {#                                                            <i class="fas fa-folder-minus"></i> {{ "Unfollow" }} #}
-                                        {#                                                        </button> #}
-                                        {#                                                    {% else %} #}
-                                        {#                                                        <button class="attendee-follow btn btn-outline-primary btn-sm btn-block" #}
-                                        {#                                                                data-target="{{ path('app_dashboard_attendee_following_add', { slug : attendee.slug }) }}" #}
-                                        {#                                                        > #}
-                                        {#                                                            <i class="fas fa-folder-plus"></i> {{ "Follow" }} #}
-                                        {#                                                        </button> #}
-                                        {#                                                    {% endif %} #}
-                                        {#                                                {% else %} #}
-                                        {#                                                    <a href="{{ path('fos_attendee_security_login')~'?_target_path='~app.request.getPathInfo }}" #}
-                                        {#                                                       class="btn btn-outline-primary btn-sm btn-block"><i #}
-                                        {#                                                                class="fas fa-folder-plus"></i> {{ "Follow" }}</a> #}
-                                        {#                                                {% endif %} #}
-                                        {#                                            {% endif %} #}
-                                        {#                                        </li> #}
+                                        {% if app.user.organizer.category == 'Club' %}
+                                            <li class="list-inline-item">
+                                                {% if is_granted('ROLE_ORGANIZER') %}
+                                                    {% if managementClubsSocietiesService.isaccepted(attendee.id, app.user.organizer.id) %}
+                                                        <button class="asorganizer-kick btn btn-outline-primary btn-sm btn-block"
+                                                                data-target="{{ path('app_dashboard_organizer_join_kick_xml', { organizerid: app.user.organizer.id, attendeeid : attendee.id }) }}">
+                                                            <i class="fas fa-folder-minus"></i> {{ "Kick" }}
+                                                        </button>
+                                                    {% elseif managementClubsSocietiesService.isrejected(attendee.id, app.user.organizer.id) %}
+                                                        <button class="asorganizer-join btn btn-outline-primary btn-sm btn-block"
+                                                                data-target="{{ path('app_dashboard_organizer_join_add', { organizerid: app.user.organizer.id, attendeeid : attendee.id }) }}">
+                                                            <i class="fas fa-folder-plus"></i> {{ "Invite" }}
+                                                        </button>
+                                                    {% elseif managementClubsSocietiesService.ispending(attendee.id, app.user.organizer.id) %}
+                                                        <button class="asorganizer-cancel btn btn-outline-primary btn-sm btn-block"
+                                                                data-target="{{ path('app_dashboard_organizer_join_cancel', { organizerid: app.user.organizer.id, attendeeid : attendee.id }) }}">
+                                                            <i class="fas fa-folder-minus"></i> {{ "Cancel pending request" }}
+                                                        </button>
+                                                    {% else %}
+                                                        <button class="asorganizer-join btn btn-outline-primary btn-sm btn-block"
+                                                                data-target="{{ path('app_dashboard_organizer_join_add', { organizerid: app.user.organizer.id, attendeeid : attendee.id }) }}">
+                                                            <i class="fas fa-folder-plus"></i> {{ "Invite" }}
+                                                        </button>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </li>
+                                        {% endif %}
                                     </ul>
                                 </div>
 
@@ -192,7 +195,7 @@
                                                     {% include "Global/event-card.html.twig" with {event: event} %}
                                                 {% endfor %}
                                             {% else %}
-                                                {% include "Global/message.html.twig" with { type: "info", message: ('This has either not attended any events or just prefers an air of mystery around their attendeed events') } %}
+                                                {% include "Global/message.html.twig" with { type: "info", message: ('This user has either not attended any events or just prefers to keep an air of mystery around their attendeed events') } %}
                                             {% endif %}
                                         </div>
                                         <div class="tab-pane fade " id="attendee-favorite-events"
@@ -202,7 +205,7 @@
                                                     {% include "Global/fav-event-card.html.twig" with {event: event} %}
                                                 {% endfor %}
                                             {% else %}
-                                                {% include "Global/message.html.twig" with { type: "info", message: ('This has either not favorited any events or just prefers an air of mystery around their favorite events') } %}
+                                                {% include "Global/message.html.twig" with { type: "info", message: ('This user has either not favorited any events or just prefers to keep an air of mystery around their favorite events') } %}
                                             {% endif %}
                                         </div>
                                         <div class="tab-pane fade " id="attendee-posts"
@@ -212,7 +215,7 @@
                                                     {% include "Global/attendee-new-card.html.twig" with {new: post} %}
                                                 {% endfor %}
                                             {% else %}
-                                                {% include "Global/message.html.twig" with { type: "info", message: ('This has either not made any posts or just prefers an air of mystery around their comments') } %}
+                                                {% include "Global/message.html.twig" with { type: "info", message: ('This user has either not made any posts or just prefers to keep an air of mystery around their posts') } %}
                                             {% endif %}
                                         </div>
                                         {#                                        <div class="tab-pane fade active" id="attendee-comments" #}
@@ -224,7 +227,7 @@
                                         {#                                                    </div> #}
                                         {#                                                {% endfor %} #}
                                         {#                                            {% else %} #}
-                                        {#                                                {% include "Global/message.html.twig" with { type: "info", message: ('This has either not made any comments or just prefers an air of mystery around their comments') } %} #}
+                                        {#                                                {% include "Global/message.html.twig" with { type: "info", message: ('This user has either not made any comments or just prefers to keep an air of mystery around their posts') } %} #}
                                         {#                                            {% endif %} #}
                                         {#                                        </div> #}
                                     </div>

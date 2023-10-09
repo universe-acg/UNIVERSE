@@ -7,6 +7,7 @@
     
     use App\Entity\Event;
     use App\Service\AppServices;
+    use App\Validator\Constraints\TagLimitConstraint;
     use FOS\RestBundle\Controller\Annotations\Options;
     use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -88,6 +89,9 @@
                     'attr' => [
                         'class' => 'tags-input',
                         'placeholder' => 'E.g., Assembly, Conference, Workshop',
+                    ],
+                    'constraints' => [
+                        new TagLimitConstraint(),
                     ],
                 ])
                 ->add('imageFile', VichImageType::class, [

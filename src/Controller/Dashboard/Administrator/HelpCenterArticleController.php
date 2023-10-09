@@ -23,7 +23,56 @@
         {
             $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
             
-            $articles = $paginator->paginate($services->getHelpCenterArticles(array('keyword' => $keyword, 'hidden' => 'all', 'sort' => 'DESC', 'order' => 'updatedAt')), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
+            $articles = $services->getHelpCenterArticles(array('keyword' => $keyword, 'hidden' => 'all', 'sort' => 'DESC', 'order' => 'updatedAt'))->getQuery()->getResult();
+            
+            // Custom sorting function
+            usort($articles, static function (HelpCenterArticle $a, HelpCenterArticle $b) {
+                $categorya = $a->getCategory()->getSlug();
+                $categoryb = $b->getCategory()->getSlug();
+                
+                // Define the order of categories
+                $categoryOrder = ['account', 'attendee', 'creator'];
+                
+                // Compare the category order
+                $categoryComparison = array_search($categorya, $categoryOrder, true) - array_search($categoryb, $categoryOrder, true);
+                
+                // If categories are the same, sort by the first one or two letters (if numeric)
+                if ($categoryComparison === 0) {
+                    $aName = $a->getTitle();
+                    $bName = $b->getTitle();
+                    
+                    // Extract the first one or two letters (if numeric)
+                    $aFirstLetters = preg_replace('/[^0-9]*/', '', substr($aName, 0, 2));
+                    $bFirstLetters = preg_replace('/[^0-9]*/', '', substr($bName, 0, 2));
+                    
+                    // Check if both first letters are non-numeric
+                    if (!is_numeric($aFirstLetters) && !is_numeric($bFirstLetters)) {
+                        // Skip the sort for this iteration by returning 0
+                        return 0;
+                    }
+                    
+                    // Check if both first letters are non-numeric
+                    if (!is_numeric($aFirstLetters) || !is_numeric($bFirstLetters)) {
+                        // Skip the sort for this iteration by returning 0
+                        return 0;
+                    }
+                    
+                    // Compare the first letters (numeric values only)
+                    $alphaComparison = (int)$aFirstLetters - (int)$bFirstLetters;
+                    
+                    
+                    // If both are non-numeric or equal numeric values, sort alphabetically
+                    if ($alphaComparison === 0) {
+                        return strcmp($aName, $bName);
+                    }
+                    
+                    return $alphaComparison;
+                }
+                
+                return $categoryComparison;
+            });
+            
+            $articles = $paginator->paginate($articles, $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
             
             return $this->render('Dashboard/Administrator/HelpCenter/Article/index.html.twig', [
                 'articles' => $articles,

@@ -23,28 +23,6 @@
         public function buildForm(FormBuilderInterface $builder, array $options)
         {
             $builder
-                ->add('firstname', TextType::class, [
-                    'purify_html' => true,
-                    'required' => true, 'constraints' => [
-                        new NotBlank(),
-                    ],
-                    'attr' => [
-                        'placeholder' => 'Enter First Name',
-                        'title' => 'Enter their first name.',
-                    ],
-                    'data' => $options['user'] ? $options['user']->getFirstname() : ''
-                ])
-                ->add('lastname', TextType::class, [
-                    'purify_html' => true, 'constraints' => [
-                        new NotBlank(),
-                    ],
-                    'required' => true,
-                    'attr' => [
-                        'placeholder' => 'Enter Last Name',
-                        'title' => 'Enter their last name.',
-                    ],
-                    'data' => $options['user'] ? $options['user']->getLastname() : ''
-                ])
                 ->add('username', TextType::class, [
                     'purify_html' => true,
                     'required' => true, 'constraints' => [

@@ -23,7 +23,11 @@ parameters:
   #asset.request_context.base_path: '%router.request_context.base_url%'
 
 services:
+  App\Service\ManagementClubsSocietiesService:
+  App\Service\UserService:
   App\Twig\SortFaqsExtension: ~
+  App\Validator\Constraints\TagLimitConstraintValidator:
+    tags: [ 'validator.constraint_validator' ]
   App\EventSubscriber\CustomLoginListener:
     tags:
       - { name: 'kernel.event_subscriber' }

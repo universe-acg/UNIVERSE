@@ -984,17 +984,17 @@ $(document).ready(function () {
 
                 // Update button text with spinner and action description
                 if ($thisButton.hasClass('organizer-follow')) {
-                    $thisButton.html('<i class="fas fa-spinner fa-spin"></i> Following');
+                    $thisButton.html('<i class="fas fa-spinner fa-spin"></i>');
                 } else {
-                    $thisButton.html('<i class="fas fa-spinner fa-spin"></i> Unfollowing');
+                    $thisButton.html('<i class="fas fa-spinner fa-spin"></i>');
                 }
             },
             success: function (response) {
                 // Restore the original button text
                 if ($thisButton.hasClass('organizer-follow')) {
-                    $thisButton.html('<i class="fas fa-folder-minus"></i> Unfollow');
+                    $thisButton.html('<i class="fas fa-bell-slash"></i>');
                 } else {
-                    $thisButton.html('<i class="fas fa-folder-plus"></i> Follow');
+                    $thisButton.html('<i class="fas fa-bell"></i>');
                 }
 
                 if (response.hasOwnProperty('success')) {
@@ -1011,9 +1011,134 @@ $(document).ready(function () {
             error: function () {
                 // Restore the original button text on error
                 if ($thisButton.hasClass('organizer-follow')) {
-                    $thisButton.html('<i class="fas fa-folder-plus"></i> Follow');
+                    $thisButton.html('<i class="fas fa-bell"></i>');
                 } else {
-                    $thisButton.html('<i class="fas fa-folder-minus"></i> Unfollow');
+                    $thisButton.html('<i class="fas fa-bell-slash"></i>');
+                }
+
+                // Show a generic error message
+                showStackBarTop('error', '', 'An error has occurred');
+            }
+        });
+    });
+
+    $(document).on("click", ".organizer-join, .organizer-leave, .organizer-cancel", function () {
+        const $thisButton = $(this);
+        if ($thisButton.attr("data-action-done") == "1") {
+            // Prevent multiple clicks
+            return false;
+        }
+
+        const targetUrl = $thisButton.data('target'); // Get the URL from data attribute
+
+        $.ajax({
+            type: "GET",
+            url: targetUrl, // Use the extracted URL
+            beforeSend: function () {
+                // Set the data-action-done attribute to prevent multiple clicks
+                $thisButton.attr("data-action-done", "1");
+
+                // Update button text with spinner and action description
+                if ($thisButton.hasClass('organizer-join')) {
+                    $thisButton.html('<i class="fas fa-spinner fa-spin"></i> Requesting');
+                } else if ($thisButton.hasClass('organizer-leave')) {
+                    $thisButton.html('<i class="fas fa-folder-minus"></i> Leaving');
+                } else {
+                    $thisButton.html('<i class="fas fa-spinner fa-spin"></i> Canceling');
+                }
+            },
+            success: function (response) {
+                // Restore the original button text
+                if ($thisButton.hasClass('organizer-join')) {
+                    $thisButton.html('<i class="fas fa-folder-plus"></i> Requested');
+                } else if ($thisButton.hasClass('organizer-leave')) {
+                    $thisButton.html('<i class="fas fa-folder-minus"></i> Left');
+                } else {
+                    $thisButton.html('<i class="fas fa-folder-minus"></i> Canceled');
+                }
+
+                if (response.hasOwnProperty('success')) {
+                    // Show success message
+                    showStackBarTop('success', '', response.success);
+                } else if (response.hasOwnProperty('error')) {
+                    // Show error message
+                    showStackBarTop('error', '', response.error);
+                } else {
+                    // Show a generic error message
+                    showStackBarTop('error', '', 'An error has occurred');
+                }
+            },
+            error: function () {
+                // Restore the original button text on error
+                if ($thisButton.hasClass('organizer-join')) {
+                    $thisButton.html('<i class="fas fa-folder-plus"> Join</i>');
+                } else if ($thisButton.hasClass('organizer-leave')) {
+                    $thisButton.html('<i class="fas fa-folder-minus"> Leave</i>');
+                } else {
+                    $thisButton.html('<i class="fas fa-folder-minus"> Cancel</i>');
+                }
+
+                // Show a generic error message
+                showStackBarTop('error', '', 'An error has occurred');
+            }
+        });
+    });
+
+
+    $(document).on("click", ".asorganizer-join, .asorganizer-kick, .asorganizer-cancel", function () {
+        const $thisButton = $(this);
+        if ($thisButton.attr("data-action-done") == "1") {
+            // Prevent multiple clicks
+            return false;
+        }
+
+        const targetUrl = $thisButton.data('target'); // Get the URL from data attribute
+
+        $.ajax({
+            type: "GET",
+            url: targetUrl, // Use the extracted URL
+            beforeSend: function () {
+                // Set the data-action-done attribute to prevent multiple clicks
+                $thisButton.attr("data-action-done", "1");
+
+                // Update button text with spinner and action description
+                if ($thisButton.hasClass('asorganizer-join')) {
+                    $thisButton.html('<i class="fas fa-spinner fa-spin"></i> Inviting');
+                } else if ($thisButton.hasClass('asorganizer-kick')) {
+                    $thisButton.html('<i class="fas fa-folder-minus"></i> Kicking');
+                } else {
+                    $thisButton.html('<i class="fas fa-spinner fa-spin"></i> Canceling');
+                }
+            },
+            success: function (response) {
+                // Restore the original button text
+                if ($thisButton.hasClass('asorganizer-join')) {
+                    $thisButton.html('<i class="fas fa-folder-minus"></i> Invited');
+                } else if ($thisButton.hasClass('asorganizer-kick')) {
+                    $thisButton.html('<i class="fas fa-folder-minus"></i> Kicked');
+                } else {
+                    $thisButton.html('<i class="fas fa-folder-plus"></i> Canceled');
+                }
+
+                if (response.hasOwnProperty('success')) {
+                    // Show success message
+                    showStackBarTop('success', '', response.success);
+                } else if (response.hasOwnProperty('error')) {
+                    // Show error message
+                    showStackBarTop('error', '', response.error);
+                } else {
+                    // Show a generic error message
+                    showStackBarTop('error', '', 'An error has occurred');
+                }
+            },
+            error: function () {
+                // Restore the original button text on error
+                if ($thisButton.hasClass('asorganizer-join')) {
+                    $thisButton.html('<i class="fas fa-folder-plus"> Invite</i>');
+                } else if ($thisButton.hasClass('asorganizer-kick')) {
+                    $thisButton.html('<i class="fas fa-folder-minus"> Kick</i>');
+                } else {
+                    $thisButton.html('<i class="fas fa-folder-minus"> Cancel</i>');
                 }
 
                 // Show a generic error message

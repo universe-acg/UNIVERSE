@@ -25,7 +25,8 @@
                     </td>
                     {% if is_granted('ROLE_ADMINISTRATOR') %}
                         <td>
-                            <a href="{{ path('organizer', { slug : event.organizer.slug }) }}" data-toggle="tooltip"
+                            <a href="{{ path('organizer', { slug : event.organizer.user.username }) }}"
+                               data-toggle="tooltip"
                                title="{{ "View organizer" }}">{{ event.organizer.name }}</a>
                         </td>
                     {% endif %}
@@ -97,6 +98,11 @@
                                            class="dropdown-item"><i
                                                     class="dropdown-icon fas fa-users fa-fw text-muted"></i> {{ "Event Date Attendance Details" }}
                                         </a>
+                                        <span style="cursor: pointer !important;"
+                                              data-target="{{ path('dashboard_organizer_event_delete_permanently', { slug : event.slug }) }}"
+                                              class="dropdown-item requires-confirmation-normal"
+                                              data-confirmation-text="{{ "You are about to delete the event and all its related information PERMANENTLY" }}"><i
+                                                    class="dropdown-icon far fa-calendar-times fa-fw text-muted"></i> {{ "Delete" }}</span>
                                         <span style="cursor: pointer !important;"
                                               data-target="{{ path('dashboard_organizer_event_delete_permanently_repeating_organizer', { slug : event.slug }) }}"
                                               class="dropdown-item requires-confirmation-repeating"

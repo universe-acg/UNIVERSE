@@ -26,6 +26,116 @@ open_event:
   path: /open-event/{slug}
   controller: 'App\Controller\Front\EventController::openevent'
 
+app_dashboard_attendee_join_leave:
+  path: /dashboard/attendee/management/leave/{attendeeid}/{organizerid}
+  controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::leave'
+  methods: [ 'GET' ]
+  condition: 'request.isXmlHttpRequest()'
+
+app_dashboard_attendee_join_leave_nonxml:
+  path: /dashboard/attendee/management/leavenonxml/{attendeeid}/{organizerid}
+  controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::leavenonxml'
+  methods: [ 'GET' ]
+
+app_dashboard_attendee_join_accept:
+  path: /dashboard/attendee/management/accept/{attendeeid}/{organizerid}
+  controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::accept'
+  methods: [ 'GET' ]
+
+app_dashboard_attendee_join_reject:
+  path: /dashboard/attendee/management/reject/{attendeeid}/{organizerid}
+  controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::reject'
+  methods: [ 'GET' ]
+
+app_dashboard_attendee_join_cancel:
+  path: /dashboard/attendee/management/cancel/{attendeeid}/{organizerid}
+  controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::cancelxml'
+  methods: [ 'GET' ]
+  condition: 'request.isXmlHttpRequest()'
+
+app_dashboard_attendee_join_cancelnotxml:
+  path: /dashboard/attendee/management/cancelnotxml/{attendeeid}/{organizerid}
+  controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::cancelnotxml'
+  methods: [ 'GET' ]
+
+app_dashboard_attendee_join_add:
+  path: /dashboard/attendee/management/add/{attendeeid}/{organizerid}
+  controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::add'
+  methods: [ 'GET' ]
+  condition: 'request.isXmlHttpRequest()'
+
+dashboard_attendee_management:
+  path: /dashboard/attendee/management
+  controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::index'
+
+# orgs start here
+
+app_dashboard_organizer_join_kick_xml:
+  path: /dashboard/organizer/management/kickxml/{organizerid}/{attendeeid}
+  controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::kickxml'
+  methods: [ 'GET' ]
+  condition: 'request.isXmlHttpRequest()'
+
+app_dashboard_organizer_join_kick:
+  path: /dashboard/organizer/management/kick/{organizerid}/{attendeeid}
+  controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::kick'
+  methods: [ 'GET' ]
+
+app_dashboard_organizer_join_accept:
+  path: /dashboard/organizer/management/accept/{organizerid}/{attendeeid}
+  controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::accept'
+  methods: [ 'GET' ]
+
+app_dashboard_organizer_join_reject:
+  path: /dashboard/organizer/management/reject/{organizerid}/{attendeeid}
+  controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::reject'
+  methods: [ 'GET' ]
+
+app_dashboard_organizer_join_cancel:
+  path: /dashboard/organizer/management/cancel/{organizerid}/{attendeeid}
+  controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::cancelxml'
+  methods: [ 'GET' ]
+  condition: 'request.isXmlHttpRequest()'
+
+app_dashboard_organizer_join_cancelnotxml:
+  path: /dashboard/organizer/management/cancelnotxml/{organizerid}/{attendeeid}
+  controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::cancelnotxml'
+  methods: [ 'GET' ]
+
+app_dashboard_organizer_join_add:
+  path: /dashboard/organizer/management/add/{organizerid}/{attendeeid}
+  controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::add'
+  methods: [ 'GET' ]
+  condition: 'request.isXmlHttpRequest()'
+
+#  end orgs
+
+dashboard_organizer_management:
+  path: /dashboard/organizer/management
+  controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::index'
+
+dashboard_organizer_management_files:
+  path: /dashboard/organizer/management/files
+  controller: 'App\Controller\Dashboard\Organizer\FilesController::index'
+
+  # config/routes.yaml
+
+dashboard_organizer_management_files_download_file:
+  path: /dashboard/organizer/management/files/download/{fileId}
+  controller: 'App\Controller\Dashboard\Organizer\FilesController::download'
+
+dashboard_organizer_management_files_add:
+  path: /dashboard/organizer/management/files/add
+  controller: 'App\Controller\Dashboard\Organizer\FilesController::add'
+
+dashboard_organizer_management_files_delete:
+  path: /dashboard/organizer/management/files/delete/{id}
+  controller: 'App\Controller\Dashboard\Organizer\FilesController::delete'
+
+dashboard_organizer_management_files_edit:
+  path: /dashboard/organizer/management/files/edit/{id}
+  controller: 'App\Controller\Dashboard\Organizer\FilesController::edit'
+
 dashboard_attendee_blog_post_delete:
   path: /dashboard/attendee/manage-blog-posts/{slug}/delete
   controller: 'App\Controller\Dashboard\Attendee\BlogPostController::delete'

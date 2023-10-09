@@ -9,6 +9,7 @@
     use App\Repository\OrganizerRepository;
     use App\Repository\UserRepository;
     use App\Service\AppServices;
+    use App\Service\ManagementClubsSocietiesService;
     use DateTime;
     use Knp\Component\Pager\PaginatorInterface;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,7 +23,7 @@
         /**
          * @Route("/organizer/{slug}", name="organizer")
          */
-        public function organizer($slug, AppServices $services, UserRepository $userRepository): Response
+        public function organizer(ManagementClubsSocietiesService $managementClubsSocietiesService, $slug, AppServices $services, UserRepository $userRepository): Response
         {
             $user = $userRepository->getByUsername($slug);
             
@@ -65,7 +66,7 @@
             
             
             return $this->render('Front/Organizer/profile.html.twig', ['organizer' => $org, 'currentevnts' => $currentevnts,
-                    'pastevents' => $pastevents, 'news' => $news]
+                    'pastevents' => $pastevents, 'news' => $news, 'managementClubsSocietiesService' => $managementClubsSocietiesService]
             );
         }
         

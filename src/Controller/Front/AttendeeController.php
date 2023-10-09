@@ -10,6 +10,7 @@
     use App\Repository\EventRepository;
     use App\Repository\UserRepository;
     use App\Service\AppServices;
+    use App\Service\ManagementClubsSocietiesService;
     use Knp\Component\Pager\PaginatorInterface;
     use Symfony\Bundle\FrameworkBundle\Controller\Controller;
     use Symfony\Component\HttpFoundation\Request;
@@ -41,7 +42,7 @@
         /**
          * @Route("/attendee-profile/{slug}", name="profile_attendee", methods="GET")
          */
-        public function viewprofile(Request $request, PaginatorInterface $paginator, $slug, AppServices $services): Response
+        public function viewprofile(Request $request, ManagementClubsSocietiesService $managementClubsSocietiesService, PaginatorInterface $paginator, $slug, AppServices $services): Response
         {
             $referer = $request->headers->get('referer');
             $attendee = $this->appServices->getUsers(array('slug' => $slug))->getQuery()->getOneOrNullresult();
@@ -77,6 +78,7 @@
             $posts = $this->blogPostRepository->getBlogPostsByUserId($attendee->getId())->getQuery()->getResult();
             
             return $this->render('Dashboard/Attendee/profile.html.twig', [
+                'managementClubsSocietiesService' => $managementClubsSocietiesService,
                 'attendee' => $attendee,
                 'blogposts' => $blogposts,
                 'level' => $level,

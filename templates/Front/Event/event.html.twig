@@ -205,7 +205,7 @@
                                                                     </div>
                                                                 </div>
                                                             {% endif %}
-                                                            {% set eventstartdate = eventDate.enddate|date('F d, Y H:i') %}
+                                                            {% set eventenddate = eventDate.enddate|date('F d, Y H:i') %}
                                                         {% endif %}
                                                         <div class="clearfix"></div>
                                                         <a id="add-to-calendar-link" data-toggle="modal"
@@ -351,7 +351,7 @@
                                                                 <div class="card border-0 card-body overflow-auto text-nowrap">
                                                                     <div class="avatar-list py-4">
                                                                         {% for user in services.getUsers({"hasbookedticketfor": event.slug, "role": "attendee"}).getQuery().getResult() %}
-                                                                            {% include "Global/user-avatar.html.twig" with { user: user, showusernametooltip: true } %}
+                                                                            {% include "Global/user-avatar-events.html.twig" with { user: user, showusernametooltip: true } %}
                                                                         {% endfor %}
                                                                     </div>
                                                                 </div>
@@ -365,7 +365,7 @@
                                                 <div class="card border-0 card-body">
                                                     <div class="avatar-list">
                                                         {% for user in services.getUsersShuffled({"hasbookedticketfor": event.slug, "limit": 12, "role": "attendee"}).getQuery().getResult() %}
-                                                            {% include "Global/user-avatar.html.twig" with { user: user, showusernametooltip: true } %}
+                                                            {% include "Global/user-avatar-events.html.twig" with { user: user, showusernametooltip: true } %}
                                                         {% endfor %}
                                                         {% if attendeescount > 12 %}
                                                             <span class="avatar">{{ attendeescount - 12 }}</span>

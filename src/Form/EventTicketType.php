@@ -35,6 +35,13 @@
                         'placeholder' => 'E.g., Ticket, General Admission',
                     ],
                 ])
+                ->add('quantity', TextType::class, [
+                    'purify_html' => true,
+                    'required' => false,
+                    'data' => 100,
+                    'label' => 'Quantity of tickets',
+                    'attr' => ['class' => 'touchspin-integer event-date-ticket-quantity', 'data-min' => '1', "data-max" => '1000000']
+                ])
                 ->add('position', HiddenType::class, [
                     'attr' => [
                         'class' => 'event-date-ticket-position',

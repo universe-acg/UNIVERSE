@@ -40,16 +40,14 @@
                 <a href="{{ link }}" class="text-dark">{{ event.name }}</a>
             </h5>
 
-            {% if displayedEventDate.startdate %}
-                {% set currentDate = "now"|date('F j, Y H:i', 'Europe/Athens') %}
-                {% if displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') <= currentDate %}
-                    {% if displayedEventDate.enddate is not null and displayedEventDate.enddate|date('F j, Y H:i', 'Europe/Athens') < currentDate %}
-                        {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }} | Event has ended
-                    {% else %}
-                        {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }} | Event has started
-                    {% endif %}
+            {% if event.isPassed %}
+                {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }} | Event has ended
+            {% else %}
+                {% set currentDate = "now"|date('U', 'Europe/Athens') %}
+                {% if displayedEventDate.startdate|date('U') > currentDate %}
+                    Starts on: {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }}
                 {% else %}
-                    {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }}
+                    {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }}| Event has started
                 {% endif %}
             {% endif %}
 
