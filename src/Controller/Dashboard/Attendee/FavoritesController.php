@@ -30,7 +30,7 @@
             $user = $this->getUser();
             
             // Get favorite events as QueryBuilder
-            $favoriteEventsQueryBuilder = $services->getEvents(array("addedtofavoritesby" => $this->getUser()));
+            $favoriteEventsQueryBuilder = $services->getEventssql(array("addedtofavoritesby" => $this->getUser()));
             
             // Get attended events as QueryBuilder
             $attendedEventsQueryBuilder = $eventRepository->findAttendedEventsByUser($user, "all", "all");
@@ -80,7 +80,7 @@
         public function addRemove($slug, AppServices $services)
         {
             
-            $event = $services->getEvents(array("slug" => $slug))->getQuery()->getOneOrNullResult();
+            $event = $services->getEvents(array("slug" => $slug))[0];
             if (!$event) {
                 return new JsonResponse(['error' => 'The event can not be found']);
             }

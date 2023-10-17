@@ -168,4 +168,33 @@
                 ->getQuery()
                 ->getResult();
         }
+        
+        public function findUsersOfOrganization($orgId)
+        {
+            $orderedResults = $this->createQueryBuilder('u')
+                ->where('u.org = :orgId')
+                ->setParameter('orgId', $orgId)
+                ->orderBy('u.createdAt', 'DESC')
+                ->getQuery()
+                ->getResult();
+            
+            shuffle($orderedResults);
+            
+            return $orderedResults;
+        }
+        
+        public function findMembersOfOrganization($orgId)
+        {
+            $orderedResults = $this->createQueryBuilder('u')
+                ->where('u.org = :orgId')
+                ->andWhere('u.status = 1')
+                ->setParameter('orgId', $orgId)
+                ->orderBy('u.createdAt', 'DESC')
+                ->getQuery()
+                ->getResult();
+            
+            shuffle($orderedResults);
+            
+            return $orderedResults;
+        }
     }

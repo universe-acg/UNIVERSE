@@ -56,7 +56,7 @@
             // favorites sort by last created
             
             if ($attendee->isShowfavs()) {
-                $favoriteEvents = $services->getEvents(array("addedtofavoritesby" => $attendee))->getQuery()->getResult();
+                $favoriteEvents = $services->getEvents(array("addedtofavoritesby" => $attendee));
             } else {
                 $favoriteEvents = [];
             }
@@ -77,9 +77,21 @@
             
             $posts = $this->blogPostRepository->getBlogPostsByUserId($attendee->getId())->getQuery()->getResult();
             
+            $manage = false;
+            if ($this->getUser()->getOrganizer()) {
+                $row = $managementClubsSocietiesService->findRowByUserIdAndOrgId($attendee->getId(), $this->getUser()->getOrganizer()->getId());
+                if ($row) {
+                    $manage = $managementClubsSocietiesService->isinitiatedbyme($row->getId(), $this->getUser()->getId());
+                } else {
+                    $manage = false;
+                }
+            }
+            
+            
             return $this->render('Dashboard/Attendee/profile.html.twig', [
                 'managementClubsSocietiesService' => $managementClubsSocietiesService,
                 'attendee' => $attendee,
+                'initiatedbyme' => $manage,
                 'blogposts' => $blogposts,
                 'level' => $level,
                 'favoriteEvents' => $favoriteEvents,

@@ -98,43 +98,29 @@
         {
             $qb = $this->createQueryBuilder("o");
             
-            $this->applyKeywordFilter($qb, $keyword);
             $this->applyLevelFilter($qb, $level);
             $this->applyCategoryFilter($qb, $category);
+            $qb->leftJoin("o.user", "u")
+                ->where('u.enabled = 1');
             $this->applyLimit($qb, $limit);
             $this->applySorting($qb, $sortedby);
             
-            return $qb;
-        }
-        
-        private function applyKeywordFilter($qb, $keyword)
-        {
-            if ($keyword !== "all") {
-                $qb->andWhere(
-                    $qb->expr()->orX(
-                        $qb->expr()->like("o.name", ":keyword"),
-                        $qb->expr()->like("o.description", ":keyword"),
-                        $qb->expr()->like("o.instagram", ":keyword"),
-                        $qb->expr()->like("o.email", ":keyword")
-                    )
-                )->setParameter("keyword", "%" . $keyword . "%");
-            }
+            $this->applyKeywordFilter($qb, $keyword);
+            return $qb->getQuery()->getResult();
         }
         
         private function applyLevelFilter($qb, $level)
         {
             if ($level !== "all") {
                 if ($level < 40) {
-                    $qb->leftJoin("o.user", "u")
-                        ->andWhere(
-                            $qb->expr()->andX(
-                                $qb->expr()->gte("u.points", $level),
-                                $qb->expr()->lt("u.points", $level + 9)
-                            )
-                        );
+                    $qb->andWhere(
+                        $qb->expr()->andX(
+                            $qb->expr()->gte("u.points", $level),
+                            $qb->expr()->lt("u.points", $level + 9)
+                        )
+                    );
                 } else {
-                    $qb->leftJoin("o.user", "u")
-                        ->andWhere("u.points >= :level")
+                    $qb->andWhere("u.points >= :level")
                         ->setParameter("level", $level);
                 }
             }
@@ -183,6 +169,18 @@
                         break;
                 }
             }
+        }
+        
+        private function applyKeywordFilter($qb, $keyword)
+        {
+            $qb->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->like("o.name", ":keyword"),
+                    $qb->expr()->like("o.description", ":keyword"),
+                    $qb->expr()->like("o.instagram", ":keyword"),
+                    $qb->expr()->like("o.email", ":keyword")
+                )
+            )->setParameter("keyword", "%" . $keyword . "%");
         }
         
         public function getById($id)

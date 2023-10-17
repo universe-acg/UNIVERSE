@@ -75,6 +75,14 @@
             return $this->repository->findRowByUserIdAndOrgId($userId, $orgId);
         }
         
+        public function findMembersOfOrganization($orgid)
+        {
+            $members = $this->repository->findMembersOfOrganization($orgid);
+            return array_map(static function ($member) {
+                return $member->getUser();
+            }, $members);
+        }
+        
         public function isaccepted($attendeeid, $orgid)
         {
             $row = $this->repository->findRowByUserIdAndOrgId($attendeeid, $orgid);
@@ -121,6 +129,11 @@
         public function findAssociationRequestsWithStatus($status)
         {
             return $this->repository->findAssociationRequestsWithStatus($status);
+        }
+        
+        public function findUsersOfOrganization($orgId)
+        {
+            return $this->repository->findUsersOfOrganization($orgId);
         }
         
         public function saveAssociationRequest(ManagementClubsSocieties $association)

@@ -50,7 +50,8 @@
          */
         public function indexadmin(Request $request, PaginatorInterface $paginator, AppServices $services): Response
         {
-            $events = $paginator->paginate($services->getEvents(array("sort" => "e.createdAt", "order" => "DESC"))->getQuery(), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
+            $events = $services->getEvents(array("sort" => "e.createdAt", "order" => "DESC"));
+            $events = $paginator->paginate($events, $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
             
             return $this->render('Dashboard/Shared/Event/index.html.twig', [
                 'events' => $events,
@@ -137,6 +138,7 @@
                     $this->processSubmittedEvent($event, $category, $commonValue, $em, $services, $authChecker);
                     $this->processRepeatingEvent($event, $category, $commonValue, $em, $services);
                 } else {
+                    $this->processFormSubmission($event, $em, $services, $category, $slug);
                     $this->processSubmittedEvent($event, $category, $commonValue, $em, $services, $authChecker);
                 }
                 
@@ -687,7 +689,7 @@
                 $organizer = $this->getUser()->getOrganizer()->getSlug();
             }
             
-            $event = $services->getEvents(array("slug" => $slug, "published" => "all", "elapsed" => "all", "organizer" => $organizer, "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();
+            $event = $services->getEvents(array("slug" => $slug, "published" => "all", "elapsed" => "all", "organizer" => $organizer, "organizerEnabled" => "all"))[0];
             if (!$event) {
                 $this->addFlash('error', 'The event can not be found');
                 return $services->redirectToReferer('event');
@@ -718,7 +720,7 @@
                 $organizer = $this->getUser()->getOrganizer()->getSlug();
             }
             
-            $event = $services->getEvents(array("slug" => $slug, "published" => "all", "elapsed" => "all", "organizer" => $organizer, "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();
+            $event = $services->getEvents(array("slug" => $slug, "published" => "all", "elapsed" => "all", "organizer" => $organizer, "organizerEnabled" => "all"))[0];
             if (!$event) {
                 $this->addFlash('error', 'The event can not be found');
                 return $services->redirectToReferer('event');
@@ -749,7 +751,7 @@
         public function restore($slug, AppServices $services)
         {
             
-            $event = $services->getEvents(array("slug" => $slug, "published" => "all", "elapsed" => "all", "organizer" => "all", "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();
+            $event = $services->getEvents(array("slug" => $slug, "published" => "all", "elapsed" => "all", "organizer" => "all", "organizerEnabled" => "all"))[0];
             if (!$event) {
                 $this->addFlash('error', 'The event can not be found');
                 return $services->redirectToReferer('event');
@@ -776,7 +778,7 @@
             if ($authChecker->isGranted('ROLE_ORGANIZER')) {
                 $organizer = $this->getUser()->getOrganizer()->getSlug();
             }
-            $event = $services->getEvents(array("slug" => $slug, "organizer" => $organizer))->getQuery()->getOneOrNullResult();
+            $event = $services->getEvents(array("slug" => $slug, "organizer" => $organizer))[0];
             if (!$event) {
                 $this->addFlash('error', 'The event can not be found');
                 return $services->redirectToReferer('event');
@@ -841,7 +843,7 @@
                 $organizer = $this->getUser()->getOrganizer()->getSlug();
             }
             
-            $event = $services->getEvents(array("slug" => $slug, "published" => "all", "elapsed" => "all", "organizer" => $organizer, "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();
+            $event = $services->getEvents(array("slug" => $slug, "published" => "all", "elapsed" => "all", "organizer" => $organizer, "organizerEnabled" => "all"))[0];
             if (!$event) {
                 return new Response('The event can not be found');
             }

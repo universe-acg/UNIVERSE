@@ -188,6 +188,13 @@
     </li>
 
     <li class="nav-item">
+        <a href="{{ path('dashboard_organizer_managementgb') }}"
+           class="nav-link {% if app.request.pathinfo == "/dashboard/organizer/managementgb" %}active{% endif %}">
+            <i class="fas fa-users fa-fw"></i> {{ 'Governing Body' }}
+        </a>
+    </li>
+
+    <li class="nav-item">
         <a href="{{ path('dashboard_organizer_management_files') }}"
            class="nav-link {% if app.request.pathinfo == "/dashboard/organizer/management/files" %}active{% endif %}">
             <i class="fas fa-hdd"></i> {{ 'Drive' }}

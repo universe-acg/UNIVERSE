@@ -43,11 +43,11 @@
             </section>
         </div>
     </div>
-    <section class="section-content padding-y bg-white {% if app.request.locale =="ar" %}overflow-hidden{% endif %}">
+    <section class="section-content padding-y bg-white">
         <div class="{{ services.getSetting("app_layout") }}">
             <div class="card">
                 <div class="row">
-                    <div class="col-12 col-lg-8 {% if app.request.locale !="ar" %}border-right{% endif %} order-1 order-lg-0">
+                    <div class="col-12 col-lg-8 order-1 order-lg-0">
                         <div class="card-body">
                             <h1 class="card-title b d-none d-lg-block">{{ event.name }}</h1>
                             {% if event.description %}
@@ -125,21 +125,20 @@
                             {% endif %}
                         </div>
                     </div>
-                    <div class="col-12 col-lg-4 order-0 order-lg-1 {% if app.request.locale=="ar" %}border-right{% endif %}">
+                    <div class="col-12 col-lg-4 order-0 order-lg-1 ">
                         <div class="card-body">
                             <h1 class="card-title b d-lg-none text-center">{{ event.name }}</h1>
-                            {% if event.hasAnEventDateOnSale %}
+                            {#                            {% if event.hasAnEventDateOnSale %} #}
                             {# Event Dates calendar used on multi date events #}
-                            {% if event.hasTwoOrMoreEventDatesOnSale %}
-                                {% set eventDatesCalendar = [] %}
-                                {% for eventDate in event.eventdates if eventDate.isOnSale %}
-                                    {% set eventDatesCalendar = eventDatesCalendar|merge([{"Date": eventDate.startdate|date('Y-m-d'), "Title": eventDate.startdate|date('g:i A'), "Link": eventDate.reference}]) %}
-                                {% endfor %}
-                                {% include "Global/message.html.twig" with { type: 'info', icon: 'fas fa-info-circle', message: "Click on a date to view tickets" } %}
-
-                                <div id="event-dates-calendar" class="mt-5"
-                                     data-event-dates="{{ eventDatesCalendar|json_encode() }}"></div>
-                            {% endif %}
+                            {#                            {% if event.hasAnEventDateOnSale %} #}
+                            {% set eventDatesCalendar = [] %}
+                            {% for eventDate in event.eventdates %}
+                                {% set eventDatesCalendar = eventDatesCalendar|merge([{"Date": eventDate.startdate|date('Y-m-d'), "Title": eventDate.startdate|date('g:i A'), "Link": eventDate.reference}]) %}
+                            {% endfor %}
+                            {#                                {% include "Global/message.html.twig" with { type: 'info', icon: 'fas fa-info-circle', message: "Click on a date to view tickets" } %} #}
+                            <div id="event-dates-calendar" class="mt-5"
+                                 data-event-dates="{{ eventDatesCalendar|json_encode() }}"></div>
+                            {#                            {% endif %} #}
 
                             {% if event.hasTwoOrMoreEventDatesOnSale %}
                             <div style="overflow-y: scroll; height: 500px">
@@ -250,23 +249,23 @@
                                                         <div class="table-responsive">
                                                             <table class="table table-hover table-condensed">
                                                                 <tbody>
-                                                                    {% for ticket in eventDate.tickets %}
-                                                                        {% if ticket.active and app.user.hasRole('ROLE_ATTENDEE') %}
-                                                                            <tr class="bg-gray">
-                                                                                <td class="border-top-white book-ticket btn btn-primary book-ticket"
-                                                                                    data-event-id="{{ event.id }}"
-                                                                                    data-event-date-id="{{ eventDate.reference }}"
-                                                                                    data-ticket-id="{{ ticket.id }}"
-                                                                                    data-is-already-booked="{{ ticket.isalreadybooked ? 'true' : 'false' }}"
-                                                                                    style="width: 100%; border-radius: 5px !important; cursor: pointer">
-                                                                                    <i class="fas fa-ticket-alt"></i>
-                                                                                    Book: {{ ticket.name }}
-                                                                                </td>
-                                                                            </tr>
-                                                                        {% else %}
-                                                                            <p>Only attendees can book events</p>
-                                                                        {% endif %}
-                                                                    {% endfor %}
+                                                                {% for ticket in eventDate.tickets %}
+                                                                    {% if ticket.active and app.user.hasRole('ROLE_ATTENDEE') %}
+                                                                        <tr class="bg-gray">
+                                                                            <td class="border-top-white book-ticket btn btn-primary book-ticket"
+                                                                                data-event-id="{{ event.id }}"
+                                                                                data-event-date-id="{{ eventDate.reference }}"
+                                                                                data-ticket-id="{{ ticket.id }}"
+                                                                                data-is-already-booked="{{ ticket.isalreadybooked ? 'true' : 'false' }}"
+                                                                                style="width: 100%; border-radius: 5px !important; cursor: pointer">
+                                                                                <i class="fas fa-ticket-alt"></i>
+                                                                                Book: {{ ticket.name }}
+                                                                            </td>
+                                                                        </tr>
+                                                                    {% else %}
+                                                                        <p>Only attendees can book events</p>
+                                                                    {% endif %}
+                                                                {% endfor %}
                                                                 </tbody>
                                                             </table>
                                                         </div>
@@ -277,23 +276,25 @@
 
                                     {% endfor %}
                                 </div>
-                                {% else %}
-                                    {% include "Global/message.html.twig" with { type: 'info', icon: 'fas fa-info-circle', message: "No tickets at this moment" } %}
-                                    <hr class="hr-md">
-                                {% endif %}
+
+                                {#                            {% else %} #}
+                                {#                                {% include "Global/message.html.twig" with { type: 'info', icon: 'fas fa-info-circle', message: "No tickets at this moment" } %} #}
+                                {#                                <hr class="hr-md"> #}
+                                {#                            {% endif %} #}
 
                                 <dl class="mt-5 mb-5">
                                     <dt class="text-muted">
-                                        <span class="{% if app.request.locale == "ar" %}float-right{% else %}float-left{% endif %}">{{ "Organizer" }}</span>
+                                        <span class="float-left">{{ "Organizer" }}</span>
                                         <a href="{{ path('organizer', { slug : event.organizer.user.username }) }}"
-                                           class="{% if app.request.locale == "ar" %}float-left{% else %}float-right{% endif %} text-sm"><i
+                                           class="float-right text-sm"><i
                                                     class="far fa-id-card"></i> {{ "Details" }}</a>
                                         <div class="clearfix"></div>
                                     </dt>
                                     <dd class="mr-0">
                                         <div class="card-banner {{ event.organizer.coverName ? '' : 'organizer-preview-no-cover' }}"{% if event.organizer.coverName %} style="height:250px;background-image: url('{{ asset(event.organizer.getCoverPath|imagine_filter('thumbnail', {"thumbnail": {"size": [400, 250] }})) }}');" {% endif %}>
-                                            <article class="overlay bottom text-center">
-                                                <h4 class="card-title"><a
+                                            <article class="overlay bottom text-center" style="
+height: 100%; display: grid; justify-content: center; align-items: center; align-content: center">
+                                                <h4 class="card-title" style="margin-top: 0.65rem"><a
                                                             href="{{ path('organizer', { slug : event.organizer.user.username }) }}">{{ event.organizer.name }}</a>
                                                 </h4>
                                                 {% if event.organizer.logoName %}
@@ -324,15 +325,16 @@
                                         </div>
                                     </dd>
                                 </dl>
-                                {% if event.showattendees %}
+                                {% if event.showattendees and is_granted('ROLE_ATTENDEE') %}
                                     {% set attendeescount = event.getTotalOrderElementsQuantitySum(1, 'all', 'ROLE_ATTENDEE') %}
                                     {% if attendeescount %}
                                         <hr>
                                         <dl class="mt-5">
                                             <dt class="text-muted mb-3">
-                                                <span class="{% if app.request.locale == "ar" %}float-right{% else %}float-left{% endif %}">{{ "Attendees" }} <b>({{ attendeescount }})</b></span>
+                                    <span class="float-left">{{ "Attendees" }} <b>({{ attendeescount }})</b>
+                                </span>
                                                 <a href="#"
-                                                   class="{% if app.request.locale == "ar" %}float-left{% else %}float-right{% endif %} text-sm"
+                                                   class="float-right text-sm"
                                                    data-toggle="modal" data-target="#attendees-modal"><i
                                                             class="fas fa-users"></i> {{ "See all" }}</a>
                                                 <div class="modal fade" id="attendees-modal">
@@ -350,7 +352,7 @@
                                                             <div class="modal-body">
                                                                 <div class="card border-0 card-body overflow-auto text-nowrap">
                                                                     <div class="avatar-list py-4">
-                                                                        {% for user in services.getUsers({"hasbookedticketfor": event.slug, "role": "attendee"}).getQuery().getResult() %}
+                                                                        {% for user in services.getUsers({"hasbookedticketfor": event.slug, "role": "attendee"}) %}
                                                                             {% include "Global/user-avatar-events.html.twig" with { user: user, showusernametooltip: true } %}
                                                                         {% endfor %}
                                                                     </div>
@@ -364,7 +366,7 @@
                                             <dd class="mr-0">
                                                 <div class="card border-0 card-body">
                                                     <div class="avatar-list">
-                                                        {% for user in services.getUsersShuffled({"hasbookedticketfor": event.slug, "limit": 12, "role": "attendee"}).getQuery().getResult() %}
+                                                        {% for user in services.getUsersShuffled({"hasbookedticketfor": event.slug, "limit": 12, "role": "attendee"}) %}
                                                             {% include "Global/user-avatar-events.html.twig" with { user: user, showusernametooltip: true } %}
                                                         {% endfor %}
                                                         {% if attendeescount > 12 %}
@@ -397,7 +399,7 @@
                             {% include '@FOSComment/Thread/async.html.twig' with {'id':event.slug} %}
                         </div>
                         {% set similareventscriteria = {"category" : event.category, "limit" : 8, "otherthan": event.slug} %}
-                        {% set similarevents = services.getEvents(similareventscriteria).getQuery().getResult() %}
+                        {% set similarevents = services.getEvents(similareventscriteria) %}
                         {% if similarevents %}
                             <div class="row">
                                 <div class="col-12">

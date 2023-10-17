@@ -1,0 +1,30 @@
+{% extends "Global/layout.html.twig" %}
+
+{% set pagetitle = 'News' %}
+
+{% block title %}{{ pagetitle }}{% endblock %}
+
+{% block content %}
+
+    {% set navigation = [{"current" : (pagetitle)}] %}
+    {% include "Global/navigation.html.twig" with navigation %}
+
+    <section class="section-content padding-y bg-white">
+        <div class="{{ services.getSetting("app_layout") }}">
+
+            <div class="row">
+                {% for blogpost in blogposts %}
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        {% include "Global/blog-card.html.twig" with {blogpost: blogpost, thumbnailsize: [397, 397], showdate: 1} %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function clearForm() {
+            window.location.href = "https://universeacg.xyz/blog";
+        }
+    </script>
+{% endblock %}

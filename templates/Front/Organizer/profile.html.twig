@@ -117,7 +117,7 @@
                             </div>
                             <div class="col-12 col-lg-8 bg-light">
 
-                                {% set publishedeventscount = services.getEvents({"count": true, elapsed: "all", organizer: organizer.slug}).getQuery().getResult() | length %}
+                                {% set publishedeventscount = services.getEvents({"count": true, elapsed: "all", organizer: organizer.slug}) | length %}
 
                                 <div class="p-4 d-flex justify-content-end text-center">
                                     <ul class="list-inline mb-0">
@@ -143,13 +143,19 @@
                                         <li class="list-inline-item">
                                             <h5 class="font-weight-bold mb-0 d-block">{{ news | length }}</h5>
                                             <small class="text-muted"> <i
-                                                        class="fas fa-newspaper mr-1"></i>{{ "News" }}
+                                                        class="fas fa-newspaper mr-1"></i>{{ "Announcements" }}
                                             </small>
                                         </li>
                                         <li class="list-inline-item">
                                             <h5 class="font-weight-bold mb-0 d-block">{{ organizer.followedby|length }}</h5>
                                             <small class="text-muted"> <i
-                                                        class="fas fa-folder-plus mr-1"></i>{{ "Followers" }}
+                                                        class="fas fa-users mr-1"></i>{{ "Followers" }}
+                                            </small>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <h5 class="font-weight-bold mb-0 d-block">{{ organizer.members|length }}</h5>
+                                            <small class="text-muted"> <i
+                                                        class="fas fa-users mr-1"></i>{{ "Members" }}
                                             </small>
                                         </li>
                                         <li class="list-inline-item">
@@ -189,10 +195,31 @@
                                                                 <i class="fas fa-folder-plus"></i> {{ "Join" }}
                                                             </button>
                                                         {% elseif managementClubsSocietiesService.ispending(app.user.id, organizer.id) %}
-                                                            <button class="organizer-cancel btn btn-outline-primary btn-sm btn-block"
-                                                                    data-target="{{ path('app_dashboard_attendee_join_cancel', { organizerid: organizer.id, attendeeid : app.user.id }) }}">
-                                                                <i class="fas fa-folder-minus"></i> {{ "Cancel pending request" }}
-                                                            </button>
+                                                            {% if initiatedbyme %}
+                                                                <button class="organizer-cancel btn btn-outline-primary btn-sm btn-block"
+                                                                        data-target="{{ path('app_dashboard_attendee_join_cancel', { attendeeid : app.user.id, organizerid: organizer.id}) }}">
+                                                                    <i class="fas fa-folder-minus"></i> {{ "Cancel pending request" }}
+                                                                </button>
+                                                            {% else %}
+                                                                <div style="display: flex; justify-content: center; align-items: center; align-content: center">
+                                                                    <button style="float: left; margin-top: 0 !important;"
+                                                                            class="organizer-reject btn btn-outline-primary btn-sm btn-block mr-2 ml-2"
+                                                                            data-target="{{ path('app_dashboard_attendee_join_reject', {  attendeeid : app.user.id, organizerid: organizer.id }) }}">
+                                                                        <i class="fas fa-folder-minus"></i> {{ "Reject" }}
+                                                                    </button>
+
+                                                                    <button style="float: left; margin-top: 0 !important;"
+                                                                            class="organizer-accept btn btn-outline-primary btn-sm btn-block"
+                                                                            data-target="{{ path('app_dashboard_attendee_join_accept_xml', { attendeeid : app.user.id, organizerid: organizer.id  }) }}">
+                                                                        <i class="fas fa-folder-minus"></i> {{ "Accept" }}
+                                                                    </button>
+                                                                </div>
+                                                            {% endif %}
+                                                            {#                                                            #}
+                                                            {#                                                            <button class="organizer-cancel btn btn-outline-primary btn-sm btn-block" #}
+                                                            {#                                                                    data-target="{{ path('app_dashboard_attendee_join_cancel', { organizerid: organizer.id, attendeeid : app.user.id }) }}"> #}
+                                                            {#                                                                <i class="fas fa-folder-minus"></i> {{ "Cancel pending request" }} #}
+                                                            {#                                                            </button> #}
                                                         {% else %}
                                                             <button class="organizer-join btn btn-outline-primary btn-sm btn-block"
                                                                     data-target="{{ path('app_dashboard_attendee_join_add', { organizerid: organizer.id, attendeeid : app.user.id }) }}">
@@ -233,7 +260,7 @@
                                             <a class="nav-link" data-toggle="pill"
                                                href="#organizer-news" role="tab"
                                                aria-controls="organizer-news"
-                                               aria-selected="true">{{ "News/Articles" }}
+                                               aria-selected="true">{{ "Announcements" }}
                                                 ({{ newscount }})</a>
                                         </li>
                                     </ul>
@@ -271,7 +298,7 @@
                                                     {% endfor %}
                                                 </div>
                                             {% else %}
-                                                {% include "Global/message.html.twig" with { type: "info", message: ('No news/articles published yet') } %}
+                                                {% include "Global/message.html.twig" with { type: "info", message: ('No announcements published yet') } %}
                                             {% endif %}
                                         </div>
                                     </div>

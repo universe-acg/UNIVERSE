@@ -73,7 +73,7 @@
                     if ($authChecker->isGranted('ROLE_ORGANIZER')) {
                         $organizer = $this->getUser()->getOrganizer()->getSlug();
                     }
-                    $event = $services->getEvents(array("slug" => $request->query->get('event'), "published" => "all", "elapsed" => "all", "organizer" => $organizer))->getQuery()->getOneOrNullResult();
+                    $event = $services->getEvents(array("slug" => $request->query->get('event'), "published" => "all", "elapsed" => "all", "organizer" => $organizer))[0];
                     if (!$event) {
                         $this->addFlash('error', 'The event can not be found');
                         return $services->redirectToReferer("orders");

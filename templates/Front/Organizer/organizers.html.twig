@@ -41,6 +41,10 @@
                                                 {% if app.request.get('sortedby') == 'mostfollowers' %}selected{% endif %}>
                                             Most Followers
                                         </option>
+                                        <option value="mostmembers"
+                                                {% if app.request.get('sortedby') == 'mostmembers' %}selected{% endif %}>
+                                            Most Members
+                                        </option>
                                         <option value="created_desc"
                                                 {% if app.request.get('sortedby') == 'created_desc' %}selected{% endif %}>
                                             Created Recently

@@ -40,7 +40,7 @@ import noUiSlider from 'nouislider/distribute/nouislider.min.js';
 import wNumb from 'wnumb/wNumb.js';
 import Readmore from 'readmore-js/dist/readmore.js';
 import Blazy from 'blazy/blazy.min.js';
-import Ouical from 'add-to-calendar-buttons/ouical.js';
+import Ouical from 'add-to-calendar-buttons/ouical.min.js';
 import Bloodhound from 'typeahead.js/dist/bloodhound.min.js';
 import Routing from '../../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min.js';
 import KnpPaginatorAjax from '../vendor/knppaginator-ajax/knppaginator-ajax.js';
@@ -81,7 +81,7 @@ $(document).ready(function () {
     // Declares utility functions
 
     // Sets the language for the date pickers
-    $.datetimepicker.setLocale($("html").attr("lang"));
+    // $.datetimepicker.setLocale('en');
 
     // Retreives a parameter value passed in the url
     function getURLParameter(paramatername) {
@@ -519,7 +519,7 @@ $(document).ready(function () {
                 theme: 'bootstrap4',
                 allowClear: true,
                 placeholder: 'Select an option',
-                sortResults: data => data.sort((a, b) => a.text.localeCompare(b.text)),
+                // sortResults: data => data.sort((a, b) => a.text.localeCompare(b.text, undefined, {sensitivity: 'base'}))
             });
         } else {
             $(this).select2({
@@ -1022,7 +1022,7 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on("click", ".organizer-join, .organizer-leave, .organizer-cancel", function () {
+    $(document).on("click", ".organizer-join, .organizer-leave, .organizer-cancel, .organizer-reject, .organizer-accept", function () {
         const $thisButton = $(this);
         if ($thisButton.attr("data-action-done") == "1") {
             // Prevent multiple clicks
@@ -1043,6 +1043,10 @@ $(document).ready(function () {
                     $thisButton.html('<i class="fas fa-spinner fa-spin"></i> Requesting');
                 } else if ($thisButton.hasClass('organizer-leave')) {
                     $thisButton.html('<i class="fas fa-folder-minus"></i> Leaving');
+                } else if ($thisButton.hasClass('organizer-accept')) {
+                    $thisButton.html('<i class="fas fa-folder-plus"></i> Accepting');
+                } else if ($thisButton.hasClass('organizer-reject')) {
+                    $thisButton.html('<i class="fas fa-folder-minus"></i> Rejecting');
                 } else {
                     $thisButton.html('<i class="fas fa-spinner fa-spin"></i> Canceling');
                 }
@@ -1053,6 +1057,12 @@ $(document).ready(function () {
                     $thisButton.html('<i class="fas fa-folder-plus"></i> Requested');
                 } else if ($thisButton.hasClass('organizer-leave')) {
                     $thisButton.html('<i class="fas fa-folder-minus"></i> Left');
+                } else if ($thisButton.hasClass('organizer-accept')) {
+                    $thisButton.html('<i class="fas fa-folder-plus"></i> Accepted');
+                    $('.organizer-reject').hide();
+                } else if ($thisButton.hasClass('organizer-reject')) {
+                    $thisButton.html('<i class="fas fa-folder-minus"></i> Rejected');
+                    $('.organizer-accept').hide();
                 } else {
                     $thisButton.html('<i class="fas fa-folder-minus"></i> Canceled');
                 }
@@ -1074,6 +1084,10 @@ $(document).ready(function () {
                     $thisButton.html('<i class="fas fa-folder-plus"> Join</i>');
                 } else if ($thisButton.hasClass('organizer-leave')) {
                     $thisButton.html('<i class="fas fa-folder-minus"> Leave</i>');
+                } else if ($thisButton.hasClass('organizer-accept')) {
+                    $thisButton.html('<i class="fas fa-folder-plus"> Accept</i>');
+                } else if ($thisButton.hasClass('organizer-reject')) {
+                    $thisButton.html('<i class="fas fa-folder-minus"> Reject</i>');
                 } else {
                     $thisButton.html('<i class="fas fa-folder-minus"> Cancel</i>');
                 }
@@ -1085,7 +1099,7 @@ $(document).ready(function () {
     });
 
 
-    $(document).on("click", ".asorganizer-join, .asorganizer-kick, .asorganizer-cancel", function () {
+    $(document).on("click", ".asorganizer-join, .asorganizer-kick, .asorganizer-cancel, .asorganizer-reject, .asorganizer-accept", function () {
         const $thisButton = $(this);
         if ($thisButton.attr("data-action-done") == "1") {
             // Prevent multiple clicks
@@ -1106,6 +1120,10 @@ $(document).ready(function () {
                     $thisButton.html('<i class="fas fa-spinner fa-spin"></i> Inviting');
                 } else if ($thisButton.hasClass('asorganizer-kick')) {
                     $thisButton.html('<i class="fas fa-folder-minus"></i> Kicking');
+                } else if ($thisButton.hasClass('asorganizer-reject')) {
+                    $thisButton.html('<i class="fas fa-folder-minus"></i> Rejecting');
+                } else if ($thisButton.hasClass('asorganizer-accept')) {
+                    $thisButton.html('<i class="fas fa-folder-plus"></i> Accepting');
                 } else {
                     $thisButton.html('<i class="fas fa-spinner fa-spin"></i> Canceling');
                 }
@@ -1116,6 +1134,12 @@ $(document).ready(function () {
                     $thisButton.html('<i class="fas fa-folder-minus"></i> Invited');
                 } else if ($thisButton.hasClass('asorganizer-kick')) {
                     $thisButton.html('<i class="fas fa-folder-minus"></i> Kicked');
+                } else if ($thisButton.hasClass('asorganizer-reject')) {
+                    $thisButton.html('<i class="fas fa-folder-minus"></i> Rejected');
+                    $('.asorganizer-accept').hide();
+                } else if ($thisButton.hasClass('asorganizer-accept')) {
+                    $thisButton.html('<i class="fas fa-folder-plus"></i> Accepted');
+                    $('.asorganizer-reject').hide();
                 } else {
                     $thisButton.html('<i class="fas fa-folder-plus"></i> Canceled');
                 }
@@ -1137,6 +1161,10 @@ $(document).ready(function () {
                     $thisButton.html('<i class="fas fa-folder-plus"> Invite</i>');
                 } else if ($thisButton.hasClass('asorganizer-kick')) {
                     $thisButton.html('<i class="fas fa-folder-minus"> Kick</i>');
+                } else if ($thisButton.hasClass('asorganizer-reject')) {
+                    $thisButton.html('<i class="fas fa-folder-minus"> Reject</i>');
+                } else if ($thisButton.hasClass('asorganizer-accept')) {
+                    $thisButton.html('<i class="fas fa-folder-plus"> Accept</i>');
                 } else {
                     $thisButton.html('<i class="fas fa-folder-minus"> Cancel</i>');
                 }
@@ -1154,7 +1182,7 @@ $(document).ready(function () {
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         remote: {
-            url: location.protocol + '//' + location.host + Routing.generate('get_events', 'en', false) + "?q=%QUERY",
+            url: location.protocol + '//' + location.host + Routing.generate('get_events', {'_locale': 'en'}, false) + "?q=%QUERY",
             wildcard: '%QUERY'
         },
     });
@@ -1330,10 +1358,11 @@ $(document).ready(function () {
     // Multi event dates calendar
     if ($('#event-dates-calendar').length) {
 
-        $('#add-to-cart-form .event-eventDate-wrapper:not(:first-child)').hide();
+        // $('#add-to-cart-form .event-eventDate-wrapper:not(:first-child)').hide();
 
         // Initializes events passed from the template as a json array
         const eventsDatesJsonArray = $('#event-dates-calendar').data("event-dates");
+
         if (eventsDatesJsonArray.length) {
             let eventArrayLength = eventsDatesJsonArray.length;
             for (let i = 0; i < eventArrayLength; i++) {
@@ -1357,7 +1386,8 @@ $(document).ready(function () {
                 EventTargetWholeDay: false, //(bool) clicking on the whole date will trigger event action, as opposed to just clicking on the title.
                 DisabledDays: [], //(array of numbers) days of the week to be slightly transparent. ie: [1,6] to fade Sunday and Saturday.
             };
-            caleandar(document.getElementById('event-dates-calendar'), eventsDatesJsonArray, settings);
+
+            caleandar($('#event-dates-calendar'), eventsDatesJsonArray, settings);
 
             // Hides the calendar back button if current month is displayed
             $('.cld-rwd').css('visibility', 'hidden');
@@ -1450,7 +1480,6 @@ $(document).ready(function () {
         }
     }
 
-
     // Dashboard sidenav
     function openDashboardSideNav() {
         document.getElementById("dashboard-sidenav").style.left = "0";
@@ -1468,60 +1497,6 @@ $(document).ready(function () {
     // Back to top button
     if ($('.material-scrolltop').length) {
         $('body').materialScrollTop();
-    }
-
-    // Disables payment related settings modifications on demo mode
-    if (typeof $("body").data('demo-mode') !== 'undefined') {
-        function disableFormSubmissionOnDemoMode(event) {
-            showStackBarTop('error', '', 'This feature is disabled in demo mode');
-            event.preventDefault();
-            return false;
-        }
-
-        $('form[name="organizer_profile"],form[name="event"],form[name="scanner_app_settings"],form[name="fos_user_change_password_form"],form[name="app_layout_settings"],form[name="menu"],form[name="homepage_hero_settings"],form[name="recaptcha_settings"],form[name="events_list_page_settings"],form[name="blog_settings"],form[name="category"],form[name="page"],form[name="blog_post"],form[name="blog_post_category"],form[name="help_center_article"],form[name="help_center_category"],form[name="account_settings"]').on("submit", function (e) {
-            disableFormSubmissionOnDemoMode(e);
-        });
-
-        $('.dropdown-item').each(function () {
-            if (typeof $(this).attr('href') !== typeof undefined && $(this).attr('href') !== false) {
-                if ($(this).attr('href').indexOf('/delete') >= 0 || $(this).attr('href').indexOf('/disable') >= 0 || $(this).attr('href').indexOf('/featured') >= 0 || $(this).attr('href').indexOf('/notfeatured') >= 0 || $(this).attr('href').indexOf('/hide') >= 0) {
-                    $(this).prop('onclick', null).off('click').unbind('click');
-                }
-            }
-            if (typeof $(this).attr('data-target') !== typeof undefined && $(this).attr('data-target') !== false) {
-                if ($(this).attr('data-target').indexOf('/delete') >= 0 || $(this).attr('data-target').indexOf('/cancel') >= 0) {
-                    $(this).prop('onclick', null).off('click').unbind('click');
-                }
-            }
-        });
-
-        $('.dropdown-item').click(function (e) {
-            if (typeof $(this).attr('href') !== typeof undefined && $(this).attr('href') !== false) {
-                if ($(this).attr('href').indexOf('/delete') >= 0 || $(this).attr('href').indexOf('/disable') >= 0 || $(this).attr('href').indexOf('/featured') >= 0 || $(this).attr('href').indexOf('/notfeatured') >= 0 || $(this).attr('href').indexOf('/hide') >= 0 || $(this).attr('href').indexOf('/hidefromdirectory') >= 0) {
-                    disableFormSubmissionOnDemoMode(e);
-                }
-            }
-            if (typeof $(this).attr('data-target') !== typeof undefined && $(this).attr('data-target') !== false) {
-                if ($(this).attr('data-target').indexOf('/delete') >= 0 || $(this).attr('data-target').indexOf('/cancel') >= 0) {
-                    disableFormSubmissionOnDemoMode(e);
-
-                }
-            }
-        });
-
-        $('.requires-confirmation:not(.dropdown-item)').click(function (e) {
-            if (typeof $(this).attr('href') !== typeof undefined && $(this).attr('href') !== false) {
-                if ($(this).attr('href').indexOf('/delete') >= 0 || $(this).attr('href').indexOf('/disable') >= 0 || $(this).attr('href').indexOf('/featured') >= 0 || $(this).attr('href').indexOf('/notfeatured') >= 0 || $(this).attr('href').indexOf('/hide') >= 0) {
-                    disableFormSubmissionOnDemoMode(e);
-                }
-            }
-            if (typeof $(this).attr('data-target') !== typeof undefined && $(this).attr('data-target') !== false) {
-                if ($(this).attr('data-target').indexOf('/delete') >= 0 || $(this).attr('data-target').indexOf('/cancel') >= 0) {
-                    disableFormSubmissionOnDemoMode(e);
-                }
-            }
-        });
-
     }
 
     // Menu elements form collection
@@ -1553,7 +1528,7 @@ $(document).ready(function () {
                                     theme: 'bootstrap4',
                                     allowClear: true,
                                     placeholder: 'Select an option',
-                                    sortResults: data => data.sort((a, b) => a.text.localeCompare(b.text)),
+                                    // sortResults: data => data.sort((a, b) => a.text.localeCompare(b.text, undefined, {sensitivity: 'base'})),
                                 });
                             } else {
                                 $(this).select2({
@@ -1574,8 +1549,8 @@ $(document).ready(function () {
 
     // Send a test email to check the mail server configuration
     $('.send-test-email-button').click(function () {
-        var $thisButton = $(this);
-        var $sendTestEmailDialog = $.confirm({
+        const $thisButton = $(this);
+        const $sendTestEmailDialog = $.confirm({
             title: 'Mail server test email',
             content: $thisButton.data('confirmation-text') +
                 '<input id="mail-test-email-address" type="email" class="form-control mt-3" placeholder="' + 'Email address' + '">',

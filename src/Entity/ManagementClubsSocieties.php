@@ -15,6 +15,7 @@
      */
     class ManagementClubsSocieties
     {
+        private $isinitiatedbyme;
         /**
          * @var DateTime $createdAt
          *
@@ -29,12 +30,12 @@
          */
         private $id;
         /**
-         * @ORM\ManyToOne(targetEntity="User")
+         * @ORM\ManyToOne(targetEntity="User", fetch = "EAGER")
          * @ORM\JoinColumn(name="userid", referencedColumnName="id")
          */
         private $user;
         /**
-         * @ORM\ManyToOne(targetEntity="Organizer")
+         * @ORM\ManyToOne(targetEntity="Organizer", fetch = "EAGER")
          * @ORM\JoinColumn(name="orgid", referencedColumnName="id")
          */
         private $org;
@@ -50,6 +51,22 @@
         
         public function __construct()
         {
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getIsinitiatedbyme()
+        {
+            return $this->isinitiatedbyme;
+        }
+        
+        /**
+         * @param mixed $isinitiatedbyme
+         */
+        public function setIsinitiatedbyme($isinitiatedbyme): void
+        {
+            $this->isinitiatedbyme = $isinitiatedbyme;
         }
         
         /**

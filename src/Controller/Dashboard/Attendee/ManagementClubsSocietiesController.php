@@ -133,7 +133,8 @@
             $organizer = $organizerService->getOrganizerById($organizerid);
             
             if (!$user || !$organizer) {
-                return new JsonResponse(['error' => 'Error']);
+                $responseData['error'] = 'Something went wrong. Contact admin';
+                return new JsonResponse($responseData);
             }
             
             $row = $managementClubsSocietiesService->findRowByUserIdAndOrgId($attendeeid, $organizerid);
@@ -146,12 +147,12 @@
                 $em->flush();
                 
                 // Define the response data based on the outcome of the operation
-                $this->addFlash('success', "Rejected the invitation to join");
-                return $this->redirectToRoute("dashboard_attendee_management");
+                $responseData['success'] = 'Rejected the invitation to join';
+                return new JsonResponse($responseData);
             }
             
-            $this->addFlash('error', "Something went wrong. Contact admin");
-            return $this->redirectToRoute("dashboard_attendee_management");
+            $responseData['error'] = 'Something went wrong. Contact admin';
+            return new JsonResponse($responseData);
         }
         
         /**
@@ -236,6 +237,42 @@
             $em->flush();
             
             $responseData['success'] = 'You have now canceled the request to join';
+            return new JsonResponse($responseData);
+        }
+        
+        
+        /**
+         * @Route("/dashboard/attendee/management/acceptxml/{attendeeid}/{organizerid}", name="app_dashboard_attendee_join_accept_xml")
+         */
+        public function acceptxml(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $organizerid, $attendeeid)
+        {
+            $user = $userService->getUserById($attendeeid);
+            $organizer = $organizerService->getOrganizerById($organizerid);
+            if (!$user || !$organizer) {
+//                $this->addFlash('error', "Something went wrong. Contact admin");
+                return $this->redirectToRoute("dashboard_organizer_management");
+            }
+            
+            $row = $managementClubsSocietiesService->findRowByUserIdAndOrgId($attendeeid, $organizerid);
+            
+            if (!$row) {
+//                $this->addFlash('error', "Something went wrong. Contact admin");
+                return new JsonResponse(['error' => 'Error']);
+            }
+            
+            if ($row->getStatus() == 0 || $row->getStatus() == -1) {
+                $em = $this->getDoctrine()->getManager();
+                $row->setStatus(1);
+                
+                $em->persist($row);
+                $em->flush();
+                
+                // Define the response data based on the outcome of the operation
+                $responseData['success'] = 'Congratulations, you are now a member';
+                return new JsonResponse($responseData);
+            }
+            
+            $responseData['success'] = 'Something went wrong. Contact admin';
             return new JsonResponse($responseData);
         }
         

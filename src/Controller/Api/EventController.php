@@ -56,7 +56,7 @@
             if ($this->isGranted("ROLE_ADMINISTRATOR")) {
                 $organizerEnabled = "all";
             }
-            $event = $services->getEvents(array('slug' => $slug, 'published' => $published, 'elapsed' => $elapsed, 'organizerEnabled' => $organizerEnabled))->getQuery()->getOneOrNullResult();
+            $event = $services->getEvents(array('slug' => $slug, 'published' => $published, 'elapsed' => $elapsed, 'organizerEnabled' => $organizerEnabled))[0];
             
             return $this->json(array("slug" => $event->getSlug(), "text" => $event->getName()));
         }
@@ -79,7 +79,7 @@
                 $organizerEnabled = "all";
             }
             
-            $events = $services->getEvents(array("organizer" => $organizer, 'keyword' => $q, 'published' => $published, 'elapsed' => $elapsed, 'limit' => $limit, 'organizerEnabled' => $organizerEnabled))->getQuery()->getResult();
+            $events = $services->getEvents(array("organizer" => $organizer, 'keyword' => $q, 'published' => $published, 'elapsed' => $elapsed, 'limit' => $limit, 'organizerEnabled' => $organizerEnabled));
             
             $results = array();
             foreach ($events as $event) {

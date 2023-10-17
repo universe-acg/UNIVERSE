@@ -119,10 +119,15 @@
     <script>
         $(document).ready(function () {
             $('#filter').on('keyup', function () {
-                var selectedStatus = $(this).val();
+                var selectedStatus = $(this).val().toLowerCase();
                 if (selectedStatus !== '') {
                     $('tbody tr').hide(); // Hide all rows
-                    $('tbody tr td:nth-child(2):contains("' + selectedStatus + '")').parent().show(); // Show rows with selected status
+                    $('tbody tr td:nth-child(2)').each(function () {
+                        var cellText = $(this).text().toLowerCase(); // Convert cell text to lowercase
+                        if (cellText.includes(selectedStatus)) {
+                            $(this).parent().show(); // Show rows with selected status
+                        }
+                    });
                 } else {
                     $('tbody tr').show(); // Show all rows when "All" is selected
                 }

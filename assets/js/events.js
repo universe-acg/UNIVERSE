@@ -18,7 +18,6 @@ import 'marker-clusterer/marker-clusterer.js';
 // require('@fullcalendar/core/locales-all.min.js');
 
 $(document).ready(function () {
-
     // Initializes events calendar
     if ($('#events-calendar').length) {
         var calendarEl = document.getElementById('events-calendar');
@@ -29,13 +28,13 @@ $(document).ready(function () {
             defaultDate: $('#events-calendar').data('default-date'),
             height: "auto",
 
-            /*customButtons: {
-             alleventscalendarlink: {
-             text: 'All events calendar',
-             click: function () {
-             }
-             }
-             },*/
+            // customButtons: {
+            //     alleventscalendarlink: {
+            //         text: 'All events calendar',
+            //         click: function () {
+            //         }
+            //     }
+            // },
             header: {
                 left: 'prev,next today alleventscalendarlink',
                 center: 'title',

@@ -1,0 +1,165 @@
+{% extends "Global/layout.html.twig" %}
+
+{% set pagetitle = 'Manage Governing Body' %}
+
+{% block title %}{{ pagetitle }}{% endblock %}
+
+{% block content %}
+
+    {% set navigation = [{ "dashboard_index": ('Dashboard' ), "current":(pagetitle) }] %}
+    {% include "Global/navigation.html.twig" with navigation %}
+
+    <section class="section-content padding-y bg-white">
+        <div class="{{ services.getSetting("app_layout") }}">
+            <div class="row">
+                <aside class="col-lg-3 pt-3 pt-lg-0">
+                    {% include "Dashboard/sidebar.html.twig" %}
+                </aside>
+                <div class="col-lg-9 mt-4 mt-lg-0">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="add-new-entry">
+                                <form method="POST" action="{{ path('dashboard_organizer_managementgb_add') }}">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="title"
+                                               placeholder="Title of GB role" required>
+                                    </div>
+                                    <br>
+                                    <div class="input-group">
+                                        <textarea rows="3" class="form-control" name="description"
+                                                  placeholder="Description of role" required></textarea>
+                                    </div>
+                                    <br>
+                                    <div class="input-group">
+                                        <select id="userselect" required name="user"
+                                                class="form-select form-control bg-white select2">
+                                            <option value="all" disabled selected>Select a member for this role</option>
+                                            {% for member in members %}
+                                                <option value="{{ member.getId }}">{{ member.getCrossRoleName }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <br>
+                                    <div class="input-group">
+                                        <button type="submit" class="btn btn-primary"
+                                                style="border-radius: 10px; color: white">
+                                            <i class="fas fa-plus"></i> Add
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <br>
+                            {% for member in gbMembers %}
+                                <div class="add-new-entry" id="member_{{ member.id }}">
+                                    <input type="hidden" name="member_id" id="newupdatetitle" value="{{ member.id }}">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" value="{{ member.title }}"
+                                               name="title"
+                                               placeholder="Title of GB role" required>
+                                    </div>
+                                    <br>
+                                    <div class="input-group">
+                <textarea rows="3" class="form-control" name="description"
+                          id="newupdatedesc"
+                          placeholder="Description of role" required>{{ member.desc }}</textarea>
+                                    </div>
+                                    <br>
+                                    <div class="input-group">
+                                        <select id="userselectupdate" required name="user"
+                                                class="form-select form-control bg-white select2">
+                                            {% for memberOption in members %}
+                                                <option value="{{ memberOption.id }}"
+                                                        {% if memberOption.id == member.attendee.id %}selected{% endif %}>
+                                                    {{ memberOption.getCrossRoleName }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <br>
+                                    <div class="input-group"
+                                         style="display: flex; justify-content: start; align-content: center; align-items: center">
+                                        <button type="button" class="btn btn-primary mr-3"
+                                                style="border-radius: 10px; color: white"
+                                                onclick="updateGbMembers('{{ member.id }}', '{{ member.title }}', '{{ member.desc }}')">
+                                            <i class="fas fa-save"></i> Update
+                                        </button>
+                                        <button type="button" class="btn btn-danger"
+                                                style="border-radius: 10px; color: white"
+                                                onclick="deleteGbMember({{ member.id }})">
+                                            <i class="fas fa-save"></i> Delete
+                                        </button>
+                                    </div>
+                                </div>
+                                <br>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function updateGbMembers(id, title, desc) {
+            // Get the selected user value
+            const selectedUser = document.getElementById('userselectupdate').value;
+            // Prepare the data to send for updating
+            const updateData = {
+                id: id,
+                title: document.getElementById('newupdatetitle'),
+                description: document.getElementById('newupdatedesc'),
+                user: selectedUser
+            };
+
+            console.dir(updateData);
+
+            // Perform an AJAX request to update members based on your route
+            fetch('{{ path('dashboard_organizer_managementgb_update_xml') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updateData)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        location.reload();
+                    }
+                })
+                .catch(error => {
+                    // Handle network errors
+                });
+        }
+
+        function deleteGbMember(id) {
+            // Get the ID of the member to delete
+            // Prepare the data to send for deletion
+            const deleteData = {
+                id: id
+            };
+
+            // Perform an AJAX request to delete a member based on your route
+            fetch('{{ path('dashboard_organizer_managementgb_delete_xml') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(deleteData)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        const parentElement = document.getElementById('member_' + id);
+                        parentElement.remove();
+                        showStackBarTop('success', "", 'Successfully deleted GB member');
+                    } else {
+                        location.reload();
+                    }
+                })
+                .catch(error => {
+                    // Handle network errors
+                });
+        }
+    </script>
+{% endblock %}

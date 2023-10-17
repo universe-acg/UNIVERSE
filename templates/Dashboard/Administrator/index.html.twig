@@ -30,21 +30,21 @@
                                 <div class="col-md-3 col-sm-6 col-12 p-1">
                                     <div class="bg-primary rounded p-4 text-center text-white position-relative counter-box">
                                         <i class="fas fa-calendar-alt"></i>
-                                        <h4>{{ services.getEvents({"count": true}).getQuery().getResult() | length }}</h4>
+                                        <h4>{{ services.getEvents({"count": true}) | length }}</h4>
                                         <h5 class="mb-0">{{ "Events added" }}</h5>
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-sm-6 col-12 p-1">
                                     <div class="bg-primary rounded p-4 text-center text-white position-relative counter-box">
                                         <i class="fas fa-calendar-alt"></i>
-                                        <h4>{{ services.getEvents({"count": true, "published": true}).getQuery().getResult() | length }}</h4>
+                                        <h4>{{ services.getEvents({"count": true, "published": true}) | length }}</h4>
                                         <h5 class="mb-0">{{ "Published events" }}</h5>
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-sm-6 col-12 p-1">
                                     <div class="bg-primary rounded p-4 text-center text-white position-relative counter-box">
                                         <i class="fas fa-calendar-alt"></i>
-                                        <h4>{{ services.getEvents({"count": true, "published": true, "elapsed": false}).getQuery().getResult() | length }}</h4>
+                                        <h4>{{ services.getEvents({"count": true, "published": true, "elapsed": false}) | length }}</h4>
                                         <h5 class="mb-0">{{ "Upcoming events" }}</h5>
                                     </div>
                                 </div>
@@ -56,7 +56,7 @@
                                     </div>
                                 </div>
                             </div>
-                            {% set events = services.getEvents({"published": "all", "elapsed": "all", "limit": 3}).getQuery().getResult() %}
+                            {% set events = services.getEvents({"published": "all", "elapsed": "all", "limit": 3}) %}
                             {% if events|length > 0 %}
                                 <div class="row">
                                     <div class="col-12">

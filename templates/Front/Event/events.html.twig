@@ -51,21 +51,32 @@
         <div class="{{ services.getSetting("app_layout") }}">
 
             {% set eventsoncalendar = [] %}
-            {% set eventsonmap = [] %}
+            {% for event in events %}
+                {% for eventdate in event.eventdates %}
+                    {% if eventdate.isOnSale %}
+                        {% if services.getSetting("show_calendar_button") == "yes" %}
+                            {% set eventsoncalendar = eventsoncalendar|merge([{"title": event.name, "start":eventdate.startdate|date('Y-m-d H:i'), "end": (eventdate.enddate ? eventdate.enddate|date('Y-m-d H:i') : ''), "url": (path('event', {slug : event.slug})) }]) %}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
 
 
-            {#            <div class="box shadow-none bg-gray mb-4"> #}
-            {#                <div class="row"> #}
-            {#                    <div class="col-sm-12 col-lg-2  mb-3 mb-lg-0"> #}
-            {#                        <span class="center-lg-y text-muted">{{ "%resultsCount% event(s) found"  |trans ({'%resultsCount%': events.getTotalItemCount}) }}</span> #}
-            {#                    </div> #}
-            {#                    <div class="col-sm-12 col-lg-6 "> #}
-            {#                        <a href="#events-calendar" class="btn btn-primary has-tooltip" data-toggle="collapse" #}
-            {#                           title="{{ "Show events calendar" }}" aria-expanded="false" #}
-            {#                           aria-controls="events-calendar"><i class="far fa-calendar fa-fw"></i></a> #}
-            {#                    </div> #}
-            {#                </div> #}
-            {#            </div> #}
+            <div id="events-calendar" data-default-date="{{ "now"|date('Y-m-d') }}"
+                 data-events="{{ eventsoncalendar|json_encode() }}" class="mb-4 collapse"></div>
+
+            <div class="box shadow-none bg-gray mb-4">
+                <div class="row">
+                    <div class="col-sm-12 col-lg-2  mb-3 mb-lg-0">
+                        <span class="center-lg-y text-muted">{{ "%resultsCount% event(s) found"  |trans ({'%resultsCount%': events.getTotalItemCount}) }}</span>
+                    </div>
+                    <div class="col-sm-12 col-lg-6 ">
+                        <a href="#events-calendar" class="btn btn-primary has-tooltip" data-toggle="collapse"
+                           title="{{ "Show events calendar" }}" aria-expanded="false"
+                           aria-controls="events-calendar"><i class="far fa-calendar fa-fw"></i></a>
+                    </div>
+                </div>
+            </div>
 
             <div class="row" style="">
                 <aside class="col-lg-3 order-2 order-lg-1">

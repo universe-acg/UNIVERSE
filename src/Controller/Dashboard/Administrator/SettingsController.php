@@ -42,7 +42,7 @@
             
             if ($form->isSubmitted()) {
                 if ($form->isValid()) {
-                    $homeSliderEvents = $services->getEvents(array("isOnHomepageSlider" => true))->getQuery()->getResult();
+                    $homeSliderEvents = $services->getEvents(array("isOnHomepageSlider" => true));
                     foreach ($homeSliderEvents as $event) {
                         $event->setIsonhomepageslider(null);
                         $em->persist($event);

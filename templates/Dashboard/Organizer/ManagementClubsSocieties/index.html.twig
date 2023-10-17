@@ -34,6 +34,11 @@
                                     <option value="Not Approved">Not Approved</option>
                                 </select>
                             </div>
+                            <div class="mb-3">
+                                <label for="filter">Filter by keword:</label>
+                                <input type="text" id="filter" placeholder="Filter through the files by keyword"
+                                       class="form-control bg-white"/>
+                            </div>
                             <div class="card">
                                 <div class="table-responsive">
                                     <table class="table table-vcenter">
@@ -96,6 +101,10 @@
                                                                                         class="dropdown-icon fas fa-window-close fa-fw text-muted"></i> {{ "Delete" }}
                                                                             </a>
                                                                         {% else %}
+                                                                            {% if association.getisinitiatedbyme %}
+                                                                            {% else %}
+
+                                                                            {% endif %}
                                                                             <a href="{{ path('app_dashboard_organizer_join_accept', { organizerid: app.user.organizer.id, attendeeid: association.user.id }) }}"
                                                                                class="dropdown-item"><i
                                                                                         class="dropdown-icon fas fa-users fa-fw text-muted"></i> {{ "Accept" }}
@@ -127,10 +136,30 @@
     <script>
         $(document).ready(function () {
             $('#statusFilter').on('change', function () {
-                var selectedStatus = $(this).val();
+                var selectedStatus = $(this).val().toLowerCase();
                 if (selectedStatus !== 'all') {
                     $('tbody tr').hide(); // Hide all rows
-                    $('tbody tr td:nth-child(4):contains("' + selectedStatus + '")').parent().show(); // Show rows with selected status
+                    $('tbody tr td:nth-child(4)').each(function () {
+                        var cellText = $(this).text().toLowerCase(); // Convert cell text to lowercase
+                        if (cellText.includes(selectedStatus)) {
+                            $(this).parent().show(); // Show rows with selected status
+                        }
+                    });
+                } else {
+                    $('tbody tr').show(); // Show all rows when "All" is selected
+                }
+            });
+
+            $('#filter').on('keyup', function () {
+                var selectedStatus = $(this).val().toLowerCase();
+                if (selectedStatus !== '') {
+                    $('tbody tr').hide(); // Hide all rows
+                    $('tbody tr td:nth-child(1)').each(function () {
+                        var cellText = $(this).text().toLowerCase(); // Convert cell text to lowercase
+                        if (cellText.includes(selectedStatus)) {
+                            $(this).parent().show(); // Show rows with selected status
+                        }
+                    });
                 } else {
                     $('tbody tr').show(); // Show all rows when "All" is selected
                 }

@@ -92,7 +92,7 @@
                             </div>
                             <div class="col-12 col-lg-8 bg-light">
 
-                                {% set publishedeventscount = services.getEvents({"count": true, elapsed: "all", attendee: attendee.slug}).getQuery().getResult() | length %}
+                                {% set publishedeventscount = services.getEvents({"count": true, elapsed: "all", attendee: attendee.slug}) | length %}
 
                                 <div class="p-4 d-flex justify-content-end text-center">
                                     <ul class="list-inline mb-0"
@@ -121,7 +121,7 @@
                                                 {{ "Comments" }}
                                             </small>
                                         </li>
-                                        {% if app.user.organizer.category == 'Club' %}
+                                        {% if app.user.organizer and app.user.organizer.category == 'Club' %}
                                             <li class="list-inline-item">
                                                 {% if is_granted('ROLE_ORGANIZER') %}
                                                     {% if managementClubsSocietiesService.isaccepted(attendee.id, app.user.organizer.id) %}
@@ -135,10 +135,26 @@
                                                             <i class="fas fa-folder-plus"></i> {{ "Invite" }}
                                                         </button>
                                                     {% elseif managementClubsSocietiesService.ispending(attendee.id, app.user.organizer.id) %}
-                                                        <button class="asorganizer-cancel btn btn-outline-primary btn-sm btn-block"
-                                                                data-target="{{ path('app_dashboard_organizer_join_cancel', { organizerid: app.user.organizer.id, attendeeid : attendee.id }) }}">
-                                                            <i class="fas fa-folder-minus"></i> {{ "Cancel pending request" }}
-                                                        </button>
+                                                        {% if initiatedbyme %}
+                                                            <button class="organizer-cancel btn btn-outline-primary btn-sm btn-block"
+                                                                    data-target="{{ path('app_dashboard_organizer_join_cancel', { attendeeid : attendee.id, organizerid: app.user.organizer.id }) }}">
+                                                                <i class="fas fa-folder-minus"></i> {{ "Cancel pending request" }}
+                                                            </button>
+                                                        {% else %}
+                                                            <div style="display: flex; justify-content: center; align-items: center; align-content: center">
+                                                                <button style="float: left; margin-top: 0 !important;"
+                                                                        class="asorganizer-reject btn btn-outline-primary btn-sm btn-block mr-2 ml-2"
+                                                                        data-target="{{ path('app_dashboard_organizer_join_reject', { organizerid: app.user.organizer.id, attendeeid : attendee.id }) }}">
+                                                                    <i class="fas fa-folder-minus"></i> {{ "Reject" }}
+                                                                </button>
+
+                                                                <button style="float: left; margin-top: 0 !important;"
+                                                                        class="asorganizer-accept btn btn-outline-primary btn-sm btn-block"
+                                                                        data-target="{{ path('app_dashboard_organizer_join_accept_xml', { organizerid: app.user.organizer.id, attendeeid : attendee.id }) }}">
+                                                                    <i class="fas fa-folder-minus"></i> {{ "Accept" }}
+                                                                </button>
+                                                            </div>
+                                                        {% endif %}
                                                     {% else %}
                                                         <button class="asorganizer-join btn btn-outline-primary btn-sm btn-block"
                                                                 data-target="{{ path('app_dashboard_organizer_join_add', { organizerid: app.user.organizer.id, attendeeid : attendee.id }) }}">

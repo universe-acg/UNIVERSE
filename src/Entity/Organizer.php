@@ -29,6 +29,7 @@
          * @ORM\Column(length=255, unique=true)
          */
         protected $slug;
+        private $members;
         /**
          * @ORM\Id()
          * @ORM\GeneratedValue()
@@ -40,7 +41,6 @@
          * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
          */
         private $user;
-        
         /**
          * @ORM\OneToMany(targetEntity="Event", mappedBy="organizer", cascade={"remove"})
          */
@@ -67,34 +67,28 @@
          * @Assert\Length(min = 2)
          */
         private $name;
-        
         /**
          * @ORM\Column(type="string", length=1000, nullable=true)
          */
         private $description;
-        
         /**
          * @ORM\Column(type="string", length=255, nullable=true)
          */
         private $website;
-        
         /**
          * @ORM\Column(type="string", length=255, nullable=true)
          */
         private $email;
-        
         /**
          * @ORM\Column(type="string", length=255, nullable=true)
          * @Assert\Length(min = 1)
          */
         private $phone;
-        
         /**
          * @ORM\Column(type="string", length=255, nullable=true)
          * @Assert\Length(max = 100)
          */
         private $facebook;
-        
         /**
          * @ORM\Column(type="string", length=255, nullable=true)
          * @Assert\Length(max = 100)
@@ -202,11 +196,8 @@
          * @ORM\Column(type="datetime")
          */
         private $createdAt;
-        
         private $newscount;
-        
         private $eventscount;
-        
         private $followerscount;
         /**
          * @var DateTime $updatedAt
@@ -224,20 +215,34 @@
          * @ORM\Column(type="integer")
          */
         private $views;
-        
-        
         /**
          * @ORM\Column(type="boolean")
          * @Assert\NotNull
          */
         private $showfollowers = true;
-        
+
         public function __construct()
         {
             $this->events = new ArrayCollection();
             $this->followedby = new ArrayCollection();
             $this->events = new ArrayCollection();
             $this->views = 0;
+        }
+        
+        /**
+         * @return mixed
+         */
+        public function getMembers()
+        {
+            return $this->members;
+        }
+        
+        /**
+         * @param mixed $members
+         */
+        public function setMembers($members): void
+        {
+            $this->members = $members;
         }
         
         /**

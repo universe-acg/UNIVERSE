@@ -464,7 +464,7 @@
         public function event($slug, OrderRepository $orderRepository, AppServices $services): Response
         {
             
-            $event = $services->getEvents(array("slug" => $slug, "elapsed" => "all"))->getQuery()->getOneOrNullResult();
+            $event = $services->getEvents(array("slug" => $slug, "elapsed" => "all"))[0];
             
             if (!$event) {
                 $this->addFlash('error', 'The event could not be found');
@@ -512,7 +512,7 @@
          */
         public function openevent($slug, OrderElementRepository $orderElementRepository, OrderRepository $orderRepository, AppServices $services, EventTicketRepository $eventTicketRepository): Response
         {
-            $event = $services->getEvents(array("slug" => $slug, "elapsed" => "all"))->getQuery()->getOneOrNullResult();
+            $event = $services->getEvents(array("slug" => $slug, "elapsed" => "all"))[0];
             
             
             if (!$event) {

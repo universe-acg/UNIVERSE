@@ -37,7 +37,7 @@
             $em->flush();
             
             $org = $user->getOrganizer();
-            $pastevents = $services->getEvents(array('organizer' => $org->getSlug()))->getQuery()->getResult();
+            $pastevents = $services->getEvents(array('organizer' => $org->getSlug()));
             $currentDateTime = new DateTime(); // Get the current date and time
 
 // Filter the $pastevents array to keep only events with enddate smaller than the current time
@@ -50,7 +50,7 @@
                 return false; // Exclude the event if none of its event dates meet the condition
             });
             
-            $currentevnts = $services->getEvents(array('organizer' => $org->getSlug()))->getQuery()->getResult();
+            $currentevnts = $services->getEvents(array('organizer' => $org->getSlug()));
             
             $currentevnts = array_filter($currentevnts, static function ($event) use ($currentDateTime) {
                 foreach ($event->getEventdates() as $eventDate) {
@@ -61,12 +61,24 @@
                 return false; // Exclude the event if none of its event dates meet the condition
             });
             
+            $row = $managementClubsSocietiesService->findRowByUserIdAndOrgId($this->getUser()->getId(), $org->getId());
+            if ($row) {
+                $manage = $managementClubsSocietiesService->isinitiatedbyme($row->getId(), $this->getUser()->getId());
+            } else {
+                $manage = false;
+            }
             
             $news = $this->getDoctrine()->getRepository(Organizer::class)->findNewsByUser($user);
             
+            $org->setMembers($managementClubsSocietiesService->findUsersOfOrganization($org->getId()));
             
-            return $this->render('Front/Organizer/profile.html.twig', ['organizer' => $org, 'currentevnts' => $currentevnts,
-                    'pastevents' => $pastevents, 'news' => $news, 'managementClubsSocietiesService' => $managementClubsSocietiesService]
+            return $this->render('Front/Organizer/profile.html.twig',
+                ['organizer' => $org,
+                    'initiatedbyme' => $manage,
+                    'currentevnts' => $currentevnts,
+                    'pastevents' => $pastevents,
+                    'news' => $news,
+                    'managementClubsSocietiesService' => $managementClubsSocietiesService]
             );
         }
         
@@ -74,14 +86,15 @@
          * @Route("/creators", name="creators", methods={"GET", "POST"})
          */
         public function creators(
-            OrganizerRepository $organizerRepository,
-            Request             $request,
-            AppServices         $appServices,
-            PaginatorInterface  $paginator
+            ManagementClubsSocietiesService $managementClubsSocietiesService,
+            OrganizerRepository             $organizerRepository,
+            Request                         $request,
+            AppServices                     $appServices,
+            PaginatorInterface              $paginator
         ): Response
         {
             $category = $request->get('category') ?? "all";
-            $keyword = $request->get('keyword') ?? "all";
+            $keyword = $request->get('keyword') ?? "";
             $level = $request->get('level') ?? "all";
             $sortedby = $request->get('sortedby') ?? "all";
             
@@ -96,11 +109,11 @@
                 'sortedby' => $sortedby
             ];
             
-            $organizers = $appServices->getCreators($criteria)->getQuery()->getResult();
+            $organizers = $appServices->getCreators($criteria);
             
             foreach ($organizers as $organizer) {
                 $organizer->setNewscount(count($this->getDoctrine()->getRepository(Organizer::class)->findNewsByUser($organizer->getUser())));
-                $organizer->setEventscount(count($appServices->getEvents(array("elapsed" => "all", "organizer" => $organizer->getSlug()))->getQuery()->getResult()));
+                $organizer->setEventscount(count($appServices->getEvents(array("elapsed" => "all", "organizer" => $organizer->getSlug()))));
                 $organizer->setFollowerscount(count($organizer->getFollowedby()));
             }
             
@@ -113,7 +126,9 @@
                     return !in_array($organizer->getCategory(), $categoriesToExclude, true);
                 });
             }
-            
+            foreach ($organizers as $organizer) {
+                $organizer->setMembers($managementClubsSocietiesService->findUsersOfOrganization($organizer->getId()));
+            }
             if ($sortedby == 'all') {
                 $organizers = $this->sortByPoints($organizers);
             } elseif ($sortedby == 'mostevents') {
@@ -122,7 +137,10 @@
                 $organizers = $this->sortByMostNews($organizers);
             } elseif ($sortedby == 'mostfollowers') {
                 $organizers = $this->sortByMostFollowers($organizers);
+            } elseif ($sortedby == 'mostmembers') {
+                $organizers = $this->sortByMostMembers($organizers);
             }
+            
             
             $pagination = $paginator->paginate(
                 $organizers,
@@ -235,6 +253,21 @@
         {
             usort($organizers, static function ($a, $b) {
                 return $b->getFollowerscount() <=> $a->getFollowerscount();
+            });
+            
+            return $organizers;
+        }
+        
+        /**
+         * Sort organizers by the count of members in descending order.
+         *
+         * @param Organizer[] $organizers
+         * @return Organizer[]
+         */
+        private function sortByMostMembers(array $organizers): array
+        {
+            usort($organizers, static function ($a, $b) {
+                return count($b->getMembers()) <=> count($a->getMembers());
             });
             
             return $organizers;

@@ -73,7 +73,8 @@ function createCalendar(calendar, element, adjuster) {
         "September",
         "October",
         "November",
-        "December"];
+        "December"
+    ];
 
     function AddSidebar() {
         var sidebar = document.createElement('div');
@@ -334,6 +335,6 @@ function createCalendar(calendar, element, adjuster) {
 }
 
 export default function caleandar(el, data, settings) {
-    var obj = new Calendar(data, settings);
+    const obj = new Calendar(data, settings);
     createCalendar(obj, el);
 }

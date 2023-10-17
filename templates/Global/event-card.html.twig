@@ -88,15 +88,3 @@
         {% endif %}
     {% endif %}
 </div>
-<script>
-    //  Lazy loading images
-    var bLazy = new Blazy({
-        selector: '.img-lazy-load',
-        success: function (ele) {
-            $(ele).find('.loader').remove();
-        },
-        error: function (ele, msg) {
-            $(ele).find('.loader').remove();
-        }
-    });
-</script>

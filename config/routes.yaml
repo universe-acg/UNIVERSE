@@ -50,7 +50,6 @@ app_dashboard_attendee_join_reject:
 app_dashboard_attendee_join_cancel:
   path: /dashboard/attendee/management/cancel/{attendeeid}/{organizerid}
   controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::cancelxml'
-  methods: [ 'GET' ]
   condition: 'request.isXmlHttpRequest()'
 
 app_dashboard_attendee_join_cancelnotxml:
@@ -86,6 +85,16 @@ app_dashboard_organizer_join_accept:
   controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::accept'
   methods: [ 'GET' ]
 
+app_dashboard_organizer_join_accept_xml:
+  path: /dashboard/organizer/management/acceptxml/{organizerid}/{attendeeid}
+  controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::acceptxml'
+  methods: [ 'GET' ]
+
+app_dashboard_attendee_join_accept_xml:
+  path: /dashboard/attendee/management/acceptxml/{attendeeid}/{organizerid}
+  controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::acceptxml'
+  methods: [ 'GET' ]
+
 app_dashboard_organizer_join_reject:
   path: /dashboard/organizer/management/reject/{organizerid}/{attendeeid}
   controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::reject'
@@ -114,11 +123,27 @@ dashboard_organizer_management:
   path: /dashboard/organizer/management
   controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::index'
 
+dashboard_organizer_managementgb:
+  path: /dashboard/organizer/managementgb
+  controller: 'App\Controller\Dashboard\Organizer\GoverningBodyController::index'
+
+dashboard_organizer_managementgb_delete_xml:
+  path: /dashboard/organizer/managementgb/delete
+  controller: 'App\Controller\Dashboard\Organizer\GoverningBodyController::deleteGbMemberById'
+
+dashboard_organizer_managementgb_update_xml:
+  path: /dashboard/organizer/managementgb/update
+  controller: 'App\Controller\Dashboard\Organizer\GoverningBodyController::updateGbMembersByOrg'
+
+dashboard_organizer_managementgb_add:
+  path: /dashboard/organizer/managementgb/add
+  controller: 'App\Controller\Dashboard\Organizer\GoverningBodyController::addGbMembersByOrg'
+
 dashboard_organizer_management_files:
   path: /dashboard/organizer/management/files
   controller: 'App\Controller\Dashboard\Organizer\FilesController::index'
 
-  # config/routes.yaml
+# config/routes.yaml
 
 dashboard_organizer_management_files_download_file:
   path: /dashboard/organizer/management/files/download/{fileId}

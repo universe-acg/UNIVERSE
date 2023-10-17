@@ -31,7 +31,7 @@
                                 {% else %}
                                     {% include "Global/user-avatar.html.twig" with { user : app.user } %}
                                 {% endif %}
-                                <div class="text-wrap {% if app.request.locale == "ar" %}ml-1{% endif %}">
+                                <div class="text-wrap ">
                                     <span>{{ app.user.username }} <i class="fas fa-caret-down"></i></span>
                                 </div>
                             </a>
@@ -115,18 +115,18 @@
                             {% set link =  menuElement.link %}
                         {% endif %}
                         {% if link == "categories_dropdown" %}
-                            {#                            <li class="nav-item dropdown dropdown-hover {% if app.request.get('_route') == "categories" %}active{% endif %}"> #}
-                            {#                                <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown" #}
-                            {#                                   aria-haspopup="true" aria-expanded="false"><i #}
-                            {#                                            class="{{ menuElement.icon }} fa-fw"></i> {{ menuElement.label }}</a> #}
-                            {#                                <div class="dropdown-menu dropdown-menu-arrow"> #}
-                            {#                                    {% for category in services.getCategories({ "featured": true, "limit": 9 }).getQuery().getResult() %} #}
-                            {#                                        <a href="{{ path('events', { category: category.slug }) }}" #}
-                            {#                                           class="dropdown-item"><i #}
-                            {#                                                    class="{{ category.icon }} fa-fw"></i> {{ category.name }}</a> #}
-                            {#                                    {% endfor %} #}
-                            {#                                </div> #}
-                            {#                            </li> #}
+                            <li class="nav-item dropdown dropdown-hover {% if app.request.get('_route') == "categories" %}active{% endif %}">
+                                <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown"
+                                   aria-haspopup="true" aria-expanded="false"><i
+                                            class="{{ menuElement.icon }} fa-fw"></i> {{ menuElement.label }}</a>
+                                <div class="dropdown-menu dropdown-menu-arrow">
+                                    {% for category in services.getCategories({ "featured": true, "limit": 9 }).getQuery().getResult() %}
+                                        <a href="{{ path('events', { category: category.slug }) }}"
+                                           class="dropdown-item"><i
+                                                    class="{{ category.icon }} fa-fw"></i> {{ category.name }}</a>
+                                    {% endfor %}
+                                </div>
+                            </li>
                         {% else %}
                             {% if link != "/events" and link != "/dashboard/attendee/my-tickets" and link != "/dashboard/organizer/my-events/add" and menuElement.customLink  != "https://universeacg.xyz/scanqr" and menuElement.customLink  != "https://universeacg.xyz/open-events" %}
                                 <li class="nav-item {% if app.request.pathinfo == link %}active{% endif %}">

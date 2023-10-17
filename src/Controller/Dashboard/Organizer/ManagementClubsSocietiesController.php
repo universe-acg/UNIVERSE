@@ -34,6 +34,10 @@
                 ['wrap-queries' => true]
             );
             
+            foreach ($associations as $associtaion) {
+                $associtaion->setIsinitiatedbyme($managementClubsSocietiesService->isinitiatedbyme($associtaion->getId(), $associtaion->getUser()->getId()));
+            }
+            
             return $this->render('Dashboard/Organizer/ManagementClubsSocieties/index.html.twig', [
                 'associations' => $associations,
                 'managementClubsSocietiesService' => $managementClubsSocietiesService
@@ -126,6 +130,41 @@
         }
         
         /**
+         * @Route("/dashboard/organizer/management/acceptxml/{organizerid}/{attendeeid}", name="app_dashboard_organizer_join_accept_xml")
+         */
+        public function acceptxml(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $organizerid, $attendeeid)
+        {
+            $user = $userService->getUserById($attendeeid);
+            $organizer = $organizerService->getOrganizerById($organizerid);
+            if (!$user || !$organizer) {
+//                $this->addFlash('error', "Something went wrong. Contact admin");
+                return $this->redirectToRoute("dashboard_organizer_management");
+            }
+            
+            $row = $managementClubsSocietiesService->findRowByUserIdAndOrgId($attendeeid, $organizerid);
+            
+            if (!$row) {
+//                $this->addFlash('error', "Something went wrong. Contact admin");
+                return new JsonResponse(['error' => 'Error']);
+            }
+            
+            if ($row->getStatus() == 0 || $row->getStatus() == -1) {
+                $em = $this->getDoctrine()->getManager();
+                $row->setStatus(1);
+                
+                $em->persist($row);
+                $em->flush();
+                
+                // Define the response data based on the outcome of the operation
+                $responseData['success'] = 'Congratulations, this user is now a member';
+                return new JsonResponse($responseData);
+            }
+            
+            $responseData['success'] = 'Something went wrong. Contact admin';
+            return new JsonResponse($responseData);
+        }
+        
+        /**
          * @Route("/dashboard/organizer/management/reject/{organizerid}/{attendeeid}", name="app_dashboard_organizer_join_reject")
          */
         public function reject(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $organizerid, $attendeeid)
@@ -146,13 +185,12 @@
                 $em->persist($row);
                 $em->flush();
                 
-                // Define the response data based on the outcome of the operation
-                $this->addFlash('success', "Rejected their invitation to join");
-                return $this->redirectToRoute("dashboard_organizer_management");
+                $responseData['success'] = 'Rejected their invitation to join';
+                return new JsonResponse($responseData);
             }
             
-            $this->addFlash('error', "Something went wrong. Contact admin");
-            return $this->redirectToRoute("dashboard_organizer_management");
+            $responseData['success'] = 'Something went wrong. Contact admin';
+            return new JsonResponse($responseData);
         }
         
         /**
