@@ -5,6 +5,8 @@
 
 namespace App\Entity;
 
+use App\Validator\Constraints\EnglishOnly;
+use App\Validator\Constraints\Profanity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -31,17 +33,23 @@ class MenuElement
     protected $slug;
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @EnglishOnly
+     * @Profanity
      * @Assert\Length(max = 255)
      */
     protected $link;
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @EnglishOnly
+     * @Profanity
      * @Assert\Length(max = 255)
      */
     protected $customLink;
     /**
      * @Assert\NotBlank
      * @ORM\Column(type="string")
+     * @EnglishOnly
+     * @Profanity
      */
     private $label;
     /**

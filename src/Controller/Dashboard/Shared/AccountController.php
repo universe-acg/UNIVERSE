@@ -26,6 +26,9 @@ class AccountController extends Controller
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
+                $this->getUser()->setSelectedImage($form->get('selectedImage')->getData());
+//                dump($form->get('selectedImage'));
+//                die();
                 $em->persist($this->getUser());
                 $em->flush();
                 $this->addFlash('success', 'Your account settings have been updated');

@@ -4,6 +4,9 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+  twilio_account_sid: 'AC3172b2bdf28448d3d1206f4bc3f5167a'
+  twilio_auth_token: '4a212965f38eca70046c8ee68b5a2487'
+  twilio_phone_number: '+306989442438'
   locale: 'en'
   is_website_configured: '%env(IS_WEBSITE_CONFIGURED)%'
   maintenance_mode: '%env(MAINTENANCE_MODE)%'
@@ -23,14 +26,38 @@ parameters:
   #asset.request_context.base_path: '%router.request_context.base_url%'
 
 services:
+  twig.extension.array:
+    class: Twig_Extensions_Extension_Array
+    tags: [ twig.extension ]
+
+  app.notification_service:
+    class: App\Service\NotificationService
+    arguments: [ '@doctrine', '@App\Repository\NotificationRepository' ]
+
+  App\Service\VolunteerService:
+  App\Service\TwilioService:
+    arguments:
+      $accountSid: 'AC3172b2bdf28448d3d1206f4bc3f5167a'
+      $authToken: '4a212965f38eca70046c8ee68b5a2487'
+  App\Service\EventService:
   App\Service\ManagementClubsSocietiesService:
+  App\Service\ScheduleService:
+  App\Service\InactiveDatesService:
+  App\Service\FacilityService:
+  App\Service\AthleticBookingService:
   App\Service\UserService:
+  App\Service\VenueService:
   App\Twig\SortFaqsExtension: ~
   App\Validator\Constraints\TagLimitConstraintValidator:
     tags: [ 'validator.constraint_validator' ]
   App\EventSubscriber\CustomLoginListener:
     tags:
       - { name: 'kernel.event_subscriber' }
+
+  App\Validator\Constraints\EnglishOnly:
+    arguments:
+      - '@doctrine.orm.entity_manager'
+
   App\Validator\Constraints\UniqueEmailValidator:
     arguments:
       - '@doctrine.orm.entity_manager'
@@ -123,11 +150,3 @@ services:
       - "%kernel.environment%"
     tags:
       - { name: controller.service_arguments }
-
-  sitemap.subscriber:
-    class: App\EventListener\SitemapSubscriber
-    arguments:
-      - "@router"
-      - "@app.services"
-    tags:
-      - { name: "kernel.event_subscriber", priority: 100 }

@@ -4,11 +4,132 @@ homepage:
   path: /
   controller: 'App\Controller\Front\MainController::homepage'
 
+access-denied:
+  path: /access-denied
+  controller: 'App\Controller\Front\ErrorsController::homepage'
+
+error400:
+  path: /error400
+  controller: 'App\Controller\Front\ErrorsController::error400'
+
+error403:
+  path: /error403
+  controller: 'App\Controller\Front\ErrorsController::error403'
+
+error404:
+  path: /error404
+  controller: 'App\Controller\Front\ErrorsController::error404'
+
+error405:
+  path: /error405
+  controller: 'App\Controller\Front\ErrorsController::error405'
+
+error500:
+  path: /error500
+  controller: 'App\Controller\Front\ErrorsController::error500'
+
 app_installer:
   resource: '../src/Controller/Installer'
   prefix: /install
   name_prefix: 'installer_'
   trailing_slash_on_root: false
+
+mark_all_notifications_as_read:
+  path: /notifications/mark/all_as_read
+  controller: App\Controller\NotificationController::markAllNotificationsAsRead
+  methods: [ 'GET' ]
+
+# Route to see details of a specific volunteer event
+volunteer_event_see_details:
+  path: /volunteer-events/{id}/details
+  controller: 'App\Controller\VolunteerEventController::seeDetails'
+  methods: [ 'GET' ]
+
+# Route to see all volunteer events for a user
+volunteer_event_see_all_for_user:
+  path: /volunteer-events/user/{userid}/{eventid}
+  controller: 'App\Controller\VolunteerEventController::seeAllForUser'
+  methods: [ 'GET' ]
+
+# Route to see all volunteer events
+volunteer_event_see_all:
+  path: /volunteer-events/all
+  controller: 'App\Controller\VolunteerEventController::seeAll'
+  methods: [ 'GET' ]
+
+# Route to make a request for volunteering in an event
+volunteer_event_make_request:
+  path: /volunteer-events/{id}/request
+  controller: 'App\Controller\VolunteerEventController::makeRequest'
+  methods: [ 'POST' ]
+
+notification_list:
+  path: /notifications
+  controller: App\Controller\Dashboard\Shared\NotificationController::listNotifications
+  methods: [ 'GET' ]
+  requirements:
+    _method: GET
+
+notification_show:
+  path: /notifications/{id}
+  controller: App\Controller\Dashboard\Shared\NotificationController::showNotification
+  methods: [ 'GET' ]
+  requirements:
+    _method: GET
+    id: \d+
+
+notification_mark_as_read_xhr:
+  path: /notifications/mark-as-readxhr/{id}
+  controller: App\Controller\Dashboard\Shared\NotificationController::markNotificationAsReadxhr
+  methods: [ 'POST' ]
+  condition: 'request.isXmlHttpRequest()'
+
+notification_mark_as_read:
+  path: /notifications/mark-as-read/{id}
+  controller: App\Controller\Dashboard\Shared\NotificationController::markNotificationAsRead
+  methods: [ 'POST' ]
+  requirements:
+    _method: POST
+    id: \d+
+
+# Chat Routes
+chat_index:
+  path: /chat
+  controller: 'App\Controller\Dashboard\Shared\ChatController::index'
+
+chat_remove_user:
+  path: /chat/{chatId}/remove-user/{userId}
+  controller: 'App\Controller\Dashboard\Shared\ChatController::removeUserFromChat'
+
+chat_mute:
+  path: /chat/{chatId}/mute-chat
+  controller: 'App\Controller\Dashboard\Shared\ChatController::muteChat'
+
+chat_create:
+  path: /chat/create
+  controller: 'App\Controller\Dashboard\Shared\ChatController::createChat'
+
+chat_show:
+  path: /chat/{chatId}
+  controller: 'App\Controller\Dashboard\Shared\ChatController::showChat'
+
+chat_add_user:
+  path: /chat/{chatId}/add-user
+  controller: 'App\Controller\Dashboard\Shared\ChatController::addUserToChat'
+
+leaderboards:
+  path: /leaderboards
+  controller: 'App\Controller\Front\LeaderboardsController::index'
+
+dashboard_administrator_venue:
+  path: /administrator/manage-venues
+  controller: 'App\Controller\Admin\VenueController::manageVenues'
+  methods: GET
+
+venue_details:
+  path: /venue/{slug}
+  controller: 'App\Controller\Front\VenueController::venueBySlug'
+  methods: GET
 
 fos_user_change_email:
   path: /dashboard/change-email
@@ -143,7 +264,9 @@ dashboard_organizer_management_files:
   path: /dashboard/organizer/management/files
   controller: 'App\Controller\Dashboard\Organizer\FilesController::index'
 
-# config/routes.yaml
+dashboard_organizer_management_files_download_file_event:
+  path: /event/management/files/download/{fileId}
+  controller: 'App\Controller\Front\EventController::download'
 
 dashboard_organizer_management_files_download_file:
   path: /dashboard/organizer/management/files/download/{fileId}
@@ -457,3 +580,8 @@ api_handle_post_request:
   path: /api/handle-post-request
   controller: App\Controller\Api\QrReaderController::handlePostRequest
   methods: POST
+
+twillio_route:
+  path: /api/twillio
+  controller: 'App\Controller\Api\TwillioController::sendSMS'
+  methods: [ 'GET' ]

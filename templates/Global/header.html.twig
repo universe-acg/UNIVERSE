@@ -22,6 +22,42 @@
                 <div class="widgets-wrap d-flex justify-content-end">
 
                     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                        {% set notificationsData = services.getLastFiveNotifications() %}
+
+                        <div class="widget-header dropdown"
+                             style="display: flex;justify-content: center;align-items: center;">
+                            <a href="#" class="icontext" data-toggle="dropdown" onclick="openNotifications()">
+                                {% if services.hasUnreadNotifications()|default(false) %}
+                                    <i class="fas fa-bell" style="font-size: 17px;"></i>
+                                {% else %}
+                                    <i class="far fa-bell" style="font-size: 17px;"></i>
+                                {% endif %}
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow header-notifications-dropdown-menu">
+                                {% for notification in notificationsData.lastFiveNotifications %}
+                                    {% if not notification.read %}
+                                        <span style="display: flex; justify-content: space-between; align-items: center; align-content: center">
+            <a class="dropdown-item"
+               href="{{ path('notification_show', {'id': notification.id}) }}">
+                {{ notification.name }}
+            </a>
+            <span style="cursor: pointer; margin-right: 10px"
+                  data-notification-id="{{ notification.id }}"
+                  class="badge badge-warning mark-as-read">
+                <i class="fas fa-check"></i>
+            </span>
+        </span>
+                                    {% else %}
+                                        <a class="dropdown-item"
+                                           href="{{ path('notification_show', {'id': notification.id}) }}">
+                                            {{ notification.name }}
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+
+                            </div>
+                        </div>
+
                         <div class="widget-header dropdown">
                             <a href="#" class="ml-3 icontext" data-toggle="dropdown" onclick="openDashboardSideNav()">
                                 {% if is_granted('ROLE_ADMINISTRATOR') %}
@@ -35,7 +71,9 @@
                                     <span>{{ app.user.username }} <i class="fas fa-caret-down"></i></span>
                                 </div>
                             </a>
+
                             <div class="dropdown-menu dropdown-menu-left dropdown-menu-arrow header-user-dropdown-menu">
+
                                 {% if is_granted('ROLE_ADMINISTRATOR') %}
                                     <a class="dropdown-item" href="{{ path('dashboard_index') }}">
                                         <i class="fas fa-tachometer-alt fa-fw"></i> {{ 'Dashboard' }}
@@ -202,6 +240,21 @@
                             {% endif %}
                         {% endif %}
                     {% endfor %}
+                    {% if is_granted('ROLE_ADMINISTRATOR') %}
+                        <li class="nav-item dropdown dropdown-hover">
+                            <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false"><i
+                                        class="fa-fw"></i>Alpha Stage Features</a>
+                            <div class="dropdown-menu dropdown-menu-arrow">
+                                <a class="dropdown-item" href="https://universeacg.xyz/leaderboards"><i
+                                            class="fa-fw"></i>Leaderboards</a>
+                                <a class="dropdown-item"><i class="fa-fw"></i>Venues</a>
+                                <a class="dropdown-item"><i class="fa-fw"></i>Athletics</a>
+                                <a class="dropdown-item"><i class="fa-fw"></i>Chat</a>
+                                <a class="dropdown-item"><i class="fa-fw"></i>Notifications</a>
+                            </div>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -224,4 +277,48 @@
         // Set the input field's value to the "keyword" parameter value
         document.getElementById('search-input').value = keywordValue;
     }
+
+    function openNotifications() {
+        // Toggle the visibility of the dropdown menu
+        var dropdown = document.querySelector('.header-notifications-dropdown-menu');
+        dropdown.classList.toggle('show');
+
+        // Check if there are unread notifications and update the badge
+        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+        var hasUnreadNotifications = {{ services.hasUnreadNotifications()|default(false) }};
+        {% endif %}
+        var badge = document.querySelector('.badge');
+        if (hasUnreadNotifications) {
+            badge.style.display = 'block';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+
+    document.addEventListener("click", function (event) {
+        if (event.target && event.target.classList.contains("mark-as-read")) {
+            event.preventDefault();
+            const notificationId = event.target.getAttribute("data-notification-id");
+
+            if (notificationId) {
+                fetch(`/notifications/mark-as-readxhr/${notificationId}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            event.target.parentElement.style.display = "none"; // Hide the notification element
+                        } else {
+                            // Handle errors or other responses
+                        }
+                    })
+                    .catch(error => {
+                        // Handle fetch errors
+                    });
+            }
+        }
+    });
+
 </script>

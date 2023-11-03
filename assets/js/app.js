@@ -76,7 +76,79 @@ require('moment-timezone/builds/moment-timezone-with-data-2012-2022.min.js');
 require('jquery-parallax.js/parallax.min.js');
 
 require('material-scrolltop/dist/material-scrolltop.js');
+$(document).on('click', '.requires-confirmation-normal', function (e) {
+    e.preventDefault();
+    var $thisElement = $(this);
 
+    if (typeof $thisElement.attr('data-target') !== typeof undefined && $thisElement.attr('data-target') !== false) {
+        // Get the value of the data-target attribute
+        var dataTarget = $thisElement.attr('data-target');
+
+        // Check if the data-target attribute contains '/delete-permanently'
+        if (dataTarget.indexOf('/delete-permanently') >= 0) {
+
+            const $confirmDialog = $.confirm({
+                title: 'Confirmation required',
+                content: $thisElement.data('confirmation-text'),
+                buttons: {
+                    confirm: {
+                        text: 'Confirm',
+                        btnClass: 'btn-primary btn-sm',
+                        keys: ['enter'],
+                        action: function () {
+                            location.href = $thisElement.data('target');
+                        }
+                    },
+                    cancel: {
+                        text: 'Cancel',
+                        btnClass: 'btn-default btn-sm',
+                        keys: ['esc'],
+                        action: function () {
+                            $confirmDialog.close();
+                        }
+                    }
+                }
+            });
+        }
+    }
+});
+
+
+$(document).on('click', '.requires-confirmation-repeating', function (e) {
+        e.preventDefault();
+        var $thisElement = $(this);
+        if (typeof $thisElement.attr('data-target') !== typeof undefined && $thisElement.attr('data-target') !== false) {
+            // Get the value of the data-target attribute
+            var dataTarget = $thisElement.attr('data-target');
+
+            // Check if the data-target attribute contains '/delete-permanently'
+            if (dataTarget.indexOf('/delete-permanently') >= 0) {
+                const $confirmDialog = $.confirm({
+                    title: 'Confirmation required',
+                    content: $thisElement.data('confirmation-text'),
+                    buttons: {
+                        confirm: {
+                            text: 'Confirm',
+                            btnClass: 'btn-primary btn-sm',
+                            keys: ['enter'],
+                            action: function () {
+                                location.href = $thisElement.data('target');
+                            }
+                        },
+                        cancel: {
+                            text: 'Cancel',
+                            btnClass: 'btn-default btn-sm',
+                            keys: ['esc'],
+                            action: function () {
+                                $confirmDialog.close();
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    }
+)
 $(document).ready(function () {
     // Declares utility functions
 
@@ -654,6 +726,24 @@ $(document).ready(function () {
             $(this).datetimepicker({
                 format: 'Y-m-d',
                 timepicker: false
+            });
+        });
+    }
+
+    if ($('.publish-date-picker').length) {
+        $('.publish-date-picker').each(function () {
+            $(this).datetimepicker({
+                format: 'Y-m-d H:i', // Include date and time
+                timepicker: true // Enable timepicker
+            });
+        });
+    }
+
+    if ($('.publish-date-picker').length) {
+        $('.publish-date-picker').each(function () {
+            $(this).datetimepicker({
+                format: 'Y-m-d H:i', // Include date and time
+                timepicker: true // Enable timepicker
             });
         });
     }
@@ -1387,7 +1477,7 @@ $(document).ready(function () {
                 DisabledDays: [], //(array of numbers) days of the week to be slightly transparent. ie: [1,6] to fade Sunday and Saturday.
             };
 
-            caleandar($('#event-dates-calendar'), eventsDatesJsonArray, settings);
+            caleandar(document.getElementById('event-dates-calendar'), eventsDatesJsonArray, settings);
 
             // Hides the calendar back button if current month is displayed
             $('.cld-rwd').css('visibility', 'hidden');

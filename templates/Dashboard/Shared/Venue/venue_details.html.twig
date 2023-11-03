@@ -1,0 +1,160 @@
+{% extends "Global/layout.html.twig" %}
+
+{% set pagetitle = venue.title %}
+
+{% block title %}{{ pagetitle }}{% endblock %}
+
+{% block meta_dynamic_seo %}
+{% endblock %}
+
+{% block content %}
+
+    {% set navigation = [{"venues": "venues", "current" : (pagetitle)}] %}
+    {% include "Global/navigation.html.twig" with navigation %}
+
+    <div class="row no-gutters">
+        <div class="col-12 p-0">
+            <section class="section-main">
+                <div class="owl-init slider-main owl-carousel" data-items="1" data-dots="false" data-nav="false"
+                     data-autoplay="false">
+                    <div class="item-slide d-flex">
+                        <img class="slider-img justify-content-center align-self-center img-lazy-load"
+                             src="{{ asset('assets/img/loader.gif') }}"
+                             data-src="{{ venue.mainImage ? asset(venue.getMainImage) : venue.getImagePlaceholder }}"
+                             alt="{{ venue.title }}"/>
+                        <div class="slider-blured-background"
+                             style="background-image: url('{{ venue.mainImage ? asset(venue.getMainImage) : venue.getImagePlaceholder }}');"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <section class="section-content padding-y bg-white">
+        <div class="{{ services.getSetting("app_layout") }}">
+            <div class="card">
+                <div class="row">
+                    <div class="col-12 col-lg-8 order-1 order-lg-0">
+                        <div class="card-body">
+                            <h1 class="card-title b d-none d-lg-block">{{ venue.title }}</h1>
+                            {% if venue.description %}
+                                <dl class="mt-5 venue-description">
+                                    <dt class="text-muted">{{ "Description" }}</dt>
+                                    <dd class="line-height-2 readmore" data-collapsed-height="500"
+                                        data-height-margin="20">
+                                        {{ venue.description|raw|nl2br }}
+                                    </dd>
+                                </dl>
+                            {% endif %}
+                            {% if venue.getSecondaryImages|length > 0 %}
+                                <dl class="mt-5">
+                                    <dt class="text-muted">{{ "Photos" }}</dt>
+                                    <dd class="mr-0">
+                                        <div class="gallery photos-gallery clearfix">
+                                            {% for image in venue.getSecondaryImages %}
+                                                <figure>
+                                                    <a href="{{ asset(image.getImagePath) }}"
+                                                       data-size="{{ image.imageDimensions is not empty ? image.imageDimensions[0] ~ 'x' ~ image.imageDimensions[1] : 'N/A' }}"
+                                                    <img class="img-lazy-load img-thumbnail img-100-100"
+                                                         src="{{ asset('assets/img/loader.gif') }}"
+                                                         data-src="{{ asset(image.getImagePath) }}"
+                                                         alt="{{ venue.title }}"/>
+                                                    </a>
+                                                </figure>
+                                            {% endfor %}
+
+                                        </div>
+                                    </dd>
+                                </dl>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-4 order-0 order-lg-1 ">
+                        <div class="card-body">
+                            <h1 class="card-title b d-lg-none text-center">{{ venue.title }}</h1>
+                            {#                            {% if venue.hasAnvenueDateOnSale %} #}
+                            {# venue Dates calendar used on multi date venues #}
+                            {#                            {% if venue.hasTwoOrMorevenueDatesOnSale %} #}
+                            {#                            <div style="overflow-y: scroll; height: 500px"> #}
+                            {#                                {% else %} #}
+                            {#                                <div> #}
+                            {#                                    {% endif %} #}
+                            {#                                    <input type="hidden" title="reference" value="{{ venue.id }}"> #}
+                            {#                                    <dt class="text-muted"> #}
+                            {#                                        <span>{{ "Dates" }}</span> #}
+                            {#                                    </dt> #}
+                            {#                                    {% for venueDate in venue.venuedates %} #}
+                            {#                                        <div id="venueDate-{{ venueDate.reference }}-wrapper" #}
+                            {#                                             class="venue-venueDate-wrapper"> #}
+                            {#                                            <dl> #}
+                            {#                                                <dd> #}
+                            {#                                                    <div class="text-center"> #}
+                            {#                                                        #}{# for the add to calendar link #}
+                            {#                                                        {% set venuestartdate = "" %} #}
+                            {#                                                        {% set venueenddate = "" %} #}
+                            {#                                                        {% set venuelocation = "" %} #}
+                            {#                                                        {% if venueDate.startdate %} #}
+                            {#                                                            <div class="display-inline-block"> #}
+                            {#                                                                <div class="display-inline-block"> #}
+                            {#                                                                    <span class="font-size-3rem">{{ venueDate.startdate|date('d') }}</span> #}
+                            {#                                                                </div> #}
+                            {#                                                                <div class="display-inline-block mr-3"> #}
+                            {#                                                                    <div> #}
+                            {#                                                                        <span class="font-size-1rem">{{ venueDate.startdate|localizeddate('none', 'none', app.request.locale, null, "MMMM")|capitalize|slice(0, 3) }}</span> #}
+                            {#                                                                    </div> #}
+                            {#                                                                    <div> #}
+                            {#                                                                        <span>{{ venueDate.startdate|date('Y') }}</span> #}
+                            {#                                                                    </div> #}
+                            {#                                                                </div> #}
+                            {#                                                                <div class="mb-2"> #}
+                            {#                                                                    <span class="text-muted b"> #}
+                            {#                                                                        {{ venueDate.startdate|date('g:i a')|upper }} #}
+                            {#                                                                        {% if venueDate.enddate %} #}
+                            {#                                                                            {% if venueDate.enddate|date('Y-m-d') == venueDate.startdate|date('Y-m-d') %} #}
+                            {#                                                                                - {{ venueDate.enddate|date('g:i a')|upper }} #}
+                            {#                                                                            {% endif %} #}
+                            {#                                                                        {% endif %} #}
+                            {#                                                                    </span> #}
+                            {#                                                                </div> #}
+                            {#                                                            </div> #}
+                            {#                                                            {% set venuestartdate = venueDate.startdate|date('F d, Y H:i') %} #}
+                            {#                                                        {% endif %} #}
+                            {#                                                        {% if venueDate.enddate %} #}
+                            {#                                                            {% if venueDate.enddate|date('Y-m-d') != venueDate.startdate|date('Y-m-d') %} #}
+                            {#                                                                <div class="display-inline-block"> #}
+                            {#                                                                    <div class="display-inline-block"> #}
+                            {#                                                                        <span class="font-size-3rem">{{ venueDate.enddate|date('d') }}</span> #}
+                            {#                                                                    </div> #}
+                            {#                                                                    <div class="display-inline-block"> #}
+                            {#                                                                        <div> #}
+                            {#                                                                            <span class="font-size-1rem">{{ venueDate.enddate|localizeddate('none', 'none', app.request.locale, null, "MMMM")|capitalize|slice(0, 3) }}</span> #}
+                            {#                                                                        </div> #}
+                            {#                                                                        <div> #}
+                            {#                                                                            <span>{{ venueDate.enddate|date('Y') }}</span> #}
+                            {#                                                                        </div> #}
+                            {#                                                                    </div> #}
+                            {#                                                                    <div class="mb-2"><span #}
+                            {#                                                                                class="text-muted b">{{ venueDate.enddate|date('g:i a')|upper }}</span> #}
+                            {#                                                                    </div> #}
+                            {#                                                                </div> #}
+                            {#                                                            {% endif %} #}
+                            {#                                                            {% set venueenddate = venueDate.enddate|date('F d, Y H:i') %} #}
+                            {#                                                        {% endif %} #}
+                            {#                                                    </div> #}
+                            {#                                                </dd> #}
+                            {#                                            </dl> #}
+                            {#                                        </div> #}
+
+                            {#                                    {% endfor %} #}
+                            {#                                </div> #}
+                            {#                        </div> #}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+{% endblock %}

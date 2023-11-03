@@ -140,4 +140,32 @@
             });
         });
     </script>
+    <script>
+        $(document).ready(function () {
+            // $('#event_type_multi_publishDate').parent().hide();
+            console.dir($('#event_type_multi_publishDate'));
+
+            // Initially, check the value of "Publish on Specific Date" when the page loads
+            togglePublicationDateField();
+
+            // Attach an event listener to the "Publish on Specific Date" radio buttons
+            $('input[name="event_type_multi[publishOnSpecificDate]"]').change(function () {
+                togglePublicationDateField();
+            });
+
+            function togglePublicationDateField() {
+                // Check if "Yes" is selected for "Publish on Specific Date"
+                var isPublishOnSpecificDate = $('input[name="event_type_multi[publishOnSpecificDate]"]:checked').val() === '1';
+                console.dir(isPublishOnSpecificDate);
+                // Show or hide the "Select the publication date and time" field based on the selection
+                if (isPublishOnSpecificDate) {
+                    $('#event_type_multi_publishDate').parent().show();
+                    $('#event_type_multi_publishDate').show();
+                } else {
+                    $('#event_type_multi_publishDate').parent().hide();
+                    $('#event_type_multi_publishDate').hide();
+                }
+            }
+        });
+    </script>
 {% endblock %}

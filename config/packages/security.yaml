@@ -72,6 +72,7 @@ security:
     - { path: ^/page/community-guidelines, role: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/page/community-guidelines, role: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/page/contact, role: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/contact, role: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/page/help-center, role: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/open-events, role: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/page/help-center/organizer, role: IS_AUTHENTICATED_ANONYMOUSLY }
@@ -79,4 +80,9 @@ security:
     - { path: ^/page/cookie-policy, role: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/page/privacy-policy, role: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: '^/open-event/', role: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: '/leaderboards/',roles: [ ROLE_ATTENDEE, ROLE_ORGANIZER, ROLE_ADMINISTRATOR ] }
+    - { path: '/volunteer/',roles: [ ROLE_ATTENDEE, ROLE_ORGANIZER, ROLE_ADMINISTRATOR ] }
+    - { path: '/notifications/', roles: [ ROLE_ATTENDEE, ROLE_ORGANIZER, ROLE_ADMINISTRATOR ] }
+    - { path: '/chat/', role: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: '/twillio/', role: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: '^/.*', roles: [ ROLE_ATTENDEE, ROLE_ORGANIZER, ROLE_ADMINISTRATOR ] }

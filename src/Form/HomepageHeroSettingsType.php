@@ -51,7 +51,7 @@ class HomepageHeroSettingsType extends AbstractType
                 'attr' => ['class' => 'select2'],
                 'label' => 'Events',
                 'query_builder' => function () {
-                    return $this->services->getEvents(array("elapsed" => "all"));
+                    return $this->services->getEventssql(array("elapsed" => "all"));
                 }
             ])
             ->add('organizers', EntityType::class, [

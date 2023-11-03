@@ -47,7 +47,9 @@
         </div>
         <span style="text-align: right" class="event-category">
                {% if user.organizer.category == "Club" or user.organizer.category == "Society" %}
-                   <span class="text-dark">{{ user.stringifypointslevel }}</span>
+                   <a href="https://universeacg.xyz/leaderboards?tag={{ organizer.user.stringifypointslevel }}"
+                   > <span class="text-dark">{{ user.stringifypointslevel }}</span></a>
+
                    <br>
                {% endif %}
             <p style="font-size: 12px; margin-bottom: 0">{{ creator.getCategory() }}</p>

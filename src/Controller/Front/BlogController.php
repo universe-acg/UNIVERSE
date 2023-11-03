@@ -103,6 +103,21 @@ class BlogController extends AbstractController
     // Helper function to get tags from blog posts
 // Function to generate a random comment.
 // Function to generate random comments.
+//
+//    /**
+//     * @Route("/upload-video", name="upload_video")
+//     */
+//    public function uploadVideo(Request $request, MessageBusInterface $messageBus)
+//    {
+//        // Handle form submission and other tasks, if needed
+//
+//        // Push a message to the queue for background processing
+//        $videoFile = $request->files->get('videoFile');
+//        $message = new VideoUpload($videoFile);
+//        $messageBus->dispatch($message);
+//
+//        return $this->render('video/uploading.html.twig');
+//    }
 
     /**
      * @Route("/blogvideos", name="blogvideos")

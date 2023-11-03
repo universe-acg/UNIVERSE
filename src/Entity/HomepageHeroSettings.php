@@ -5,6 +5,8 @@
 
 namespace App\Entity;
 
+use App\Validator\Constraints\EnglishOnly;
+use App\Validator\Constraints\Profanity;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -24,6 +26,8 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 class HomepageHeroSettings
 {
     /**
+     * @EnglishOnly
+     * @Profanity
      * @ORM\Column(length=255, unique=true)
      */
     protected $title;

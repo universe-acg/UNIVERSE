@@ -1,237 +1,172 @@
 <div class="table-responsive">
     <table class="table table-hover table-vcenter">
         <thead>
-            <tr>
-                <th style="width:35%;">{{ 'Event' }}</th>
-                {% if is_granted('ROLE_ADMINISTRATOR') %}
-                    <th>{{ 'Organizer' }}</th>
-                {% endif %}
-                <th class="text-center"><i class="fas fa-cog"></i></th>
-            </tr>
+        <tr>
+            <th style="width:35%;">{{ 'Event' }}</th>
+            {% if is_granted('ROLE_ADMINISTRATOR') %}
+                <th>{{ 'Organizer' }}</th>
+            {% endif %}
+            <th>Status</th>
+            <th class="text-center"><i class="fas fa-cog"></i></th>
+        </tr>
         </thead>
         <tbody>
-            {% for event in events %}
-                <tr>
+        {% for event in events %}
+            <tr>
+                <td>
+                    <a class="fancybox"
+                       href="{{ event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder }}"
+                       data-toggle="tooltip" title="{{ "Enlarge" }}">
+                        <img src="{{ event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder }}"
+                             class="img-thumbnail img-50-50"/>
+                    </a>
+                    <a href="{{ path('event', { slug : event.slug }) }}" data-toggle="tooltip"
+                       title="{{ "View event" }}">{{ event.name }}</a>
+                    <span class="small text-muted ml-1">#{{ event.reference }}</span>
+                </td>
+                <td>
+                    {% if event.getPublished() %}
+                        Published
+                    {% else %}
+                        Draft
+                    {% endif %}
+                </td>
+                {% if is_granted('ROLE_ADMINISTRATOR') %}
                     <td>
-                        <a class="fancybox"
-                           href="{{ event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder }}"
-                           data-toggle="tooltip" title="{{ "Enlarge" }}">
-                            <img src="{{ event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder }}"
-                                 class="img-thumbnail img-50-50"/>
-                        </a>
-                        <a href="{{ path('event', { slug : event.slug }) }}" data-toggle="tooltip"
-                           title="{{ "View event" }}">{{ event.name }}</a>
-                        <span class="small text-muted ml-1">#{{ event.reference }}</span>
+                        <a href="{{ path('organizer', { slug : event.organizer.user.username }) }}"
+                           data-toggle="tooltip"
+                           title="{{ "View organizer" }}">{{ event.organizer.name }}</a>
                     </td>
-                    {% if is_granted('ROLE_ADMINISTRATOR') %}
-                        <td>
-                            <a href="{{ path('organizer', { slug : event.organizer.user.username }) }}"
-                               data-toggle="tooltip"
-                               title="{{ "View organizer" }}">{{ event.organizer.name }}</a>
-                        </td>
-                    {% endif %}
-                    {% if event.deletedAt %}
-                        <td>
-                            <span class="badge badge-{{ event.stringifyStatusClass }}">{{ event.stringifyStatus }}</span>
-                            <br>
-                            <br>
-                            <span class="badge badge-danger"><i class="fas fa-times fa-fw"></i> {{ "Deleted" }}</span>
-                        </td>
-                    {% endif %}
-                    <td class="text-center">
-                        <div class="item-action dropdown">
-                            <a href="javascript:void(0)" data-toggle="dropdown" data-boundary="window" class="icon"><i
-                                        class="fas fa-ellipsis-v"></i></a>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                {% if is_granted('ROLE_ADMINISTRATOR') %}
-                                    {#                                    <span data-title="{{ event.name }}" data-url="{{ path('dashboard_administrator_event_details', { slug : event.slug }) }}" class="dropdown-item ajax-loading"><i class="dropdown-icon fas fa-file-alt fa-fw text-muted"></i> {{ "Details" }}</span> #}
-                                    <a href="{{ path('dashboard_administrator_attendees', { event : event.slug, status: 1 }) }}"
+                {% endif %}
+                {% if event.deletedAt %}
+                    <td>
+                        <span class="badge badge-{{ event.stringifyStatusClass }}">{{ event.stringifyStatus }}</span>
+                        <br>
+                        <br>
+                        <span class="badge badge-danger"><i class="fas fa-times fa-fw"></i> {{ "Deleted" }}</span>
+                    </td>
+                {% endif %}
+                <td class="text-center">
+                    <div class="item-action dropdown">
+                        <a href="javascript:void(0)" data-toggle="dropdown" data-boundary="window" class="icon"><i
+                                    class="fas fa-ellipsis-v"></i></a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            {% if is_granted('ROLE_ADMINISTRATOR') %}
+                                {#                                    <span data-title="{{ event.name }}" data-url="{{ path('dashboard_administrator_event_details', { slug : event.slug }) }}" class="dropdown-item ajax-loading"><i class="dropdown-icon fas fa-file-alt fa-fw text-muted"></i> {{ "Details" }}</span> #}
+                                <a href="{{ path('dashboard_administrator_attendees', { event : event.slug, status: 1 }) }}"
+                                   class="dropdown-item"><i
+                                            class="dropdown-icon fas fa-users fa-fw text-muted"></i> {{ "Attendees" }}
+                                </a>
+                                {% if event.hasTwoOrMoreEventDatesOnSale %}
+                                    <a href="{{ path('dashboard_administrator_attendees_details', { eventslug : event.slug}) }}"
                                        class="dropdown-item"><i
-                                                class="dropdown-icon fas fa-users fa-fw text-muted"></i> {{ "Attendees" }}
+                                                class="dropdown-icon fas fa-users fa-fw text-muted"></i> {{ "Event Date Attendance Details" }}
                                     </a>
-                                    {% if event.hasTwoOrMoreEventDatesOnSale %}
-                                        <a href="{{ path('dashboard_administrator_attendees_details', { eventslug : event.slug}) }}"
-                                           class="dropdown-item"><i
-                                                    class="dropdown-icon fas fa-users fa-fw text-muted"></i> {{ "Event Date Attendance Details" }}
-                                        </a>
-                                    {% endif %}
-                                    {% if event.isrepeat %}
-                                        <span data-target="{{ path('dashboard_organizer_event_delete_permanently_repeating_admin', { slug : event.slug }) }}"
-                                              class="dropdown-item requires-confirmation-repeating"
-                                              data-confirmation-text="{{ "THIS IS A REPEATING EVENT. ALL OCCURENCES WILL ALSO BE DELETED PERMANENTLY!" }}"><i
-                                                    class="dropdown-icon far fa-calendar-times fa-fw text-muted"></i> {{ "Delete repeating event" }}</span>
-                                    {% else %}
-                                        <span data-target="{{ path('dashboard_organizer_event_delete_permanently_admin', { slug : event.slug }) }}"
-                                              class="dropdown-item requires-confirmation"
-                                              data-confirmation-text="{{ "You are about to delete the event and all its related information PERMANENTLY" }}"><i
-                                                    class="dropdown-icon far fa-calendar-times fa-fw text-muted"></i> {{ "Delete" }}</span>
-                                    {% endif %}
-                                {% elseif is_granted('ROLE_ORGANIZER') %}
-                                    <a href="{{ path('dashboard_organizer_event_edit', { slug : event.slug }) }}"
-                                       class="dropdown-item"><i
-                                                class="dropdown-icon fas fa-edit fa-fw text-muted"></i> {{ "Edit" }}
-                                    </a>
-                                    <a href="{{ path('dashboard_organizer_attendees', { event : event.slug, status: 1 }) }}"
-                                       class="dropdown-item"><i
-                                                class="dropdown-icon fas fa-users fa-fw text-muted"></i> {{ "Attendees" }}
-                                    </a>
-                                    {% if event.hasTwoOrMoreEventDatesOnSale %}
-                                        <a href="{{ path('dashboard_organizer_attendees_details', { eventslug : event.slug}) }}"
-                                           class="dropdown-item"><i
-                                                    class="dropdown-icon fas fa-users fa-fw text-muted"></i> {{ "Event Date Attendance Details" }}
-                                        </a>
-                                    {% endif %}
-                                    {% if event.published %}
-                                        <a href="{{ path('dashboard_organizer_event_draft', { slug : event.slug }) }}"
-                                           class="dropdown-item"><i
-                                                    class="dropdown-icon fas fa-eye-slash fa-fw text-muted"></i> {{ "Draft/Hide" }}
-                                        </a>
-                                    {% else %}
-                                        <a href="{{ path('dashboard_organizer_event_publish', { slug : event.slug }) }}"
-                                           class="dropdown-item"><i
-                                                    class="dropdown-icon fas fa-eye fa-fw text-muted"></i> {{ "Publish" }}
-                                        </a>
-                                    {% endif %}
-                                    {#                                {% if event.deletedAt %} #}
-                                    {% if event.isrepeat %}
-                                        <a href="{{ path('dashboard_organizer_attendees_details', { eventslug : event.slug}) }}"
-                                           class="dropdown-item"><i
-                                                    class="dropdown-icon fas fa-users fa-fw text-muted"></i> {{ "Event Date Attendance Details" }}
-                                        </a>
-                                        <span style="cursor: pointer !important;"
-                                              data-target="{{ path('dashboard_organizer_event_delete_permanently', { slug : event.slug }) }}"
-                                              class="dropdown-item requires-confirmation-normal"
-                                              data-confirmation-text="{{ "You are about to delete the event and all its related information PERMANENTLY" }}"><i
-                                                    class="dropdown-icon far fa-calendar-times fa-fw text-muted"></i> {{ "Delete" }}</span>
-                                        <span style="cursor: pointer !important;"
-                                              data-target="{{ path('dashboard_organizer_event_delete_permanently_repeating_organizer', { slug : event.slug }) }}"
-                                              class="dropdown-item requires-confirmation-repeating"
-                                              data-confirmation-text="{{ "THIS IS A REPEATING EVENT. ALL OCCURENCES WILL ALSO BE DELETED PERMANENTLY!" }}"><i
-                                                    class="dropdown-icon far fa-calendar-times fa-fw text-muted"></i> {{ "Delete repeating" }}</span>
-                                    {% else %}
-                                        <span style="cursor: pointer !important;"
-                                              data-target="{{ path('dashboard_organizer_event_delete_permanently', { slug : event.slug }) }}"
-                                              class="dropdown-item requires-confirmation-normal"
-                                              data-confirmation-text="{{ "You are about to delete the event and all its related information PERMANENTLY" }}"><i
-                                                    class="dropdown-icon far fa-calendar-times fa-fw text-muted"></i> {{ "Delete" }}</span>
-                                    {% endif %}
                                 {% endif %}
-                            </div>
+                                {% if event.isrepeat %}
+                                    <span data-target="{{ path('dashboard_organizer_event_delete_permanently_repeating_admin', { slug : event.slug }) }}"
+                                          class="dropdown-item requires-confirmation-repeating"
+                                          data-confirmation-text="{{ "THIS IS A REPEATING EVENT. ALL OCCURENCES WILL ALSO BE DELETED PERMANENTLY!" }}"><i
+                                                class="dropdown-icon far fa-calendar-times fa-fw text-muted"></i> {{ "Delete repeating event" }}</span>
+                                {% else %}
+                                    <span data-target="{{ path('dashboard_organizer_event_delete_permanently_admin', { slug : event.slug }) }}"
+                                          class="dropdown-item requires-confirmation"
+                                          data-confirmation-text="{{ "You are about to delete the event and all its related information PERMANENTLY" }}"><i
+                                                class="dropdown-icon far fa-calendar-times fa-fw text-muted"></i> {{ "Delete" }}</span>
+                                {% endif %}
+                            {% elseif is_granted('ROLE_ORGANIZER') %}
+                                <a href="{{ path('dashboard_organizer_event_edit', { slug : event.slug }) }}"
+                                   class="dropdown-item"><i
+                                            class="dropdown-icon fas fa-edit fa-fw text-muted"></i> {{ "Edit" }}
+                                </a>
+                                <a href="{{ path('dashboard_organizer_attendees', { event : event.slug, status: 1 }) }}"
+                                   class="dropdown-item"><i
+                                            class="dropdown-icon fas fa-users fa-fw text-muted"></i> {{ "Attendees" }}
+                                </a>
+                                {% if event.hasTwoOrMoreEventDatesOnSale %}
+                                    <a href="{{ path('dashboard_organizer_attendees_details', { eventslug : event.slug}) }}"
+                                       class="dropdown-item"><i
+                                                class="dropdown-icon fas fa-users fa-fw text-muted"></i> {{ "Event Date Attendance Details" }}
+                                    </a>
+                                {% endif %}
+                                {% if event.hasvolunters %}
+                                    <a href="{{ path('volunteer_event_see_all_for_user', { userid : event.organizer.user.id, eventid: event.id}) }}"
+                                       class="dropdown-item"><i
+                                                class="dropdown-icon fas fa-users fa-fw text-muted"></i> {{ "See Volunteer List" }}
+                                    </a>
+                                {% endif %}
+                                {% if event.published %}
+                                    <a href="{{ path('dashboard_organizer_event_draft', { slug : event.slug }) }}"
+                                       class="dropdown-item"><i
+                                                class="dropdown-icon fas fa-eye-slash fa-fw text-muted"></i> {{ "Draft/Hide" }}
+                                    </a>
+                                {% else %}
+                                    <a href="{{ path('dashboard_organizer_event_publish', { slug : event.slug }) }}"
+                                       class="dropdown-item"><i
+                                                class="dropdown-icon fas fa-eye fa-fw text-muted"></i> {{ "Publish" }}
+                                    </a>
+                                {% endif %}
+                                {#                                {% if event.deletedAt %} #}
+                                {% if event.isrepeat %}
+                                    <a href="{{ path('dashboard_organizer_attendees_details', { eventslug : event.slug}) }}"
+                                       class="dropdown-item"><i
+                                                class="dropdown-icon fas fa-users fa-fw text-muted"></i> {{ "Event Date Attendance Details" }}
+                                    </a>
+                                    <span style="cursor: pointer !important;"
+                                          data-target="{{ path('dashboard_organizer_event_delete_permanently', { slug : event.slug }) }}"
+                                          class="dropdown-item requires-confirmation-normal"
+                                          data-confirmation-text="{{ "You are about to delete the event and all its related information PERMANENTLY" }}"><i
+                                                class="dropdown-icon far fa-calendar-times fa-fw text-muted"></i> {{ "Delete" }}</span>
+                                    <span style="cursor: pointer !important;"
+                                          data-target="{{ path('dashboard_organizer_event_delete_permanently_repeating_organizer', { slug : event.slug }) }}"
+                                          class="dropdown-item requires-confirmation-repeating"
+                                          data-confirmation-text="{{ "THIS IS A REPEATING EVENT. ALL OCCURENCES WILL ALSO BE DELETED PERMANENTLY!" }}"><i
+                                                class="dropdown-icon far fa-calendar-times fa-fw text-muted"></i> {{ "Delete repeating" }}</span>
+                                {% else %}
+                                    <span style="cursor: pointer !important;"
+                                          data-target="{{ path('dashboard_organizer_event_delete_permanently', { slug : event.slug }) }}"
+                                          class="dropdown-item requires-confirmation-normal"
+                                          data-confirmation-text="{{ "You are about to delete the event and all its related information PERMANENTLY" }}"><i
+                                                class="dropdown-icon far fa-calendar-times fa-fw text-muted"></i> {{ "Delete" }}</span>
+                                {% endif %}
+                            {% endif %}
                         </div>
-                    </td>
-                </tr>
+                    </div>
+                </td>
+            </tr>
 
-                <div class="modal fade" id="event-{{ event.reference }}-dates">
-                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title">{{ event.name }}: {{ "Event dates" }}</h4>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
-                            <div class="modal-body">
-                                {% for eventDate in event.eventdates %}
-                                    <div>
-                                        <b class="float-left">{{ eventDate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</b>
-                                        {% if is_granted("ROLE_ADMINISTRATOR") %}
-                                            <a href="{{ path("dashboard_administrator_event_date_statistics", {eventDateReference: eventDate.reference, eventSlug: event.slug}) }}"
-                                               class="float-right">{{ "View stats" }}</a>
-                                        {% elseif is_granted("ROLE_ORGANIZER") %}
-                                            <a href="{{ path("dashboard_organizer_event_date_statistics", {eventDateReference: eventDate.reference, eventSlug: event.slug}) }}"
-                                               class="float-right">{{ "View stats" }}</a>
-                                        {% endif %}
-                                        <div class="clearfix"></div>
-                                    </div>
-                                    {% if not loop.last %}
-                                        <hr>{% endif %}
-                                {% endfor %}
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary"
-                                        data-dismiss="modal">{{ "Close" }}</button>
-                            </div>
+            <div class="modal fade" id="event-{{ event.reference }}-dates">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">{{ event.name }}: {{ "Event dates" }}</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            {% for eventDate in event.eventdates %}
+                                <div>
+                                    <b class="float-left">{{ eventDate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</b>
+                                    {% if is_granted("ROLE_ADMINISTRATOR") %}
+                                        <a href="{{ path("dashboard_administrator_event_date_statistics", {eventDateReference: eventDate.reference, eventSlug: event.slug}) }}"
+                                           class="float-right">{{ "View stats" }}</a>
+                                    {% elseif is_granted("ROLE_ORGANIZER") %}
+                                        <a href="{{ path("dashboard_organizer_event_date_statistics", {eventDateReference: eventDate.reference, eventSlug: event.slug}) }}"
+                                           class="float-right">{{ "View stats" }}</a>
+                                    {% endif %}
+                                    <div class="clearfix"></div>
+                                </div>
+                                {% if not loop.last %}
+                                    <hr>{% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary"
+                                    data-dismiss="modal">{{ "Close" }}</button>
                         </div>
                     </div>
                 </div>
-            {% endfor %}
+            </div>
+        {% endfor %}
         </tbody>
     </table>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script>
-
-    $(document).on('click', '.requires-confirmation-normal', function (e) {
-        e.preventDefault();
-        var $thisElement = $(this);
-
-        if (typeof $thisElement.attr('data-target') !== typeof undefined && $thisElement.attr('data-target') !== false) {
-            // Get the value of the data-target attribute
-            var dataTarget = $thisElement.attr('data-target');
-
-            // Check if the data-target attribute contains '/delete-permanently'
-            if (dataTarget.indexOf('/delete-permanently') >= 0) {
-
-                const $confirmDialog = $.confirm({
-                    title: 'Confirmation required',
-                    content: $thisElement.data('confirmation-text'),
-                    buttons: {
-                        confirm: {
-                            text: 'Confirm',
-                            btnClass: 'btn-primary btn-sm',
-                            keys: ['enter'],
-                            action: function () {
-                                location.href = $thisElement.data('target');
-                            }
-                        },
-                        cancel: {
-                            text: 'Cancel',
-                            btnClass: 'btn-default btn-sm',
-                            keys: ['esc'],
-                            action: function () {
-                                $confirmDialog.close();
-                            }
-                        }
-                    }
-                });
-            }
-        }
-    });
-
-
-    $(document).on('click', '.requires-confirmation-repeating', function (e) {
-            e.preventDefault();
-            var $thisElement = $(this);
-            if (typeof $thisElement.attr('data-target') !== typeof undefined && $thisElement.attr('data-target') !== false) {
-                // Get the value of the data-target attribute
-                var dataTarget = $thisElement.attr('data-target');
-
-                // Check if the data-target attribute contains '/delete-permanently'
-                if (dataTarget.indexOf('/delete-permanently') >= 0) {
-                    const $confirmDialog = $.confirm({
-                        title: 'Confirmation required',
-                        content: $thisElement.data('confirmation-text'),
-                        buttons: {
-                            confirm: {
-                                text: 'Confirm',
-                                btnClass: 'btn-primary btn-sm',
-                                keys: ['enter'],
-                                action: function () {
-                                    location.href = $thisElement.data('target');
-                                }
-                            },
-                            cancel: {
-                                text: 'Cancel',
-                                btnClass: 'btn-default btn-sm',
-                                keys: ['esc'],
-                                action: function () {
-                                    $confirmDialog.close();
-                                }
-                            }
-                        }
-                    });
-                }
-            }
-        }
-    )
-</script>

@@ -82,6 +82,25 @@
     </li>
 
     <li class="nav-item">
+        <a href="#venues-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu"
+           class="nav-link dropdown-toggle">
+            <i class="fas fa-map-marker-alt fa-fw"></i> {{ 'Venues' }}
+        </a>
+        <ul id="venues-submenu-{{ random }}"
+            class="nav flex-column ml-3 collapse {% if routename == "dashboard_administrator_venue" or routename == "dashboard_administrator_venue_add" or routename == "dashboard_administrator_venue_edit" or routename == "dashboard_administrator_venuetype" or routename == "dashboard_administrator_venuetype_add" or routename == "dashboard_administrator_venuetype_edit" or routename == "dashboard_administrator_amenity" or routename == "dashboard_administrator_amenity_add" or routename == "dashboard_administrator_amenity_edit" %}show{% endif %}">
+            <li class="nav-item">
+                <a class="nav-link {% if routename == "dashboard_administrator_venue" or routename == "dashboard_administrator_venue_add" or routename == "dashboard_administrator_venue_edit" %}active{% endif %}"
+                   href="{{ path('dashboard_administrator_venue') }}">{{ "Manage venues" }}</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {% if routename == "dashboard_administrator_amenity" or routename == "dashboard_administrator_amenity_add" or routename == "dashboard_administrator_amenity_edit" %}active{% endif %}"
+                   href="{{ path('dashboard_administrator_amenity') }}">Manage Amenities</a>
+            </li>
+        </ul>
+    </li>
+
+    <li class="nav-item">
         <a href="{{ path('dashboard_administrator_page') }}"
            class="nav-link {% if routename == "dashboard_administrator_page" %}active{% endif %}">
             <i class="far fa-file-alt fa-fw"></i> {{ 'Pages' }}
@@ -167,7 +186,7 @@
 
     <li class="nav-item">
         <a href="{{ path('dashboard_organizer_event') }}"
-           class="nav-link {% if routename == "dashboard_organizer_event" or routename == "dashboard_organizer_event_add" or routename == "dashboard_organizer_event_edit" or routename == "dashboard_organizer_event_date_statistics" %}active{% endif %}">
+           class="nav-link {% if routename == "dashboard_organizer_event" or routename == "dashboard_organizer_event_add" or routename == "dashboard_organizer_event_edit" or routename == "dashboard_organizer_event_date_statistics" or routename == "volunteer_event_see_all" or routename == "volunteer_event_see_details" %}active{% endif %}">
             <i class="fas fa-calendar fa-fw"></i> {{ 'My events' }}
         </a>
     </li>
@@ -205,6 +224,13 @@
         <a href="{{ path('blog_post_organizer') }}"
            class="nav-link {% if routename == "blog_post_organizer" %}active{% endif %}">
             <i class="fas fa-newspaper fa-fw"></i> {{ 'News' }}
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="{{ path('notification_list') }}"
+           class="nav-link {% if routename == "notification_list" %}active{% endif %}">
+            <i class="fas fa-bell fa-fw"></i> {{ 'Notifications' }}
         </a>
     </li>
 
@@ -297,6 +323,12 @@
         </a>
     </li>
 
+    <li class="nav-item">
+        <a href="{{ path('notification_list') }}"
+           class="nav-link {% if routename == "notification_list" %}active{% endif %}">
+            <i class="fas fa-bell fa-fw"></i> {{ 'Notifications' }}
+        </a>
+    </li>
 
     <li class="nav-item">
         <a href="#account-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu"

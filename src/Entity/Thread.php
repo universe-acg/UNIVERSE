@@ -1,29 +1,32 @@
 <?php
-    
-    namespace App\Entity;
-    
-    use Doctrine\ORM\Mapping as ORM;
-    use FOS\CommentBundle\Entity\Thread as BaseThread;
-    
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
+
+namespace App\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use FOS\CommentBundle\Entity\Thread as BaseThread;
+
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\ThreadRepository")
+ * @ORM\Table(name="universe_thread")
+ * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
+ */
+class Thread extends BaseThread
+{
+
     /**
-     * @ORM\Entity(repositoryClass="App\Repository\ThreadRepository")
-     * @ORM\Table(name="universe_thread")
-     * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
+     * @var string $id
+     *
+     * @ORM\Id
+     * @ORM\Column(type="string")
      */
-    class Thread extends BaseThread
+    protected $id;
+
+    public function getId()
     {
-        
-        /**
-         * @var string $id
-         *
-         * @ORM\Id
-         * @ORM\Column(type="string")
-         */
-        protected $id;
-        
-        public function getId()
-        {
-            return $this->id;
-        }
-        
+        return $this->id;
     }
+
+}

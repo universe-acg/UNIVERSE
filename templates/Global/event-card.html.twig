@@ -13,7 +13,7 @@
 <div class="card card-event" style="z-index: 999 !important;">
     {#    <div class="img-wrap img-lazy-load {{ event.isPassed or past or  attendeed  ? 'grayed-out' : '' }}" #}
     <div class="img-wrap img-lazy-load {{ event.isPassed ? 'grayed-out' : '' }}"
-         data-src="{{ event.imageName ? asset(event.getImagePath|imagine_filter('thumbnail', runtimeConfig)) : event.getImagePlaceholder }}">
+         data-src="{{ event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder }}">
         <a href="{{ link }}"></a>
         <div class="loader"></div>
     </div>
@@ -38,45 +38,84 @@
                 {% endif %}
             </div>
         {% endif %}
-        <div class="event-info" style="width: 100%;">
-            <h5>
-                <a href="{{ link }}" class="text-dark">{{ event.name }} {{ event.isPassed }}</a>
-            </h5>
 
-            {% if event.isPassed %}
-                {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }} | Event has ended
-            {% else %}
-                {% set currentDate = "now"|date('U', 'Europe/Athens') %}
-                {% if displayedEventDate.startdate|date('U') > currentDate %}
-                    Starts on: {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }}
-                {% else %}
-                    {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }}| Event has started
-                {% endif %}
-            {% endif %}
+        <span class="event-info" style="float: left">
+                    {% if  event.getOrganizer().getUser().isAdmin() %}
+                    <h5 style="float: left;">
+                         <a style="float: left" href="{{ link }}"
+                            class="text-dark">{{ event.name }} {{ event.isPassed }}</a>
+                            </h5>
+                        {% else %}
+                    <h5 style="float: left;">
+                         <a style="float: left" href="{{ link }}"
+                            class="text-dark">{{ event.name }} {{ event.isPassed }}</a>
+                            </h5>
 
-            <span style="float: right"><a
-                        href="{{ path('organizer', {slug: (event.getOrganizer().getUser().getUsername())}) }}"
-                        class="link-style text-dark">{{ (event.getOrganizer().getName()) }}</a></span>
+                <span style="float: right">
+                             <div style="display: inline-block">
+         <a
+                 href="{{ path('organizer', {slug: (event.getOrganizer().getUser().getUsername())}) }}">
+                          <div class="outer-image">
+{#                                 {% if event.getOrganizer().getUser().getPoints() > 0 and event.getOrganizer().getUser().orggoodrole %} #}
+                                     <img src="{{ asset(event.getOrganizer().getUser().imagiifypointslevel) }}">
+{#                                 {% endif %} #}
+                                <div class="inner-image">
+                                            <img src="{{ event.getOrganizer().logoName ? asset(event.getOrganizer().getLogoPath) : event.getOrganizer().getLogoPlaceholder }}">
+                                        </div>
+                                    </div>
+             </a>
+                        {% endif %}
+                        </div>
+           </span>
 
-            {% if  is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+
+                 {% if event.isattended %}
+                     {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }} |<span
+                         class="accomplishment">✨Attended✨</span>
+                 {% elseif event.isPassed %}
+                     {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }} | Event has ended
+                 {% else %}
+                     {% set currentDate = "now"|date('U', 'Europe/Athens') %}
+                     {% if displayedEventDate.startdate|date('U') > currentDate %}
+                         Starts on: {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }}
+                     {% else %}
+                         {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }}| Event has started
+                     {% endif %}
+                 {% endif %}
+
+
+            {% if  is_granted('IS_AUTHENTICATED_REMEMBERED') and event.showattendees %}
                 <div class="mt-3">
                     {% set attendees = services.getUsersShuffled({"hasbookedticketfor": event.slug, "limit": 14, "role": "attendee"}).getQuery().getResult() %}
                     {% if attendees | length > 0 %}
                         {% for user in attendees %}
-                            {% include "Global/user-avatar-events.html.twig" with { user: user, showusernametooltip: true } %}
+                            {% if user.showattendeed %}
+                                {% include "Global/user-avatar-events.html.twig" with { user: user, showusernametooltip: true } %}
+                            {% endif %}
                         {% endfor %}
                     {% else %}
-                        <p>No attendees as of yet</p>
+                        {#                        <p>No attendees as of yet</p> #}
                     {% endif %}
                 </div>
             {% endif %}
-        </div>
+        </span>
+
         {% if orderReference is defined %}
             <div class="order-reference">
                 <a href="{{ path('dashboard_attendee_order_details', {reference: orderReference}) }}"><small>{{ "Order" }}
                         #{{ orderReference }}</small></a>
             </div>
         {% endif %}
+
+        <a href="{{ path('organizer', {slug: (event.getOrganizer().getUser().getUsername())}) }}"
+           class="link-style text-dark">{{ (event.getOrganizer().getName()) }}</a>
+
+        {% if event.venue %}
+            | <a
+                href="{{ path('venue', {slug: (event.getVenue().getSlug())}) }}"
+                class="link-style text-dark">{{ (event.getVenue().getTitle()) }}</a>
+        {% endif %}
+
         <div class="clearfix"></div>
     </div>
     {% if displayedEventDate %}

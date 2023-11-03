@@ -80,11 +80,7 @@ class OrderElement
 
     public function belongsToOrganizer($slug)
     {
-        if ($this->eventticket->getEventdate()->getEvent()->getOrganizer()->getSlug() == $slug) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->eventticket->getEventdate()->getEvent()->getOrganizer()->getSlug() == $slug;
     }
 
     public function displayUnitPrice()

@@ -6,6 +6,25 @@
 
 {% block content %}
 
+    <style>
+        .avatar-container {
+            position: relative;
+            display: inline-block; /* To keep the container's size to match the images */
+        }
+
+        .avatar.organizer-profile-logo {
+            /* Your existing CSS for the first image */
+        }
+
+        img.bottom-right-image {
+            position: absolute;
+            bottom: -20px;
+            right: 0;
+            width: 80px;
+            height: 80px;
+        }
+    </style>
+
     <section class="section-content padding-y bg-white">
         <div class="{{ services.getSetting("app_layout") }}">
             <div class="row">
@@ -13,17 +32,21 @@
 
                     <div class="shadow rounded overflow-hidden" style="min-height: 100vh">
                         {% if attendee.coverName %}
-                        <img class="organizer-profile-cover parallax-window" data-parallax="scroll"
-                             style="height: 350px !important; width: 100% !important; object-fit: cover; object-position: center"
-                             src="{{ asset(attendee.getCoverPath) }}"></img>{% endif %}
+                            <img class="organizer-profile-cover parallax-window" data-parallax="scroll"
+                                 style="height: 350px !important; width: 100% !important; object-fit: cover; object-position: center"
+                                 src="{{ asset(attendee.getCoverPath) }}">{% endif %}
 
                         <div class="row mt-5">
                             <div class="col-12 col-lg-4" style="background: white !important;">
                                 <div class="attendee-profile-sidebar text-center {% if not attendee.getCrossRoleName() %}mt-3 mb-3{% endif %}">
-
-                                        <span class="avatar organizer-profile-logo"
-                                              style="background-size: cover; background: url('{{ attendee.logoName ? asset(attendee.getLogoPath) : attendee.getLogoPlaceholder }}');"></span>
-
+                                    <div class="avatar-container">
+    <span class="avatar organizer-profile-logo"
+          style="background: url('{{ attendee.logoName ? asset(attendee.getLogoPath) : attendee.getLogoPlaceholder }}');"></span>
+                                        {% if attendee.getNolevel() == false %}
+                                            <img class="bottom-right-image"
+                                                 src="{{ attendee.imagiifypointslevel }}">
+                                        {% endif %}
+                                    </div>
                                     <h4 class="font-weight-bold text-center my-5">{{ attendee.getCrossRoleName() }}</h4>
 
                                     {% if attendee.hasSocialMedia %}

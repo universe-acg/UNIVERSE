@@ -22,6 +22,8 @@ use App\Entity\Organizer;
 use App\Entity\Page;
 use App\Entity\Settings;
 use App\Entity\User;
+use App\Entity\Venue;
+use App\Repository\NotificationRepository;
 use App\Repository\OrganizerRepository;
 use DateTime;
 use DateTimeInterface;
@@ -65,9 +67,14 @@ class AppServices
     private $urlMatcherInterface;
 
     private $organizerRepository;
+    private $notificationService;
 
-    public function __construct(EntityManagerInterface $entityManager, AuthorizationCheckerInterface $authChecker, RequestStack $requestStack, KernelInterface $kernel, AdapterInterface $cache, UrlGeneratorInterface $router, Security $security, Swift_Mailer $mailer, ParameterBagInterface $params, Twig_Environment $templating, UrlMatcherInterface $urlMatcherInterface, OrganizerRepository $organizerRepository)
+    private $notificationRepository;
+
+    public function __construct(NotificationRepository $notificationRepository, NotificationService $notificationService, EntityManagerInterface $entityManager, AuthorizationCheckerInterface $authChecker, RequestStack $requestStack, KernelInterface $kernel, AdapterInterface $cache, UrlGeneratorInterface $router, Security $security, Swift_Mailer $mailer, ParameterBagInterface $params, Twig_Environment $templating, UrlMatcherInterface $urlMatcherInterface, OrganizerRepository $organizerRepository)
     {
+        $this->notificationRepository = $notificationRepository;
+        $this->notificationService = $notificationService;
         $this->em = $entityManager;
         $this->authChecker = $authChecker;
         $this->requestStack = $requestStack;
@@ -82,7 +89,47 @@ class AppServices
         $this->organizerRepository = $organizerRepository;
     }
 
+    public function hasUnreadNotifications()
+    {
+        // Get the count of unread notifications
+        $unreadCount = $this->notificationRepository->countUnreadNotificationsByUser($this->security->getUser()->getId());
+
+        // Check if there are unread notifications
+        return $unreadCount > 0;
+    }
+
+    public function getLastFiveNotifications()
+    {
+        // Retrieve the last 5 notifications from the repository
+        $lastFiveNotifications = $this->notificationRepository->findLastFiveNotificationsByUser($this->security->getUser()->getId());
+
+        return [
+            'lastFiveNotifications' => $lastFiveNotifications,
+        ];
+    }
+
+    public function getLastFiveNotificationsWithUnreadFlag()
+    {
+        // Retrieve the last 5 notifications from the repository
+        $lastFiveNotifications = $this->notificationRepository->findLastFiveNotificationsByUser($this->security->getUser()->getId());
+
+        // Check for unread notifications
+        $hasUnreadNotifications = false;
+        foreach ($lastFiveNotifications as $notification) {
+            if (!$notification->getRead()) {
+                $hasUnreadNotifications = true;
+                break;
+            }
+        }
+
+        return [
+            'lastFiveNotifications' => $lastFiveNotifications,
+            'hasUnreadNotifications' => $hasUnreadNotifications,
+        ];
+    }
+
     // Redirects to the referer page when available, if not, redirects to the dashboard index
+
     public function redirectToReferer($alt = null): RedirectResponse
     {
         if ($this->requestStack->getCurrentRequest()->headers->get('referer')) {
@@ -278,6 +325,8 @@ class AppServices
                 $this->templating->render('Dashboard/Shared/Order/confirmation-email.html.twig', ['order' => $order]), 'text/html')
             ->attach(new Swift_Attachment($ticketsPdfFile, $order->getReference() . "-" . "tickets") . '.pdf', 'application/pdf');
 
+        $this->notificationService->createNotification($this->security->getUser()->getId(), $message, $email->getSubject());
+
         $this->mailer->send($email);
         return 1;
     }
@@ -334,6 +383,7 @@ class AppServices
             ->setBody(
                 $this->templating->render('Dashboard/Shared/Order/event-updated-email.html.twig', ['data' => $emaildata, 'message' => $message]), 'text/html', 'UTF-8');
 
+        $this->notificationService->createNotification($this->security->getUser()->getId(), $message, $email->getSubject());
         try {
             $result = $this->mailer->send($email);
         } catch (Exception $e) {
@@ -371,6 +421,8 @@ class AppServices
             ->setTo($emailTo)
             ->setBody(
                 $this->templating->render('Dashboard/Shared/Order/event-cancelled-email.html.twig', ['data' => $emaildata, 'message' => $message]), 'text/html', 'UTF-8');
+
+        $this->notificationService->createNotification($this->security->getUser()->getId(), $message, $email->getSubject());
 
         try {
             $result = $this->mailer->send($email);
@@ -585,6 +637,8 @@ class AppServices
         return $this->em->getRepository(Page::class)->getPages($slug);
     }
 
+    // Returns the venues after applying the specified search criterias
+
     public function getCategories($criterias)
     {
 
@@ -599,7 +653,7 @@ class AppServices
         return $this->em->getRepository(Category::class)->getCategories($hidden, $keyword, $slug, $featured, $limit, $sort, $order);
     }
 
-    // Returns the event dates after applying the specified search criterias
+    // Returns the venues after applying the specified search criterias
 
     public function getBlogPosts($criterias)
     {
@@ -799,6 +853,60 @@ class AppServices
             return !in_array($event, $eventsToRemove, true);
         });
 
+        $eventsToRemove = [];
+        $eventsByCommonValue = [];
+
+        // Step 1: Iterate through each event
+        foreach ($events as $event) {
+            if ($event->isIsrepeat()) {
+                $commonValue = $event->getCommonvalue();
+
+
+                // Step 2: Create an array of events with the same common value
+                if (!isset($eventsByCommonValue[$commonValue])) {
+                    $eventsByCommonValue[$commonValue] = [];
+                }
+                $eventsByCommonValue[$commonValue][] = $event;
+            }
+        }
+
+        // Step 3: Filter and sort events for each common value
+        foreach ($eventsByCommonValue as $commonValue => $commonEvents) {
+            $filteredEvents = array_filter($commonEvents, static function ($event) {
+                return $event->getLatestEndDate() >= new DateTime();
+            });
+
+            // Sort the events based on the latest event date
+            usort($filteredEvents, static function ($eventA, $eventB) {
+                $latestEventDateA = $eventA->getLatestEndDate();
+                $latestEventDateB = $eventB->getLatestEndDate();
+
+                if ($latestEventDateA === null && $latestEventDateB === null) {
+                    return 0;
+                }
+
+                if ($latestEventDateA === null) {
+                    return 1;
+                }
+
+                if ($latestEventDateB === null) {
+                    return -1;
+                }
+
+                return $latestEventDateA <=> $latestEventDateB;
+            });
+
+            // Step 4: Add the first event to the removal list
+            if (count($filteredEvents) > 1) {
+                $eventsToRemove = array_merge($eventsToRemove, array_slice($filteredEvents, 1));
+            }
+        }
+
+        // Step 5: Remove events with the same common value
+        $events = array_filter($events, static function ($event) use ($eventsToRemove) {
+            return !in_array($event, $eventsToRemove, true);
+        });
+
         // Execute the query
         return $events;
     }
@@ -817,6 +925,8 @@ class AppServices
 
         return $this->em->getRepository(HelpCenterCategory::class)->getHelpCenterCategories($parent, $hidden, $keyword, $slug, $limit, $order, $sort);
     }
+
+    // Returns the event dates after applying the specified search criterias
 
     public function getHelpCenterArticles($criterias)
     {
@@ -869,6 +979,33 @@ class AppServices
         $count = array_key_exists('count', $criterias) ? $criterias['count'] : false;
 
         return $this->em->getRepository("App\Entity\User")->getUsers($role, $keyword, $organizername, $organizerslug, $username, $email, $firstname, $lastname, $enabled, $slug, $followedby, $hasboughtticketforEvent, $hasboughtticketforOrganizer, $hasbookedticketfor, $apiKey, $isOnHomepageSlider, $limit, $count);
+    }
+
+    public function getVenues($criterias)
+    {
+        $hidden = array_key_exists('hidden', $criterias) ? $criterias['hidden'] : false;
+        $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
+        $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
+        $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
+        $count = array_key_exists('count', $criterias) ? $criterias['count'] : false;
+
+        return $this->em->getRepository(Venue::class)->getVenues($hidden, $keyword, $slug, $limit, $count);
+    }
+
+    public function getVenuessql($criterias)
+    {
+        $hidden = array_key_exists('hidden', $criterias) ? $criterias['hidden'] : false;
+        $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
+        $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
+        $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
+        $count = array_key_exists('count', $criterias) ? $criterias['count'] : false;
+
+        return $this->em->getRepository(Venue::class)->getVenuessql($hidden, $keyword, $slug, $limit, $count);
+    }
+
+    public function getVenueBySlug($slug)
+    {
+        return $this->em->getRepository(Venue::class)->findOneBy(['slug' => $slug]);
     }
 
     public function getBlogPostVideos($criterias)
@@ -1111,6 +1248,7 @@ class AppServices
     {
         // Extract criteria variables
         $category = $criterias['category'] ?? "all";
+        $venue = $criterias['venue'] ?? "all";
         $organizer = $criterias['organizer'] ?? "all";
         $open = $criterias['open'] ?? "all";
         $keyword = $criterias['keyword'] ?? "all";
@@ -1162,6 +1300,14 @@ class AppServices
                 ->andWhere('e.category = :category')
                 ->setParameter('category', $category);
         }
+
+        if ($venue !== "all") {
+            // Add a condition for the category
+            $queryBuilder
+                ->andWhere('e.venue = :venue')
+                ->setParameter('venue', $venue);
+        }
+
         if ($keyword !== "all") {
             // Add a condition for the keyword
             $keyword = "%" . $keyword . "%";

@@ -13,7 +13,7 @@
 <div class="card card-event" style="z-index: 999 !important;">
     {#    <div class="img-wrap img-lazy-load {{ event.isPassed or past or  attendeed  ? 'grayed-out' : '' }}" #}
     <div class="img-wrap img-lazy-load {{ event.isPassed ? 'grayed-out' : '' }}"
-         data-src="{{ event.imageName ? asset(event.getImagePath|imagine_filter('thumbnail', runtimeConfig)) : event.getImagePlaceholder }}">
+         data-src="{{ event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder }}">
         <a href="{{ link }}"></a>
         <div class="loader"></div>
     </div>

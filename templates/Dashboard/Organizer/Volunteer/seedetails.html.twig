@@ -1,0 +1,47 @@
+{% extends "Global/layout.html.twig" %}
+
+{% set pagetitle = volunteer.user.getCrossRoleName %}
+
+{% block title %}Details of volunteer:  {{ pagetitle }}{% endblock %}
+
+{% block content %}
+
+    {% set navigation = [{"current":(pagetitle)}] %}
+    {% include "Global/navigation.html.twig" with navigation %}
+
+    <section class="section-content padding-y bg-white">
+        <div class="{{ services.getSetting("app_layout") }}">
+            <div class="row">
+                <aside class="col-lg-3 pt-3 pt-lg-0">
+                    {% include "Dashboard/sidebar.html.twig" %}
+                </aside>
+                <div class="col-lg-9 mt-4 mt-lg-0">
+                    <div class="card box">
+                        <div class="card-body">
+                            <h4>Volunteer: <a href="{{ path('profile_attendee', { slug : volunteer.user.slug }) }}"
+                                              data-toggle="tooltip">{{ volunteer.user.getCrossRoleName }}</a></h4>
+                            <p>{{ volunteer.message }}</p>
+                            <div style="display: flex; justify-content: start; align-items: center; align-content: center;">
+                                <a href="{{ path('volunteer_event_see_all_for_user', { userid : userid, eventid: volunteer.eventid}) }}"
+                                <button style="border-radius: 7px; float: left"
+                                        class="styled-button2 btn btn-primary d-inline-block">
+                                    Back to Volunteer List
+                                </button>
+                                </a>
+                                <a href="{{ path('volunteer_event_see_all_for_user', { userid : userid, eventid: volunteer.eventid}) }}"
+                                <button style="border-radius: 7px; float: left"
+                                        class="styled-button2 btn btn-primary d-inline-block">
+                                    Message
+                                </button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+{% endblock %}
+

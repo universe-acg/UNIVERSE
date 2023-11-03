@@ -1,112 +1,112 @@
 <?php
-    /*
+/*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-    
-    namespace App\Controller\Dashboard\Organizer;
-    
-    use App\Entity\UniverseGbMember;
-    use App\Service\ManagementClubsSocietiesService;
-    use App\Service\UniverseGbMemberService;
-    use App\Service\UserService;
-    use Knp\Component\Pager\PaginatorInterface;
-    use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-    use Symfony\Component\HttpFoundation\JsonResponse;
-    use Symfony\Component\HttpFoundation\Request;
-    use Symfony\Component\Routing\Annotation\Route;
-    
-    class GoverningBodyController extends Controller
+
+namespace App\Controller\Dashboard\Organizer;
+
+use App\Entity\UniverseGbMember;
+use App\Service\ManagementClubsSocietiesService;
+use App\Service\UniverseGbMemberService;
+use App\Service\UserService;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+
+class GoverningBodyController extends Controller
+{
+
+    /**
+     * @Route("/dashboard/organizer/managementgb/delete", name="dashboard_organizer_managementgb_delete_xml")
+     */
+    public function deleteGbMemberById(Request $request, UniverseGbMemberService $universeGbMemberService)
     {
-        
-        /**
-         * @Route("/dashboard/organizer/managementgb/delete", name="dashboard_organizer_managementgb_delete_xml")
-         */
-        public function deleteGbMemberById(Request $request, UniverseGbMemberService $universeGbMemberService)
-        {
-            $id = $request->request->get('id');
-            $universeGbMemberService->deleteById($id);
-            $responseData['success'] = 'Successfully deleted GB member';
-            return new JsonResponse($responseData, 200);
+        $id = $request->request->get('id');
+        $universeGbMemberService->deleteById($id);
+        $responseData['success'] = 'Successfully deleted GB member';
+        return new JsonResponse($responseData, 200);
+    }
+
+    /**
+     * @Route("/dashboard/organizer/managementgb", name="dashboard_organizer_managementgb", methods="GET")
+     */
+    public function index(Request $request, PaginatorInterface $paginator, UniverseGbMemberService $universeGbMemberService, ManagementClubsSocietiesService $managementClubsSocietiesService)
+    {
+        $gbMembers = $universeGbMemberService->getByOrg($this->getUser()->getOrganizer()->getId());
+        $members = $managementClubsSocietiesService->findMembersOfOrganization($this->getUser()->getOrganizer()->getId());
+
+        return $this->render('Dashboard/Organizer/gbmembers/index.html.twig', [
+            'gbMembers' => $gbMembers,
+            'members' => $members,
+            'managementClubsSocietiesService' => $universeGbMemberService
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/organizer/managementgb/update", name="dashboard_organizer_managementgb_update_xml", methods="POST")
+     */
+    public function updateGbMembersByOrg(UserService $userService, Request $request, UniverseGbMemberService $universeGbMemberService)
+    {
+        $jsonData = json_decode($request->getContent(), true);
+
+        // Check if the required fields are present
+        if (
+            !isset($jsonData['id']) ||
+            !isset($jsonData['title']) ||
+            !isset($jsonData['description']) ||
+            !isset($jsonData['user'])
+        ) {
+            // Return an error response (e.g., using Symfony's JsonResponse)
+            $responseData = ['error' => 'Some required fields are missing.'];
+            return new JsonResponse($responseData, 400); // Use an appropriate HTTP status code, e.g., 400 Bad Request
         }
-        
-        /**
-         * @Route("/dashboard/organizer/managementgb", name="dashboard_organizer_managementgb", methods="GET")
-         */
-        public function index(Request $request, PaginatorInterface $paginator, UniverseGbMemberService $universeGbMemberService, ManagementClubsSocietiesService $managementClubsSocietiesService)
-        {
-            $gbMembers = $universeGbMemberService->getByOrg($this->getUser()->getOrganizer()->getId());
-            $members = $managementClubsSocietiesService->findMembersOfOrganization($this->getUser()->getOrganizer()->getId());
-            
-            return $this->render('Dashboard/Organizer/gbmembers/index.html.twig', [
-                'gbMembers' => $gbMembers,
-                'members' => $members,
-                'managementClubsSocietiesService' => $universeGbMemberService
-            ]);
-        }
-        
-        /**
-         * @Route("/dashboard/organizer/managementgb/update", name="dashboard_organizer_managementgb_update_xml", methods="POST")
-         */
-        public function updateGbMembersByOrg(UserService $userService, Request $request, UniverseGbMemberService $universeGbMemberService)
-        {
-            $jsonData = json_decode($request->getContent(), true);
-            
-            // Check if the required fields are present
-            if (
-                !isset($jsonData['id']) ||
-                !isset($jsonData['title']) ||
-                !isset($jsonData['description']) ||
-                !isset($jsonData['user'])
-            ) {
-                // Return an error response (e.g., using Symfony's JsonResponse)
-                $responseData = ['error' => 'Some required fields are missing.'];
-                return new JsonResponse($responseData, 400); // Use an appropriate HTTP status code, e.g., 400 Bad Request
-            }
-            
-            $id = $jsonData['id'];
-            $title = $jsonData['title'];
-            $description = $jsonData['description'];
-            $selectedUserId = $jsonData['user'];
-            
-            $user = $userService->getUserById($selectedUserId);
-            
-            $newuniverseGbMember = $universeGbMemberService->getById($id)[0];
-            
-            $newuniverseGbMember->setOrg($this->getUser()->getOrganizer());
-            $newuniverseGbMember->setDesc($description);
-            $newuniverseGbMember->setAttendee($user);
-            $newuniverseGbMember->setTitle($title);
-            
-            $universeGbMemberService->add($newuniverseGbMember);
-            $responseData['success'] = 'Successfully updated new GB member';
-            return new JsonResponse($responseData);
-        }
-        
-        /**
-         * @Route("/dashboard/organizer/managementgb/add", name="dashboard_organizer_managementgb_add", methods="POST")
-         */
-        public function addGbMembersByOrg(UserService $userService, Request $request, UniverseGbMemberService $universeGbMemberService)
-        {
-            $title = $request->request->get('title');
-            $description = $request->request->get('description');
-            $selectedUserId = $request->request->get('user');
-            if ($selectedUserId == "all" || $selectedUserId == null || $selectedUserId == "") {
-                $this->addFlash('error', "Please select a member for this role");
-                return $this->redirectToRoute("dashboard_organizer_managementgb");
-            }
-            
-            $user = $userService->getUserById($selectedUserId);
-            $newuniverseGbMember = new UniverseGbMember();
-            $newuniverseGbMember->setOrg($this->getUser()->getOrganizer());
-            $newuniverseGbMember->setDesc($description);
-            $newuniverseGbMember->setAttendee($user);
-            $newuniverseGbMember->setTitle($title);
-            
-            $universeGbMemberService->add($newuniverseGbMember);
-            
-            $this->addFlash('success', "Successfully added new GB member");
+
+        $id = $jsonData['id'];
+        $title = $jsonData['title'];
+        $description = $jsonData['description'];
+        $selectedUserId = $jsonData['user'];
+
+        $user = $userService->getUserById($selectedUserId);
+
+        $newuniverseGbMember = $universeGbMemberService->getById($id)[0];
+
+        $newuniverseGbMember->setOrg($this->getUser()->getOrganizer());
+        $newuniverseGbMember->setDesc($description);
+        $newuniverseGbMember->setAttendee($user);
+        $newuniverseGbMember->setTitle($title);
+
+        $universeGbMemberService->add($newuniverseGbMember);
+        $responseData['success'] = 'Successfully updated new GB member';
+        return new JsonResponse($responseData);
+    }
+
+    /**
+     * @Route("/dashboard/organizer/managementgb/add", name="dashboard_organizer_managementgb_add", methods="POST")
+     */
+    public function addGbMembersByOrg(UserService $userService, Request $request, UniverseGbMemberService $universeGbMemberService)
+    {
+        $title = $request->request->get('title');
+        $description = $request->request->get('description');
+        $selectedUserId = $request->request->get('user');
+        if ($selectedUserId == "all" || $selectedUserId == null || $selectedUserId == "") {
+            $this->addFlash('error', "Please select a member for this role");
             return $this->redirectToRoute("dashboard_organizer_managementgb");
         }
+
+        $user = $userService->getUserById($selectedUserId);
+        $newuniverseGbMember = new UniverseGbMember();
+        $newuniverseGbMember->setOrg($this->getUser()->getOrganizer());
+        $newuniverseGbMember->setDesc($description);
+        $newuniverseGbMember->setAttendee($user);
+        $newuniverseGbMember->setTitle($title);
+
+        $universeGbMemberService->add($newuniverseGbMember);
+
+        $this->addFlash('success', "Successfully added new GB member");
+        return $this->redirectToRoute("dashboard_organizer_managementgb");
+    }
 
 //
 //        /**
@@ -374,4 +374,4 @@
 //            $this->addFlash('success', "You have now canceled the request for them to join");
 //            return $this->redirectToRoute("dashboard_organizer_management");
 //        }
-    }
+}

@@ -1,0 +1,64 @@
+{% extends "Global/layout.html.twig" %}
+
+{% form_theme form 'Global/jquery.collection.html.twig' %}
+
+{% set pagetitle = 'Add a new venue' %}
+
+{% if venue.id %}{% set pagetitle = 'Update the venue' %}{% endif %}
+
+{% block title %}{{ pagetitle }}{% endblock %}
+
+{% block content %}
+
+    {% if is_granted('ROLE_ADMINISTRATOR') %}
+        {% set navigation = [{ "dashboard_index": ('Dashboard' ),  "dashboard_administrator_venue": ('Manage venues' ), "current":(pagetitle) }] %}
+    {% elseif is_granted('ROLE_ORGANIZER') %}
+        {% set navigation = [{ "dashboard_index": ('Dashboard' ),  "dashboard_organizer_venue": ('my venues' ), "current":(pagetitle) }] %}
+    {% endif %}
+    {% include "Global/navigation.html.twig" with navigation %}
+
+    <section class="section-content padding-y bg-white">
+        <div class="{{ services.getSetting("app_layout") }}">
+            <div class="row">
+                <aside class="col-lg-3 pt-3 pt-lg-0">
+                    {% include "Dashboard/sidebar.html.twig" %}
+                </aside>
+                <div class="col-lg-9 mt-4 mt-lg-0">
+                    <div class="card box">
+                        <div class="card-body">
+                            {#                                                        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }} #}
+                            {#                                                        {{ form_errors(form) }} #}
+                            {#                                                        {{ form_row(form.amenities) }} #}
+                            {#                                                        {{ form_end(form) }} #}
+                            {#                                                        {{ form_row(form.save) }} #}
+                            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                            {{ form_widget(form) }}
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+
+    {% if google_maps_api_key != "" %}
+        <script type="text/javascript"
+                src="{{ services.getCurrentRequestProtocol() }}://maps.google.com/maps/api/js?sensor=false&key={{ google_maps_api_key }}"></script>
+    {% endif %}
+    <script>
+
+        $(document).ready(function () {
+
+
+        });
+
+    </script>
+
+
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "Global/layout.html.twig" %}
+
+{% set pagetitle = notification.name %}
+
+{% block title %}Notification:  {{ pagetitle }}{% endblock %}
+
+{% block content %}
+
+    {% set navigation = [{"current":(pagetitle)}] %}
+    {% include "Global/navigation.html.twig" with navigation %}
+
+    <section class="section-content padding-y bg-white">
+        <div class="{{ services.getSetting("app_layout") }}">
+            <div class="row">
+                <aside class="col-lg-3 pt-3 pt-lg-0">
+                    {% include "Dashboard/sidebar.html.twig" %}
+                </aside>
+                <div class="col-lg-9 mt-4 mt-lg-0">
+                    <div class="card box">
+                        <div class="card-body">
+                            <h1>Notification: {{ notification.name }}</h1>
+                            <p>{{ notification.description }}</p>
+
+                            {% if notification.read %}
+                                <p>Status: Read</p>
+                            {% else %}
+                                <p>Status: Unread</p>
+                                <a href="{{ path('notification_mark_as_read', {'id': notification.id}) }}"
+                                   class="btn btn-primary">Mark as
+                                    Read</a>
+                            {% endif %}
+
+                            <a href="{{ path('notification_list') }}" class="btn btn-secondary">Back to
+                                Notification Center</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+{% endblock %}
+

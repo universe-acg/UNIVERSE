@@ -1,10 +1,51 @@
 {% extends "Global/layout.html.twig" %}
 
-{% set pagetitle = 'Account settings' %}
+{% set pagetitle = 'Account settifdasafdafngs' %}
 
 {% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
+
+    <style>
+        .image-selector {
+            width: 100%; /* Adjust the width as needed */
+            margin: 0 auto;
+        }
+
+        .scrollbox {
+            max-height: 100%; /* Adjust the height as needed */
+            overflow-y: auto;
+            border: 1px solid #ccc;
+        }
+
+        .image-item {
+            display: flex;
+            align-items: center;
+            padding: 5px;
+            cursor: pointer;
+            float: left;
+        }
+
+        .image-item.selected {
+            background-color: #314CA3; /* Highlight color */
+        }
+
+        .image-item img {
+            max-height: 98px; /* Adjust the height as needed */
+            margin-right: 10px;
+        }
+
+        .image-item {
+            display: inline-block;
+            cursor: pointer;
+            margin: 5px;
+            border: 2px solid transparent; /* Add a transparent border to all images */
+        }
+
+        .image-item.selected {
+            border-color: #314CA3; /* Highlight color for selected image */
+        }
+    </style>
 
     {% set navigation = [{"current":(pagetitle)}] %}
     {% include "Global/navigation.html.twig" with navigation %}
@@ -30,15 +71,46 @@
                                             class="fas fa-user-plus fa-fw"></i> {{ app.user.createdAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</span>
                             </div>
 
-                            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-                            {{ form_widget(form) }}
+                            {{ form_start(form) }}
+                            <div>
+                                <div class="image-selector">
+                                    {{ form_label(form.selectedImage) }}
+                                    <div class="image-list">
+                                        {% for choice in form.selectedImage.vars.choices %}
+                                            <div class="image-item">
+                                                <img src="{{ asset( 'https://universeacg.xyz/uploads/imgs/' ~ choice.data) }}"
+                                                     alt="{{ choice.label }}" class="selectable-image">
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <br>
                             {{ form_end(form) }}
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
 
+    {#    <img src="{{ asset( 'https://universeacg.xyz/uploads/imgs/' ~ choice.data) }}" #}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const images = document.querySelectorAll(".selectable-image");
+            images.forEach((image) => {
+                image.addEventListener("click", function () {
+                    // Deselect all images
+                    document.querySelectorAll(".image-item").forEach(item => item.classList.remove("selected"));
+                    // Select the clicked image
+                    this.parentElement.classList.add("selected");
+
+                    const value = this.getAttribute("alt");
+                    document.querySelector('input[name="{{ form.selectedImage.vars.full_name }}"][value="' + value + '"]').click();
+                });
+            });
+        });
+    </script>
 {% endblock %}

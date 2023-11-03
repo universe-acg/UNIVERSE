@@ -19,19 +19,22 @@
 
                     <div class="shadow rounded overflow-hidden">
                         {% if organizer.coverName %}
-                        <img class="organizer-profile-cover parallax-window" data-parallax="scroll"
-                             style="height: 350px !important; width: 100% !important; object-fit: cover; object-position: center"
-                             src="{{ asset(organizer.getCoverPath) }}"></img>{% endif %}
+                            <img class="organizer-profile-cover parallax-window" data-parallax="scroll"
+                                 style="height: 350px !important; width: 100% !important; object-fit: cover; object-position: center"
+                                 src="{{ asset(organizer.getCoverPath) }}">{% endif %}
 
                         <div class="row">
                             <div class="col-12 col-lg-4" style="background: white !important;">
                                 <div class="organizer-profile-sidebar text-center {% if not organizer.coverName %}mt-3 mb-3{% endif %}">
 
-                                    <span class="avatar organizer-profile-logo"
-                                          style="background-size: cover; background: url('{{ organizer.logoName ? asset(organizer.getLogoPath) : organizer.getLogoPlaceholder }}');"></span>
+                                                                        <span class="avatar organizer-profile-logo"
+                                                                              style="background-size: cover; background: url('{{ organizer.logoName ? asset(organizer.getLogoPath) : organizer.getLogoPlaceholder }}');"></span>
 
-                                    <h4 class="font-weight-bold text-center my-5">{{ organizer.name }}</h4>
-
+                                    <h4 class="font-weight-bold text-center mt-5">{{ organizer.name }}</h4>
+                                    <p class="mb-5">
+                                        <a href="https://universeacg.xyz/leaderboards?tag={{ organizer.user.stringifypointslevel }}"
+                                        >{{ organizer.user.stringifypointslevel }}</a>
+                                    </p>
                                     {% if organizer.hasSocialMedia %}
 
                                         <ul class="list-inline mb-0">
@@ -118,69 +121,81 @@
                             <div class="col-12 col-lg-8 bg-light">
 
                                 {% set publishedeventscount = services.getEvents({"count": true, elapsed: "all", organizer: organizer.slug}) | length %}
+                                <div style="display: block">
+                                    <div class="p-4 d-flex justify-content-end text-center" style="float:left;">
+                                        <ul class="list-inline mb-0">
+                                            <li class="list-inline-item"
+                                                style="display: block;">
+                                                <button style="border-radius: 7px; float: left"
+                                                        class="styled-button2 btn btn-primary d-inline-block">
+                                                    Message
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="p-4 d-flex justify-content-end text-center" style="float: right">
+                                        <ul class="list-inline mb-0">
+                                            {% if organizer.categories|length %}
+                                                {% for category in organizer.categories %}
+                                                    <li class="list-inline-item mr-3">
+                                                        <h5 class="font-weight-bold mb-0 d-block">
+                                                            <i class="{{ category.icon }}"></i>
+                                                        </h5>
+                                                        <small class="text-muted">
+                                                            {{ category.name }}
+                                                        </small>
+                                                    </li>
+                                                {% endfor %}
 
-                                <div class="p-4 d-flex justify-content-end text-center">
-                                    <ul class="list-inline mb-0">
-                                        {% if organizer.categories|length %}
-                                            {% for category in organizer.categories %}
-                                                <li class="list-inline-item mr-3">
-                                                    <h5 class="font-weight-bold mb-0 d-block">
-                                                        <i class="{{ category.icon }}"></i>
-                                                    </h5>
-                                                    <small class="text-muted">
-                                                        {{ category.name }}
-                                                    </small>
-                                                </li>
-                                            {% endfor %}
-
-                                        {% endif %}
-                                        <li class="list-inline-item mr-3">
-                                            <h5 class="font-weight-bold mb-0 d-block">{{ publishedeventscount }}</h5>
-                                            <small class="text-muted"> <i
-                                                        class="fas fa-calendar-alt fa-fw mr-1"></i>{{ "Events" }}
-                                            </small>
-                                        </li>
-                                        <li class="list-inline-item">
-                                            <h5 class="font-weight-bold mb-0 d-block">{{ news | length }}</h5>
-                                            <small class="text-muted"> <i
-                                                        class="fas fa-newspaper mr-1"></i>{{ "Announcements" }}
-                                            </small>
-                                        </li>
-                                        <li class="list-inline-item">
-                                            <h5 class="font-weight-bold mb-0 d-block">{{ organizer.followedby|length }}</h5>
-                                            <small class="text-muted"> <i
-                                                        class="fas fa-users mr-1"></i>{{ "Followers" }}
-                                            </small>
-                                        </li>
-                                        <li class="list-inline-item">
-                                            <h5 class="font-weight-bold mb-0 d-block">{{ organizer.members|length }}</h5>
-                                            <small class="text-muted"> <i
-                                                        class="fas fa-users mr-1"></i>{{ "Members" }}
-                                            </small>
-                                        </li>
-                                        <li class="list-inline-item">
-                                            {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') or is_granted('ROLE_ATTENDEE') %}
-                                                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                                                    {% if organizer.isFollowedBy(app.user) %}
-                                                        <button class="organizer-unfollow btn btn-outline-primary btn-sm btn-block"
-                                                                data-target="{{ path('app_dashboard_attendee_following_remove', { slug : organizer.slug }) }}">
-                                                            <i class="fas fa-bell-slash"></i>
-                                                        </button>
-                                                    {% else %}
-                                                        <button class="organizer-follow btn btn-outline-primary btn-sm btn-block"
-                                                                data-target="{{ path('app_dashboard_attendee_following_add', { slug : organizer.slug }) }}"
-                                                        >
-                                                            <i class="fas fa-bell"></i>
-                                                        </button>
-                                                    {% endif %}
-                                                {% else %}
-                                                    <a href="{{ path('fos_user_security_login')~'?_target_path='~app.request.getPathInfo }}"
-                                                       class="btn btn-outline-primary btn-sm btn-block"><i
-                                                                class="fas fa-bell"></i></a>
-                                                {% endif %}
                                             {% endif %}
-                                        </li>
-                                        {% if organizer.category == 'Club' %}
+                                            <li class="list-inline-item mr-3">
+                                                <h5 class="font-weight-bold mb-0 d-block">{{ publishedeventscount }}</h5>
+                                                <small class="text-muted"> <i
+                                                            class="fas fa-calendar-alt fa-fw mr-1"></i>{{ "Events" }}
+                                                </small>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <h5 class="font-weight-bold mb-0 d-block">{{ news | length }}</h5>
+                                                <small class="text-muted"> <i
+                                                            class="fas fa-newspaper mr-1"></i>{{ "Announcements" }}
+                                                </small>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <h5 class="font-weight-bold mb-0 d-block">{{ organizer.followedby|length }}</h5>
+                                                <small class="text-muted"> <i
+                                                            class="fas fa-users mr-1"></i>{{ "Followers" }}
+                                                </small>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <h5 class="font-weight-bold mb-0 d-block">{{ organizer.members|length }}</h5>
+                                                <small class="text-muted"> <i
+                                                            class="fas fa-users mr-1"></i>{{ "Members" }}
+                                                </small>
+                                            </li>
+
+                                            <li class="list-inline-item">
+                                                {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') or is_granted('ROLE_ATTENDEE') %}
+                                                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                                                        {% if organizer.isFollowedBy(app.user) %}
+                                                            <button class="organizer-unfollow btn btn-outline-primary btn-sm btn-block"
+                                                                    data-target="{{ path('app_dashboard_attendee_following_remove', { slug : organizer.slug }) }}">
+                                                                <i class="fas fa-bell-slash"></i>
+                                                            </button>
+                                                        {% else %}
+                                                            <button class="organizer-follow btn btn-outline-primary btn-sm btn-block"
+                                                                    data-target="{{ path('app_dashboard_attendee_following_add', { slug : organizer.slug }) }}"
+                                                            >
+                                                                <i class="fas fa-bell"></i>
+                                                            </button>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <a href="{{ path('fos_user_security_login')~'?_target_path='~app.request.getPathInfo }}"
+                                                           class="btn btn-outline-primary btn-sm btn-block"><i
+                                                                    class="fas fa-bell"></i></a>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </li>
+                                            {#                                            {% if organizer.category == 'Club' %} #}
                                             <li class="list-inline-item">
                                                 {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') or is_granted('ROLE_ATTENDEE') %}
                                                     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
@@ -233,10 +248,11 @@
                                                     {% endif %}
                                                 {% endif %}
                                             </li>
-                                        {% endif %}
-                                    </ul>
+                                            {#                                            {% endif %} #}
+                                        </ul>
+                                    </div>
                                 </div>
-
+                                <div class="clearfix"></div>
                                 {% set onsaleeventscount = currentevnts | length %}
                                 {% set pasteventscount = pastevents | length %}
                                 {% set newscount = news | length %}

@@ -5,6 +5,8 @@
 
 namespace App\Entity;
 
+use App\Validator\Constraints\EnglishOnly;
+use App\Validator\Constraints\Profanity;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -31,6 +33,8 @@ class BlogPostVideo
      */
     protected $slug;
     /**
+     * @EnglishOnly
+     * @Profanity
      * @ORM\Column(length=255, unique=true)
      */
     protected $tags;
@@ -46,6 +50,8 @@ class BlogPostVideo
     private $name;
     /**
      * @ORM\Column(type="string")
+     * @EnglishOnly
+     * @Profanity
      */
     private $content;
     /**

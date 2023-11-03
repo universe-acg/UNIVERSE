@@ -5,11 +5,15 @@
 
 namespace App\Entity;
 
+use App\Validator\Constraints\EnglishOnly;
+use App\Validator\Constraints\Profanity;
 use DateTime;
 use DateTimeImmutable;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinColumn;
 use Exception;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\HttpFoundation\File\File;
@@ -39,8 +43,41 @@ class Event
      * @ORM\Column(length=255, unique=true)
      */
     protected $slug;
-    private $repeatsweekly;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="User")
+     * @ORM\JoinTable(name="universe_volunteer_event")
+     */
+    private $volunteers;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="User")
+     * @ORM\JoinTable(name="universe_volunteer_event_select_attendees")
+     */
+    private $selectattendees;
+    /**
+     * @ORM\ManyToOne(targetEntity="Venue", inversedBy="events", fetch="LAZY")
+     * @JoinColumn(name="venue_id", referencedColumnName="id")
+     */
+    private $venue;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $redirectable;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $allowoverbook;
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $viewablebyselect;
+    private $visibletoallmembers;
+    private $addmembersasviewable;
+    private $publishOnSpecificDate = false;
+    private $repeatsweekly;
     private $repeatweeks;
     private $repeatstartdate;
     private $repeatenddate;
@@ -56,7 +93,6 @@ class Event
     private $category;
     private $isPassed = false;
     private $isAttnded = false;
-
     /**
      * @ORM\ManyToOne(targetEntity="Organizer", inversedBy="events", fetch = "EAGER")
      */
@@ -66,12 +102,22 @@ class Event
      */
     private $images;
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $outofcampus;
+    /**
+     * @ORM\OneToMany(targetEntity="EventFile", mappedBy="event", cascade={"persist", "remove"}, orphanRemoval=true, fetch = "EAGER")
+     */
+    private $files;
+    /**
      * @ORM\OneToMany(targetEntity="EventDate", mappedBy="event", cascade={"persist", "remove"}, fetch = "EAGER", orphanRemoval=true)
      * @ORM\OrderBy({"startdate" = "ASC"})
      * @Assert\Valid(groups={"create", "update"})
      */
     private $eventdates;
     private $eventDatesMulti;
+
+    // Getters and setters...
     /**
      * @ORM\ManyToMany(targetEntity="User", inversedBy="favorites", cascade={"persist", "merge"})
      * @ORM\JoinTable(name="universe_favorites",
@@ -99,24 +145,32 @@ class Event
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @EnglishOnly
+     * @Profanity
      */
     private $externallink;
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @EnglishOnly
+     * @Profanity
      */
     private $phonenumber;
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @EnglishOnly
+     * @Profanity
      */
     private $email;
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @EnglishOnly
+     * @Profanity
      */
     private $tags;
     /**
@@ -193,11 +247,16 @@ class Event
      * @Assert\NotNull(groups={"create", "update"})
      */
     private $showattendees = true;
+    private $isattended = false;
     /**
      * @ORM\Column(type="boolean")
      * @Assert\NotNull(groups={"create", "update"})
      */
     private $volsneeded = false;
+    /**
+     * @ORM\Column(type="datetime", nullable=true, name="publish_date")
+     */
+    private $publishDate;
 
     public function __construct()
     {
@@ -223,6 +282,253 @@ class Event
         ]);
 
         return strlen($reference) > $length ? substr($reference, 0, $length) : $reference;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAllowoverbook()
+    {
+        return $this->allowoverbook;
+    }
+
+    /**
+     * @param mixed $allowoverbook
+     */
+    public function setAllowoverbook($allowoverbook): void
+    {
+        $this->allowoverbook = $allowoverbook;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRedirectable()
+    {
+        return $this->redirectable;
+    }
+
+    /**
+     * @param mixed $redirectable
+     */
+    public function setRedirectable($redirectable): void
+    {
+        $this->redirectable = $redirectable;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSelectattendees()
+    {
+        return $this->selectattendees;
+    }
+
+    /**
+     * @param mixed $selectattendees
+     */
+    public function setSelectattendees($selectattendees): void
+    {
+        $this->selectattendees = $selectattendees;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVisibletoallmembers()
+    {
+        return $this->visibletoallmembers;
+    }
+
+    /**
+     * @param mixed $visibletoallmembers
+     */
+    public function setVisibletoallmembers($visibletoallmembers): void
+    {
+        $this->visibletoallmembers = $visibletoallmembers;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAddmembersasviewable()
+    {
+        return $this->addmembersasviewable;
+    }
+
+    /**
+     * @param mixed $addmembersasviewable
+     */
+    public function setAddmembersasviewable($addmembersasviewable): void
+    {
+        $this->addmembersasviewable = $addmembersasviewable;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getViewablebyselect()
+    {
+        return $this->viewablebyselect;
+    }
+
+    /**
+     * @param mixed $viewablebyselect
+     */
+    public function setViewablebyselect($viewablebyselect): void
+    {
+        $this->viewablebyselect = $viewablebyselect;
+    }
+
+    public function hasvolunters()
+    {
+        return $this->volunteers && count($this->volunteers) > 0;
+    }
+
+    /**
+     * Add a volunteer to the event.
+     *
+     * @param User $volunteer
+     */
+    public function addVolunteer(User $volunteer)
+    {
+        // Check if the volunteer is not already associated with the event
+        if (!$this->volunteers->contains($volunteer)) {
+            $this->volunteers->add($volunteer);
+            // You may also want to update the inverse side of the relationship
+            $volunteer->addVolunteerEvent($this);
+        }
+    }
+
+    /**
+     * Remove a volunteer from the event.
+     *
+     * @param User $volunteer
+     */
+    public function removeVolunteer(User $volunteer)
+    {
+        if ($this->volunteers->contains($volunteer)) {
+            $this->volunteers->removeElement($volunteer);
+            // You may also want to update the inverse side of the relationship
+            $volunteer->removeVolunteerEvent($this);
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIsattended(): bool
+    {
+        return $this->isattended;
+    }
+
+    /**
+     * @param bool $isattended
+     */
+    public function setIsattended(bool $isattended): void
+    {
+        $this->isattended = $isattended;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVolunteers()
+    {
+        return $this->volunteers;
+    }
+
+    /**
+     * @param mixed $volunteers
+     */
+    public function setVolunteers($volunteers): void
+    {
+        $this->volunteers = $volunteers;
+    }
+
+    /**
+     * @return ArrayCollection|EventFile[]
+     */
+    public function getFiles()
+    {
+        return $this->files;
+    }
+
+    /**
+     * @param mixed $files
+     */
+    public function setFiles($files): void
+    {
+        $this->files = $files;
+    }
+
+    public function addFile(EventFile $file)
+    {
+        if (!$this->files->contains($file)) {
+            $this->files[] = $file;
+            $file->setEvent($this);
+        }
+    }
+
+    public function removeFile(EventFile $file)
+    {
+        if ($this->files->contains($file)) {
+            $this->files->removeElement($file);
+            // Set the owning side of the relationship to null
+            $file->setEvent(null);
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOutofcampus()
+    {
+        return $this->outofcampus;
+    }
+
+    /**
+     * @param mixed $outofcampus
+     */
+    public function setOutofcampus($outofcampus): void
+    {
+        $this->outofcampus = $outofcampus;
+    }
+
+    // ... Other getter and setter methods
+
+    public function getVenue()
+    {
+        return $this->venue;
+    }
+
+    public function setVenue($venue)
+    {
+        $this->venue = $venue;
+    }
+
+    public function getPublishDate(): ?DateTimeInterface
+    {
+        return $this->publishDate;
+    }
+
+    public function setPublishDate(?DateTimeInterface $publishDate): self
+    {
+        $this->publishDate = $publishDate;
+
+        return $this;
+    }
+
+    public function isPublishOnSpecificDate(): bool
+    {
+        return $this->publishOnSpecificDate;
+    }
+
+    public function setPublishOnSpecificDate(bool $publishOnSpecificDate): self
+    {
+        $this->publishOnSpecificDate = $publishOnSpecificDate;
+
+        return $this;
     }
 
     /**

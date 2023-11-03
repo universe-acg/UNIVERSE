@@ -142,6 +142,9 @@
     "egulias/email-validator": {
         "version": "2.1.8"
     },
+    "endroid/qr-code-bundle": {
+        "version": "4.1.1"
+    },
     "excelwebzone/recaptcha-bundle": {
         "version": "1.5",
         "recipe": {
@@ -281,15 +284,6 @@
     "knplabs/knp-time-bundle": {
         "version": "v1.9.1"
     },
-    "league/uri": {
-        "version": "5.3.0"
-    },
-    "league/uri-components": {
-        "version": "1.8.2"
-    },
-    "league/uri-interfaces": {
-        "version": "1.1.1"
-    },
     "liip/imagine-bundle": {
         "version": "1.8",
         "recipe": {
@@ -338,27 +332,6 @@
     },
     "ocramius/proxy-manager": {
         "version": "2.1.1"
-    },
-    "paypal/rest-api-sdk-php": {
-        "version": "1.14.0"
-    },
-    "payum/core": {
-        "version": "1.5.1"
-    },
-    "payum/iso4217": {
-        "version": "1.0.1"
-    },
-    "payum/offline": {
-        "version": "1.5.1"
-    },
-    "payum/paypal-express-checkout-nvp": {
-        "version": "1.5.1"
-    },
-    "payum/payum-bundle": {
-        "version": "2.3.3"
-    },
-    "payum/stripe": {
-        "version": "1.5.1"
     },
     "phenx/php-font-lib": {
         "version": "0.5.1"
@@ -493,9 +466,6 @@
         "files": [
             "./config/packages/stof_doctrine_extensions.yaml"
         ]
-    },
-    "stripe/stripe-php": {
-        "version": "v4.13.0"
     },
     "swiftmailer/swiftmailer": {
         "version": "v6.2.1"
@@ -639,6 +609,18 @@
             "version": "1.0",
             "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
         }
+    },
+    "symfony/messenger": {
+        "version": "4.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "4.3",
+            "ref": "25e3c964d3aee480b3acc3114ffb7940c89edfed"
+        },
+        "files": [
+            "./config/packages/messenger.yaml"
+        ]
     },
     "symfony/mime": {
         "version": "v4.3.0"

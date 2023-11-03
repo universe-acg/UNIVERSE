@@ -58,7 +58,9 @@ function createCalendar(calendar, element, adjuster) {
         element.innerHTML = '';
     } else {
         for (var key in calendar.Options) {
-            typeof calendar.Options[key] != 'function' && typeof calendar.Options[key] != 'object' && calendar.Options[key] ? element.className += " " + key + "-" + calendar.Options[key] : 0;
+            typeof calendar.Options[key] != 'function'
+            && typeof calendar.Options[key] != 'object'
+            && calendar.Options[key] ? element.className += " " + key + "-" + calendar.Options[key] : 0;
         }
     }
     var months = [

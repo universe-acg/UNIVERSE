@@ -2,7 +2,7 @@
 <div class="card mb-4 shadow-none blog-post-card">
     <a href="{{ path('blog_article', { slug : blogpost.slug }) }}">
         <img class="card-img-top img-lazy-load" src="{{ asset('assets/img/loader.svg') }}"
-             data-src="{{ blogpost.imageName ? (blogpost.getImagePath|imagine_filter('thumbnail', runtimeConfig)) : blogpost.getImagePlaceholder }}"
+             data-src="{{ blogpost.imageName ? (blogpost.getImagePath) : blogpost.getImagePlaceholder }}"
              alt="{{ blogpost.name }}">
     </a>
     <div class="card-body">

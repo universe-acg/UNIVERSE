@@ -95,7 +95,7 @@
                                             <div class="col-4 pr-0">
                                                 <a href="{{ path('blog_article', { slug : popularblogpost.slug }) }}">
                                                     <img src="{{ asset('assets/img/loader.svg') }}"
-                                                         data-src="{{ popularblogpost.imageName ? (popularblogpost.getImagePath|imagine_filter('thumbnail', runtimeConfig)) : popularblogpost.getImagePlaceholder }}"
+                                                         data-src="{{ popularblogpost.imageName ? (popularblogpost.getImagePath) : popularblogpost.getImagePlaceholder }}"
                                                          class="img-lazy-load img-fluid hover-effect-2"
                                                          alt="{{ popularblogpost.name }}">
                                                 </a>

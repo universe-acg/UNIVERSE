@@ -3,70 +3,70 @@
         <div class="table-responsive">
             <table class="table table-borderless table-striped table-hover table-sm">
                 <thead>
-                    <tr>
-                        <th colspan="2"><i
-                                    class="fas fa-file-alt fa-fw text-muted"></i> {{ "General information" }}</th>
-                    </tr>
+                <tr>
+                    <th colspan="2"><i
+                                class="fas fa-file-alt fa-fw text-muted"></i> {{ "General information" }}</th>
+                </tr>
                 </thead>
                 <tbody>
+                <tr>
+                    <td width="30%">{{ "Status" }}</td>
+                    <td>
+                        <span class="badge badge-{{ event.stringifyStatusClass }}">{{ event.stringifyStatus }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="30%">{{ "Title" }}</td>
+                    <td>{{ event.name }}</td>
+                </tr>
+                {% if is_granted('ROLE_ADMINISTRATOR') %}
                     <tr>
-                        <td width="30%">{{ "Status" }}</td>
-                        <td>
-                            <span class="badge badge-{{ event.stringifyStatusClass }}">{{ event.stringifyStatus }}</span>
-                        </td>
+                        <td>{{ "Organizer" }}</td>
+                        <td>{{ event.organizer.name }}</td>
                     </tr>
+                {% endif %}
+                <tr>
+                    <td>{{ "Reference" }}</td>
+                    <td>{{ event.reference }}</td>
+                </tr>
+                <tr>
+                    <td>{{ "Creation date" }}</td>
+                    <td>{{ event.createdAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
+                </tr>
+                {% if event.updatedAt %}
                     <tr>
-                        <td width="30%">{{ "Title" }}</td>
-                        <td>{{ event.name }}</td>
+                        <td>{{ "Update date" }}</td>
+                        <td>{{ event.updatedAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
                     </tr>
-                    {% if is_granted('ROLE_ADMINISTRATOR') %}
-                        <tr>
-                            <td>{{ "Organizer" }}</td>
-                            <td>{{ event.organizer.name }}</td>
-                        </tr>
-                    {% endif %}
+                {% endif %}
+                {% if event.deletedAt %}
                     <tr>
-                        <td>{{ "Reference" }}</td>
-                        <td>{{ event.reference }}</td>
+                        <td>{{ "Deletion date" }}</td>
+                        <td>{{ event.deletedAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
                     </tr>
+                {% endif %}
+                <tr>
+                    <td>{{ "Views" }}</td>
+                    <td>{{ event.views }} {{ "view(s)" }}</td>
+                </tr>
+                <tr>
+                    <td>{{ "Added to favorites by" }}</td>
+                    <td>{{ event.addedtofavoritesby|length }} {{ "user(s)" }}</td>
+                </tr>
+                <tr>
+                    <td>{{ "Category" }}</td>
+                    <td>{{ event.category.name }}</td>
+                </tr>
+                {% if event.tags %}
                     <tr>
-                        <td>{{ "Creation date" }}</td>
-                        <td>{{ event.createdAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
+                        <td>{{ "Tags" }}</td>
+                        <td>{{ event.tags }}</td>
                     </tr>
-                    {% if event.updatedAt %}
-                        <tr>
-                            <td>{{ "Update date" }}</td>
-                            <td>{{ event.updatedAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
-                        </tr>
-                    {% endif %}
-                    {% if event.deletedAt %}
-                        <tr>
-                            <td>{{ "Deletion date" }}</td>
-                            <td>{{ event.deletedAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
-                        </tr>
-                    {% endif %}
-                    <tr>
-                        <td>{{ "Views" }}</td>
-                        <td>{{ event.views }} {{ "view(s)" }}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ "Added to favorites by" }}</td>
-                        <td>{{ event.addedtofavoritesby|length }} {{ "user(s)" }}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ "Category" }}</td>
-                        <td>{{ event.category.name }}</td>
-                    </tr>
-                    {% if event.tags %}
-                        <tr>
-                            <td>{{ "Tags" }}</td>
-                            <td>{{ event.tags }}</td>
-                        </tr>
-                    {% endif %}
-                    <tr>
-                        <td>{{ "Publicly show attendees" }}</td>
-                        <td>{{ event.showattendees ? 'Yes' : 'No' }}</td>
-                    </tr>
+                {% endif %}
+                <tr>
+                    <td>{{ "Publicly show attendees" }}</td>
+                    <td>{{ event.showattendees ? 'Yes' : 'No' }}</td>
+                </tr>
                 </tbody>
                 </thead>
             </table>
@@ -76,41 +76,41 @@
         <div class="table-responsive">
             <table class="table table-borderless table-striped table-hover table-sm">
                 <thead>
-                    <tr>
-                        <th colspan="2"><i class="fas fa-image fa-fw text-muted"></i> {{ "Images" }}</th>
-                    </tr>
+                <tr>
+                    <th colspan="2"><i class="fas fa-image fa-fw text-muted"></i> {{ "Images" }}</th>
+                </tr>
                 <tbody>
-                    <tr>
-                        <td width="30%">{{ "Main image" }}</td>
-                        <td>
-                            <a class="fancybox"
-                               href="{{ event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder }}"
-                               data-toggle="tooltip" title="{{ "Enlarge" }}">
-                                <img src="{{ event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder }}"
-                                     class="img-thumbnail img-100-100"/>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>{{ "Gallery" }}</td>
-                        <td>
-                            {{ event.images|length }} {{ "image(s)" }}
-                            <div class="gallery photos-gallery clearfix">
-                                {% for image in event.images %}
-                                    <figure>
-                                        <a href="{{ asset(image.getImagePath) }}"
-                                           data-size="{{ image.imageDimensions[0] }}x{{ image.imageDimensions[1] }}">
-                                            <img class="img-50-50"
-                                                 src="{{ image.getImagePath|imagine_filter('thumbnail') }}"
-                                                 alt="{{ event.name }}"/>
-                                        </a>
-                                    </figure>
-                                {% endfor %}
+                <tr>
+                    <td width="30%">{{ "Main image" }}</td>
+                    <td>
+                        <a class="fancybox"
+                           href="{{ event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder }}"
+                           data-toggle="tooltip" title="{{ "Enlarge" }}">
+                            <img src="{{ event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder }}"
+                                 class="img-thumbnail img-100-100"/>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>{{ "Gallery" }}</td>
+                    <td>
+                        {{ event.images|length }} {{ "image(s)" }}
+                        <div class="gallery photos-gallery clearfix">
+                            {% for image in event.images %}
+                                <figure>
+                                    <a href="{{ asset(image.getImagePath) }}"
+                                       data-size="{{ image.imageDimensions[0] }}x{{ image.imageDimensions[1] }}">
+                                        <img class="img-50-50"
+                                             src="{{ image.getImagePath }}"
+                                             alt="{{ event.name }}"/>
+                                    </a>
+                                </figure>
+                            {% endfor %}
 
-                            </div>
+                        </div>
 
-                        </td>
-                    </tr>
+                    </td>
+                </tr>
                 </tbody>
                 </thead>
             </table>
@@ -120,119 +120,119 @@
         <div class="table-responsive">
             <table class="table table-borderless table-sm">
                 <thead>
-                    <tr>
-                        <th><i class="fas fa-calendar fa-fw text-muted"></i> {{ "Event dates" }}</th>
-                        <th><i class="fas fa-ticket-alt fa-fw text-muted"></i> {{ "Tickets" }}</th>
-                    </tr>
+                <tr>
+                    <th><i class="fas fa-calendar fa-fw text-muted"></i> {{ "Event dates" }}</th>
+                    <th><i class="fas fa-ticket-alt fa-fw text-muted"></i> {{ "Tickets" }}</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {% for eventdate in event.eventdates %}
-                        <tr>
-                            <td width="50%">
-                                <h6>{{ "Event date" }} {{ loop.index }}</h6>
+                {% for eventdate in event.eventdates %}
+                    <tr>
+                        <td width="50%">
+                            <h6>{{ "Event date" }} {{ loop.index }}</h6>
+                            <div class="table-responsive">
+                                <table class="table table-borderless table-striped table-hover table-sm">
+                                    <tbody>
+                                    {% if eventdate.startdate|length %}
+                                        <tr>
+                                            <td>{{ "Start date" }}</td>
+                                            <td>{{ eventdate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    {% if eventdate.enddate|length %}
+                                        <tr>
+                                            <td>{{ "End date" }}</td>
+                                            <td>{{ eventdate.enddate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    <tr>
+                                        <td width="30%">{{ "Status" }}</td>
+                                        <td>
+                                            <span class="badge badge-{{ eventdate.stringifyStatusClass }}">{{ eventdate.stringifyStatus }}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ "Reference" }}</td>
+                                        <td>{{ eventdate.reference }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ "Tickets types" }}</td>
+                                        <td>{{ eventdate.tickets|length }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                        <td>
+                            {% for universeket in eventdate.tickets %}
+                                <h6>{{ "Ticket" }} {{ loop.index }}</h6>
                                 <div class="table-responsive">
                                     <table class="table table-borderless table-striped table-hover table-sm">
                                         <tbody>
-                                            {% if eventdate.startdate|length %}
-                                                <tr>
-                                                    <td>{{ "Start date" }}</td>
-                                                    <td>{{ eventdate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
-                                                </tr>
-                                            {% endif %}
-                                            {% if eventdate.enddate|length %}
-                                                <tr>
-                                                    <td>{{ "End date" }}</td>
-                                                    <td>{{ eventdate.enddate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
-                                                </tr>
-                                            {% endif %}
+                                        <tr>
+                                            <td>{{ "Name" }}</td>
+                                            <td>{{ universeket.name }} <small
+                                                        class="text-muted">#{{ universeket.reference }}</small>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="30%">{{ "Status" }}</td>
+                                            <td>
+                                                <span class="badge badge-{{ universeket.stringifyStatusClass }}">{{ universeket.stringifyStatus }}</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>{{ "Tickets left" }}</td>
+                                            <td>
+                                                {{ universeket.getTicketsLeftCount(false) }}
+                                            </td>
+                                        </tr>
+                                        {% if universeket.quantity %}
                                             <tr>
-                                                <td width="30%">{{ "Status" }}</td>
+                                                <td>{{ "Quantity" }}</td>
+                                                <td>{{ universeket.quantity }}</td>
+                                            </tr>
+                                        {% endif %}
+                                        <tr>
+                                            <td>{{ "Price" }}</td>
+                                            <td>
+                                                {{ universeket.free ? "Free" : ((services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '') ~ universeket.getPrice() ~ (services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '')) }}
+                                            </td>
+                                        </tr>
+                                        {% if not universeket.free and universeket.promotionalprice %}
+                                            <tr>
+                                                <td>{{ "Promotional price" }}</td>
                                                 <td>
-                                                    <span class="badge badge-{{ eventdate.stringifyStatusClass }}">{{ eventdate.stringifyStatus }}</span>
+                                                    {{ services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '' }}{{ universeket.getPromotionalprice() }}{{ services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '' }}
                                                 </td>
                                             </tr>
+                                        {% endif %}
+                                        {% if universeket.ticketsperattendee %}
                                             <tr>
-                                                <td>{{ "Reference" }}</td>
-                                                <td>{{ eventdate.reference }}</td>
+                                                <td>{{ "Tickets per attendee" }}</td>
+                                                <td>{{ universeket.ticketsperattendee }}</td>
                                             </tr>
+                                        {% endif %}
+                                        {% if universeket.salesstartdate|length %}
                                             <tr>
-                                                <td>{{ "Tickets types" }}</td>
-                                                <td>{{ eventdate.tickets|length }}</td>
+                                                <td>{{ "Start date" }}</td>
+                                                <td>{{ universeket.salesstartdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
                                             </tr>
+                                        {% endif %}
+                                        {% if universeket.salesenddate|length %}
+                                            <tr>
+                                                <td>{{ "End date" }}</td>
+                                                <td>{{ universeket.salesenddate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
+                                            </tr>
+                                        {% endif %}
+
                                         </tbody>
                                     </table>
                                 </div>
-                            </td>
-                            <td>
-                                {% for universeket in eventdate.tickets %}
-                                    <h6>{{ "Ticket" }} {{ loop.index }}</h6>
-                                    <div class="table-responsive">
-                                        <table class="table table-borderless table-striped table-hover table-sm">
-                                            <tbody>
-                                                <tr>
-                                                    <td>{{ "Name" }}</td>
-                                                    <td>{{ universeket.name }} <small
-                                                                class="text-muted">#{{ universeket.reference }}</small>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td width="30%">{{ "Status" }}</td>
-                                                    <td>
-                                                        <span class="badge badge-{{ universeket.stringifyStatusClass }}">{{ universeket.stringifyStatus }}</span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>{{ "Tickets left" }}</td>
-                                                    <td>
-                                                        {{ universeket.getTicketsLeftCount(false) }}
-                                                    </td>
-                                                </tr>
-                                                {% if universeket.quantity %}
-                                                    <tr>
-                                                        <td>{{ "Quantity" }}</td>
-                                                        <td>{{ universeket.quantity }}</td>
-                                                    </tr>
-                                                {% endif %}
-                                                <tr>
-                                                    <td>{{ "Price" }}</td>
-                                                    <td>
-                                                        {{ universeket.free ? "Free" : ((services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '') ~ universeket.getPrice() ~ (services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '')) }}
-                                                    </td>
-                                                </tr>
-                                                {% if not universeket.free and universeket.promotionalprice %}
-                                                    <tr>
-                                                        <td>{{ "Promotional price" }}</td>
-                                                        <td>
-                                                            {{ services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '' }}{{ universeket.getPromotionalprice() }}{{ services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '' }}
-                                                        </td>
-                                                    </tr>
-                                                {% endif %}
-                                                {% if universeket.ticketsperattendee %}
-                                                    <tr>
-                                                        <td>{{ "Tickets per attendee" }}</td>
-                                                        <td>{{ universeket.ticketsperattendee }}</td>
-                                                    </tr>
-                                                {% endif %}
-                                                {% if universeket.salesstartdate|length %}
-                                                    <tr>
-                                                        <td>{{ "Start date" }}</td>
-                                                        <td>{{ universeket.salesstartdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
-                                                    </tr>
-                                                {% endif %}
-                                                {% if universeket.salesenddate|length %}
-                                                    <tr>
-                                                        <td>{{ "End date" }}</td>
-                                                        <td>{{ universeket.salesenddate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
-                                                    </tr>
-                                                {% endif %}
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                {% endfor %}
-                            </td>
-                        </tr>
-                    {% endfor %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -242,30 +242,30 @@
             <div class="table-responsive">
                 <table class="table table-borderless table-striped table-hover table-sm">
                     <thead>
-                        <tr>
-                            <th colspan="2"><i
-                                        class="fas fa-at fa-fw text-muted"></i> {{ "Contact & Social media" }}
-                            </th>
-                        </tr>
+                    <tr>
+                        <th colspan="2"><i
+                                    class="fas fa-at fa-fw text-muted"></i> {{ "Contact & Social media" }}
+                        </th>
+                    </tr>
                     <tbody>
-                        {% if event.externallink %}
-                            <tr>
-                                <td>{{ "External link" }}</td>
-                                <td>{{ event.externallink }}</td>
-                            </tr>
-                        {% endif %}
-                        {% if event.email %}
-                            <tr>
-                                <td>{{ "Email" }}</td>
-                                <td>{{ event.email }}</td>
-                            </tr>
-                        {% endif %}
-                        {% if event.phonenumber %}
-                            <tr>
-                                <td>{{ "Phone number" }}</td>
-                                <td>{{ event.phonenumber }}</td>
-                            </tr>
-                        {% endif %}
+                    {% if event.externallink %}
+                        <tr>
+                            <td>{{ "External link" }}</td>
+                            <td>{{ event.externallink }}</td>
+                        </tr>
+                    {% endif %}
+                    {% if event.email %}
+                        <tr>
+                            <td>{{ "Email" }}</td>
+                            <td>{{ event.email }}</td>
+                        </tr>
+                    {% endif %}
+                    {% if event.phonenumber %}
+                        <tr>
+                            <td>{{ "Phone number" }}</td>
+                            <td>{{ event.phonenumber }}</td>
+                        </tr>
+                    {% endif %}
                     </tbody>
                     </thead>
                 </table>

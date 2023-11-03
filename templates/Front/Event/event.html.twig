@@ -68,9 +68,9 @@
                                                 <figure>
                                                     <a href="{{ asset(image.getImagePath) }}"
                                                        data-size="{{ image.imageDimensions[0] }}x{{ image.imageDimensions[1] }}">
-                                                        <img class="img-lazy-load"
+                                                        <img class="img-lazy-load img-thumbnail img-100-100"
                                                              src="{{ asset('assets/img/loader.gif') }}"
-                                                             data-src="{{ image.getImagePath|imagine_filter('thumbnail') }}"
+                                                             data-src="{{ asset(image.getImagePath) }}"
                                                              alt="{{ event.name }}"/>
                                                     </a>
                                                 </figure>
@@ -80,6 +80,20 @@
                                     </dd>
                                 </dl>
                             {% endif %}
+                            <div style="display: flex; justify-content: start; align-content: center; align-items: center">
+                                {% for file in event.files %}
+                                    <div>
+                                        <a
+                                                href="{{ path('dashboard_organizer_management_files_download_file_event', {'fileId': file.id}) }}"
+                                                style="float: left" class="mr-4">
+                                            <img style="width: 75px; height: 75px"
+                                                 src="{{ asset('assets/img/icons/file.png') }}"
+                                                 alt="File" class="custom-image">
+                                            {{ file.fileName }}
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </div>
                             {% if event.hasContactAndSocialMedia %}
                                 <dl class="mt-5">
                                     <dt class="text-muted">{{ "Contact & Social media" }}</dt>
@@ -130,15 +144,15 @@
                             <h1 class="card-title b d-lg-none text-center">{{ event.name }}</h1>
                             {#                            {% if event.hasAnEventDateOnSale %} #}
                             {# Event Dates calendar used on multi date events #}
-                            {#                            {% if event.hasAnEventDateOnSale %} #}
-                            {% set eventDatesCalendar = [] %}
-                            {% for eventDate in event.eventdates %}
-                                {% set eventDatesCalendar = eventDatesCalendar|merge([{"Date": eventDate.startdate|date('Y-m-d'), "Title": eventDate.startdate|date('g:i A'), "Link": eventDate.reference}]) %}
-                            {% endfor %}
-                            {#                                {% include "Global/message.html.twig" with { type: 'info', icon: 'fas fa-info-circle', message: "Click on a date to view tickets" } %} #}
-                            <div id="event-dates-calendar" class="mt-5"
-                                 data-event-dates="{{ eventDatesCalendar|json_encode() }}"></div>
-                            {#                            {% endif %} #}
+                            {% if event.hasTwoOrMoreEventDatesOnSale %}
+                                {% set eventDatesCalendar = [] %}
+                                {% for eventDate in event.eventdates %}
+                                    {% set eventDatesCalendar = eventDatesCalendar|merge([{"Date": eventDate.startdate|date('Y-m-d'), "Title": eventDate.startdate|date('g:i A'), "Link": eventDate.reference}]) %}
+                                {% endfor %}
+                                {#                                {% include "Global/message.html.twig" with { type: 'info', icon: 'fas fa-info-circle', message: "Click on a date to view tickets" } %} #}
+                                <div id="event-dates-calendar" class="mt-5"
+                                     data-event-dates="{{ eventDatesCalendar|json_encode() }}"></div>
+                            {% endif %}
 
                             {% if event.hasTwoOrMoreEventDatesOnSale %}
                             <div style="overflow-y: scroll; height: 500px">
@@ -230,12 +244,14 @@
                                                                     </div>
                                                                     <div id="add-to-calendar" class="modal-body">
                                                                     </div>
-                                                                    {#                                                                        <div class="modal-footer"> #}
-                                                                    {#                                                                            <button type="button" #}
-                                                                    {#                                                                                    disabled="{{ eventDate.tickets[0].isalreadybooked ? 'true' : 'false' }}" #}
-                                                                    {#                                                                                    class="btn btn-primary" #}
-                                                                    {#                                                                                    data-dismiss="modal">{{ "Book" }}</button> #}
-                                                                    {#                                                                        </div> #}
+                                                                    <div class="modal-footer">
+                                                                        {#                                                                        <button type="button" #}
+                                                                        {#                                                                                disabled="{{ eventDate.tickets[0].isalreadybooked ? 'true' : 'false' }}" #}
+                                                                        {#                                                                                class="btn btn-primary" #}
+                                                                        {#                                                                                data-dismiss="modal">{{ "Book" }}</button> #}
+                                                                        <button type="button" class="btn btn-primary"
+                                                                                data-dismiss="modal">{{ "Close"|trans }}</button>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -381,13 +397,22 @@ height: 100%; display: grid; justify-content: center; align-items: center; align
                                 {% if is_granted('ROLE_ATTENDEE') %}
                                     {% if event.volsneeded %}
                                         <dl class="mt-5">
-                                            <a href="mailto:{{ event.email }}"
-                                               class="btn btn-primary btn-block mb-2"
-                                            > Volunteer
-                                            </a>
-                                            <dt class="text-muted">The organizers are looking for volunteers to
+                                            <dt class="text-muted pb-1">The organizers are looking for volunteers
+                                                to
                                                 help.
                                             </dt>
+                                            <div class="input-group">
+                                                <form method="post" class="input-group"
+                                                      action="{{ path('volunteer_event_make_request', {'eventid': event.id}) }}">
+        <textarea name="message" rows="3" class="mb-3 form-control">Hello, I would like to volunteer my time and skills to help out with the setting up of this event.
+        </textarea>
+
+                                                    <button type="submit" class="btn btn-primary btn-block"
+                                                            style="border-radius: 0.25em">
+                                                        Volunteer
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </dl>
                                     {% endif %}
                                 {% endif %}
@@ -416,6 +441,7 @@ height: 100%; display: grid; justify-content: center; align-items: center; align
                     </div>
                 </div>
             </div>
+        </div>
     </section>
 
 {% endblock %}

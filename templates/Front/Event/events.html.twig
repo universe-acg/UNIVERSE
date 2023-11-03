@@ -51,16 +51,32 @@
         <div class="{{ services.getSetting("app_layout") }}">
 
             {% set eventsoncalendar = [] %}
-            {% for event in events %}
+            {% set eventscriteria = {"published": 1} %}
+            {% set allevents = services.getEvents(eventscriteria) %}
+            {% for event in allevents %}
                 {% for eventdate in event.eventdates %}
                     {% if eventdate.isOnSale %}
                         {% if services.getSetting("show_calendar_button") == "yes" %}
-                            {% set eventsoncalendar = eventsoncalendar|merge([{"title": event.name, "start":eventdate.startdate|date('Y-m-d H:i'), "end": (eventdate.enddate ? eventdate.enddate|date('Y-m-d H:i') : ''), "url": (path('event', {slug : event.slug})) }]) %}
+                            {% set eventsoncalendar = eventsoncalendar|merge([{
+                                "title": event.name,
+                                "start": eventdate.startdate|date('Y-m-d H:i'),
+                                "end": (eventdate.enddate ? eventdate.enddate|date('Y-m-d H:i') : ''),
+                                "url": path('event', {slug: event.slug})
+                            }]) %}
                         {% endif %}
                     {% endif %}
                 {% endfor %}
             {% endfor %}
 
+            {# Add holidays to the eventsoncalendar array #}
+            {% for holiday in holidays %}
+                {% set eventsoncalendar = eventsoncalendar|merge([{
+                    "title": holiday.name,
+                    "start": holiday.startDate|date('Y-m-d H:i'),
+                    "end": holiday.endDate|date('Y-m-d H:i'),
+                    "url": ''
+                }]) %}
+            {% endfor %}
 
             <div id="events-calendar" data-default-date="{{ "now"|date('Y-m-d') }}"
                  data-events="{{ eventsoncalendar|json_encode() }}" class="mb-4 collapse"></div>
@@ -111,13 +127,35 @@
                                                 <option value="">&nbsp;</option>
                                                 <option value="all">All</option>
                                                 {% for category in services.getCategories({}).getQuery().getResult() %}
-                                                    <option value="{{ category.slug }}">{{ category.name }}</option>
+                                                    {% set isSelected = (category.slug == app.request.get('category')) ? 'selected' : '' %}
+                                                    <option value="{{ category.slug }}" {{ isSelected }}>{{ category.name }}</option>
                                                 {% endfor %}
                                             </select>
                                         </div>
                                     </div>
                                 </article>
                             {% endif %}
+                            <article class="card-group-item filter-item">
+                                <header class="card-header">
+                                    <a href="#" data-toggle="collapse" data-target="#filter-category">
+                                        <i class="icon-action fa fa-chevron-down"></i>
+                                        <h6 class="title">{{ "Venue" }}</h6>
+                                    </a>
+                                </header>
+                                <div class="filter-content collapse show" id="filter-venue">
+                                    <div class="card-body">
+                                        <select id="venue" name="venue" class="select2 col"
+                                                data-sort-options="1">
+                                            <option value="">&nbsp;</option>
+                                            <option value="all">All</option>
+                                            {% for venue in services.getVenues({}) %}
+                                                {% set isSelected = (venue.slug == app.request.get('venue')) ? 'selected' : '' %}
+                                                <option value="{{ venue.slug }}" {{ isSelected }}>{{ venue.title }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </article>
                             {% if services.getSetting("show_date_filter") == "yes" %}
                                 <article class="card-group-item filter-item">
                                     <header class="card-header">
@@ -224,6 +262,18 @@
                                                name="open-events-only" value="1">
                                         <label class="custom-control-label" for="open-events-only">
                                             Open events only
+                                        </label>
+                                    </div>
+                                </div>
+                            </article>
+                            <article class="card-group-item filter-item">
+                                <div class="card-body">
+                                    <div class="custom-control custom-checkbox form-check-input ml-0 mb-4">
+                                        <input {% if out_of_campus %}checked{% endif %} type="checkbox"
+                                               class="custom-control-input" id="out-of-campus"
+                                               name="out-of-campus" value="1">
+                                        <label class="custom-control-label" for="out-of-campus">
+                                            Out of campus events only
                                         </label>
                                     </div>
                                 </div>
@@ -375,5 +425,27 @@
                 $('#tagsart').css('display', 'block');
             }
         }
+
+        // Function to parse URL parameters
+        function getURLParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const radioButtons = document.querySelectorAll(".custom-control-input");
+
+            radioButtons.forEach(function (radioButton) {
+                // Get the value attribute of each radio button
+                const value = radioButton.getAttribute("value");
+
+                // Check if the URL contains the parameter with the same value
+                if (getURLParameter("startdate") === value) {
+                    radioButton.checked = true;
+                }
+            });
+        });
+
     </script>
+
 {% endblock %}
