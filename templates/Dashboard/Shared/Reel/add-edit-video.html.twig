@@ -1,0 +1,143 @@
+{% extends "Global/layout.html.twig" %}
+
+ {% form_theme form 'Global/jquery.collection.html.twig' %}
+
+ {% set pagetitle = 'Add a new reel' %}
+
+ {% if reel.id %}{% set pagetitle = 'Update the Reel' %}{% endif %}
+
+ {% block title %}{{ pagetitle }}{% endblock %}
+
+ {% block content %}
+
+     {% set navigation = [{ "dashboard_index": ('Dashboard' ),  "dashboard_attendee_reel": ('Manage reel' ), "current":(pagetitle) }] %}
+     {% include "Global/navigation.html.twig" with navigation %}
+
+     <section class="section-content padding-y bg-white">
+         <div class="{{ services.getSetting("app_layout") }}">
+             <div class="row">
+                 <aside class="col-lg-3 pt-3 pt-lg-0">
+                     {% include "Dashboard/sidebar.html.twig" %}
+                 </aside>
+                 <div class="col-lg-9 mt-4 mt-lg-0">
+                     <div class="card box">
+                         <div class="card-body">
+                             {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                             {{ form_widget(form) }}
+                             <div class="progress mt-3">
+                                 <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%"
+                                      aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                             </div>
+                             {{ form_end(form) }}
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </section>
+
+ {% endblock %}
+
+ {% block javascripts %}
+
+     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/dist/toastr.min.css">
+     <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/dist/toastr.min.js"></script>
+     <script>
+         // Function to toggle the fields based on the selected media type
+         function toggleFields() {
+             var selectedMediaType = $('input[name="reel[mediaType]"]:checked').val();
+
+             // Reset values and disable the fields
+             $('#reel_mainImageFile_file').val('').prop('disabled', true);
+             $('#reel_videoFile_file').val('').prop('disabled', true);
+
+             // Enable the selected field
+             if (selectedMediaType === 'image') {
+                 $('#reel_mainImageFile_file').val('');
+             } else if (selectedMediaType === 'video') {
+                 $('#reel_videoFile_file').val('');
+             }
+         }
+
+         $(document).ready(function () {
+             // Handle change event on the radio buttons
+             $('input[name="reel[mediaType]"]').on('change', function () {
+                 toggleFields();
+             });
+
+             // Set up the form submission handler
+             $('.card-body form').submit(function (event) {
+                 event.preventDefault();
+                 // reel_video_title
+                 // reel_video_content
+                 // Check if the title is empty
+                 if ($('#reel_video_title').val().trim() === '') {
+                     alert('Please enter a title.'); // You can replace this with your preferred way of displaying feedback
+                     return; // Stop form submission if the title is empty
+                 }
+
+                 // Check if the content is empty
+                 if ($('#reel_video_content').val().trim() === '') {
+                     alert('Please enter content.'); // You can replace this with your preferred way of displaying feedback
+                     return; // Stop form submission if the content is empty
+                 }
+                 // Check if the video file input is empty
+                 if ($('#reel_video_videoFile_file').get(0) == null) {
+                     alert('Please choose a video file.'); // You can replace this with your preferred way of displaying feedback
+                     return; // Stop form submission if video file is empty
+                 }
+                 // Get the form data
+                 const formData = new FormData($(this)[0]);
+
+                 // Perform your form submission logic here
+                 axios({
+                     method: 'post',
+                     url: 'https://universeacg.xyz/dashboard/attendee/manage-reels-video/add',
+                     data: formData,
+                     headers: {
+                         'Content-Type': 'multipart/form-data',
+                     },
+                     onUploadProgress: function (progressEvent) {
+                         const percentage = (progressEvent.loaded / progressEvent.total) * 100;
+                         updateProgressBar(percentage.toFixed(2));
+                     },
+                 })
+                     .then(function (response) {
+                         console.dir(response);
+
+                         // Get the flash message element
+                         const flashMessage = document.getElementById('flash-message');
+
+                         // Check if the flash message element exists and has content
+                         if (flashMessage) {
+                             // Access the flash message content and type
+                             const message = "The reel has been successfully created";
+                             const messageType = flashMessage.dataset.type;
+                             // Display the message in your preferred way (e.g., alert, toast, etc.)
+                             toastr[messageType](message, messageType.toUpperCase());
+                         }
+                         window.location.href = 'https://universeacg.xyz/dashboard/attendee/manage-reels';
+                     })
+                     .catch(function (error) {
+                         console.error('Error submitting form:', error);
+                     });
+             });
+         });
+
+         // Frontend code (JavaScript)
+         function updateProgressBar(progress) {
+             const progressBar = $('#progress-bar'); // Replace with the actual ID of your progress bar element
+
+             // Ensure the progress value is within the valid range (0 to 100)
+             const validProgress = Math.min(100, Math.max(0, progress));
+
+             // Update the width of the progress bar
+             progressBar.css('width', validProgress + '%');
+
+             // Update the text inside the progress bar (optional)
+             progressBar.text(validProgress + '% Complete');
+         }
+     </script>
+
+ {% endblock %}

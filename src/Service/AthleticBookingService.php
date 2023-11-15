@@ -71,29 +71,28 @@ class AthleticBookingService
         }
     }
 
-// AthleticBookingService.php
     public function getAthleticBookingById($athleticBookingId)
+    {
+        return $this->athleticBookingRepository->getByFacilityId($athleticBookingId);
+    }
+
+    public function getAthleticBookingByFacility($facility)
     {
         return $this->athleticBookingRepository->find($athleticBookingId);
     }
 
-// AthleticBookingService.php
-    public function updateAthleticBooking($athleticBookingId, $facilityId, $userId, $scheduleId, $bookingDate)
+
+    // join
+
+    // dates stuff
+
+    public function getAthleticBookings()
     {
-        $athleticBooking = $this->getAthleticBookingById($athleticBookingId);
-
-        if ($athleticBooking) {
-            $athleticBooking->setFacilityId($facilityId);
-            $athleticBooking->setUserId($userId);
-            $athleticBooking->setScheduleId($scheduleId);
-            $athleticBooking->setBookingDate($bookingDate);
-
-            $entityManager = $this->em;
-            $entityManager->flush();
-        }
+        return $this->athleticBookingRepository->find();
     }
 
 // AthleticBookingService.php
+
     public function createAthleticBooking($facilityId, $userId, $scheduleId, $bookingDate, $duration)
     {
         $schedule = $this->getScheduleById($scheduleId);

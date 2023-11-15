@@ -1,0 +1,73 @@
+{% extends "Global/layout.html.twig" %}
+
+{% set pagetitle = 'ACG Athletics Facilities' %}
+
+{% block title %}{{ pagetitle }}{% endblock %}
+
+{% block content %}
+
+    <style>
+
+        .homepage-slider .item-slide:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(to bottom, rgba(153, 153, 153, 0) 0%, rgba(153, 153, 153, 0) 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00999999', endColorstr='#000000', GradientType=0);
+        }
+    </style>
+
+    {% set navigation = [{"current" : (pagetitle)}] %}
+    {% include "Global/navigation.html.twig" with navigation %}
+
+    <section class="section-content padding-y bg-white">
+        <div class="{{ services.getSetting("app_layout") }}">
+            <div class="col-lg-12 order-1 order-lg-2" style="padding: 0 !important;">
+                {% if athletics.getTotalItemCount > 0 %}
+                    <div class="row">
+                        {% for athletic in athletics %}
+                            <div class="col-12 col-sm-4 col-lg-3 mb-3">
+                                {% include "Global/athletic-card.html.twig" with {athletic: athletic} %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {% include "Global/message.html.twig" with { type: "info", message: ('No athletics found'), icon: "fas fa-exclamation-circle" } %}
+                {% endif %}
+                {{ knp_pagination_render(athletics, null, {}, {'align': 'center'}) }}
+            </div>
+
+            {#            <div class="row"> #}
+            {#                <aside class="col-lg-3 order-2 order-lg-1"> #}
+            {#                    <article class="card-group-item"> #}
+            {#                        <div class="card-body"> #}
+            {#                            <button class="btn btn-block btn-outline-primary"><i #}
+            {#                                        class="fas fa-search"></i> {{ "Search" }}</button> #}
+            {#                        </div> #}
+            {#                    </article> #}
+            {#                </aside> #}
+            {#                <div class="col-lg-9 order-1 order-lg-2"> #}
+            {#                    {% if athletics.getTotalItemCount > 0 %} #}
+            {#                        {% for athletic in athletics %} #}
+            {#                            {% include "Global/athletic-card.html.twig" with {'athletic': athletic} %} #}
+            {#                        {% endfor %} #}
+            {#                    {% else %} #}
+            {#                        {% include "Global/message.html.twig" with { type: "info", message: ('No athletics found'), icon: "fas fa-exclamation-circle" } %} #}
+            {#                    {% endif %} #}
+            {#                </div> #}
+            {#            </div> #}
+
+            {#            {% if athletics.getTotalItemCount > 0 %} #}
+            {#                {{ knp_pagination_render(athletics, null, {}, {'align': 'center'}) }} #}
+            {#            {% endif %} #}
+
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+{% endblock %}

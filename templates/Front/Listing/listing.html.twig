@@ -1,0 +1,135 @@
+{% extends "Global/layout.html.twig" %}
+
+{% set pagetitle = listing.name %}
+
+{% block title %}{{ pagetitle }}{% endblock %}
+
+{% block meta_dynamic_seo %}
+{% endblock %}
+
+{% block content %}
+
+    {% if is_granted('ROLE_ORGANIZER') %}
+        {% if listing.organizer == app.user.organizer %}
+            {% include "Global/message.html.twig" with { type: 'info', icon: 'fas fa-info-circle', message: ('<a href="'~ path('dashboard_organizer_listing', {slug: listing.slug}) ~'">' ~ 'Click here' ~ '</a> ' ~ 'to manage your listing') } %}
+        {% endif %}
+    {% endif %}
+
+    {% set navigation = [{"listings": "Listings", "current" : (pagetitle)}] %}
+    {% include "Global/navigation.html.twig" with navigation %}
+
+    <section class="section-content padding-y bg-white">
+        <div class="{{ services.getSetting("app_layout") }}">
+            <div class="card">
+                <div class="row">
+                    <div class="col-12 col-lg-6 order-1 order-lg-0">
+                        <div class="card-body">
+                            <div class="row no-gutters">
+                                <div class="col-12 p-0">
+                                    <section class="section-main">
+                                        <img class="slider-img justify-content-center align-self-center img-lazy-load"
+                                             src="{{ asset('assets/img/loader.gif') }}"
+                                             data-src="{{ listing.imageName ? asset(listing.getImagePath) : listing.getImagePlaceholder }}"
+                                             alt="{{ listing.name }}"/>
+                                        <div class="slider-blured-background"
+                                             style="background-image: url('{{ listing.imageName ? asset(listing.getImagePath) : listing.getImagePlaceholder }}');"></div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 order-0 order-lg-1 ">
+                        <div class="card-body">
+                            <h1 class="card-title b d-lg-none text-center">{{ listing.name }}</h1>
+                            {#                            {% if listing.hasAnlistingDateOnSale %} #}
+                            {# listing Dates calendar used on multi date listings #}
+                            <dl class="">
+                                <h2 class="text-muted pb-1 "><span
+                                            class="card-title b">{{ listing.name }}</span>
+                                </h2>
+                                <dl class="mt-1 listing-description">
+                                    <dt class="text-muted">{{ "Description" }}</dt>
+                                    <dd class="line-height-2 readmore" data-collapsed-height="500"
+                                        data-height-margin="20">
+                                        {{ listing.shortdescription|raw|nl2br }}
+                                    </dd>
+                                </dl>
+
+                                <div class="input-group">
+                                    <form method="post" class="input-group"
+                                    >
+                                        <textarea name="message" rows="3" class="mb form-control">I am excited about this opportunity because...</textarea>
+                                        <div class="input-group mt-2 mb-2">
+                                            <input type="file" class="form-control" name="file"
+                                                   accept=".pdf, .doc, .docx" required>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary btn-block"
+                                                style="border-radius: 0.25em">
+                                            Apply
+                                        </button>
+                                    </form>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="px-4">
+                    <h1 class="card-title b d-lg-none text-center">Details</h1>
+                    {% if listing.description %}
+                        <dl class="mt-5 listing-description">
+                            <dd class="line-height-2 readmore" data-collapsed-height="500"
+                                data-height-margin="20">
+                                {{ listing.description|raw|nl2br }}
+                            </dd>
+                        </dl>
+                    {% endif %}
+                    {% if listing.images|length > 0 %}
+                        <hr>
+                        <dl class="mt-5">
+                            <dt class="text-muted">{{ "Photos" }}</dt>
+                            <dd class="mr-0">
+                                <div class="gallery photos-gallery clearfix">
+                                    {% for image in listing.images %}
+                                        <figure>
+                                            <a href="{{ asset(image.getImagePath) }}"
+                                               data-size="{{ image.imageDimensions[0] }}x{{ image.imageDimensions[1] }}">
+                                                <img class="img-lazy-load img-thumbnail img-100-100"
+                                                     src="{{ asset('assets/img/loader.gif') }}"
+                                                     data-src="{{ asset(image.getImagePath) }}"
+                                                     alt="{{ listing.name }}"/>
+                                            </a>
+                                        </figure>
+                                    {% endfor %}
+
+                                </div>
+                            </dd>
+                        </dl>
+                    {% endif %}
+                    <div style="display: flex; justify-content: start; align-content: center; align-items: center">
+                        <hr>
+                        {% for file in listing.files %}
+                            <div>
+                                <a
+                                        href="{{ path('dashboard_organizer_management_files_download_file_listing', {'fileId': file.id}) }}"
+                                        style="float: left" class="mr-4">
+                                    <img style="width: 75px; height: 75px"
+                                         src="{{ asset('assets/img/icons/file.png') }}"
+                                         alt="File" class="custom-image">
+                                    {{ file.fileName }}
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+    </script>
+{% endblock %}

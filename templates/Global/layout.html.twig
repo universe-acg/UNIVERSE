@@ -49,15 +49,19 @@
     {{ encore_entry_script_tags('app') }}
 
     {# Application theme #}
+    {#    {{ encore_entry_link_tags('app.'~services.getSetting('app_theme')) }} #}
     {{ encore_entry_link_tags('app.'~services.getSetting('app_theme')) }}
 
     {% block stylesheets %}
     {% endblock %}
 
-    {# Custom css code added in the app parameters #}
     {% if services.getSetting('custom_css') != "" and services.getSetting('custom_css') is not null %}
         <style>
             {{ services.getSetting('custom_css')|raw }}
+
+            .vich-image a img {
+                width: 250px;
+            }
 
             .cookies-popup {
                 position: fixed;
@@ -183,8 +187,16 @@
                 height: 90%;
                 border-radius: 50%;
             }
+
+            /*p, div, h1, h2, h3, h4, h5, h6, ul, ol, li, pre, blockquote, table, form, header, footer, section, article, aside, main, nav, menu, details, summary, figure, figcaption,*/
+            /*.navbar *, .header-main, .section-header *, .section-content *, .section-pagetop *, *, html, body {*/
+            /*    background-color: #222 !important;*/
+            /*    color: #fff0ff !important;*/
+            /*}*/
         </style>
     {% endif %}
+    <script src="https://unpkg.com/darkmode-js@1.3.4/lib/darkmode-js.js"></script>
+
     <script>
         window.interdeal = {
             "sitekey": "cd8dac2398fd91cdd3fc6aa25da262d3",

@@ -1,0 +1,66 @@
+{% extends "Global/layout.html.twig" %}
+
+{% set pagetitle = 'Positions available in the ACG community' %}
+
+{% block title %}{{ pagetitle }}{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('events') }}
+{% endblock %}
+
+{% block content %}
+
+    {% set navigation = [{"current" : (pagetitle)}] %}
+
+    <style>
+        /* Add this CSS to your stylesheet */
+        @media (max-width: 767px) {
+            .order-1,
+            .order-2 {
+                order: initial; /* Reset the order for smaller screens */
+            }
+
+            .col-lg-3,
+            .col-lg-9 {
+                width: 100%; /* Full width on smaller screens */
+            }
+        }
+
+        @media (max-width: 767px) {
+            .filters-section {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .filter-item {
+                margin-bottom: 10px; /* Add spacing between filter items */
+            }
+        }
+    </style>
+
+    {% include "Global/navigation.html.twig" with navigation %}
+    <section class="section-content bg-white padding-y" style="overflow-x: hidden">
+        {#        <div class="{{ services.getSetting("app_layout") }}"> #}
+
+        <div class="row" style="">
+            <div class="col-lg-12 order-1 order-lg-2 mt-4 mt-md-0">
+                {% if listings.getTotalItemCount > 0 %}
+                    <div class="d-flex flex-wrap align-items-stretch" style="overflow-y: scroll">
+                        {% for listing in listings %}
+                            <div class="col-12 col-sm-4 col-lg-2 mb-3">
+                                {% include "Global/listing-card.html.twig" with {listing: listing} %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {% include "Global/message.html.twig" with { type: "info", message: ('No listings found'), icon: "fas fa-exclamation-circle" } %}
+                {% endif %}
+                {{ knp_pagination_render(listings, null, {}, {'align': 'center'}) }}
+            </div>
+        </div>
+        {#        </div> #}
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+{% endblock %}

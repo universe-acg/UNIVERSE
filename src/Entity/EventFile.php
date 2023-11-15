@@ -137,7 +137,8 @@ class EventFile
      */
     public function setFile(File $file = null)
     {
-        $this->file = $file;
+//        $this->file = $file;
+        $this->eventfile = $file;
 
         if (null !== $file) {
             // It is required that at least one field changes if you are using doctrine

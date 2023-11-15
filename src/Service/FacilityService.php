@@ -22,7 +22,7 @@ use Symfony\Component\Security\Core\Security;
 use Twig_Environment;
 
 class FacilityService
-{// FacilityService.php
+{
     private $em;
     private $authChecker;
     private $requestStack;
@@ -77,6 +77,17 @@ class FacilityService
         return $this->facilityRepository->find($facilityId);
     }
 
+    public function getFacilities($criterias)
+    {
+        $hidden = array_key_exists('hidden', $criterias) ? $criterias['hidden'] : false;
+        $keyword = array_key_exists('keyword', $criterias) ? $criterias['keyword'] : "all";
+        $slug = array_key_exists('slug', $criterias) ? $criterias['slug'] : "all";
+        $limit = array_key_exists('limit', $criterias) ? $criterias['limit'] : "all";
+        $count = array_key_exists('count', $criterias) ? $criterias['count'] : false;
+
+        return $this->em->getRepository(FacilityEntity::class)->getFacilityEntitys($hidden, $keyword, $slug, $limit, $count);
+    }
+
 // FacilityService.php
 
     public function updateFacility($facilityId, $name, $description, $minPlayers, $maxPlayers, $reference, $views, $externallink)
@@ -115,8 +126,15 @@ class FacilityService
         return $facility;
     }
 
+    public function findById($id): ?FacilityEntity
+    {
+        return $this->facilityRepository->findById($id);
+    }
+
     public function getUserById($userId): ?User
     {
         return $this->userRepository->getById($userId);
     }
+
+
 }

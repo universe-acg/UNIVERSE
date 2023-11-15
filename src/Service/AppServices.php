@@ -8,7 +8,6 @@ namespace App\Service;
 use App\Entity\AppLayoutSettings;
 use App\Entity\BlogPost;
 use App\Entity\BlogPostCategory;
-use App\Entity\BlogPostVideo;
 use App\Entity\Category;
 use App\Entity\Event;
 use App\Entity\EventDate;
@@ -20,6 +19,7 @@ use App\Entity\Order;
 use App\Entity\OrderTicket;
 use App\Entity\Organizer;
 use App\Entity\Page;
+use App\Entity\Reel;
 use App\Entity\Settings;
 use App\Entity\User;
 use App\Entity\Venue;
@@ -1019,7 +1019,7 @@ class AppServices
         $otherthan = array_key_exists('otherthan', $criterias) ? $criterias['otherthan'] : "all";
         $sortedby = array_key_exists('sortedby', $criterias) ? $criterias['sortedby'] : "all";
 
-        return $this->em->getRepository(BlogPostVideo::class)->getBlogPostVideos($selecttags, $hidden, $keyword, $slug, $category, $limit, $sortedby, $otherthan);
+        return $this->em->getRepository(Reel::class)->getBlogPostVideos($selecttags, $hidden, $keyword, $slug, $category, $limit, $sortedby, $otherthan);
     }
 
     /**

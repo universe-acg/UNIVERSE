@@ -10,6 +10,8 @@ use App\Entity\EventDate;
 use App\Entity\EventFile;
 use App\Form\EventTypeMulti;
 use App\Form\EventTypeMultiEdit;
+use App\Form\EventTypeMultiEditSimple;
+use App\Form\EventTypeMultiSimple;
 use App\Message\PublishEventMessage;
 use App\Repository\CategoryRepository;
 use App\Repository\EventFileRepository;
@@ -132,21 +134,27 @@ class EventController extends Controller
         }
 
         $event = $this->initializeEvent($slug);
+
         if ($event === null) {
             return $services->redirectToReferer('event');
         }
 
+        $formTypesimple = EventTypeMultiSimple::class;
         $formType = EventTypeMulti::class;
+
         $form = $this->createForm($formType, $event, [
+            'validation_groups' => ['create', 'Default'],
+            'user_choices' => $eventChoices,
+        ]);
+
+        $formsimple = $this->createForm($formTypesimple, $event, [
             'validation_groups' => ['create', 'Default'],
             'user_choices' => $eventChoices,
         ]);
 
         $em = $this->getDoctrine()->getManager();
         $form->handleRequest($request);
-
-        $commonValue = $this->generateCommonValue();
-        $event->setCommonvalue($commonValue);
+        $formsimple->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Check if it's an out-of-campus event
@@ -158,6 +166,8 @@ class EventController extends Controller
                 $event->setOutofcampus(false);
             }
             if ($event->getRepeatsweekly()) {
+                $commonValue = $this->generateCommonValue();
+                $event->setCommonvalue($commonValue);
                 $event->setIsrepeat(true);
                 $this->processSubmittedEvent($event, $category, $commonValue, $em, $services, $authChecker);
                 $this->processRepeatingEvent($event, $category, $commonValue, $em, $services);
@@ -176,7 +186,35 @@ class EventController extends Controller
             return $this->redirectToRouteAfterSubmission($authChecker);
         }
 
-        return $this->renderEventForm($event, $form);
+        if ($formsimple->isSubmitted() && $formsimple->isValid()) {
+            // Set references for event dates and tickets
+            foreach ($event->getEventdates() as $eventdate) {
+                $eventdate->setEvent($event);
+                if (!$slug || !$eventdate->getReference()) {
+                    $eventdate->setReference($services->generateReference(10));
+                }
+                foreach ($eventdate->getTickets() as $eventticket) {
+                    $eventdate->setTitle($event->getName());
+                    $eventdate->setDescription($event->getDescription());
+                    $eventticket->setEventdate($eventdate);
+                    if (!$slug || !$eventticket->getReference()) {
+                        $eventticket->setReference($services->generateReference(10));
+                    }
+                }
+            }
+            $this->processSubmittedEvent($event, $category, '', $em, $services, $authChecker);
+
+            // Handle new event creation or update
+            if (!$slug) {
+                $this->addFlash('success', 'The event has been successfully created');
+            } else {
+                $this->addFlash('success', 'The event has been successfully updated');
+            }
+
+            return $this->redirectToRouteAfterSubmission($authChecker);
+        }
+
+        return $this->renderEventForm($event, $form, $formsimple);
     }
 
     private function mapCategoryName($category)
@@ -485,11 +523,12 @@ class EventController extends Controller
         return $this->redirectToRoute("dashboard_organizer_event");
     }
 
-    private function renderEventForm($event, $form)
+    private function renderEventForm($event, $form, $formsimple)
     {
         return $this->render('Dashboard/Shared/Event/add-edit.html.twig', [
             "event" => $event,
             "form" => $form->createView(),
+            "formsimple" => $formsimple->createView(),
         ]);
     }
 
@@ -551,8 +590,14 @@ class EventController extends Controller
             'user_choices' => $eventChoices,
         ]);
 
+        $formsimple = $this->createForm(EventTypeMultiEditSimple::class, $event, [
+            'validation_groups' => ['create', 'Default'],
+            'user_choices' => $eventChoices,
+        ]);
+
         $em = $this->getDoctrine()->getManager();
         $form->handleRequest($request);
+        $formsimple->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -622,7 +667,35 @@ class EventController extends Controller
             return $this->redirectToRouteAfterSubmission($authChecker);
         }
 
-        return $this->renderEventForm($event, $form);
+        if ($formsimple->isSubmitted() && $formsimple->isValid()) {
+            // Set references for event dates and tickets
+            foreach ($event->getEventdates() as $eventdate) {
+                $eventdate->setEvent($event);
+                if (!$slug || !$eventdate->getReference()) {
+                    $eventdate->setReference($services->generateReference(10));
+                }
+                foreach ($eventdate->getTickets() as $eventticket) {
+                    $eventdate->setTitle($event->getName());
+                    $eventdate->setDescription($event->getDescription());
+                    $eventticket->setEventdate($eventdate);
+                    if (!$slug || !$eventticket->getReference()) {
+                        $eventticket->setReference($services->generateReference(10));
+                    }
+                }
+            }
+            $this->processSubmittedEvent($event, $category, '', $em, $services, $authChecker);
+
+            // Handle new event creation or update
+            if (!$slug) {
+                $this->addFlash('success', 'The event has been successfully created');
+            } else {
+                $this->addFlash('success', 'The event has been successfully updated');
+            }
+
+            return $this->redirectToRouteAfterSubmission($authChecker);
+        }
+
+        return $this->renderEventForm($event, $form, $formsimple);
     }
 
     // Helper method to render the event form

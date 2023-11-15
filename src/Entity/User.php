@@ -25,6 +25,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  */
 class User extends BaseUser
 {
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -44,6 +45,15 @@ class User extends BaseUser
      * @ORM\Column(length=255)
      */
     protected $studentid;
+    /**
+     * @ORM\OneToOne(targetEntity="CV", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $cv;
+
+    /**
+     * @ORM\OneToOne(targetEntity="DocDocumentDTO", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $doc;
     /**
      * @ORM\ManyToMany(targetEntity="Event", mappedBy="volunteers")
      */
@@ -122,12 +132,10 @@ class User extends BaseUser
      * @Assert\NotNull
      */
     private $isbusinessweek;
-
     /**
      * @ORM\Column(type="boolean")
      */
     private $nolevel;
-
     /**
      * @ORM\Column(type="boolean")
      */
@@ -369,6 +377,38 @@ class User extends BaseUser
         $this->favorites = new ArrayCollection();
         $this->following = new ArrayCollection();
         $this->ticketreservations = new ArrayCollection();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDoc()
+    {
+        return $this->doc;
+    }
+
+    /**
+     * @param mixed $doc
+     */
+    public function setDoc($doc): void
+    {
+        $this->doc = $doc;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCv()
+    {
+        return $this->cv;
+    }
+
+    /**
+     * @param mixed $cv
+     */
+    public function setCv($cv): void
+    {
+        $this->cv = $cv;
     }
 
     /**
@@ -1016,11 +1056,6 @@ class User extends BaseUser
         $this->isbusinessweek = $isbusinessweek;
     }
 
-    public function getId()
-    {
-        return $this->id;
-    }
-
     public function hasBoughtATicketForEvent($event)
     {
         foreach ($this->orders as $order) {
@@ -1128,7 +1163,7 @@ class User extends BaseUser
             return $this->organizer->getName();
         }
 
-        return "N/A";
+        return "Administrator";
     }
 
     public function getFullName()
@@ -1610,6 +1645,26 @@ class User extends BaseUser
         $this->points = $points;
     }
 
+    public function isAdministratorUser()
+    {
+        if ($this->getId() == 109) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function isClubOrSociety()
+    {
+        $points = $this->getPoints();
+        return ($this->getRole() == "Organizer") && ($this->getOrganizer()->getCategory() == "Club" || $this->getOrganizer()->getCategory() == "Society");
+    }
+
     public function orggoodrole()
     {
         $points = $this->getPoints();
@@ -1670,10 +1725,11 @@ class User extends BaseUser
                     return 'https://universeacg.xyz/uploads/imgs/' . "LEVELS_ATTENDEES-02.png";
                 }
 
-                if ($points >= 10) {
-                    return 'https://universeacg.xyz/uploads/imgs/' . "LEVELS_ATTENDEES-01.png";
-                }
+//                if ($points >= 10) {
+                return 'https://universeacg.xyz/uploads/imgs/' . "LEVELS_ATTENDEES-01.png";
+//                }
 
+                return 'https://universeacg.xyz/uploads/imgs/' . "LEVELS_ATTENDEES-01.png";
             } else {
                 return 'https://universeacg.xyz/uploads/imgs/' . "LEVELS_ATTENDEES-01.png";
             }

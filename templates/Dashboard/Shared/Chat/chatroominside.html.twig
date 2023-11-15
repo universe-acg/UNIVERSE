@@ -1,0 +1,342 @@
+{% block content %}
+
+    <style>
+        :root {
+            --body-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --msger-bg: #fff;
+            --border: 2px solid #ddd;
+            --left-msg-bg: #ececec;
+            --right-msg-bg: #579ffb;
+        }
+
+        .msger {
+            display: block;
+            flex-flow: column wrap;
+            justify-content: space-between;
+            /*width: 100%;*/
+            /*max-width: 867px;*/
+            margin: 0 !important;;
+            padding: 0 !important;
+            height: 100%;
+            overflow-y: scroll;
+            border: var(--border);
+            border-radius: 5px;
+            background: var(--msger-bg);
+            box-shadow: 0 15px 15px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        .msger-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: var(--border);
+            background: #eee;
+            color: #666;
+        }
+
+        .msger-chat {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .msger-chat::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .msger-chat::-webkit-scrollbar-track {
+            background: #ddd;
+        }
+
+        .msger-chat::-webkit-scrollbar-thumb {
+            background: #bdbdbd;
+        }
+
+        .msg {
+            display: flex;
+            align-items: flex-end;
+            margin-bottom: 10px;
+        }
+
+        .msg:last-of-type {
+            margin: 0;
+        }
+
+        .msg-img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+            background: #ddd no-repeat center;
+            background-size: cover;
+            border-radius: 50%;
+        }
+
+        .msg-bubble {
+            max-width: 450px;
+            padding: 6px 15px 0 15px;
+            border-radius: 15px;
+            background: var(--left-msg-bg);
+        }
+
+        .msg-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .msg-info-name {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .msg-info-time {
+            font-size: 0.85em;
+        }
+
+        .left-msg .msg-bubble {
+            border-bottom-left-radius: 0;
+        }
+
+        .right-msg {
+            flex-direction: row-reverse;
+        }
+
+        .right-msg * {
+            justify-content: end !important;
+            color: #fff;
+            text-align: right !important;
+        }
+
+        .right-msg .msg-bubble {
+            background: var(--right-msg-bg);
+            color: #fff;
+            border-bottom-right-radius: 0;
+        }
+
+        .right-msg .msg-img {
+            margin: 0 0 0 10px;
+        }
+
+        .msger-inputarea {
+            display: flex;
+            padding: 10px;
+            border-top: var(--border);
+            background: #eee;
+        }
+
+        .msger-inputarea * {
+            padding: 10px;
+            border: none;
+            border-radius: 3px;
+            font-size: 1em;
+        }
+
+        .msger-input {
+            flex: 1;
+            background: #ddd;
+        }
+
+        .msger-send-btn {
+            margin-left: 10px;
+            background: rgb(0, 196, 65);
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.23s;
+        }
+
+        .msger-send-btn:hover {
+            background: rgb(0, 180, 50);
+        }
+
+        .msger-chat {
+            background-color: #fcfcfe;
+            background-image: url("https://universeacg.xyz/uploads/imgs/bgchat.png");
+        }
+
+        {#background-image: url("{{ asset('assets/img/placeholders/bgchat.png') }}");#}
+    </style>
+
+    <section class="msger">
+        {#        <header class="msger-header"> #}
+        {#            <div class="msger-header-title"> #}
+        {#                <i class="fas fa-comment-alt"></i> SimpleChat #}
+        {#            </div> #}
+        {#            <div class="msger-header-options"> #}
+        {#                <span><i class="fas fa-cog"></i></span> #}
+        {#            </div> #}
+        {#        </header> #}
+
+        <main class="msger-chat" style="display: block; width: 100%; height: 100%; overflow-y: scroll">
+            {% for msg in msgs %}
+                {% if msg.issender == true %}
+                    <div class="msg left-msg">
+                        <div class="msg-bubble">
+                            <div class="msg-info">
+                                <div class="msg-info-name">{{ msg.msg.contact.name }}</div>
+                            </div>
+                            <div class="msg-text">
+                                {{ msg.msg.txt }}
+                            </div>
+
+                            <div class="mt-4">
+                                <p class="text-muted"
+                                   style="font-size: 10px; float:left;">{{ msg.msg.contact.datetimeSent|date('Y-m-d H:i') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="msg right-msg">
+                        <div class="msg-bubble">
+                            <div class="msg-info">
+                                <div class="msg-info-name">{{ app.user.getCrossRoleName() }}</div>
+                            </div>
+                            <div class="msg-text">
+                                {{ msg.msg.txt }}
+                            </div>
+
+                            <div class="mt-4">
+                                <p class="text-muted"
+                                   style="font-size: 10px;
+                                    float: right;
+            color: #fff !important;
+">{{ msg.msg.contact.datetimeSent|date('Y-m-d H:i') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+        </main>
+
+        <div style="display: block; position: relative; bottom: 0 !important;">
+            <form class="msger-inputarea">
+                <input type="text" class="msger-input" placeholder="Enter your message...">
+                <button type="submit" class="btn-primary btn-sm">Send</button>
+            </form>
+        </div>
+
+    </section>
+
+    <script>
+        const socket = new WebSocket('ws://universeacg.xyz:8080'); // Replace with your server details
+
+        // Add an event listener for when the WebSocket connection is open
+        socket.addEventListener('open', (event) => {
+            console.log('WebSocket connection is open.');
+        });
+        // Function to scroll to the bottom of the chat box
+        const chatBox = document.querySelector(".msger-chat");
+
+        function scrollToBottom() {
+            chatBox.scrollTop = chatBox.scrollHeight - chatBox.clientHeight;
+        }
+
+        const msgerForm = get(".msger-inputarea");
+        const msgerInput = get(".msger-input");
+        const msgerChat = get(".msger-chat");
+
+        const BOT_MSGS = [
+            "Hi, how are you?",
+            "You are not talking to Alex's Hologram",
+            "Jaime le fromage et le pain au chocolat et toi?",
+            "Fromage",
+            "Bye!"];
+
+
+        // Icons made by Freepik from www.flaticon.com
+        const BOT_NAME = "BOT";
+        const PERSON_NAME = "{{ app.user.getCrossRoleName() }}";
+
+        msgerForm.addEventListener("submit", event => {
+            event.preventDefault();
+
+            const msgText = msgerInput.value;
+            if (!msgText) return;
+
+            appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText);
+            msgerInput.value = "";
+
+
+            socket.onmessage = (event) => {
+                const message = event.data;
+                console.dir(message);
+                // const chatDiv = document.getElementById('chat');
+                // chatDiv.innerHTML += message + '<br>';
+            };
+            botResponse();
+        });
+
+        function appendMessage(name, img, side, text) {
+            socket.send(text);
+            //   Simple solution for small apps
+            const msgHTML = `<div class="msg right-msg">
+    <div class="msg-bubble">
+        <div class="msg-info">
+            <div class="msg-info-name">${name}</div>
+        </div>
+        <div class="msg-text">${text}</div>
+        <div class="mt-4">
+            <p class="text-muted" style="font-size: 10px; float: right; color: #fff !important;">
+                ${formatDate(new Date())}
+            </p>
+        </div>
+    </div>
+</div>`;
+
+            msgerChat.insertAdjacentHTML("beforeend", msgHTML);
+            msgerChat.scrollTop += 500;
+            scrollToBottom();
+        }
+
+        function appendMessageResponse(name, img, side, text) {
+            //   Simple solution for small apps
+            const msgHTML = `
+<div class="msg left-msg">
+    <div class="msg-bubble">
+        <div class="msg-info">
+            <div class="msg-info-name">${name}</div>
+        </div>
+        <div class="msg-text">${text}</div>
+        <div class="mt-4">
+            <p class="text-muted" style="font-size: 10px; float: left;">
+                ${formatDate(new Date())}
+            </p>
+        </div>
+    </div>
+</div>
+`;
+
+            msgerChat.insertAdjacentHTML("beforeend", msgHTML);
+            msgerChat.scrollTop += 500;
+        }
+
+        function botResponse() {
+            const r = random(0, BOT_MSGS.length - 1);
+            const msgText = BOT_MSGS[r];
+            const delay = msgText.split(" ").length * 100;
+
+            setTimeout(() => {
+                appendMessageResponse(BOT_NAME, BOT_IMG, "left", msgText);
+                scrollToBottom();
+            }, delay);
+        }
+
+        // Utils
+        function get(selector, root = document) {
+            return root.querySelector(selector);
+        }
+
+        function formatDate(date) {
+            const h = "0" + date.getHours();
+            const m = "0" + date.getMinutes();
+
+            return `${h.slice(-2)}:${m.slice(-2)}`;
+        }
+
+        function random(min, max) {
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+    </script>
+{% endblock %}

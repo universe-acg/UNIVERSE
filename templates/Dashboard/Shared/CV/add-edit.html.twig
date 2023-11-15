@@ -1,0 +1,61 @@
+{% extends "Global/layout.html.twig" %}
+
+ {% form_theme form 'Global/jquery.collection.html.twig' %}
+ {% form_theme formdoc1 'Global/jquery.collection.html.twig' %}
+
+ {% set pagetitle = 'Documents Management' %}
+
+ {% set pagetitle = 'Upload your Documents' %}
+
+ {% block title %}{{ pagetitle }}{% endblock %}
+
+ {% block content %}
+
+     {% set navigation = [{ "dashboard_index": ('Dashboard' ),  "dashboard_doc_edit": ('Update your Documents' ), "current":(pagetitle) }] %}
+     {% include "Global/navigation.html.twig" with navigation %}
+
+     <section class="section-content padding-y bg-white">
+         <div class="{{ services.getSetting("app_layout") }}">
+             <div class="row">
+                 <aside class="col-lg-3 pt-3 pt-lg-0">
+                     {% include "Dashboard/sidebar.html.twig" %}
+                 </aside>
+                 <div class="col-lg-9 mt-4 mt-lg-0">
+                     <div class="card box">
+                         <div class="form-tabs">
+                             <ul class="nav nav-tabs" role="tablist">
+                                 <li class="nav-item">
+                                     <a class="nav-link active" id="cv-tab" data-toggle="tab" href="#cv"
+                                        role="tab">CV</a>
+                                 </li>
+                                 <li class="nav-item">
+                                     <a class="nav-link" id="doctor-tab" data-toggle="tab" href="#doctor"
+                                        role="tab">Doctor Documents</a>
+                                 </li>
+                             </ul>
+
+                             <div class="tab-content">
+                                 <div class="tab-pane fade show active" id="cv" role="tabpanel">
+                                     <br>
+                                     {{ form_start(form) }}
+                                     {{ form_widget(form) }}
+                                     {{ form_end(form) }}
+                                 </div>
+                                 <div class="tab-pane fade" id="doctor" role="tabpanel">
+                                     <br>
+                                     {{ form_start(formdoc1) }}
+                                     {{ form_widget(formdoc1) }}
+                                     {{ form_end(formdoc1) }}
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </section>
+
+ {% endblock %}
+
+ {% block javascripts %}
+ {% endblock %}

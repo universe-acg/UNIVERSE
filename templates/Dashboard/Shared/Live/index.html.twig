@@ -1,0 +1,157 @@
+{% extends "Global/layout.html.twig" %}
+
+{% set pagetitle = 'Manage Athletic Facilities' %}
+
+{% block title %}{{ pagetitle }}{% endblock %}
+
+{% block content %}
+
+    {% set navigation = [{ "dashboard_index": ('Dashboard' ), "current":(pagetitle) }] %}
+    {% include "Global/navigation.html.twig" with navigation %}
+
+    <section class="section-content padding-y bg-white">
+        <div class="{{ services.getSetting("app_layout") }}">
+            <div class="row">
+                <aside class="col-lg-3 pt-3 pt-lg-0">
+                    {% include "Dashboard/sidebar.html.twig" %}
+                </aside>
+                <div class="col-lg-9 mt-4 mt-lg-0">
+
+                    <div class="box shadow-none bg-gray mb-4">
+                        <div class="row">
+                            <div class="col-sm-12 col-lg-2  mb-3 mb-lg-0">
+                                <span class="center-lg-y text-muted">{{ "%resultsCount% result(s) found" |trans ({'%resultsCount%': athleticfacility.getTotalItemCount}) }}</span>
+                            </div>
+                            <div class="col-sm-12 col-lg-6 ">
+                                {% if is_granted('ROLE_ADMINISTRATOR') %}
+                                    <a href="{{ path('dashboard_administrator_facilities_add') }}"
+                                       class="btn btn-primary ml-3" data-toggle="tooltip"
+                                       title="{{ 'Add a new Athletic Facility' }}"><i class="fas fa-plus"></i></a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if athleticfacility.getTotalItemCount > 0 %}
+
+                        <div class="row">
+
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-vcenter text-nowrap">
+                                            <thead>
+                                            <tr>
+                                                <th>{{ 'Name' }}</th>
+                                                <th>{{ 'Image' }}</th>
+                                                <th>{{ 'Reservations' }}</th>
+                                                <th>{{ 'Status' }}</th>
+                                                <th class="text-center"><i class="fas fa-cog"></i></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+
+                                            {% for athletic in athleticfacility %}
+                                                <tr>
+                                                    <td>
+                                                        <a href="{{ path("athletic_details", {slug: athletic.slug}) }}">{{ athletic.title }}</a>
+                                                    </td>
+                                                    <td>
+                                                        <a class="fancybox"
+                                                           href="{{ athletic.getMainImage ? asset(athletic.getImagePath) : athletic.getImagePlaceholder }}"
+                                                           data-toggle="tooltip" title="{{ "Enlarge" }}">
+                                                            <img src="{{ athletic.getMainImage ? asset(athletic.getImagePath) : athletic.getImagePlaceholder }}"
+                                                                 class="img-thumbnail img-100-100"/>
+                                                        </a>
+                                                    </td>
+                                                    <td>{{ athletic.getEventsCount() }}</td>
+                                                    <td>
+                                                        {% if athletic.hidden %}
+                                                            <span class="badge badge-danger"><i
+                                                                        class="fas fa-eye-slash fa-fw"></i> {{ "Hidden" }}</span>
+                                                        {% else %}
+                                                            <span class="badge badge-success"><i
+                                                                        class="fas fa-eye fa-fw"></i> {{ "Visible" }}</span>
+                                                        {% endif %}
+                                                        <br>
+                                                        <br>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <div class="item-action dropdown">
+                                                            <a href="javascript:void(0)" data-toggle="dropdown"
+                                                               data-boundary="window" class="icon"><i
+                                                                        class="fas fa-ellipsis-v"></i></a>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                {% if is_granted('ROLE_ADMINISTRATOR') %}
+                                                                    <a href="{{ path('dashboard_administrator_facilities_edit', { slug : athletic.slug }) }}"
+                                                                       class="dropdown-item"><i
+                                                                                class="dropdown-icon fas fa-edit fa-fw text-muted"></i> {{ "Edit" }}
+                                                                    </a>
+                                                                    {% if athletic.hidden %}
+                                                                        <a href="{{ path('dashboard_administrator_facilities_show', { slug : athletic.slug }) }}"
+                                                                           class="dropdown-item"><i
+                                                                                    class="dropdown-icon fas fa-eye fa-fw text-muted"></i> {{ "Show" }}
+                                                                        </a>
+                                                                    {% else %}
+                                                                        <a href="{{ path('dashboard_administrator_facilities_hide', { slug : athletic.slug }) }}"
+                                                                           class="dropdown-item"><i
+                                                                                    class="dropdown-icon fas fa-eye-slash fa-fw text-muted"></i> {{ "Hide" }}
+                                                                        </a>
+                                                                    {% endif %}
+                                                                    {% if athletic.deletedAt %}
+                                                                        <a href="{{ path('dashboard_administrator_facilities_restore', { slug : athletic.slug }) }}"
+                                                                           class="dropdown-item"><i
+                                                                                    class="dropdown-icon fas fa-trash-restore fa-fw text-muted"></i> {{ "Restore" }}
+                                                                        </a>
+                                                                        <span data-target="{{ path('dashboard_administrator_facilities_delete', { slug : athletic.slug }) }}"
+                                                                              class="dropdown-item requires-confirmation"
+                                                                              data-confirmation-text="{{ "You are about to delete the athletic PERMANENTLY" }}"><i
+                                                                                    class="dropdown-icon fas fa-trash fa-fw text-muted"></i> {{ "Delete permanently" }}</span>
+                                                                    {% else %}
+                                                                        <a href="{{ path('dashboard_administrator_facilities_disable', { slug : athletic.slug }) }}"
+                                                                           class="dropdown-item"><i
+                                                                                    class="dropdown-icon fas fa-times fa-fw text-muted"></i> {{ "Delete" }}
+                                                                        </a>
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                {{ knp_pagination_render(athleticfacility, null, {}, {'align': 'center'}) }}
+                            </div>
+
+                        </div>
+
+                    {% else %}
+
+                        {% include "Global/message.html.twig" with { type: "info", message: ('No athleticfacility found'), icon: "fas fa-exclamation-circle" } %}
+
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script>
+
+        $(document).ready(function () {
+            if (getURLParameter('directory') != "null") {
+                $('input[type="radio"][name="directory"][value="' + getURLParameter('directory') + '"]').attr("checked", "checked");
+            }
+        });
+
+    </script>
+
+{% endblock %}

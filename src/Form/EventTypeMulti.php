@@ -154,10 +154,10 @@ class EventTypeMulti extends AbstractType
                 'required' => true,
                 'multiple' => false,
                 'expanded' => true,
-                'label' => 'Do you want this event to be viewable by anyone (unauthenticated users, people from all over the world who do not have an account at Universe)?',
+                'label' => 'If yes, anyone from the internet can view this event',
                 'choices' => ['No' => false, 'Yes' => true],
                 'label_attr' => ['class' => 'radio-custom radio-inline'],
-                'help' => 'If yes, anyone from the internet can view this event',
+                'help' => 'Do you want this event to be viewable by anyone (unauthenticated users, people from all over the world who do not have an account at Universe)?',
             ])
             ->add('outofcampus', ChoiceType::class, [
                 'required' => true,
@@ -317,20 +317,20 @@ class EventTypeMulti extends AbstractType
                     'class' => 'select2', // Add a CSS class
                 ],
             ])
-//            ->add('redirectable', ChoiceType::class, [
-//                'label' => 'Is this an event that redirects somewhere?',
-//                'choices' => [
-//                    'No' => false,
-//                    'Yes' => true,
-//                ],
-//                'required' => true,
-//                'expanded' => true,
-//                'multiple' => false,
-//                'label_attr' => [
-//                    'class' => ' radio-custom radio-inline',
-//                ],
-//                'data' => false, // Preselect "No"
-//            ])
+            ->add('redirectable', ChoiceType::class, [
+                'label' => 'Is this an event that redirects somewhere?',
+                'choices' => [
+                    'No' => false,
+                    'Yes' => true,
+                ],
+                'required' => true,
+                'expanded' => true,
+                'multiple' => false,
+                'label_attr' => [
+                    'class' => ' radio-custom radio-inline',
+                ],
+                'data' => false, // Preselect "No"
+            ])
             ->add('save', SubmitType::class, [
                 'label' => 'Save',
                 'attr' => ['class' => 'btn btn-primary'],

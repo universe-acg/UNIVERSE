@@ -1,10 +1,6 @@
 {% extends "Global/layout.html.twig" %}
 
-{% if is_granted('ROLE_ADMINISTRATOR') %}
-    {% set pagetitle = 'Manage venues' %}
-{% else %}
-    {% set pagetitle = 'My venues' %}
-{% endif %}
+{% set pagetitle = 'Manage Athletic Facilities' %}
 
 {% block title %}{{ pagetitle }}{% endblock %}
 
@@ -24,19 +20,19 @@
                     <div class="box shadow-none bg-gray mb-4">
                         <div class="row">
                             <div class="col-sm-12 col-lg-2  mb-3 mb-lg-0">
-                                <span class="center-lg-y text-muted">{{ "%resultsCount% result(s) found" |trans ({'%resultsCount%': venues.getTotalItemCount}) }}</span>
+                                <span class="center-lg-y text-muted">{{ "%resultsCount% result(s) found" |trans ({'%resultsCount%': athleticfacility.getTotalItemCount}) }}</span>
                             </div>
                             <div class="col-sm-12 col-lg-6 ">
                                 {% if is_granted('ROLE_ADMINISTRATOR') %}
-                                    <a href="{{ path('dashboard_administrator_venue_add') }}"
+                                    <a href="{{ path('dashboard_administrator_facilities_add') }}"
                                        class="btn btn-primary ml-3" data-toggle="tooltip"
-                                       title="{{ 'Add a new venue' }}"><i class="fas fa-plus"></i></a>
+                                       title="{{ 'Add a new Athletic Facility' }}"><i class="fas fa-plus"></i></a>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
 
-                    {% if venues.getTotalItemCount > 0 %}
+                    {% if athleticfacility.getTotalItemCount > 0 %}
 
                         <div class="row">
 
@@ -48,29 +44,29 @@
                                             <tr>
                                                 <th>{{ 'Name' }}</th>
                                                 <th>{{ 'Image' }}</th>
-                                                <th>{{ 'Events count' }}</th>
+                                                <th>{{ 'Reservations' }}</th>
                                                 <th>{{ 'Status' }}</th>
                                                 <th class="text-center"><i class="fas fa-cog"></i></th>
                                             </tr>
                                             </thead>
                                             <tbody>
 
-                                            {% for venue in venues %}
+                                            {% for athletic in athleticfacility %}
                                                 <tr>
                                                     <td>
-                                                        <a href="{{ path("venue", {slug: venue.slug}) }}">{{ venue.title }}</a>
+                                                        <a href="{{ path("athletic_details", {slug: athletic.slug}) }}">{{ athletic.title }}</a>
                                                     </td>
                                                     <td>
                                                         <a class="fancybox"
-                                                           href="{{ venue.getMainImage ? asset(venue.getImagePath) : venue.getImagePlaceholder }}"
+                                                           href="{{ athletic.getMainImage ? asset(athletic.getImagePath) : athletic.getImagePlaceholder }}"
                                                            data-toggle="tooltip" title="{{ "Enlarge" }}">
-                                                            <img src="{{ venue.getMainImage ? asset(venue.getImagePath) : venue.getImagePlaceholder }}"
+                                                            <img src="{{ athletic.getMainImage ? asset(athletic.getImagePath) : athletic.getImagePlaceholder }}"
                                                                  class="img-thumbnail img-100-100"/>
                                                         </a>
                                                     </td>
-                                                    <td>{{ venue.getEventsCount() }}</td>
+                                                    <td>{{ athletic.getEventsCount() }}</td>
                                                     <td>
-                                                        {% if venue.hidden %}
+                                                        {% if athletic.hidden %}
                                                             <span class="badge badge-danger"><i
                                                                         class="fas fa-eye-slash fa-fw"></i> {{ "Hidden" }}</span>
                                                         {% else %}
@@ -87,36 +83,32 @@
                                                                         class="fas fa-ellipsis-v"></i></a>
                                                             <div class="dropdown-menu dropdown-menu-right">
                                                                 {% if is_granted('ROLE_ADMINISTRATOR') %}
-                                                                    <a href="{{ path('dashboard_administrator_venue_edit', { slug : venue.slug }) }}"
+                                                                    <a href="{{ path('dashboard_administrator_facilities_edit', { slug : athletic.slug }) }}"
                                                                        class="dropdown-item"><i
                                                                                 class="dropdown-icon fas fa-edit fa-fw text-muted"></i> {{ "Edit" }}
                                                                     </a>
-                                                                    {% if venue.hidden %}
-                                                                        <a href="{{ path('dashboard_administrator_venue_show', { slug : venue.slug }) }}"
+                                                                    {% if athletic.hidden %}
+                                                                        <a href="{{ path('dashboard_administrator_facilities_show', { slug : athletic.slug }) }}"
                                                                            class="dropdown-item"><i
                                                                                     class="dropdown-icon fas fa-eye fa-fw text-muted"></i> {{ "Show" }}
                                                                         </a>
                                                                     {% else %}
-                                                                        <a href="{{ path('dashboard_administrator_venue_hide', { slug : venue.slug }) }}"
+                                                                        <a href="{{ path('dashboard_administrator_facilities_hide', { slug : athletic.slug }) }}"
                                                                            class="dropdown-item"><i
                                                                                     class="dropdown-icon fas fa-eye-slash fa-fw text-muted"></i> {{ "Hide" }}
                                                                         </a>
                                                                     {% endif %}
-                                                                    <a href="https://universeacg.xyz/events?venue={{ venue.slug }}"
-                                                                       class="dropdown-item"><i
-                                                                                class="dropdown-icon fas fa-eye fa-fw text-muted"></i> {{ "See associated events" }}
-                                                                    </a>
-                                                                    {% if venue.deletedAt %}
-                                                                        <a href="{{ path('dashboard_administrator_venue_restore', { slug : venue.slug }) }}"
+                                                                    {% if athletic.deletedAt %}
+                                                                        <a href="{{ path('dashboard_administrator_facilities_restore', { slug : athletic.slug }) }}"
                                                                            class="dropdown-item"><i
                                                                                     class="dropdown-icon fas fa-trash-restore fa-fw text-muted"></i> {{ "Restore" }}
                                                                         </a>
-                                                                        <span data-target="{{ path('dashboard_administrator_venue_delete', { slug : venue.slug }) }}"
+                                                                        <span data-target="{{ path('dashboard_administrator_facilities_delete', { slug : athletic.slug }) }}"
                                                                               class="dropdown-item requires-confirmation"
-                                                                              data-confirmation-text="{{ "You are about to delete the venue PERMANENTLY" }}"><i
+                                                                              data-confirmation-text="{{ "You are about to delete the athletic PERMANENTLY" }}"><i
                                                                                     class="dropdown-icon fas fa-trash fa-fw text-muted"></i> {{ "Delete permanently" }}</span>
                                                                     {% else %}
-                                                                        <a href="{{ path('dashboard_administrator_venue_disable', { slug : venue.slug }) }}"
+                                                                        <a href="{{ path('dashboard_administrator_facilities_disable', { slug : athletic.slug }) }}"
                                                                            class="dropdown-item"><i
                                                                                     class="dropdown-icon fas fa-times fa-fw text-muted"></i> {{ "Delete" }}
                                                                         </a>
@@ -132,14 +124,14 @@
                                         </table>
                                     </div>
                                 </div>
-                                {{ knp_pagination_render(venues, null, {}, {'align': 'center'}) }}
+                                {{ knp_pagination_render(athleticfacility, null, {}, {'align': 'center'}) }}
                             </div>
 
                         </div>
 
                     {% else %}
 
-                        {% include "Global/message.html.twig" with { type: "info", message: ('No venues found'), icon: "fas fa-exclamation-circle" } %}
+                        {% include "Global/message.html.twig" with { type: "info", message: ('No athleticfacility found'), icon: "fas fa-exclamation-circle" } %}
 
                     {% endif %}
                 </div>

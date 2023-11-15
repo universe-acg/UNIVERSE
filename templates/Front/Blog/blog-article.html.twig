@@ -38,7 +38,7 @@
                                 <a class="" aria-expanded="true" href="#" data-toggle="collapse"
                                    data-target="#filter-keyword">
                                     <i class="icon-action fa fa-chevron-down"></i>
-                                    <h6 class="title">{{ "Search blog" }}</h6>
+                                    <h6 class="title">{{ "Search Announcements & News" }}</h6>
                                 </a>
                             </header>
                             <div class="filter-content collapse show" id="filter-keyword">
@@ -95,7 +95,7 @@
                                             <div class="col-4 pr-0">
                                                 <a href="{{ path('blog_article', { slug : popularblogpost.slug }) }}">
                                                     <img src="{{ asset('assets/img/loader.svg') }}"
-                                                         data-src="{{ popularblogpost.imageName ? (popularblogpost.getImagePath) : popularblogpost.getImagePlaceholder }}"
+                                                         data-src="{{ popularblogpost.imageName ? (popularblogpost.getImagePath|imagine_filter('thumbnail', runtimeConfig)) : popularblogpost.getImagePlaceholder }}"
                                                          class="img-lazy-load img-fluid hover-effect-2"
                                                          alt="{{ popularblogpost.name }}">
                                                 </a>
@@ -165,7 +165,7 @@
                             {% if similarblogposts|length %}
                                 <div class="row">
                                     <div class="col-12">
-                                        <h3 class="mt-5 mb-4 text-center">{{ "Related posts" }}</h3>
+                                        <h3 class="mt-5 mb-4 text-center">{{ "Related Announcements & News" }}</h3>
                                         <div class="owl-init owl-carousel" data-margin="15" data-items="4"
                                              data-dots="false"
                                              data-nav="true" data-autoplay="false">

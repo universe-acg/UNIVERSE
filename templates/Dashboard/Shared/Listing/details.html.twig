@@ -1,0 +1,275 @@
+<div class="row">
+    <div class="col-lg-6">
+        <div class="table-responsive">
+            <table class="table table-borderless table-striped table-hover table-sm">
+                <thead>
+                <tr>
+                    <th colspan="2"><i
+                                class="fas fa-file-alt fa-fw text-muted"></i> {{ "General information" }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td width="30%">{{ "Status" }}</td>
+                    <td>
+                        <span class="badge badge-{{ listing.stringifyStatusClass }}">{{ listing.stringifyStatus }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="30%">{{ "Title" }}</td>
+                    <td>{{ listing.name }}</td>
+                </tr>
+                {% if is_granted('ROLE_ADMINISTRATOR') %}
+                    <tr>
+                        <td>{{ "Organizer" }}</td>
+                        <td>{{ listing.organizer.name }}</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td>{{ "Reference" }}</td>
+                    <td>{{ listing.reference }}</td>
+                </tr>
+                <tr>
+                    <td>{{ "Creation date" }}</td>
+                    <td>{{ listing.createdAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
+                </tr>
+                {% if listing.updatedAt %}
+                    <tr>
+                        <td>{{ "Update date" }}</td>
+                        <td>{{ listing.updatedAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
+                    </tr>
+                {% endif %}
+                {% if listing.deletedAt %}
+                    <tr>
+                        <td>{{ "Deletion date" }}</td>
+                        <td>{{ listing.deletedAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td>{{ "Views" }}</td>
+                    <td>{{ listing.views }} {{ "view(s)" }}</td>
+                </tr>
+                <tr>
+                    <td>{{ "Added to favorites by" }}</td>
+                    <td>{{ listing.addedtofavoritesby|length }} {{ "user(s)" }}</td>
+                </tr>
+                <tr>
+                    <td>{{ "Category" }}</td>
+                    <td>{{ listing.category.name }}</td>
+                </tr>
+                {% if listing.tags %}
+                    <tr>
+                        <td>{{ "Tags" }}</td>
+                        <td>{{ listing.tags }}</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td>{{ "Publicly show attendees" }}</td>
+                    <td>{{ listing.showattendees ? 'Yes' : 'No' }}</td>
+                </tr>
+                </tbody>
+                </thead>
+            </table>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="table-responsive">
+            <table class="table table-borderless table-striped table-hover table-sm">
+                <thead>
+                <tr>
+                    <th colspan="2"><i class="fas fa-image fa-fw text-muted"></i> {{ "Images" }}</th>
+                </tr>
+                <tbody>
+                <tr>
+                    <td width="30%">{{ "Main image" }}</td>
+                    <td>
+                        <a class="fancybox"
+                           href="{{ listing.imageName ? asset(listing.getImagePath) : listing.getImagePlaceholder }}"
+                           data-toggle="tooltip" title="{{ "Enlarge" }}">
+                            <img src="{{ listing.imageName ? asset(listing.getImagePath) : listing.getImagePlaceholder }}"
+                                 class="img-thumbnail img-100-100"/>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>{{ "Gallery" }}</td>
+                    <td>
+                        {{ listing.images|length }} {{ "image(s)" }}
+                        <div class="gallery photos-gallery clearfix">
+                            {% for image in listing.images %}
+                                <figure>
+                                    <a href="{{ asset(image.getImagePath) }}"
+                                       data-size="{{ image.imageDimensions[0] }}x{{ image.imageDimensions[1] }}">
+                                        <img class="img-50-50"
+                                             src="{{ image.getImagePath }}"
+                                             alt="{{ listing.name }}"/>
+                                    </a>
+                                </figure>
+                            {% endfor %}
+
+                        </div>
+
+                    </td>
+                </tr>
+                </tbody>
+                </thead>
+            </table>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="table-responsive">
+            <table class="table table-borderless table-sm">
+                <thead>
+                <tr>
+                    <th><i class="fas fa-calendar fa-fw text-muted"></i> {{ "listing dates" }}</th>
+                    <th><i class="fas fa-ticket-alt fa-fw text-muted"></i> {{ "Tickets" }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for listingdate in listing.listingdates %}
+                    <tr>
+                        <td width="50%">
+                            <h6>{{ "listing date" }} {{ loop.index }}</h6>
+                            <div class="table-responsive">
+                                <table class="table table-borderless table-striped table-hover table-sm">
+                                    <tbody>
+                                    {% if listingdate.startdate|length %}
+                                        <tr>
+                                            <td>{{ "Start date" }}</td>
+                                            <td>{{ listingdate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    {% if listingdate.enddate|length %}
+                                        <tr>
+                                            <td>{{ "End date" }}</td>
+                                            <td>{{ listingdate.enddate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    <tr>
+                                        <td width="30%">{{ "Status" }}</td>
+                                        <td>
+                                            <span class="badge badge-{{ listingdate.stringifyStatusClass }}">{{ listingdate.stringifyStatus }}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ "Reference" }}</td>
+                                        <td>{{ listingdate.reference }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ "Tickets types" }}</td>
+                                        <td>{{ listingdate.tickets|length }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                        <td>
+                            {% for universeket in listingdate.tickets %}
+                                <h6>{{ "Ticket" }} {{ loop.index }}</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-borderless table-striped table-hover table-sm">
+                                        <tbody>
+                                        <tr>
+                                            <td>{{ "Name" }}</td>
+                                            <td>{{ universeket.name }} <small
+                                                        class="text-muted">#{{ universeket.reference }}</small>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="30%">{{ "Status" }}</td>
+                                            <td>
+                                                <span class="badge badge-{{ universeket.stringifyStatusClass }}">{{ universeket.stringifyStatus }}</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>{{ "Tickets left" }}</td>
+                                            <td>
+                                                {{ universeket.getTicketsLeftCount(false) }}
+                                            </td>
+                                        </tr>
+                                        {% if universeket.quantity %}
+                                            <tr>
+                                                <td>{{ "Quantity" }}</td>
+                                                <td>{{ universeket.quantity }}</td>
+                                            </tr>
+                                        {% endif %}
+                                        <tr>
+                                            <td>{{ "Price" }}</td>
+                                            <td>
+                                                {{ universeket.free ? "Free" : ((services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '') ~ universeket.getPrice() ~ (services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '')) }}
+                                            </td>
+                                        </tr>
+                                        {% if not universeket.free and universeket.promotionalprice %}
+                                            <tr>
+                                                <td>{{ "Promotional price" }}</td>
+                                                <td>
+                                                    {{ services.getSetting('currency_position') == 'left' ? services.getSetting('currency_symbol') : '' }}{{ universeket.getPromotionalprice() }}{{ services.getSetting('currency_position') == 'right' ? services.getSetting('currency_symbol') : '' }}
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                        {% if universeket.ticketsperattendee %}
+                                            <tr>
+                                                <td>{{ "Tickets per attendee" }}</td>
+                                                <td>{{ universeket.ticketsperattendee }}</td>
+                                            </tr>
+                                        {% endif %}
+                                        {% if universeket.salesstartdate|length %}
+                                            <tr>
+                                                <td>{{ "Start date" }}</td>
+                                                <td>{{ universeket.salesstartdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
+                                            </tr>
+                                        {% endif %}
+                                        {% if universeket.salesenddate|length %}
+                                            <tr>
+                                                <td>{{ "End date" }}</td>
+                                                <td>{{ universeket.salesenddate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</td>
+                                            </tr>
+                                        {% endif %}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% if listing.hasContactAndSocialMedia %}
+        <div class="col-lg-6">
+            <div class="table-responsive">
+                <table class="table table-borderless table-striped table-hover table-sm">
+                    <thead>
+                    <tr>
+                        <th colspan="2"><i
+                                    class="fas fa-at fa-fw text-muted"></i> {{ "Contact & Social media" }}
+                        </th>
+                    </tr>
+                    <tbody>
+                    {% if listing.externallink %}
+                        <tr>
+                            <td>{{ "External link" }}</td>
+                            <td>{{ listing.externallink }}</td>
+                        </tr>
+                    {% endif %}
+                    {% if listing.email %}
+                        <tr>
+                            <td>{{ "Email" }}</td>
+                            <td>{{ listing.email }}</td>
+                        </tr>
+                    {% endif %}
+                    {% if listing.phonenumber %}
+                        <tr>
+                            <td>{{ "Phone number" }}</td>
+                            <td>{{ listing.phonenumber }}</td>
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+</div>

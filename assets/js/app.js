@@ -749,7 +749,7 @@ $(document).ready(function () {
     }
 
 // Event form dates collection
-    if ($('.eventdates-collection').length) {
+    if ($('.eventdates-collectionsimple').length) {
         $('.eventdates-collection').each(function () {
             $(this).collection({
                 min: 1,
@@ -890,7 +890,231 @@ $(document).ready(function () {
         });
     }
 
-// Event favorites ajax add and remove
+    if ($('.eventdates-collection').length) {
+        $('.eventdates-collection').each(function () {
+            $(this).collection({
+                min: 1,
+                prefix: 'eventdate',
+                add_at_the_end: true,
+                allow_add: true,
+                allow_remove: true,
+                allow_duplicate: false,
+                allow_up: true,
+                allow_down: true,
+                add: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-add-button"><i class="fas fa-plus-square"></i> ' + 'Add a new event date' + '</a>',
+                remove: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-remove-button"><i class="fas fa-minus-square"></i> ' + 'Remove this event date' + '</a>',
+                duplicate: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-duplicate-button"><i class="fas fa-clone"></i> ' + 'Duplicate this event date' + '</a>',
+                up: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-up-button"><i class="fas fa-caret-square-up"></i> ' + 'Move up' + '</a>',
+                down: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-down-button"><i class="fas fa-caret-square-down"></i> ' + 'Move down' + '</a>',
+                children: [{
+                    min: 1,
+                    selector: '.eventtickets-collection',
+                    prefix: 'eventticket',
+                    add_at_the_end: true,
+                    allow_add: true,
+                    allow_remove: true,
+                    allow_duplicate: false,
+                    allow_up: true,
+                    allow_down: true,
+                    position_field_selector: '.event-date-ticket-position',
+                    // add: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-add-button"><i class="fas fa-plus-square"></i> ' + 'Add a new ticket' + '</a>',
+                    // remove: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-remove-button"><i class="fas fa-minus-square"></i> ' + 'Remove this ticket' + '</a>',
+                    // duplicate: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-duplicate-button"><i class="fas fa-clone"></i> ' + 'Duplicate this ticket' + '</a>',
+                    // up: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-up-button"><i class="fas fa-caret-square-up"></i> ' + 'Move up' + '</a>',
+                    // down: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-ticket-action-button event-ticket-down-button"><i class="fas fa-caret-square-down"></i> ' + 'Move down' + '</a>',
+                    after_add: function (eventticketscollection, eventticketelement) {
+                        // Presets event date ticket radios
+                        if ($('.section-content').hasClass("add-event")) {
+                            eventticketelement.find(".is-ticket-active input:radio[value='1']").attr('checked', true);
+                            eventticketelement.find(".is-ticket-free-radio input:radio[value='0']").attr('checked', true);
+                        }
+
+                        // Initializes event date ticket plugins
+                        eventticketelement.find(".touchspin-integer").TouchSpin({
+                            verticalbuttons: true,
+                            min: $(this).data('min'),
+                            max: $(this).data('max')
+                        });
+                        eventticketelement.find(".touchspin-decimal").TouchSpin({
+                            verticalbuttons: true,
+                            min: $(this).data('min'),
+                            max: $(this).data('max'),
+                            decimals: 2,
+                            prefix: $('body').data('currency-symbol')
+                        });
+                        eventticketelement.find('.datetimepicker').each(function () {
+                            $(this).datetimepicker({
+                                format: 'Y-m-d H:i'
+                            });
+                        });
+                    },
+                    after_init: function (eventticketscollection, eventticketelement) {
+
+                        // Hides ticket price and promotional price if not free checked
+                        $(document).on("change", ".is-ticket-free-radio input[type=radio]", function () {
+                            if (this.value == 1) {
+                                $(this).closest('.form-group').next('.form-group').hide();
+                                $(this).closest('.form-group').next('.form-group').next('.form-group').hide();
+                                $(this).closest('.form-group').next('.form-group').find(".event-date-ticket-price").val('');
+                                $(this).closest('.form-group').next('.form-group').find(".event-date-ticket-promotionalprice").val('');
+                            } else {
+                                $(this).closest('.form-group').next('.form-group').show();
+                                $(this).closest('.form-group').next('.form-group').next('.form-group').show();
+                            }
+                        });
+                        if ($('.section-content').hasClass("edit-event")) {
+                            $(".is-ticket-free-radio input[type=radio]:checked").each(function () {
+                                if (this.value == 1) {
+                                    $(this).closest('.form-group').next('.form-group').hide();
+                                    $(this).closest('.form-group').next('.form-group').next('.form-group').hide();
+                                }
+                            });
+                        }
+
+                        // Trick to hide the 0 or 0.00 numbers
+                        eventticketscollection.find('.event-date-ticket-price').each(function () {
+                            if ($(this).val() == "0" || $(this).val() == "0.00") {
+                                $(this).trigger('change');
+                                $(this).val("");
+                            }
+                        });
+                        eventticketscollection.find('.event-date-ticket-promotionalprice').each(function () {
+                            if ($(this).val() == "0" || $(this).val() == "0.00") {
+                                $(this).trigger('change');
+                                $(this).val("");
+                            }
+                        });
+                    }
+                }],
+                after_add: function (eventdatecollection, eventdateelement) {
+
+                    // Pre-enables the event date
+                    if ($('.section-content').hasClass("add-event")) {
+                        eventdateelement.find(".is-event-date-active input:radio[value='1']").attr('checked', true);
+                        eventdateelement.find(".is-event-date-online input:radio[value='0']").attr('checked', true);
+                    }
+
+                    // Initializes event date plugins
+                    eventdateelement.find('.datetimepicker').each(function () {
+                        $(this).datetimepicker({
+                            format: 'Y-m-d H:i'
+                        });
+                    });
+                    eventdateelement.find('.select2').each(function () {
+                        $(this).select2({
+                            theme: 'bootstrap4',
+                            allowClear: true,
+                            placeholder: 'Select an option'
+                        });
+                    });
+                },
+                after_init: function (eventdatecollection, eventdateelement) {
+                    // Hides the venue select if online is checked
+                    $(document).on("change", ".is-event-date-online input[type=radio]", function () {
+                        if (this.value == 1) {
+                            $(this).closest('.form-group').next('.form-group').hide();
+                            $(this).closest('.form-group').next('.form-group').find(".event-date-venue").val([]);
+                        } else {
+                            $(this).closest('.form-group').next('.form-group').show();
+                        }
+                    });
+                    if ($('.section-content').hasClass("edit-event")) {
+                        $(".is-event-date-online input[type=radio]:checked").each(function () {
+                            if (this.value == 1) {
+                                $(this).closest('.form-group').next('.form-group').hide();
+                            }
+                        });
+                    }
+                }
+            });
+        });
+    }
+
+    if ($('.month-collection').length) {
+        $('.month-collection').each(function () {
+            $(this).collection({
+                min: 1,
+                prefix: 'month',
+                add_at_the_end: true,
+                allow_add: true,
+                allow_remove: true,
+                allow_duplicate: false,
+                allow_up: true,
+                allow_down: true,
+                add: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-add-button"><i class="fas fa-plus-square"></i> ' + 'Add a new month' + '</a>',
+                remove: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-remove-button"><i class="fas fa-minus-square"></i> ' + 'Remove this month' + '</a>',
+                duplicate: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-duplicate-button"><i class="fas fa-clone"></i> ' + 'Duplicate this month' + '</a>',
+                up: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-up-button"><i class="fas fa-caret-square-up"></i> ' + 'Move up' + '</a>',
+                down: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-date-down-button"><i class="fas fa-caret-square-down"></i> ' + 'Move down' + '</a>',
+                // Add a callback when a new month is added
+                after_add: function (collection, element) {
+                    // Find the weeklySchedule form within the newly added month
+                    var hours = $(element).find('.hour-collection');
+
+                    // Initialize the WeeklyScheduleType form
+                    hours.each(function () {
+                        $(this).collection({
+                            min: 1,
+                            prefix: 'hour',
+                            add_at_the_end: true,
+                            allow_add: true,
+                            allow_remove: true,
+                            allow_duplicate: false,
+                            allow_up: true,
+                            allow_down: true,
+                            add: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-hour-add-button"><i class="fas fa-plus-square"></i> ' + 'Add' + '</a>',
+                            remove: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-hour-remove-button"><i class="fas fa-minus-square"></i> ' + 'Remove' + '</a>',
+                            duplicate: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-hour-duplicate-button"><i class="fas fa-clone"></i> ' + 'Duplicate' + '</a>',
+                            up: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-hour-up-button"><i class="fas fa-caret-square-up"></i> ' + 'Move' + '</a>',
+                            down: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-hour-down-button"><i class="fas fa-caret-square-down"></i> ' + 'Move' + '</a>',
+                        });
+                    });
+                }
+            });
+
+            $('.hour-collection').each(function () {
+                $(this).collection({
+                    min: 1,
+                    prefix: 'hour',
+                    add_at_the_end: true,
+                    allow_add: true,
+                    allow_remove: true,
+                    allow_duplicate: false,
+                    allow_up: true,
+                    allow_down: true,
+                    add: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-hour-add-button"><i class="fas fa-plus-square"></i> ' + 'Add' + '</a>',
+                    remove: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-hour-remove-button"><i class="fas fa-minus-square"></i> ' + 'Remove' + '</a>',
+                    duplicate: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-hour-duplicate-button"><i class="fas fa-clone"></i> ' + 'Duplicate' + '</a>',
+                    up: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-hour-up-button"><i class="fas fa-caret-square-up"></i> ' + 'Move' + '</a>',
+                    down: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-hour-down-button"><i class="fas fa-caret-square-down"></i> ' + 'Move' + '</a>',
+
+                });
+            });
+        });
+    }
+
+    if ($('.hour-collection').length) {
+        $('.hour-collection').each(function () {
+            $(this).collection({
+                min: 1,
+                prefix: 'hour',
+                add_at_the_end: true,
+                allow_add: true,
+                allow_remove: true,
+                allow_duplicate: false,
+                allow_up: true,
+                allow_down: true,
+                add: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-hour-add-button"><i class="fas fa-plus-square"></i> ' + 'Add' + '</a>',
+                remove: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-hour-remove-button"><i class="fas fa-minus-square"></i> ' + 'Remove' + '</a>',
+                duplicate: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-hour-duplicate-button"><i class="fas fa-clone"></i> ' + 'Duplicate' + '</a>',
+                up: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-hour-up-button"><i class="fas fa-caret-square-up"></i> ' + 'Move' + '</a>',
+                down: '<a href="#" class="mr-3 btn btn-outline-dark btn-sm event-hour-down-button"><i class="fas fa-caret-square-down"></i> ' + 'Move' + '</a>',
+
+            });
+        });
+    }
+
+    // Event favorites ajax add and remove
     $(document).on("click", ".event-favorites-add, .event-favorites-remove", function () {
         var $thisButton = $(this);
         if ($thisButton.attr("data-action-done") == "1") {

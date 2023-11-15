@@ -157,7 +157,7 @@
                                             <li class="list-inline-item">
                                                 <h5 class="font-weight-bold mb-0 d-block">{{ news | length }}</h5>
                                                 <small class="text-muted"> <i
-                                                            class="fas fa-newspaper mr-1"></i>{{ "Announcements" }}
+                                                            class="fas fa-newspaper mr-1"></i>{{ "Announcements & News" }}
                                                 </small>
                                             </li>
                                             <li class="list-inline-item">
@@ -172,6 +172,14 @@
                                                             class="fas fa-users mr-1"></i>{{ "Members" }}
                                                 </small>
                                             </li>
+                                            {% if listings|length> 0 %}
+                                                <li class="list-inline-item">
+                                                    <h5 class="font-weight-bold mb-0 d-block">{{ listings|length }}</h5>
+                                                    <small class="text-muted"> <i
+                                                                class="fas fa-users mr-1"></i>{{ "Listings" }}
+                                                    </small>
+                                                </li>
+                                            {% endif %}
 
                                             <li class="list-inline-item">
                                                 {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') or is_granted('ROLE_ATTENDEE') %}
@@ -256,6 +264,8 @@
                                 {% set onsaleeventscount = currentevnts | length %}
                                 {% set pasteventscount = pastevents | length %}
                                 {% set newscount = news | length %}
+                                {% set listingscount = listings | length %}
+
                                 <div class="py-4 px-4">
                                     <ul class="nav nav-pills mb-3">
                                         <li class="nav-item">
@@ -276,10 +286,20 @@
                                             <a class="nav-link" data-toggle="pill"
                                                href="#organizer-news" role="tab"
                                                aria-controls="organizer-news"
-                                               aria-selected="true">{{ "Announcements" }}
+                                               aria-selected="true">{{ "Announcements & News" }}
                                                 ({{ newscount }})</a>
                                         </li>
+                                        {% if listings|length> 0 %}
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-toggle="pill"
+                                                   href="#organizer-listings" role="tab"
+                                                   aria-controls="organizer-listings"
+                                                   aria-selected="true">{{ "Listings" }}
+                                                    ({{ listingscount }})</a>
+                                            </li>
+                                        {% endif %}
                                     </ul>
+
                                     <div class="tab-content">
                                         <div class="tab-pane fade show active" id="organizer-onsale-events"
                                              role="tabpanel" aria-labelledby="organizer-onsale-events-tab">
@@ -315,6 +335,18 @@
                                                 </div>
                                             {% else %}
                                                 {% include "Global/message.html.twig" with { type: "info", message: ('No announcements published yet') } %}
+                                            {% endif %}
+                                        </div>
+                                        <div class="tab-pane fade active" id="organizer-listings"
+                                             role="tabpanel" aria-labelledby="organizer-listings-tab">
+                                            {% if listingscount > 0 %}
+                                                <div class="row">
+                                                    {% for listing in listings %}
+                                                        {% include "Global/listing-card-inprofile.html.twig" with {listing: listing} %}
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {% include "Global/message.html.twig" with { type: "info", message: ('No listings published yet') } %}
                                             {% endif %}
                                         </div>
                                     </div>

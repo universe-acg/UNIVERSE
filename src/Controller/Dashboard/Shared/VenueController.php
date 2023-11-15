@@ -137,7 +137,6 @@ class VenueController extends Controller
      */
     public function restore($slug, Request $request, AppServices $appServices, VenueService $venueService)
     {
-
         $venue = $venueService->getVenues(array('organizer' => "all", 'hidden' => 'all', 'slug' => $slug, "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();
         if (!$venue) {
             $this->addFlash('error', 'The venue can not be found');

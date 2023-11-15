@@ -75,6 +75,13 @@
     </li>
 
     <li class="nav-item">
+        <a class="nav-link {% if routename == "dashboard_administrator_listing_category" or routename == "dashboard_administrator_listing_category_add" or routename == "dashboard_administrator_listing_category_edit" %}active{% endif %}"
+           href="{{ path('dashboard_administrator_listing_category') }}">
+            <i class="fas fa-stream fa-fw"></i> {{ "Listings Categories" }}
+        </a>
+    </li>
+
+    <li class="nav-item">
         <a href="{{ path('dashboard_administrator_user') }}"
            class="nav-link {% if routename == "dashboard_administrator_user" %}active{% endif %}">
             <i class="fas fa-users-cog fa-fw"></i> {{ 'Users' }}
@@ -96,6 +103,20 @@
             <li class="nav-item">
                 <a class="nav-link {% if routename == "dashboard_administrator_amenity" or routename == "dashboard_administrator_amenity_add" or routename == "dashboard_administrator_amenity_edit" %}active{% endif %}"
                    href="{{ path('dashboard_administrator_amenity') }}">Manage Amenities</a>
+            </li>
+        </ul>
+    </li>
+
+    <li class="nav-item">
+        <a href="#athletics-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu"
+           class="nav-link dropdown-toggle">
+            <i class="fas fa-dumbbell fa-fw"></i> {{ 'Athletics' }}
+        </a>
+        <ul id="athletics-submenu-{{ random }}"
+            class="nav flex-column ml-3 collapse {% if routename == "dashboard_administrator_athletics" or routename == "dashboard_administrator_athletics_add" or routename == "dashboard_administrator_athletics_edit" or routename == "dashboard_administrator_athleticstype" or routename == "dashboard_administrator_athleticstype_add" or routename == "dashboard_administrator_athleticstype_edit" or routename == "dashboard_administrator_amenity" or routename == "dashboard_administrator_amenity_add" or routename == "dashboard_administrator_amenity_edit" %}show{% endif %}">
+            <li class="nav-item">
+                <a class="nav-link {% if routename == "dashboard_administrator_athletics" or routename == "dashboard_administrator_athletics_add" or routename == "dashboard_administrator_athletics_edit" %}active{% endif %}"
+                   href="{{ path('dashboard_administrator_athletics') }}">{{ "Manage athletics" }}</a>
             </li>
         </ul>
     </li>
@@ -199,19 +220,58 @@
         </a>
     </li>
 
+    {% if app.user.isClubOrSociety %}
+        <li class="nav-item">
+            <a href="{{ path('dashboard_organizer_management') }}"
+               class="nav-link {% if app.request.pathinfo == "/dashboard/organizer/management" %}active{% endif %}">
+                <i class="fas fa-users fa-fw"></i> {{ 'Manage members' }}
+            </a>
+        </li>
+    {% endif %}
+
+    {% if app.user.isClubOrSociety %}
+        <li class="nav-item">
+            <a href="{{ path('dashboard_organizer_managementgb') }}"
+               class="nav-link {% if app.request.pathinfo == "/dashboard/organizer/managementgb" %}active{% endif %}">
+                <i class="fas fa-users fa-fw"></i> {{ 'Governing Body' }}
+            </a>
+        </li>
+    {% endif %}
+
     <li class="nav-item">
-        <a href="{{ path('dashboard_organizer_management') }}"
-           class="nav-link {% if app.request.pathinfo == "/dashboard/organizer/management" %}active{% endif %}">
-            <i class="fas fa-users fa-fw"></i> {{ 'Manage members' }}
+        <a href="{{ path('dashboard_organizer_listing') }}"
+           class="nav-link {% if routename == "dashboard_organizer_listing" or routename == "dashboard_organizer_listing_add" or routename == "dashboard_organizer_listing_edit" %}active{% endif %}">
+            <i class="fas fa-suitcase fa-fw"></i> {{ 'My Listings' }}
         </a>
     </li>
 
     <li class="nav-item">
-        <a href="{{ path('dashboard_organizer_managementgb') }}"
-           class="nav-link {% if app.request.pathinfo == "/dashboard/organizer/managementgb" %}active{% endif %}">
-            <i class="fas fa-users fa-fw"></i> {{ 'Governing Body' }}
+        <a href="#athletics-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu"
+           class="nav-link dropdown-toggle">
+            <i class="fas fa-table-tennis fa-fw"></i> {{ 'Facilities' }}
+        </a>
+        <ul id="athletics-submenu-{{ random }}"
+            class="nav flex-column ml-3 collapse {% if routename == "dashboard_administrator_athletics" or routename == "dashboard_administrator_athletics_add" or routename == "dashboard_administrator_athletics_edit" or routename == "dashboard_administrator_athleticstype" or routename == "dashboard_administrator_athleticstype_add" or routename == "dashboard_administrator_athleticstype_edit" or routename == "dashboard_administrator_amenity" or routename == "dashboard_administrator_amenity_add" or routename == "dashboard_administrator_amenity_edit" %}show{% endif %}">
+            <li class="nav-item">
+                <a class="nav-link {% if routename == "dashboard_administrator_athletics" or routename == "dashboard_administrator_athletics_add" or routename == "dashboard_administrator_athletics_edit" %}active{% endif %}"
+                   href="{{ path('dashboard_administrator_athletics') }}">{{ "Manage facilities" }}</a>
+            </li>
+        </ul>
+    </li>
+
+    <li class="nav-item">
+        <a href="{{ path('dashboard_organizer_reel') }}"
+           class="nav-link {% if routename == "dashboard_organizer_reel" %}active{% endif %}">
+            <i class="fas fa-video fa-fw"></i> {{ 'Reels' }}
         </a>
     </li>
+
+    {#    <li class="nav-item"> #}
+    {#        <a href="{{ path('dashboard_organizer_live') }}" #}
+    {#           class="nav-link {% if routename == "dashboard_organizer_live" %}active{% endif %}"> #}
+    {#            <i class="fas fa-tv fa-fw"></i> {{ 'Lives' }} #}
+    {#        </a> #}
+    {#    </li> #}
 
     <li class="nav-item">
         <a href="{{ path('dashboard_organizer_management_files') }}"
@@ -223,7 +283,7 @@
     <li class="nav-item">
         <a href="{{ path('blog_post_organizer') }}"
            class="nav-link {% if routename == "blog_post_organizer" %}active{% endif %}">
-            <i class="fas fa-newspaper fa-fw"></i> {{ 'News' }}
+            <i class="fas fa-newspaper fa-fw"></i> {{ 'Announcements & News' }}
         </a>
     </li>
 
@@ -243,11 +303,19 @@
             class="nav flex-column ml-3 collapse {% if routename == "fos_user_change_password" %}show{% endif %}">
 
             <li class="nav-item">
+                <a href="{{ path('dashboard_doc_edit') }}"
+                   class="nav-link {% if routename == "dashboard_doc_edit" %}active{% endif %}">
+                    {{ 'Documents' }}
+                </a>
+            </li>
+
+            <li class="nav-item">
                 <a href="{{ path('dashboard_organizer_account_settings') }}"
                    class="nav-link {% if routename == "dashboard_organizer_account_settings" %}active{% endif %}">
                     {{ 'Settings' }}
                 </a>
             </li>
+
             <li class="nav-item">
                 <a href="{{ path('fos_user_change_password') }}"
                    class="nav-link {% if routename == "fos_user_change_password" %}active{% endif %}">
@@ -309,12 +377,18 @@
     </li>
 
     <li class="nav-item">
+        <a href="{{ path('dashboard_attendee_reel') }}"
+           class="nav-link {% if routename == "dashboard_attendee_reel" or routename == "dashboard_attendee_reel_addedit" or routename == "dashboard_attendee_reel_add_image" or routename == "dashboard_attendee_reel_add_video" %}active{% endif %}">
+            <i class="fas fa-image fa-fw"></i> {{ 'Reels' }}
+        </a>
+    </li>
+
+    <li class="nav-item">
         <a href="{{ path('dashboard_attendee_favorites') }}"
            class="nav-link {% if routename == "dashboard_attendee_favorites" %}active{% endif %}">
             <i class="far fa-heart fa-fw"></i> {{ 'My favorites' }}
         </a>
     </li>
-
 
     <li class="nav-item">
         <a href="{{ path('attendeed_events') }}"

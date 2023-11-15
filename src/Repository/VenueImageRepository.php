@@ -23,7 +23,6 @@ class VenueImageRepository extends ServiceEntityRepository
         parent::__construct($registry, VenueImage::class);
     }
 
-
     public function findByExampleField($value)
     {
         return $this->createQueryBuilder('v')
@@ -35,7 +34,6 @@ class VenueImageRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-
     public function findOneBySomeField($value): ?VenueImage
     {
         return $this->createQueryBuilder('v')
@@ -44,5 +42,4 @@ class VenueImageRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
-
 }

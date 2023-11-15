@@ -1,6 +1,7 @@
 {% extends "Global/layout.html.twig" %}
 
 {% form_theme form 'Global/jquery.collection.html.twig' %}
+{% form_theme formsimple 'Global/jquery.collection.html.twig' %}
 
 {% set pagetitle = 'Add a new event' %}
 
@@ -38,9 +39,33 @@
                     <div class="card box">
                         <div class="card-body">
                             {% include "Global/message.html.twig" with { type: "info", icon: "fas fa-info-circle", message: ("The fields preceded with a red * are mandatory") } %}
-                            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-                            {{ form_widget(form) }}
-                            {{ form_end(form) }}
+                            <div class="form-tabs">
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="basic-tab" data-toggle="tab" href="#basic"
+                                           role="tab">Basic</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="advanced-tab" data-toggle="tab" href="#advanced"
+                                           role="tab">Advanced</a>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div class="tab-pane fade show active" id="basic" role="tabpanel">
+                                        <br>
+                                        {{ form_start(formsimple, {'attr': {'novalidate': 'novalidate'}}) }}
+                                        {{ form_widget(formsimple) }}
+                                        {{ form_end(formsimple) }}
+                                    </div>
+                                    <div class="tab-pane fade" id="advanced" role="tabpanel">
+                                        <br>
+                                        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                                        {{ form_widget(form) }}
+                                        {{ form_end(form) }}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -153,7 +178,6 @@
 
             const $editableDiv = $('.note-editable');
 
-
             {% if event.id %}
             {% for eventDate in event.eventdates %}
             {% for eventDateTicket in eventDate.tickets if eventDateTicket.isOnSale and eventDateTicket.getOrderElementsQuantitySum() > 0 %}
@@ -170,6 +194,10 @@
             $(document).on('submit', 'form[name="event"]', function () {
                 $('form[name="event"]').find('fieldset').prop('disabled', false);
             });
+
+            // $(document).on('submit', 'form_simple[name="event"]', function () {
+            //     $('form[name="event"]').find('fieldset').prop('disabled', false);
+            // });
         });
     </script>
 

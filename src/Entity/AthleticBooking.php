@@ -5,6 +5,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -19,6 +20,13 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  */
 class AthleticBooking
 {
+
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $status;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -27,29 +35,150 @@ class AthleticBooking
     private $id;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $amount;
+    /**
      * @ORM\ManyToOne(targetEntity="FacilityEntity")
      * @ORM\JoinColumn(name="facility_id", referencedColumnName="id", nullable=false)
      */
     private $facility;
-
     /**
      * @ORM\Column(type="integer")
      */
     private $duration;
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="bookings")
-     * @ORM\JoinTable(name="user_booking")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="orders")
      */
-    private $users;
+    private $user;
+
+    private $ispast;
     /**
-     * @ORM\ManyToOne(targetEntity="ScheduleEntity")
-     * @ORM\JoinColumn(name="schedule_id", referencedColumnName="id", nullable=false)
-     */
-    private $schedule;
-    /**
-     * @ORM\Column(type="date", nullable=false)
+     * @ORM\Column(type="datetime", nullable=false)
      */
     private $bookingDate;
+
+    private $bookingTime;
+
+    /**
+     * @var DateTime $createdAt
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
+    /**
+     * @var DateTime $updatedAt
+     *
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @return mixed
+     */
+    public function getIspast()
+    {
+        return $this->ispast;
+    }
+
+    /**
+     * @param mixed $ispast
+     */
+    public function setIspast($ispast): void
+    {
+        $this->ispast = $ispast;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBookingTime()
+    {
+        return $this->bookingTime;
+    }
+
+    /**
+     * @param mixed $bookingTime
+     */
+    public function setBookingTime($bookingTime): void
+    {
+        $this->bookingTime = $bookingTime;
+    }
+
+    public function stringifyStatus()
+    {
+        if ($this->status == 0) {
+            return "Reserved";
+        }
+
+        return "Looking for people to join...";
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getCreatedAt(): DateTime
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param DateTime $createdAt
+     */
+    public function setCreatedAt(DateTime $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getUpdatedAt(): DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param DateTime $updatedAt
+     */
+    public function setUpdatedAt(DateTime $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status): void
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    /**
+     * @param mixed $amount
+     */
+    public function setAmount($amount): void
+    {
+        $this->amount = $amount;
+    }
 
     /**
      * @return mixed
@@ -134,22 +263,6 @@ class AthleticBooking
     /**
      * @return mixed
      */
-    public function getSchedule()
-    {
-        return $this->schedule;
-    }
-
-    /**
-     * @param mixed $schedule
-     */
-    public function setSchedule($schedule): void
-    {
-        $this->schedule = $schedule;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getBookingDate()
     {
         return $this->bookingDate;
@@ -162,5 +275,4 @@ class AthleticBooking
     {
         $this->bookingDate = $bookingDate;
     }
-
 }

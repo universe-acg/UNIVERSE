@@ -1,0 +1,36 @@
+{% set runtimeConfig = {"thumbnail": {"size": [400, 250] }} %}
+
+{# <style> #}
+{#    .image-container[data-src] { #}
+{#        object-fit: contain !important; #}
+{#    } #}
+{# </style> #}
+{# <a href="{{ path('athletic_details', { slug : athletic.slug }) }}" class="text-dark"> #}
+{#    <div class="card card-event pb-2"> #}
+{#        <div class="img-wrap img-lazy-load image-container" #}
+{#             style="height: 260px;" #}
+{#             data-src="{{ athletic.getImagePath ? asset(athletic.getImagePath) : athletic.getImagePlaceholder }}"> #}
+{#            <div class="loader"></div> #}
+{#        </div> #}
+{#        <div class="info-wrap" style="min-height: initial !important;"> #}
+{#            <div class="event-info"> #}
+{#                <h5> #}
+{#                    <a href="{{ path('athletic_details', { slug : athletic.slug }) }}" #}
+{#                       class="text-dark">{{ athletic.name }}</a> #}
+{#                </h5> #}
+{#            </div> #}
+{#            <div class="clearfix"></div> #}
+{#            {{ athletic.description|striptags|slice(0, 150) ~ (athletic.description|striptags|length > 150 ? '...' : '') }} #}
+{#        </div> #}
+{#    </div> #}
+{# </a> #}
+
+<a href="{{ path('athletic_details', { slug : athletic.slug }) }}" class="text-dark">
+    <div class="card-banner mb-3">
+        <div class="card-body zoom-in img-lazy-load"
+             data-src="{{ athletic.getImagePath ? asset(athletic.getImagePath) : athletic.getImagePlaceholder }}"
+             style="height: 300px; background-repeat: no-repeat; background-position: center center;">
+            <div class="loader"></div>
+        </div>
+    </div>
+</a>

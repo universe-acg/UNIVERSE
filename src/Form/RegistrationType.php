@@ -125,8 +125,8 @@ class RegistrationType extends AbstractType
                         'minMessage' => 'Your password should be at least {{ limit }} characters long.',
                     ]),
                     new Regex([
-                        'pattern' => '/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/',
-                        'message' => 'Your password must contain at least one uppercase letter, one lowercase letter, one number, and one special character from these @$!%*?&.',
+                        'pattern' => '/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]+$/',
+                        'message' => 'Your password must contain at least one uppercase letter, one lowercase letter, one number, and one special character from these @$!%*?&._',
                     ]),
                 ],
             ))

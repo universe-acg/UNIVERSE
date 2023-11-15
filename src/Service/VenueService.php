@@ -95,7 +95,6 @@ class VenueService
         return $this->em->getRepository(Venue::class)->getVenuessql($hidden, $keyword, $slug, $limit, $count);
     }
 
-
     public function getVenueBySlug($slug)
     {
         return $this->em->getRepository(Venue::class)->findOneBy(['slug' => $slug]);

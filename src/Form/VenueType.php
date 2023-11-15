@@ -51,7 +51,7 @@ class VenueType extends AbstractType
                 'download_label' => false,
                 'download_uri' => false,
                 'image_uri' => false,
-                'label' => 'Main event image',
+                'label' => 'Main venue image',
                 'help' => 'Choose the main image that represents the venue (recommended size: 1200x600px, 2:1 ratio).',
                 'data' => $options['data']->getMainImageFile(), // Pre-fill with the existing main image file name
             ])
@@ -78,7 +78,7 @@ class VenueType extends AbstractType
                 'attr' => array(
                     'class' => 'form-collection',
                 ),
-                'help' => 'Add other images that represent your event to be displayed as a gallery.',
+                'help' => 'Add other images that represent your venue to be displayed as a gallery.',
                 'error_bubbling' => false,
             ))
             ->add('save', SubmitType::class, [

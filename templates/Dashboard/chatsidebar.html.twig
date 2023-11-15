@@ -1,0 +1,36 @@
+<div class="sticky-top sticky-sidebar dashboard-sidebar d-none d-lg-block d-xl-block" style="height: 100%">
+    <ul id="dashboard-menu" class="nav nav-pills nav-pills-vertical-styled overflow-auto"
+        style="max-height: 60vh; min-height: 100%;">
+        {% for contact in contacts %}
+            <li class="nav-item card mt-3 mx-3 py-2">
+                <div style="display: flex; justify-content: space-between; align-content: center; align-items: center; padding-right: 20px; padding-left: 20px">
+                    {% if contact.isorganizer %}
+                        <a href="{{ path('organizer', {slug: 'Astronomy.Club'} ) }}"
+                           class="link-style text-dark">
+                            <img style="width: 30px; height: 30px; object-fit: contain" class="circular-image"
+                                 src="{{ contact.profile_image }}">
+                        </a>
+                    {% else %}
+                        <a href="{{ path('profile_attendee', {slug: 'dereestudent134-asd'} ) }}"
+                           class="link-style text-dark">
+                            <img style="width: 30px; height: 30px; object-fit: contain" class="circular-image"
+                                 src="{{ contact.profile_image }}">
+                        </a>
+                    {% endif %}
+                    {% if contact.isorganizer %}
+                        <a href="{{ path('organizer', {slug: 'Astronomy.Club'} ) }}"
+                           class="link-style text-dark"><h6>{{ contact.name }}</h6></a>
+                    {% else %}
+                        <a href="{{ path('profile_attendee', {slug: 'dereestudent134-asd'} ) }}"
+                           class="link-style text-dark"><h6>{{ contact.name }}</h6></a>
+                    {% endif %}
+                </div>
+                <a class="nav-link" href="#" style="margin-bottom: 0 !important; padding-bottom: 0 !important;">
+                    <div class="chatbox-info pt-1 mt-1">
+                        <p>{{ contact.last_message|length > 50 ? contact.last_message|slice(0, 50) ~ '...' : contact.last_message }}</p>
+                    </div>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>

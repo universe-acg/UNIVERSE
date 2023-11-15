@@ -2,6 +2,10 @@ vich_uploader:
   db_driver: orm
 
   mappings:
+    video_mapping:
+      uri_prefix: /uploads/videos
+      upload_destination: '%kernel.project_dir%/public/uploads/videos'
+      namer: Vich\UploaderBundle\Naming\UniqidNamer
     category_image:
       uri_prefix: /uploads/categories
       upload_destination: '%kernel.project_dir%/public/uploads/categories'
@@ -19,9 +23,29 @@ vich_uploader:
     venue_main_image:
       uri_prefix: /uploads/venues
       upload_destination: '%kernel.project_dir%/public/uploads/venues'
+    facility_main_image:
+      uri_prefix: /uploads/facilities
+      upload_destination: '%kernel.project_dir%/public/uploads/facilities'
+    reel_main_image:
+      uri_prefix: /uploads/reels
+      upload_destination: '%kernel.project_dir%/public/uploads/reels'
+    live_main_image:
+      uri_prefix: /uploads/lives
+      upload_destination: '%kernel.project_dir%/public/uploads/lives'
+    listing_main_image:
+      uri_prefix: /uploads/listings
+      upload_destination: '%kernel.project_dir%/public/uploads/listings'
     venue_image:
       uri_prefix: /uploads/venues
       upload_destination: '%kernel.project_dir%/public/uploads/venues'
+      namer: vich_uploader.namer_uniqid
+    listing_image:
+      uri_prefix: /uploads/venues
+      upload_destination: '%kernel.project_dir%/public/uploads/listings'
+      namer: vich_uploader.namer_uniqid
+    facility_image:
+      uri_prefix: /uploads/facilities
+      upload_destination: '%kernel.project_dir%/public/uploads/facilities'
       namer: vich_uploader.namer_uniqid
     file_file:
       uri_prefix: /uploads/files
@@ -30,6 +54,22 @@ vich_uploader:
     event_file:
       uri_prefix: /uploads/files
       upload_destination: '%kernel.project_dir%/public/uploads/files'
+      namer: vich_uploader.namer_uniqid
+    doc_file1:
+      uri_prefix: /uploads/doc_file1
+      upload_destination: '%kernel.project_dir%/public/uploads/doc_file1'
+      namer: vich_uploader.namer_uniqid
+    doc_file2:
+      uri_prefix: /uploads/doc_file2
+      upload_destination: '%kernel.project_dir%/public/uploads/doc_file2'
+      namer: vich_uploader.namer_uniqid
+    cv_file:
+      uri_prefix: /uploads/cvfiles
+      upload_destination: '%kernel.project_dir%/public/uploads/cvfiles'
+      namer: vich_uploader.namer_uniqid
+    listing_file:
+      uri_prefix: /uploads/listings
+      upload_destination: '%kernel.project_dir%/public/uploads/listings'
       namer: vich_uploader.namer_uniqid
     organizer_logo:
       uri_prefix: /uploads/organizers

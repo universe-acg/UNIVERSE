@@ -54,6 +54,11 @@ class Organizer
      * @ORM\OneToMany(targetEntity="Event", mappedBy="organizer", cascade={"remove"})
      */
     private $events;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Listing", mappedBy="organizer", cascade={"remove"})
+     */
+    private $listings;
     /**
      * @ORM\ManyToMany(targetEntity="Category", inversedBy="organizers", cascade={"persist", "merge", "remove"})
      * @ORM\JoinTable(name="universe_organizer_category",
@@ -248,12 +253,49 @@ class Organizer
      */
     private $showfollowers = true;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isathletics;
+
     public function __construct()
     {
-        $this->events = new ArrayCollection();
+        $this->listings = new ArrayCollection();
         $this->followedby = new ArrayCollection();
         $this->events = new ArrayCollection();
         $this->views = 0;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsathletics()
+    {
+        return $this->isathletics;
+    }
+
+    /**
+     * @param mixed $isathletics
+     */
+    public function setIsathletics($isathletics): void
+    {
+        $this->isathletics = $isathletics;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getListings()
+    {
+        return $this->listings;
+    }
+
+    /**
+     * @param mixed $listings
+     */
+    public function setListings($listings): void
+    {
+        $this->listings = $listings;
     }
 
     /**

@@ -585,3 +585,386 @@ twillio_route:
   path: /api/twillio
   controller: 'App\Controller\Api\TwillioController::sendSMS'
   methods: [ 'GET' ]
+
+
+# athletics
+athletics:
+  path: /athletics
+  controller: 'App\Controller\Front\AthleticsController::index'
+  methods: GET
+
+athletic_details:
+  path: /athleticfacility/{slug}
+  controller: 'App\Controller\Front\AthleticsController::athleticBySlug'
+  methods: GET|POST
+
+# admin athletics
+dashboard_administrator_athletics:
+  path: /administrator/manage-facilities
+  controller: 'App\Controller\Dashboard\Shared\AthleticBookingController::manage'
+  methods: GET
+
+dashboard_administrator_facilities_add:
+  path: /administrator/manage-facilities/add
+  controller: 'App\Controller\Dashboard\Shared\AthleticBookingController::addedit'
+  methods: GET|POST
+
+dashboard_administrator_facilities_edit:
+  path: /administrator/manage-facilities/{slug}/edit
+  controller: 'App\Controller\Dashboard\Shared\AthleticBookingController::addedit'
+  methods: GET|POST
+
+dashboard_administrator_facilities_disable:
+  path: /administrator/manage-facilities/{slug}/disable
+  controller: 'App\Controller\Dashboard\Shared\AthleticBookingController::delete'
+  methods: GET
+
+dashboard_administrator_facilities_delete:
+  path: /administrator/manage-facilities/{slug}/delete
+  controller: 'App\Controller\Dashboard\Shared\AthleticBookingController::delete'
+  methods: GET
+
+dashboard_administrator_facilities_restore:
+  path: /administrator/manage-facilities/{slug}/restore
+  controller: 'App\Controller\Dashboard\Shared\AthleticBookingController::restore'
+  methods: GET
+
+dashboard_administrator_facilities_show:
+  path: /administrator/manage-facilities/{slug}/show
+  controller: 'App\Controller\Dashboard\Shared\AthleticBookingController::showhide'
+  methods: GET
+
+dashboard_administrator_facilities_hide:
+  path: /administrator/manage-facilities/{slug}/hide
+  controller: 'App\Controller\Dashboard\Shared\AthleticBookingController::showhide'
+  methods: GET
+
+# Delete Reservation
+delete_reservation:
+  path: /delete/{athleticBookingId}
+  controller: 'App\Controller\Dashboard\Shared\::deleteReservation'
+  methods: [ 'GET' ]  # Adjust the HTTP method as needed
+
+# Book Reservation
+book_reservation:
+  path: /book/{facilityId}/{scheduleId}/{bookingDate}/{duration}
+  controller: 'App\Controller\Dashboard\Shared\::bookReservation'
+  methods: [ 'GET' ]  # Adjust the HTTP method as needed
+
+# Cancel Reservation
+cancel_reservation:
+  path: /cancel/{athleticBookingId}
+  controller: 'App\Controller\Dashboard\Shared\::cancelReservation'
+  methods: [ 'GET' ]  # Adjust the HTTP method as needed
+
+#listings
+# routes.yaml
+
+# Index
+dashboard_organizer_listing:
+  path: /dashboard/organizer/manage-listings
+  controller: 'App\Controller\Dashboard\Shared\ListingController::index'
+  methods: [ 'GET' ]
+
+# Add Listing
+dashboard_organizer_listing_add:
+  path: /dashboard/organizer/my-listings/add
+  controller: 'App\Controller\Dashboard\Shared\ListingController::addListing'
+  methods: [ 'GET', 'POST' ]
+
+# Edit Listing
+dashboard_organizer_listing_edit:
+  path: /dashboard/organizer/my-listings/{slug}/edit
+  controller: 'App\Controller\Dashboard\Shared\ListingController::editListing'
+  methods: [ 'GET', 'POST' ]
+
+# Delete Listing (Soft Delete)
+dashboard_organizer_listing_delete:
+  path: /dashboard/organizer/my-listings/{slug}/delete
+  controller: 'App\Controller\Dashboard\Shared\ListingController::delete'
+  methods: [ 'GET' ]
+
+# Permanently Delete Listing
+dashboard_organizer_listing_delete_permanently:
+  path: /dashboard/organizer/my-listings/{slug}/delete-permanently
+  controller: 'App\Controller\Dashboard\Shared\ListingController::delete'
+  methods: [ 'GET' ]
+
+# Restore Deleted Listing
+dashboard_organizer_listing_restore:
+  path: /dashboard/organizer/manage-listings/{slug}/restore
+  controller: 'App\Controller\Dashboard\Shared\ListingController::restore'
+  methods: [ 'GET' ]
+
+# Publish Listing
+dashboard_organizer_listing_publish:
+  path: /dashboard/organizer/my-listings/{slug}/publish
+  controller: 'App\Controller\Dashboard\Shared\ListingController::showhide'
+  methods: [ 'GET' ]
+
+# Unpublish Listing
+dashboard_organizer_listing_draft:
+  path: /dashboard/organizer/my-listings/{slug}/draft
+  controller: 'App\Controller\Dashboard\Shared\ListingController::showhide'
+  methods: [ 'GET' ]
+
+# Listing Details (Ajax)
+dashboard_organizer_listing_details:
+  path: /dashboard/organizer/my-listings/{slug}/details
+  controller: 'App\Controller\Dashboard\Shared\ListingController::details'
+  methods: [ 'GET' ]
+  condition: 'request.isXmlHttpRequest()'
+
+#reels likes
+get_likes_of_user:
+  path: '/reel-likes/get-likes-of-user/{userId}'
+  methods: [ 'GET' ]
+  controller: 'App\Controller\Front\ReelsLikesController::getLikesOfUser'
+
+has_user_liked_reel:
+  path: '/reel-likes/has-user-liked-reel/{userId}/{reelId}'
+  methods: [ 'GET' ]
+  controller: 'App\Controller\Front\ReelsLikesController::hasUserLikedReel'
+
+get_like_of_user_for_reel:
+  path: '/reel-likes/get-like-of-user-for-reel/{userId}/{reelId}'
+  methods: [ 'GET' ]
+  controller: 'App\Controller\Front\ReelsLikesController::getLikeOfUserForReel'
+
+get_like_count_for_reel:
+  path: '/reel-likes/get-like-count-for-reel/{reelId}'
+  methods: [ 'GET' ]
+  controller: 'App\Controller\Front\ReelsLikesController::getLikeCountForReel'
+
+get_users_who_liked_reel:
+  path: '/reel-likes/get-users-who-liked-reel/{reelId}'
+  methods: [ 'GET' ]
+  controller: 'App\Controller\Front\ReelsLikesController::getUsersWhoLikedReel'
+
+#reels
+
+load_more_reels_organizer:
+  path: /dashboard/organizer/load-more-reels
+  controller: 'App\Controller\Front\ReelsController::loadMoreReels'
+
+load_more_reels_attendee:
+  path: /dashboard/attendee/load-more-reels
+  controller: 'App\Controller\Front\ReelsController::loadMoreReels'
+
+# Index
+dashboard_organizer_reel:
+  path: /dashboard/organizer/manage-reels
+  controller: 'App\Controller\Dashboard\Shared\ReelsController::index'
+  methods: [ 'GET' ]
+
+# Add/Edit
+dashboard_organizer_reel_add_video:
+  path: /dashboard/organizer/manage-reels-video/add
+  controller: 'App\Controller\Dashboard\Shared\ReelsController::addeditvideoorg'
+  methods: [ 'GET', 'POST' ]
+
+# Add/Edit
+dashboard_organizer_reel_add_image:
+  path: /dashboard/organizer/manage-reels-image/add
+  controller: 'App\Controller\Dashboard\Shared\ReelsController::addeditimageorg'
+  methods: [ 'GET', 'POST' ]
+
+dashboard_attendee_reel_edit_image:
+  path: /dashboard/organizer/manage-reels-image/{slug}/edit
+  controller: 'App\Controller\Dashboard\Shared\ReelsController::addeditimageorg'
+  methods: [ 'GET', 'POST' ]
+  requirements:
+    slug: '^[a-zA-Z0-9-]+$'
+
+dashboard_organizer_reel_edit_video:
+  path: /dashboard/organizer/manage-reels-video/{slug}/edit
+  controller: 'App\Controller\Dashboard\Shared\ReelsController::addeditvideoorg'
+  methods: [ 'GET', 'POST' ]
+  requirements:
+    slug: '^[a-zA-Z0-9-]+$'
+
+# Disable/Delete
+dashboard_organizer_reel_disable_delete:
+  path: /dashboard/organizer/manage-reels/{slug}/disable
+  controller: 'App\Controller\Dashboard\Shared\ReelsController::delete'
+  methods: [ 'GET' ]
+
+# Permanently Delete
+dashboard_organizer_reel_delete:
+  path: /dashboard/organizer/manage-reels/{slug}/delete
+  controller: 'App\Controller\Dashboard\Shared\ReelsController::delete'
+  methods: [ 'GET' ]
+
+# Restore
+dashboard_organizer_reel_restore:
+  path: /dashboard/organizer/manage-reels/{slug}/restore
+  controller: 'App\Controller\Dashboard\Shared\ReelsController::restore'
+  methods: [ 'GET' ]
+
+# Show/Hide
+dashboard_organizer_reel_showhide:
+  path: /dashboard/organizer/manage-reels/{slug}/{action}
+  controller: 'App\Controller\Dashboard\Shared\ReelsController::showhide'
+  methods: [ 'GET' ]
+  requirements:
+    action: 'show|hide'
+
+
+dashboard_attendee_reel:
+  path: /dashboard/attendee/manage-reels
+  controller: 'App\Controller\Dashboard\Shared\ReelsController::index'
+  methods: [ 'GET' ]
+
+# Edit
+dashboard_attendee_reel_addedit_image:
+  path: /dashboard/attendee/manage-reels-image/{slug}/edit
+  controller: 'App\Controller\Dashboard\Shared\ReelsController::addeditimage'
+  methods: [ 'GET', 'POST' ]
+  requirements:
+    slug: '^[a-zA-Z0-9-]+$'
+
+dashboard_attendee_reel_addedit_video:
+  path: /dashboard/attendee/manage-reels-video/{slug}/edit
+  controller: 'App\Controller\Dashboard\Shared\ReelsController::addeditvideo'
+  methods: [ 'GET', 'POST' ]
+  requirements:
+    slug: '^[a-zA-Z0-9-]+$'
+
+# Add
+dashboard_attendee_reel_add_video:
+  path: /dashboard/attendee/manage-reels-video/add
+  controller: 'App\Controller\Dashboard\Shared\ReelsController::addeditvideo'
+  methods: [ 'GET', 'POST' ]
+
+dashboard_attendee_reel_add_image:
+  path: /dashboard/attendee/manage-reels-image/add
+  controller: 'App\Controller\Dashboard\Shared\ReelsController::addeditimage'
+  methods: [ 'GET', 'POST' ]
+
+# Disable/Delete
+dashboard_attendee_reel_disable_delete:
+  path: /dashboard/attendee/manage-reels/{slug}/disable
+  controller: 'App\Controller\Dashboard\Shared\ReelsController::delete'
+  methods: [ 'GET' ]
+
+# Permanently Delete
+dashboard_attendee_reel_delete:
+  path: /dashboard/attendee/manage-reels/{slug}/delete
+  controller: 'App\Controller\Dashboard\Shared\ReelsController::delete'
+  methods: [ 'GET' ]
+
+# Restore
+dashboard_attendee_reel_restore:
+  path: /dashboard/attendee/manage-reels/{slug}/restore
+  controller: 'App\Controller\Dashboard\Shared\ReelsController::restore'
+  methods: [ 'GET' ]
+
+# Show/Hide
+dashboard_attendee_reel_showhide:
+  path: /dashboard/attendee/manage-reels/{slug}/{action}
+  controller: 'App\Controller\Dashboard\Shared\ReelsController::showhide'
+  methods: [ 'GET' ]
+  requirements:
+    action: 'show|hide'
+
+##lives
+#
+## Index
+#dashboard_organizer_live:
+#  path: /dashboard/organizer/manage-lives
+#  controller: 'App\Controller\Dashboard\Shared\LiveController::index'
+#  methods: [ 'GET' ]
+#
+## Add/Edit
+#dashboard_organizer_live_addedit:
+#  path: /dashboard/organizer/manage-lives/{slug}/edit
+#  controller: 'App\Controller\Dashboard\Shared\LiveController::addedit'
+#  methods: [ 'GET', 'POST' ]
+#  requirements:
+#    slug: '^[a-zA-Z0-9-]+$'
+#
+## Disable/Delete
+#dashboard_organizer_live_disable_delete:
+#  path: /dashboard/organizer/manage-lives/{slug}/disable
+#  controller: 'App\Controller\Dashboard\Shared\LiveController::delete'
+#  methods: [ 'GET' ]
+#
+## Permanently Delete
+#dashboard_organizer_live_delete:
+#  path: /dashboard/organizer/manage-lives/{slug}/delete
+#  controller: 'App\Controller\Dashboard\Shared\LiveController::delete'
+#  methods: [ 'GET' ]
+#
+## Restore
+#dashboard_organizer_live_restore:
+#  path: /dashboard/organizer/manage-lives/{slug}/restore
+#  controller: 'App\Controller\Dashboard\Shared\LiveController::restore'
+#  methods: [ 'GET' ]
+#
+## Show/Hide
+#dashboard_organizer_live_showhide:
+#  path: /dashboard/organizer/manage-lives/{slug}/{action}
+#  controller: 'App\Controller\Dashboard\Shared\LiveController::showhide'
+#  methods: [ 'GET' ]
+#  requirements:
+#    action: 'show|hide'
+
+dashboard_administrator_listing_category_disable:
+  path: /manage-listing-categories/{slug}/disable
+  controller: 'App\Controller\Dashboard\Administrator\ListingCategoryController::delete'
+  methods: [ 'GET' ]
+
+dashboard_administrator_listing_category_delete:
+  path: /manage-listing-categories/{slug}/delete
+  controller: 'App\Controller\Dashboard\Administrator\ListingCategoryController::delete'
+  methods: [ 'GET' ]
+
+dashboard_administrator_listing_category_restore:
+  path: /manage-listing-categories/{slug}/restore
+  controller: 'App\Controller\Dashboard\Administrator\ListingCategoryController::restore'
+  methods: [ 'GET' ]
+
+dashboard_administrator_listing_category_show:
+  path: /manage-listing-categories/{slug}/show
+  controller: 'App\Controller\Dashboard\Administrator\ListingCategoryController::showhide'
+  methods: [ 'GET' ]
+
+dashboard_administrator_listing_category_hide:
+  path: /manage-listing-categories/{slug}/hide
+  controller: 'App\Controller\Dashboard\Administrator\ListingCategoryController::showhide'
+  methods: [ 'GET' ]
+
+dashboard_administrator_listing_category_featured:
+  path: /manage-listing-categories/{slug}/featured
+  controller: 'App\Controller\Dashboard\Administrator\ListingCategoryController::featured'
+  methods: [ 'GET' ]
+
+dashboard_administrator_listing_category_notfeatured:
+  path: /manage-listing-categories/{slug}/notfeatured
+  controller: 'App\Controller\Dashboard\Administrator\ListingCategoryController::featured'
+  methods: [ 'GET' ]
+
+dashboard_administrator_listing_category:
+  path: /manage-listing-categories
+  controller: 'App\Controller\Dashboard\Administrator\ListingCategoryController::index'
+  methods: [ 'GET' ]
+
+dashboard_administrator_listing_category_add:
+  path: /manage-listing-categories/add
+  controller: 'App\Controller\Dashboard\Administrator\ListingCategoryController::addedit'
+  methods: [ 'GET', 'POST' ]
+
+dashboard_administrator_listing_category_edit:
+  path: /manage-listing-categories/{slug}/edit
+  controller: 'App\Controller\Dashboard\Administrator\ListingCategoryController::addedit'
+  methods: [ 'GET', 'POST' ]
+
+dashboard_doc_edit:
+  path: /dashboard/doc/edit
+  controller: 'App\Controller\Dashboard\Shared\DocumentController::editDoc'
+  methods: [ 'GET', 'POST' ]
+
+dashboard_doc_delete:
+  path: /dashboard/doc/delete
+  controller: 'App\Controller\Dashboard\Shared\DocumentController::deleteDoc'
+  methods: [ 'POST' ]

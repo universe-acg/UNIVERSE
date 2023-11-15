@@ -1,0 +1,8 @@
+{% for reel in reels %}
+    <div class="card_medium card_exp">
+        <img class="img_card" data-reel-id="{{ reel.id }}"
+             src="{{ reel.getMainImage ? asset(reel.getImagePath) : reel.getImagePlaceholder }}"
+             alt="">
+        <figcaption>{{ reel.title }}</figcaption>
+    </div>
+{% endfor %}

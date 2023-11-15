@@ -35,7 +35,14 @@ services:
     arguments: [ '@doctrine', '@App\Repository\NotificationRepository' ]
 
   App\Service\VolunteerService:
+  App\Service\LiveService:
+  App\Service\ReelService:
+  App\Service\ListingCategoryService:
   App\Service\TwilioService:
+  App\Service\ListingService:
+  App\Service\ListingFileService:
+  App\Service\ListingImageService:
+  App\Service\ListingSubmissionService:
     arguments:
       $accountSid: 'AC3172b2bdf28448d3d1206f4bc3f5167a'
       $authToken: '4a212965f38eca70046c8ee68b5a2487'

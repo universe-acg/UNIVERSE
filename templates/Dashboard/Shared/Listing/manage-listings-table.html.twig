@@ -1,0 +1,89 @@
+<div class="table-responsive">
+    <table class="table table-hover table-vcenter">
+        <thead>
+        <tr>
+            <th style="width:35%;">{{ 'listing' }}</th>
+            {% if is_granted('ROLE_ADMINISTRATOR') %}
+                <th>{{ 'Organizer' }}</th>
+            {% endif %}
+            <th>Status</th>
+            <th>Category</th>
+            <th class="text-center"><i class="fas fa-cog"></i></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for listing in listings %}
+            <tr>
+                <td>
+                    <a class="fancybox"
+                       href="{{ listing.imageName ? asset(listing.getImagePath) : listing.getImagePlaceholder }}"
+                       data-toggle="tooltip" title="{{ "Enlarge" }}">
+                        <img src="{{ listing.imageName ? asset(listing.getImagePath) : listing.getImagePlaceholder }}"
+                             class="img-thumbnail img-50-50"/>
+                    </a>
+                    <a href="{{ path('listing', { slug : listing.slug }) }}" data-toggle="tooltip"
+                       title="{{ "View listing" }}">{{ listing.name }}</a>
+                    <span class="small text-muted ml-1">#{{ listing.reference }}</span>
+                </td>
+                <td>
+                    {% if listing.isPublished() %}
+                        Published
+                    {% else %}
+                        Draft
+                    {% endif %}
+                </td>
+                <td>
+                    {{ listing.category.name }}
+                </td>
+                {% if is_granted('ROLE_ADMINISTRATOR') %}
+                    <td>
+                        <a href="{{ path('organizer', { slug : listing.organizer.user.username }) }}"
+                           data-toggle="tooltip"
+                           title="{{ "View organizer" }}">{{ listing.organizer.name }}</a>
+                    </td>
+                {% endif %}
+                {% if listing.deletedAt %}
+                    <td>
+                        <span class="badge badge-{{ listing.stringifyStatusClass }}">{{ listing.stringifyStatus }}</span>
+                        <br>
+                        <br>
+                        <span class="badge badge-danger"><i class="fas fa-times fa-fw"></i> {{ "Deleted" }}</span>
+                    </td>
+                {% endif %}
+                <td class="text-center">
+                    <div class="item-action dropdown">
+                        <a href="javascript:void(0)" data-toggle="dropdown" data-boundary="window" class="icon"><i
+                                    class="fas fa-ellipsis-v"></i></a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a href="{{ path('dashboard_organizer_listing_edit', { slug : listing.slug }) }}"
+                               class="dropdown-item"><i
+                                        class="dropdown-icon fas fa-edit fa-fw text-muted"></i> {{ "Edit" }}
+                            </a>
+                            <a href="{{ path('dashboard_organizer_attendees', { listing : listing.slug, status: 1 }) }}"
+                               class="dropdown-item"><i
+                                        class="dropdown-icon fas fa-users fa-fw text-muted"></i> {{ "Attendees" }}
+                            </a>
+                            {% if listing.published %}
+                                <a href="{{ path('dashboard_organizer_listing_draft', { slug : listing.slug }) }}"
+                                   class="dropdown-item"><i
+                                            class="dropdown-icon fas fa-eye-slash fa-fw text-muted"></i> {{ "Draft/Hide" }}
+                                </a>
+                            {% else %}
+                                <a href="{{ path('dashboard_organizer_listing_publish', { slug : listing.slug }) }}"
+                                   class="dropdown-item"><i
+                                            class="dropdown-icon fas fa-eye fa-fw text-muted"></i> {{ "Publish" }}
+                                </a>
+                            {% endif %}
+                            <span style="cursor: pointer !important;"
+                                  data-target="{{ path('dashboard_organizer_listing_delete_permanently', { slug : listing.slug }) }}"
+                                  class="dropdown-item requires-confirmation-normal"
+                                  data-confirmation-text="{{ "You are about to delete the listing and all its related information PERMANENTLY" }}"><i
+                                        class="dropdown-icon far fa-calendar-times fa-fw text-muted"></i> {{ "Delete" }}</span>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

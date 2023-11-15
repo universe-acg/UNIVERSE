@@ -7,90 +7,17 @@
 {% block content %}
 
     <style>
-        ul {
-            display: flex;
-            width: calc(80% - 2rem);
-            padding: 0;
-            margin: 0;
-            list-style-type: none;
-        }
 
-        li {
-            padding: 0;
-        }
-
-        img {
-            max-width: 100%;
+        .homepage-slider .item-slide:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
             width: 100%;
-            object-fit: cover;
-            transition: all 0.2s ease;
+            background: linear-gradient(to bottom, rgba(153, 153, 153, 0) 0%, rgba(153, 153, 153, 0) 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00999999', endColorstr='#000000', GradientType=0);
         }
-
-        ul:is(:hover, :focus-within) img {
-            /*opacity: calc(0.1 + (var(--active-lerp, 0) * 0.9));*/
-            /*filter: grayscale(calc(1 - var(--active-lerp, 0)));*/
-        }
-
-        :root {
-            --lerp-0: 1;
-            --lerp-1: 0.5787037;
-            --lerp-2: 0.2962963;
-            --lerp-3: 0.125;
-            --lerp-4: 0.037037;
-            --lerp-5: 0.0046296;
-            --lerp-6: 0;
-        }
-
-        a {
-            outline-offset: 4px;
-        }
-
-        li {
-            flex: calc(0.1 + (var(--active-lerp, 0) * 1));
-            transition: flex 0.2s ease;
-        }
-
-        li:is(:hover, :focus-within) {
-            --active-lerp: var(--lerp-0);
-            z-index: 7;
-        }
-
-        li:has( + li:is(:hover, :focus-within)),
-        li:is(:hover, :focus-within) + li {
-            --active-lerp: var(--lerp-1);
-            z-index: 6;
-        }
-
-        li:has( + li + li:is(:hover, :focus-within)),
-        li:is(:hover, :focus-within) + li + li {
-            --active-lerp: var(--lerp-2);
-            z-index: 5;
-        }
-
-        li:has( + li + li + li:is(:hover, :focus-within)),
-        li:is(:hover, :focus-within) + li + li + li {
-            --active-lerp: var(--lerp-3);
-            z-index: 4;
-        }
-
-        li:has( + li + li + li + li:is(:hover, :focus-within)),
-        li:is(:hover, :focus-within) + li + li + li + li {
-            --active-lerp: var(--lerp-4);
-            z-index: 3;
-        }
-
-        li:has( + li + li + li + li + li:is(:hover, :focus-within)),
-        li:is(:hover, :focus-within) + li + li + li + li + li {
-            --active-lerp: var(--lerp-5);
-            z-index: 2;
-        }
-
-        li:has( + li + li + li + li + li + li:is(:hover, :focus-within)),
-        li:is(:hover, :focus-within) + li + li + li + li + li + li {
-            --active-lerp: var(--lerp-6);
-            z-index: 1;
-        }
-
     </style>
 
     {% set navigation = [{"current" : (pagetitle)}] %}
@@ -99,58 +26,46 @@
     <section class="section-content padding-y bg-white">
         <div class="{{ services.getSetting("app_layout") }}">
 
-            {#            <div class="box shadow-none bg-gray mb-4"> #}
-            {#                <div class="row"> #}
-            {#                    <div class="col-sm-12 col-lg-3  mb-3 mb-lg-0"> #}
-            {#                        <span class="center-lg-y text-muted">{{ "%resultsCount% result(s) found" |trans ({'%resultsCount%': venues.getTotalItemCount}) }}</span> #}
-            {#                    </div> #}
-
-            {#                    <div class="col-sm-12 col-lg-6 offset-lg-3 "> #}
-            {#                        <label for="sortable-select" class="display-inline">{{ "Sort by" }} #}
-            {#                            <select id="sortable-select" class="form-control display-inline-block bg-white select2 ml-3" #}
-            {#                                    data-placeholder="{{ "Select an option" }}" style="width: 100%;"> #}
-            {#                                {{ knp_pagination_sortable(venues, "Creation date" ~ ' (' ~ "desc" ~ ')', "v.createdAt", {"direction": "desc", "criteria": "v.createdAt"}) }} #}
-            {#                                {{ knp_pagination_sortable(venues, "Creation date" ~ ' (' ~ "asc" ~ ')', "v.createdAt", {"direction": "asc", "criteria": "v.createdAt"}) }} #}
-            {#                            </select> #}
-            {#                        </label> #}
-            {#                    </div> #}
-            {#                </div> #}
-            {#            </div> #}
-
-            <ul class="results">
-                {% for venue in venues %}
-                    <li class="result">
-                        <a href="#"><img
-                                    src="{{ venue.secondaryImages|length > 0 ? venue.getImagePath: venue.getImagePlaceholder }}"
-                                    width="500" height="500" alt=""></a>
-                    </li>
-                    {#                    {% include "Global/venue-card.html.twig" with {'venue': venue} %} #}
-                {% endfor %}
-            </ul>
-
-            {#            <div class="row"> #}
-            {#                <aside class="col-lg-3 order-2 order-lg-1"> #}
-            {#                    <article class="card-group-item"> #}
-            {#                        <div class="card-body"> #}
-            {#                            <button class="btn btn-block btn-outline-primary"><i #}
-            {#                                        class="fas fa-search"></i> {{ "Search" }}</button> #}
-            {#                        </div> #}
-            {#                    </article> #}
-            {#                </aside> #}
-            {#                <div class="col-lg-9 order-1 order-lg-2"> #}
-            {#                    {% if venues.getTotalItemCount > 0 %} #}
-            {#                        {% for venue in venues %} #}
-            {#                            {% include "Global/venue-card.html.twig" with {'venue': venue} %} #}
-            {#                        {% endfor %} #}
-            {#                    {% else %} #}
-            {#                        {% include "Global/message.html.twig" with { type: "info", message: ('No venues found'), icon: "fas fa-exclamation-circle" } %} #}
-            {#                    {% endif %} #}
-            {#                </div> #}
-            {#            </div> #}
-
-            {% if venues.getTotalItemCount > 0 %}
+            <section class="section-main mb-5">
+                <div class="owl-init slider-main homepage-slider owl-carousel" data-items="1" data-dots="true"
+                     data-nav="true" data-autoplay="true" data-rtl="true">
+                    {% for venue in venues|shuffle|slice(0, 6) %}
+                        <div class="item-slide img-lazy-load" style="height: 500px !important;"
+                             data-src="{{ venue.getImagePath  ? asset(venue.getImagePath) : venue.getImagePlaceholder }}">
+                            <div class="loader"></div>
+                            <div class="content-container">
+                                <div class="{{ services.getSetting("app_layout") }}">
+                                    <div class="row-sm">
+                                        <div class="col-md-12" style="display: flex; justify-content: start">
+                                            <div class="pl-5">
+                                                <h2 class="text-light mb-4">{{ venue.title }}</h2>
+                                                <a href="{{ path('venue', { slug : venue.slug }) }}"
+                                                   class="btn btn-light btn-lg"><i
+                                                            class="fas fa-ticket-alt fa-fw"></i> {{ "Browse events" }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+            <div class="col-lg-12 order-1 order-lg-2" style="padding: 0 !important;">
+                {% if venues.getTotalItemCount > 0 %}
+                    <div class="row">
+                        {% for venue in venues %}
+                            <div class="col-12 col-sm-4 col-lg-3 mb-3">
+                                {% include "Global/venue-card.html.twig" with {venue: venue} %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {% include "Global/message.html.twig" with { type: "info", message: ('No venues found'), icon: "fas fa-exclamation-circle" } %}
+                {% endif %}
                 {{ knp_pagination_render(venues, null, {}, {'align': 'center'}) }}
-            {% endif %}
+            </div>
 
         </div>
     </section>

@@ -1,0 +1,181 @@
+{% extends "Global/layout.html.twig" %}
+
+{% set pagetitle = facility.name %}
+
+{% block name %}{{ pagetitle }}{% endblock %}
+ {% form_theme formbook 'Global/jquery.collection.html.twig' %}
+
+{% block meta_dynamic_seo %}
+{% endblock %}
+
+{% block content %}
+
+    <style>
+
+        .fa.fa-chevron-right {
+            margin-right: 10px;
+            color: white;
+        }
+
+        .fa.fa-chevron-left {
+            margin-left: 10px;
+            color: white;
+        }
+    </style>
+
+    {% set navigation = [{"athletics": "athletics", "current" : (pagetitle)}] %}
+    {% include "Global/navigation.html.twig" with navigation %}
+    <section class="section-content padding-y bg-white">
+        <div>
+
+            <section class="section-main mb-5">
+
+                <div style="overflow-x: hidden">
+                    <div class="row no-gutters">
+                        <div class="col-8 p-0">
+                            <section class="section-main">
+                                <div class="owl-init slider-main homepage-slider owl-carousel" data-items="1"
+                                     data-dots="true"
+                                     data-dots="true"
+                                     data-nav="true" data-autoplay="true" data-rtl="true">
+                                    {% for image in allImagePaths %}
+                                        <div class="item-slide d-flex" style="height: 600px; width: 100% !important;">
+                                            <img class="slider-img justify-content-center align-self-center"
+                                                 style="object-fit: cover; width: 100% !important; height: 100%"
+                                                 src="{{ asset(image) ? asset(image) : facility.getImagePlaceholder }}"/>
+                                            <div class="slider-blured-background"
+                                                 style="background-image: url('{{ image ? asset(image) : facility.getImagePlaceholder }}');"></div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </section>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="row">
+                                <div class="col-12 col-lg-12 order-1 order-lg-0">
+                                    <div class="card-body">
+
+
+                                        {{ form_start(formbook) }}
+                                        {{ form_widget(formbook) }}
+                                        {{ form_end(formbook) }}
+
+                                        {% set eventsoncalendar = [] %}
+                                        {% set eventscriteria = {"published": 1} %}
+                                        {% set allevents = services.getEvents(eventscriteria) %}
+                                        {% for event in allevents %}
+                                            {% for eventdate in event.eventdates %}
+                                                {% if eventdate.isOnSale %}
+                                                    {% if services.getSetting("show_calendar_button") == "yes" %}
+                                                        {% set eventsoncalendar = eventsoncalendar|merge([{
+                                                            "title": event.name,
+                                                            "start": eventdate.startdate|date('Y-m-d H:i'),
+                                                            "end": (eventdate.enddate ? eventdate.enddate|date('Y-m-d H:i') : ''),
+                                                            "url": path('event', {slug: event.slug})
+                                                        }]) %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row p-4">
+                        {#                            {% for facility in listings %} #}
+                        <div class="col-12">
+                            {#                            {% if facility.description %} #}
+                            {#                                <dl class="mt-5 facility-description"> #}
+                            {#                                    <dt class="text-muted">{{ "Description" }}</dt> #}
+                            {#                                    <dd class="line-height-2 readmore" data-collapsed-height="500" #}
+                            {#                                        data-height-margin="20"> #}
+                            {#                                        {{ facility.description|raw|nl2br }} #}
+                            {#                                    </dd> #}
+                            {#                                </dl> #}
+                            {#                            {% endif %} #}
+                            {% include "Global/athletic-bookings-table.html.twig" with {reservations: reservations} %}
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </section>
+    <!-- Include flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <!-- Include flatpickr JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    {% block javascripts %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const reservationDataString = {{ data|raw|json_encode|raw }};
+                const reservationData = JSON.parse(reservationDataString);
+
+                if (Array.isArray(reservationData)) {
+                    const bookingDates = reservationData.map(function (day) {
+                        return day.dateOfDay;
+                    });
+
+                    const flatpickrInstance = flatpickr('.bookdatetimepicker', {
+                        enable: bookingDates,
+                        dateFormat: 'Y-m-d',
+                    });
+
+                    var bookingTimeSelect = document.getElementById('athletic_booking_bookingTime');
+                    var durationSelect = document.getElementById('athletic_booking_duration'); // Assuming this is the ID of your duration select input
+
+                    // Initially hide the bookingTimeSelect
+                    bookingTimeSelect.parentElement.style.display = 'none';
+
+                    flatpickrInstance.config.onChange.push(function (selectedDates, dateStr) {
+                        // Get the selected date
+                        var selectedDate = dateStr;
+
+                        // Get the durations and startTimes for the selected date
+                        var selectedDay = reservationData.find(function (day) {
+                            return day.dateOfDay === selectedDate;
+                        });
+
+                        if (selectedDay) {
+                            // Clear existing options
+                            bookingTimeSelect.innerHTML = '';
+
+                            // Get the selected duration
+                            var selectedDuration = durationSelect.value;
+                            console.dir(selectedDay.durations);
+
+
+                            // Filter start times based on the selected duration
+                            var timeslist = [];
+                            var filteredStartTimes = selectedDay.durations.filter(function (startTime, index) {
+                                if (selectedDay.durations[index].duration == selectedDuration) {
+                                    timeslist = selectedDay.durations[index].startTimes;
+
+                                }
+                            });
+
+                            console.dir(timeslist);
+
+                            // Populate the select element with options based on the selected date and duration
+                            timeslist.forEach(function (time) {
+                                var option = document.createElement('option');
+                                option.value = time;
+                                option.text = time;
+                                bookingTimeSelect.appendChild(option);
+                            });
+
+                            // Show the bookingTimeSelect
+                            bookingTimeSelect.parentElement.style.display = 'block';
+                        } else {
+                            console.error('Selected date not found in reservation data:', selectedDate);
+                        }
+                    });
+                } else {
+                    console.error('Reservation data is not an array:', reservationData);
+                }
+            });
+        </script>
+    {% endblock %}
+{% endblock %}

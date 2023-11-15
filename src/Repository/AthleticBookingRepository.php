@@ -16,4 +16,14 @@ class AthleticBookingRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, AthleticBooking::class);
     }
+
+    public function getByFacilityId($facilityid)
+    {
+        $qb = $this->createQueryBuilder("a");
+        $qb->select("a");
+
+        $qb->andWhere("a.facility = :facilityid")->setParameter("facilityid", $facilityid);
+
+        return $qb->getQuery()->getResult();
+    }
 }

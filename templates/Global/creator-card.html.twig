@@ -7,7 +7,6 @@
 </style>
 
 <a href="{{ path('organizer', {slug: (creator.user.username)}) }}" class="text-dark">
-
     <div class="card card-event pb-2">
         <div class="img-wrap img-lazy-load image-container"
              style="height: 260px;"
@@ -33,8 +32,10 @@
             {% set maxAvatars = 10 %} {# Change this to the maximum number of avatars you want to display #}
             {% set displayedAvatars = 0 %}
 
-            {% if creator.followedby|length ==0 %}
-                <p>No followers yet</p>
+            {% if creator.user.isAdministratorUser %}
+                <p style="margin-bottom: 7px">Official Universe Creator profile</p>
+            {% elseif creator.followedby|length ==0 %}
+                <p style="margin-bottom: 7px">No followers yet</p>
             {% else %}
                 {% for follower in creator.followedby %}
                     {% if displayedAvatars < maxAvatars %}
@@ -46,13 +47,17 @@
 
         </div>
         <span style="text-align: right" class="event-category">
-               {% if user.organizer.category == "Club" or user.organizer.category == "Society" %}
-                   <a href="https://universeacg.xyz/leaderboards?tag={{ organizer.user.stringifypointslevel }}"
-                   > <span class="text-dark">{{ user.stringifypointslevel }}</span></a>
+            {% if user.isAdministratorUser %}
+                <b>Universe</b>
+            {% elseif user.organizer.category == "Club" or user.organizer.category == "Society" %}
+                <a href="https://universeacg.xyz/leaderboards?tag={{ organizer.user.stringifypointslevel }}"
+                > <span class="text-dark">{{ user.stringifypointslevel }}</span></a>
 
-                   <br>
-               {% endif %}
-            <p style="font-size: 12px; margin-bottom: 0">{{ creator.getCategory() }}</p>
+                <br>
+            {% endif %}
+            {% if not user.isAdministratorUser %}
+                <p style="font-size: 12px; margin-bottom: 0">{{ creator.getCategory() }}</p>
+            {% endif %}
         </span>
     </div>
 </a>

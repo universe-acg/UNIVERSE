@@ -41,7 +41,7 @@ class ChatHandler implements MessageComponentInterface
     public function onMessage(ConnectionInterface $from, $msg)
     {
         // Parse the message to determine the recipient(s)
-        $data = json_decode($msg);
+        $data = json_decode($msg, false);
         $recipientUserId = $data->recipientUserId;
 
         // Find the recipient's connections

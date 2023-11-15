@@ -8,6 +8,8 @@ namespace App\Command;
 use Ratchet\Http\HttpServer;
 use Ratchet\Server\IoServer;
 use Ratchet\WebSocket\WsServer;
+use React\EventLoop\Factory;
+use React\Socket\Server;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,12 +27,14 @@ class WebSocketServerCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $loop = Factory::create(); // Create an event loop
+
         $chatHandler = new ChatHandler(); // Implement your WebSocket message handling logic
         $webSocketServer = new IoServer(
             new HttpServer(
                 new WsServer($chatHandler)
             ),
-            8080 // Port to listen on
+            new Server('0.0.0.0:8080', $loop) // Use React\Socket\Server here
         );
 
         $output->writeln('WebSocket server started.');
