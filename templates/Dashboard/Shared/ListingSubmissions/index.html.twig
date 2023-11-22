@@ -1,0 +1,61 @@
+{% extends "Global/layout.html.twig" %}
+
+{% if is_granted('ROLE_ADMINISTRATOR') %}
+    {% set pagetitle = 'All applications' %}
+{% elseif is_granted('ROLE_ORGANIZER') %}
+    {% set pagetitle = 'All applications' %}
+{% elseif is_granted('ROLE_ATTENDEE') %}
+    {% set pagetitle = 'My applications' %}
+{% endif %}
+
+{% block title %}{{ pagetitle }}{% endblock %}
+
+{% block content %}
+
+    {% set navigation = [{"current":(pagetitle)}] %}
+    {% include "Global/navigation.html.twig" with navigation %}
+
+    <section class="section-content padding-y bg-white">
+        <div class="{{ services.getSetting("app_layout") }}">
+            <div class="row">
+                <aside class="col-lg-3 pt-3 pt-lg-0">
+                    {% include "Dashboard/sidebar.html.twig" %}
+                </aside>
+                <div class="col-lg-9 mt-4 mt-lg-0">
+                    <div class="box shadow-none bg-gray mb-4">
+                        <div class="row">
+                            <div class="col-sm-12 col-lg-2 mb-3 mb-lg-0">
+                                <span class="center-lg-y text-muted">{{ "%resultsCount% result(s) found" |trans ({'%resultsCount%': listingsubs.getTotalItemCount}) }}</span>
+                            </div>
+                            <div class="col-sm-12 col-lg-8">
+                                {% if is_granted('ROLE_ORGANIZER') %}
+                                    <a href="{{ path('dashboard_organizer_listing_add') }}"
+                                       class="btn btn-primary ml-3"><i
+                                                class="fas fa-plus"></i> {{ 'Add a new listing' }}</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if listingsubs.getTotalItemCount > 0 %}
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    {% include "Dashboard/Shared/ListingSubmissions/manage-listings-table.html.twig" with {listingsubs: listingsubs} %}
+                                </div>
+                            </div>
+                            {{ knp_pagination_render(listingsubs, null, {}, {'align': 'center'}) }}
+                        </div>
+                    {% else %}
+                        {% include "Global/message.html.twig" with { type: "info", message: ('No listing applications found'), icon: "fas fa-exclamation-circle" } %}
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+{% endblock %}

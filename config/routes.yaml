@@ -661,6 +661,28 @@ cancel_reservation:
 # routes.yaml
 
 # Index
+#  dashboard_attendee_orders
+dashboard_attendee__my_listing:
+  path: /dashboard/attendee/my-listing-applications
+  controller: 'App\Controller\Dashboard\Shared\ListingController::mylistingapplicaitons'
+  methods: [ 'GET' ]
+
+download_cv:
+  path: '/download-cv/{userId}'
+  controller: 'App\Controller\Dashboard\Shared\DocumentController::downloadCVAction'
+  requirements:
+    userId: '\d+'
+
+dashboard_organizer__my_listing:
+  path: /dashboard/organizer/my-listing-applications-creator/{id}
+  controller: 'App\Controller\Dashboard\Shared\ListingController::mylistingapplicaitonscreator'
+  methods: [ 'GET' ]
+
+dashboard_attendee_cancel:
+  path: /dashboard/attendee/subcance/{id}/subcancel
+  controller: 'App\Controller\Dashboard\Shared\ListingController::cancel'
+  methods: [ 'GET' ]
+
 dashboard_organizer_listing:
   path: /dashboard/organizer/manage-listings
   controller: 'App\Controller\Dashboard\Shared\ListingController::index'
@@ -715,6 +737,19 @@ dashboard_organizer_listing_details:
   methods: [ 'GET' ]
   condition: 'request.isXmlHttpRequest()'
 
+# config/routes.yaml
+
+download_listing_submission_file:
+  path: '/download/listingsubmission/{id}/file'
+  controller: 'App\Controller\Dashboard\Shared\ListingController::downloadFileAction'
+  requirements:
+    id: '\d+'
+
+dashboard_listing_details:
+  path: /dashboard/my-listingsubs/{id}/details
+  controller: 'App\Controller\Dashboard\Shared\ListingController::detailsattendee'
+  methods: [ 'GET' ]
+
 #reels likes
 get_likes_of_user:
   path: '/reel-likes/get-likes-of-user/{userId}'
@@ -740,6 +775,18 @@ get_users_who_liked_reel:
   path: '/reel-likes/get-users-who-liked-reel/{reelId}'
   methods: [ 'GET' ]
   controller: 'App\Controller\Front\ReelsLikesController::getUsersWhoLikedReel'
+
+dashboard_organizer_listing_apply:
+  path: '/dashboard/organizer/my-listings/{slug}/apply'
+  methods: [ 'POST' ]
+  controller: 'App\Controller\Dashboard\Shared\ListingController::apply'
+
+# Listing Details (Ajax)
+applylisting:
+  path: /applylisting/{slug}/{userid}
+  controller: 'App\Controller\Front\ListingController::applylisting'
+  methods: [ 'GET' ]
+  condition: 'request.isXmlHttpRequest()'
 
 #reels
 

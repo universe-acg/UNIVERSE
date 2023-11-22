@@ -1,4 +1,5 @@
 {% extends "Global/layout.html.twig" %}
+{% form_theme form 'Global/jquery.collection.html.twig' %}
 
 {% set pagetitle = listing.name %}
 
@@ -41,36 +42,41 @@
                     <div class="col-12 col-lg-6 order-0 order-lg-1 ">
                         <div class="card-body">
                             <h1 class="card-title b d-lg-none text-center">{{ listing.name }}</h1>
-                            {#                            {% if listing.hasAnlistingDateOnSale %} #}
                             {# listing Dates calendar used on multi date listings #}
-                            <dl class="">
-                                <h2 class="text-muted pb-1 "><span
-                                            class="card-title b">{{ listing.name }}</span>
-                                </h2>
-                                <dl class="mt-1 listing-description">
-                                    <dt class="text-muted">{{ "Description" }}</dt>
-                                    <dd class="line-height-2 readmore" data-collapsed-height="500"
-                                        data-height-margin="20">
-                                        {{ listing.shortdescription|raw|nl2br }}
-                                    </dd>
-                                </dl>
+                            {{ form_start(form) }}
+                            {{ form_widget(form) }}
+                            {{ form_end(form) }}
+                            {#                            <dl class=""> #}
+                            {#                                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }} #}
+                            {#                                {{ form_widget(form) }} #}
+                            {#                                {{ form_end(form) }} #}
+                            {#                                <h2 class="text-muted pb-1 "><span #}
+                            {#                                            class="card-title b">{{ listing.name }}</span> #}
+                            {#                                </h2> #}
+                            {#                                <dl class="mt-1 listing-description"> #}
+                            {#                                    <dt class="text-muted">{{ "Description" }}</dt> #}
+                            {#                                    <dd class="line-height-2 readmore" data-collapsed-height="500" #}
+                            {#                                        data-height-margin="20"> #}
+                            {#                                        {{ listing.shortdescription|raw|nl2br }} #}
+                            {#                                    </dd> #}
+                            {#                                </dl> #}
 
-                                <div class="input-group">
-                                    <form method="post" class="input-group"
-                                    >
-                                        <textarea name="message" rows="3" class="mb form-control">I am excited about this opportunity because...</textarea>
-                                        <div class="input-group mt-2 mb-2">
-                                            <input type="file" class="form-control" name="file"
-                                                   accept=".pdf, .doc, .docx" required>
-                                        </div>
+                            {#                                <div class="input-group"> #}
+                            {#                                    <form method="post" class="input-group" #}
+                            {#                                    > #}
+                            {#                                        <textarea name="message" rows="3" class="mb form-control">I am excited about this opportunity because...</textarea> #}
+                            {#                                        <div class="input-group mt-2 mb-2"> #}
+                            {#                                            <input type="file" class="form-control" name="file" #}
+                            {#                                                   accept=".pdf, .doc, .docx" required> #}
+                            {#                                        </div> #}
 
-                                        <button type="submit" class="btn btn-primary btn-block"
-                                                style="border-radius: 0.25em">
-                                            Apply
-                                        </button>
-                                    </form>
-                                </div>
-                            </dl>
+                            {#                                        <button type="submit" class="btn btn-primary btn-block" #}
+                            {#                                                style="border-radius: 0.25em"> #}
+                            {#                                            Apply #}
+                            {#                                        </button> #}
+                            {#                                    </form> #}
+                            {#                                </div> #}
+                            {#                            </dl> #}
                         </div>
                     </div>
 

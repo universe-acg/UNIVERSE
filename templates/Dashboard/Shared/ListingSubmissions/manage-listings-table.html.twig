@@ -1,0 +1,91 @@
+<div class="table-responsive">
+    <table class="table table-hover table-vcenter">
+        <thead>
+            <tr>
+                {% if is_granted('ROLE_ATTENDEE') %}
+                    <th>{{ 'Creator' }}</th>
+                {% else %}
+                    <th>{{ 'User' }}</th>
+                {% endif %}
+                <th>Title</th>
+                {#                <th>Event</th> #}
+                {% if is_granted('ROLE_ORGANIZER') %}
+                    <th>Document</th>
+                {% endif %}
+                <th>Date Applied</th>
+                <th class="text-center"><i class="fas fa-cog"></i></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for listingsub in listingsubs %}
+                <tr>
+                    <td>
+                        {% if is_granted('ROLE_ATTENDEE') %}
+                            <a href="{{ path('organizer', { slug : listingsub.listing.organizer.user.username }) }}"
+                               data-toggle="tooltip"
+                               title="{{ "View organizer" }}">{{ listingsub.listing.organizer.name }}</a>
+                        {% else %}
+                            <a href="{{ path('profile_attendee', {slug: listingsub.user.slug} ) }}"
+                               data-toggle="tooltip"
+                               title="{{ "View Attendee" }}">{{ listingsub.user.crossRoleName }}</a>
+                        {% endif %}
+
+                        {#                    <a href="{{ path('listing', { slug : listingsub.listing.slug }) }}" data-toggle="tooltip" #}
+                        {#                       title="{{ "View listing" }}">{{ listingsub.listing.name }}</a> #}
+                    </td>
+                    <td>
+                        <a href="{{ path('listing', { slug : listingsub.listing.slug }) }}" data-toggle="tooltip"
+                           title="{{ "View listing" }}">{{ listingsub.listing.name }}</a>
+                    </td>
+                    {#                <td> #}
+                    {#                    {% if listingsub.listing.event %} #}
+                    {#                        <a href="{{ path('event', { slug : listingsub.listing.event.slug }) }}" data-toggle="tooltip" #}
+                    {#                           title="{{ "View event" }}">{{ listingsub.listing.event.name }}</a> #}
+                    {#                    {% else %} #}
+                    {#                        -#}
+                    {#                    {% endif %} #}
+                    {#                </td> #}
+                    {% if is_granted('ROLE_ORGANIZER') %}
+                        <td>
+                            {% if is_granted('ROLE_ORGANIZER') %}
+                                {% if listingsub.fileOriginalName %}
+                                    <div style="display: grid; justify-content: start; align-content: start; align-items: start">
+                                        <a href="{{ path('download_listing_submission_file', {'id': listingsub.id}) }}">{{ listingsub.fileOriginalName }}</a>
+                                    </div>
+                                {% else %}
+                                    {% if app.user.cv %}
+                                        <a href="{{ path('download_cv', {'userId': app.user.id}) }}">{{ Download CV }}</a>
+                                    {% else %}
+                                        No CV
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                    {% endif %}
+                    <td>
+                        {{ listingsub.createdAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}
+                    </td>
+
+                    <td class="text-center">
+                        <div class="item-action dropdown">
+                            <a href="javascript:void(0)" data-toggle="dropdown" data-boundary="window" class="icon"><i
+                                        class="fas fa-ellipsis-v"></i></a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a href="{{ path('dashboard_listing_details', { id : listingsub.id }) }}"
+                                   class="dropdown-item"><i
+                                            class="dropdown-icon fas fa-eye fa-fw text-muted"></i> {{ "Details" }}
+                                </a>
+                                {% if is_granted('ROLE_ATTENDEE') %}
+                                    <a href="{{ path('dashboard_attendee_cancel', { id : listingsub.id }) }}"
+                                       class="dropdown-item"><i
+                                                class="dropdown-icon fas fa-trash fa-fw text-muted"></i> {{ "Cancel" }}
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

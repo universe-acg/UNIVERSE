@@ -51,6 +51,10 @@ vich_uploader:
       uri_prefix: /uploads/files
       upload_destination: '%kernel.project_dir%/public/uploads/files'
       namer: vich_uploader.namer_uniqid
+    listingsubmission_file:
+      uri_prefix: /uploads/files
+      upload_destination: '%kernel.project_dir%/public/uploads/files'
+      namer: vich_uploader.namer_uniqid
     event_file:
       uri_prefix: /uploads/files
       upload_destination: '%kernel.project_dir%/public/uploads/files'

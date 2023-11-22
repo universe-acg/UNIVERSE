@@ -29,7 +29,7 @@
                     Members: {{ creator.getMembers()|length }}</p>
             </div>
             <div class="clearfix"></div>
-            {% set maxAvatars = 10 %} {# Change this to the maximum number of avatars you want to display #}
+            {% set maxAvatars = 8 %} {# Change this to the maximum number of avatars you want to display #}
             {% set displayedAvatars = 0 %}
 
             {% if creator.user.isAdministratorUser %}

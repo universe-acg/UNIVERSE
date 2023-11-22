@@ -1,0 +1,197 @@
+{% extends "Global/layout.html.twig" %}
+
+{% form_theme formgeneral 'Global/jquery.collection.html.twig' %}
+{% form_theme formspecific 'Global/jquery.collection.html.twig' %}
+
+{% set pagetitle = 'Add a new listing' %}
+
+{% if listing.id %}{% set pagetitle = 'Update the listing' %}{% endif %}
+
+{% block title %}{{ pagetitle }}{% endblock %}
+
+{% block content %}
+
+    <style>
+        .select2-selection.select2-selection--multiple.select2-selection--clearable {
+            height: 500px !important;
+        }
+
+        .select2-container {
+            height: 500px !important;
+        }
+
+        select.form-control[multiple], select.form-control[size], #descriptionsummernote {
+            height: 500px !important;
+        }
+    </style>
+
+
+    </style>
+
+    {% set navigation = [{ "dashboard_index": ('Dashboard' ),  "dashboard_organizer_listing": ('My listings'), "current":(pagetitle) }] %}
+    {% include "Global/navigation.html.twig" with navigation %}
+
+    <section
+            class="section-content padding-y bg-white {{ "listing_add" in app.request.get("_route") ? "add-listing" : "edit-listing" }}">
+        <div class="{{ services.getSetting("app_layout") }}">
+            <div class="row">
+                <aside class="col-lg-3 pt-3 pt-lg-0">
+                    {% include "Dashboard/sidebar.html.twig" %}
+                </aside>
+                <div class="col-lg-9 mt-4 mt-lg-0">
+                    <div class="card box">
+                        <div class="card-body">
+                            {#                            {% include "Global/message.html.twig" with { type: "info", icon: "fas fa-info-circle", message: ("The fields preceded with a red * are mandatory") } %} #}
+                            {#                            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }} #}
+                            {#                            {{ form_widget(form) }} #}
+                            {#                            {{ form_end(form) }} #}
+                            <div class="form-tabs">
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="general-tab" data-toggle="tab" href="#general"
+                                           role="tab">General</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="specific-tab" data-toggle="tab" href="#specific"
+                                           role="tab">Specific</a>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div class="tab-pane fade show active" id="general" role="tabpanel">
+                                        <br>
+                                        {{ form_start(formgeneral, {'attr': {'novalidate': 'novalidate'}}) }}
+                                        {{ form_widget(formgeneral) }}
+                                        {{ form_end(formgeneral) }}
+                                    </div>
+                                    <div class="tab-pane fade" id="specific" role="tabpanel">
+                                        <br>
+                                        {{ form_start(formspecific, {'attr': {'novalidate': 'novalidate'}}) }}
+                                        {{ form_widget(formspecific) }}
+                                        {{ form_end(formspecific) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Summernote CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+
+    <!-- Summernote JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+
+    <!-- Include the necessary libraries (e.g., jQuery and datepicker) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-daterangepicker@3.0.3/daterangepicker.js"></script>
+
+    <!-- Initialize the datepicker -->
+    <script>
+        $(document).ready(function () {
+            $('#listing_type_multi_userlistings').change(function () {
+                var listingId = $(this).val();
+                // Make an AJAX request to fetch listing details based on the selected listing ID
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/get-listing-details/' + listingId,
+                    dataType: 'json',
+                    success: function (data) {
+                        // Check if the 'slug' field exists in the data
+                        if (data.slug) {
+                            // Construct the URL for redirection
+                            var redirectUrl = '/dashboard/organizer/my-listings/' + data.slug + '/prefill';
+                            // Redirect to the new URL
+                            window.location.href = redirectUrl;
+                        } else {
+                            console.error('Slug not found in data');
+                        }
+                    }
+                });
+            });
+            $('#listing_type_multi_repeatsweekly').on('change', function () {
+                const yes = $('#listing_type_multi_repeatsweekly_0:checked').val();
+                if (yes) {
+                    $('.repetition-options').parent().show();
+                } else {
+                    $('.repetition-options').parent().hide();
+                }
+            });
+
+
+            const yes = $('#listing_type_multi_repeatsweekly_0:checked').val();
+            if (yes) {
+                $('.repetition-options').parent().show();
+            } else {
+                $('.repetition-options').parent().hide();
+            }
+
+
+            $('#listing_type_userlistings').change(function () {
+                var listingId = $(this).val();
+                // Make an AJAX request to fetch listing details based on the selected listing ID
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/get-listing-details/' + listingId,
+                    dataType: 'json',
+                    success: function (data) {
+                        // Check if the 'slug' field exists in the data
+                        if (data.slug) {
+                            // Construct the URL for redirection
+                            var redirectUrl = '/dashboard/organizer/my-listings/' + data.slug + '/prefill';
+                            // Redirect to the new URL
+                            window.location.href = redirectUrl;
+                        } else {
+                            console.error('Slug not found in data');
+                        }
+                    }
+                });
+            });
+            $('#listing_repeatsweekly').on('change', function () {
+                const yes = $('#listing_repeatsweekly_0:checked').val();
+                if (yes) {
+                    $('.repetition-options').parent().show();
+                } else {
+                    $('.repetition-options').parent().hide();
+                }
+            });
+
+
+            const yes1 = $('#listing_repeatsweekly_0:checked').val();
+            if (yes1) {
+                $('.repetition-options').parent().show();
+            } else {
+                $('.repetition-options').parent().hide();
+            }
+
+
+            // Initialize DateRangePicker on the input field with the 'date-range-picker' class
+            $('.date-range-picker').daterangepicker({
+                opens: 'left'
+            });
+
+            const $editableDiv = $('.note-editable');
+
+            $(document).on('submit', 'form[name="listing"]', function () {
+                $('form[name="listing"]').find('fieldset').prop('disabled', false);
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+        });
+    </script>
+{% endblock %}

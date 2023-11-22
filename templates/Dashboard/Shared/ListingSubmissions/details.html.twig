@@ -1,0 +1,49 @@
+{% extends "Global/layout.html.twig" %}
+
+{% set pagetitle = 'Applied to: ' ~ listingsub.listing.name %}
+
+{% block title %}{{ pagetitle }}{% endblock %}
+
+{% block meta_dynamic_seo %}
+{% endblock %}
+
+{% block content %}
+
+    {% set navigation = [{"listings": "Applications", "current" : (pagetitle)}] %}
+    {% include "Global/navigation.html.twig" with navigation %}
+
+    <section class="section-content padding-y bg-white">
+        <div class="{{ services.getSetting("app_layout") }}">
+            <div class="card">
+                <div class="row">
+                    <div class="col-12 col-lg-6 order-1 order-lg-0">
+                        <div class="card-body">
+                            <div class="row no-gutters">
+                                <div class="col-12 p-0">
+                                    <section class="section-main">
+                                        <p><b>Message</b></p>
+                                        <p>{{ listingsub.content|raw|nl2br }}</p>
+                                        <p><b>Attached document</b></p>
+                                        <div style="display: grid; justify-content: start; align-content: start; align-items: start">
+                                            <a href="{{ path('download_listing_submission_file', {'id': listingsub.id}) }}">Download
+                                                File</a>
+                                            {{ listingsub.fileOriginalName }}
+                                            <img src="{{ asset('assets/img/icons/file.png') }}"
+                                                 alt="File" class="custom-image" style="width: 100px; float: left">
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+    </script>
+{% endblock %}

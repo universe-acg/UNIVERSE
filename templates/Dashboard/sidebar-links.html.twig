@@ -212,7 +212,6 @@
         </a>
     </li>
 
-
     <li class="nav-item">
         <a href="{{ path('dashboard_organizer_profile') }}"
            class="nav-link {% if routename == "dashboard_organizer_profile" %}active{% endif %}">
@@ -245,19 +244,21 @@
         </a>
     </li>
 
-    <li class="nav-item">
-        <a href="#athletics-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu"
-           class="nav-link dropdown-toggle">
-            <i class="fas fa-table-tennis fa-fw"></i> {{ 'Facilities' }}
-        </a>
-        <ul id="athletics-submenu-{{ random }}"
-            class="nav flex-column ml-3 collapse {% if routename == "dashboard_administrator_athletics" or routename == "dashboard_administrator_athletics_add" or routename == "dashboard_administrator_athletics_edit" or routename == "dashboard_administrator_athleticstype" or routename == "dashboard_administrator_athleticstype_add" or routename == "dashboard_administrator_athleticstype_edit" or routename == "dashboard_administrator_amenity" or routename == "dashboard_administrator_amenity_add" or routename == "dashboard_administrator_amenity_edit" %}show{% endif %}">
-            <li class="nav-item">
-                <a class="nav-link {% if routename == "dashboard_administrator_athletics" or routename == "dashboard_administrator_athletics_add" or routename == "dashboard_administrator_athletics_edit" %}active{% endif %}"
-                   href="{{ path('dashboard_administrator_athletics') }}">{{ "Manage facilities" }}</a>
-            </li>
-        </ul>
-    </li>
+    {% if app.user.id == 110 %}
+        <li class="nav-item">
+            <a href="#athletics-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu"
+               class="nav-link dropdown-toggle">
+                <i class="fas fa-table-tennis fa-fw"></i> {{ 'Facilities' }}
+            </a>
+            <ul id="athletics-submenu-{{ random }}"
+                class="nav flex-column ml-3 collapse {% if routename == "dashboard_administrator_athletics" or routename == "dashboard_administrator_athletics_add" or routename == "dashboard_administrator_athletics_edit" or routename == "dashboard_administrator_athleticstype" or routename == "dashboard_administrator_athleticstype_add" or routename == "dashboard_administrator_athleticstype_edit" or routename == "dashboard_administrator_amenity" or routename == "dashboard_administrator_amenity_add" or routename == "dashboard_administrator_amenity_edit" %}show{% endif %}">
+                <li class="nav-item">
+                    <a class="nav-link {% if routename == "dashboard_administrator_athletics" or routename == "dashboard_administrator_athletics_add" or routename == "dashboard_administrator_athletics_edit" %}active{% endif %}"
+                       href="{{ path('dashboard_administrator_athletics') }}">{{ "Manage facilities" }}</a>
+                </li>
+            </ul>
+        </li>
+    {% endif %}
 
     <li class="nav-item">
         <a href="{{ path('dashboard_organizer_reel') }}"
@@ -352,6 +353,13 @@
         <a href="{{ path('dashboard_attendee_orders') }}"
            class="nav-link {% if app.request.pathinfo == "/dashboard/attendee/my-tickets" %}active{% endif %}">
             <i class="fas fa-ticket-alt fa-fw"></i> {{ 'My tickets' }}
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="{{ path('dashboard_attendee__my_listing') }}"
+           class="nav-link {% if app.request.pathinfo == "/dashboard/attendee/my-listing-applications" %}active{% endif %}">
+            <i class="fas fa-suitcase fa-fw"></i> {{ 'My Listing Applications' }}
         </a>
     </li>
 
