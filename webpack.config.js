@@ -1,3 +1,7 @@
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
+
 var Encore = require('@symfony/webpack-encore');
 
 Encore
@@ -19,11 +23,6 @@ Encore
     .addEntry('app.red', './assets/js/themes/app.red.js')
     .addEntry('app.green', './assets/js/themes/app.green.js')
     .addEntry('app.dark', './assets/js/themes/app.dark.js')
-    .addEntry('app.fr', './assets/js/i18n/app.fr.js')
-    // .addEntry('app.es', './assets/js/i18n/app.es.js')
-    // .addEntry('app.ar', './assets/js/i18n/app.ar.js')
-    // .addEntry('app.de', './assets/js/i18n/app.de.js')
-    // .addEntry('app.pt', './assets/js/i18n/app.pt.js')
     .addEntry('events', './assets/js/events.js')
     .addEntry('event', './assets/js/event.js')
     .addEntry('organizerprofile', './assets/js/organizerprofile.js')

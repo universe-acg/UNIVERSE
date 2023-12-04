@@ -93,7 +93,7 @@
                  // Perform your form submission logic here
                  axios({
                      method: 'post',
-                     url: 'https://universeacg.xyz/dashboard/attendee/manage-reels-video/add',
+                     url: 'http://localhost/newunvierse/dashboard/attendee/manage-reels-video/add',
                      data: formData,
                      headers: {
                          'Content-Type': 'multipart/form-data',
@@ -117,7 +117,7 @@
                              // Display the message in your preferred way (e.g., alert, toast, etc.)
                              toastr[messageType](message, messageType.toUpperCase());
                          }
-                         window.location.href = 'https://universeacg.xyz/dashboard/attendee/manage-reels';
+                         window.location.href = 'http://localhost/newunvierse/dashboard/attendee/manage-reels';
                      })
                      .catch(function (error) {
                          console.error('Error submitting form:', error);

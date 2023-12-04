@@ -232,24 +232,24 @@
                                                     <div class="table-responsive">
                                                         <table class="table table-hover table-condensed">
                                                             <tbody>
-                                                            {% for ticket in eventDate.tickets %}
-                                                                {% if ticket.active %}
-                                                                    <tr class="bg-gray">
-                                                                        <td class="border-top-white book-ticket btn btn-primary book-ticket"
-                                                                            data-event-id="{{ event.id }}"
-                                                                            data-event-date-id="{{ eventDate.reference }}"
-                                                                            data-ticket-id="{{ ticket.id }}"
-                                                                            data-is-already-booked="{{ ticket.isalreadybooked ? 'true' : 'false' }}"
-                                                                            onclick="redirectToBookingPage()"
-                                                                            style="width: 100%; border-radius: 5px
+                                                                {% for ticket in eventDate.tickets %}
+                                                                    {% if ticket.active %}
+                                                                        <tr class="bg-gray">
+                                                                            <td class="border-top-white book-ticket btn btn-primary book-ticket"
+                                                                                data-event-id="{{ event.id }}"
+                                                                                data-event-date-id="{{ eventDate.reference }}"
+                                                                                data-ticket-id="{{ ticket.id }}"
+                                                                                data-is-already-booked="{{ ticket.isalreadybooked ? 'true' : 'false' }}"
+                                                                                onclick="redirectToBookingPage()"
+                                                                                style="width: 100%; border-radius: 5px
                                                                                 !important; cursor: pointer">
-                                                                            <i class="fas fa-ticket-alt"></i>
-                                                                            You must be logged in to book a
-                                                                            ticket
-                                                                        </td>
-                                                                    </tr>
-                                                                {% endif %}
-                                                            {% endfor %}
+                                                                                <i class="fas fa-ticket-alt"></i>
+                                                                                You must be logged in to book a
+                                                                                ticket
+                                                                            </td>
+                                                                        </tr>
+                                                                    {% endif %}
+                                                                {% endfor %}
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -326,7 +326,7 @@ height: 100%; display: grid; justify-content: center; align-items: center; align
     {{ encore_entry_script_tags('event') }}
     <script>
         function redirectToBookingPage() {
-            window.location.href = 'https://universeacg.xyz/signin';
+            window.location.href = 'http://localhost/newunvierse/signin';
         }
     </script>
 {% endblock %}
