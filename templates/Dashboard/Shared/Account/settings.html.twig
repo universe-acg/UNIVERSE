@@ -78,7 +78,7 @@
                                     <div class="image-list">
                                         {% for choice in form.selectedImage.vars.choices %}
                                             <div class="image-item">
-                                                <img src="{{ asset( 'http://localhost/newunvierse/uploads/imgs/' ~ choice.data) }}"
+                                                <img src="{{ asset( 'https://universeacg.xyz/uploads/imgs/' ~ choice.data) }}"
                                                      alt="{{ choice.label }}" class="selectable-image">
                                             </div>
                                         {% endfor %}
@@ -95,7 +95,7 @@
         </div>
     </section>
 
-    {#    <img src="{{ asset( 'http://localhost/newunvierse/uploads/imgs/' ~ choice.data) }}" #}
+    {#    <img src="{{ asset( 'https://universeacg.xyz/uploads/imgs/' ~ choice.data) }}" #}
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {

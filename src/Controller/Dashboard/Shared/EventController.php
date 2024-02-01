@@ -1008,7 +1008,7 @@
                 $emaildata = [
                     $title = $event->getName(),
                     $startdate = $event->getEventdates()[0]->getStartdate()->format('Y-m-d H:i:s'),
-                    $link = "http://localhost/newunvierse/event/" . $event->getSlug(),
+                    $link = "https://universeacg.xyz/event/" . $event->getSlug(),
                 ];
                 
                 $message = "The creator you are following has just created a new event: " . $event->getName();

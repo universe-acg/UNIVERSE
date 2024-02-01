@@ -102,7 +102,7 @@
                             $emaildata = [
                                 $title = $event->getName() . " | " . $eventDate->getTickets()[0]->getName(),
                                 $startdate = $eventDate->getStartdate()->format('D j M Y, g:i A'),
-                                $link = "http://localhost/newunvierse/event/" . $event->getSlug(),
+                                $link = "https://universeacg.xyz/event/" . $event->getSlug(),
                             ];
                             $email = (new Swift_Message($this->appServices->getSetting('website_name') . ' - Kind reminder, ' . $event->getName() . ' is taking place today'))
                                 ->setFrom($this->appServices->getSetting('no_reply_email'))

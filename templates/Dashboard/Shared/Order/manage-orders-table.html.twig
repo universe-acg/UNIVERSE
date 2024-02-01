@@ -19,7 +19,7 @@
                         {% for orderelement in order.orderelements %}
                             {% if is_granted('ROLE_ATTENDEE') %}
                                 {% if (not app.request.get('event') or app.request.get('event') == orderelement.eventticket.eventdate.event.slug) and (not app.request.get('eventdate') or app.request.get('eventdate') == orderelement.eventticket.eventdate.reference) and (not app.request.get('eventticket') or app.request.get('eventticket') == orderelement.eventticket.reference) and (not app.request.get('organizer') or app.request.get('organizer') == orderelement.eventticket.eventdate.event.organizer.slug) %}
-                                    {% set eventlink  = "http://localhost/newunvierse/event/" ~ orderelement.eventticket.eventdate.event.slug %}
+                                    {% set eventlink  = "https://universeacg.xyz/event/" ~ orderelement.eventticket.eventdate.event.slug %}
                                     <a href="{{ path('event', { slug: orderelement.eventticket.eventdate.event.slug }) }}">{{ orderelement.eventticket.eventdate.event.name }}
                                         | {{ orderelement.eventticket.name }}</a>
                                 {% endif %}

@@ -1710,54 +1710,54 @@
                     $points = $this->getPoints();
                     
                     if ($points >= 50) {
-                        return 'http://localhost/newunvierse/uploads/imgs/' . "LEVELS_ATTENDEES-05-05.png";
+                        return 'https://universeacg.xyz/uploads/imgs/' . "LEVELS_ATTENDEES-05-05.png";
                     }
                     
                     if ($points >= 40) {
-                        return 'http://localhost/newunvierse/uploads/imgs/' . "LEVELS_ATTENDEES-04.png";
+                        return 'https://universeacg.xyz/uploads/imgs/' . "LEVELS_ATTENDEES-04.png";
                     }
                     
                     if ($points >= 30) {
-                        return 'http://localhost/newunvierse/uploads/imgs/' . "LEVELS_ATTENDEES-03.png";
+                        return 'https://universeacg.xyz/uploads/imgs/' . "LEVELS_ATTENDEES-03.png";
                     }
                     
                     if ($points >= 20) {
-                        return 'http://localhost/newunvierse/uploads/imgs/' . "LEVELS_ATTENDEES-02.png";
+                        return 'https://universeacg.xyz/uploads/imgs/' . "LEVELS_ATTENDEES-02.png";
                     }
 
 //                if ($points >= 10) {
-                    return 'http://localhost/newunvierse/uploads/imgs/' . "LEVELS_ATTENDEES-01.png";
+                    return 'https://universeacg.xyz/uploads/imgs/' . "LEVELS_ATTENDEES-01.png";
 //                }
                     
-                    return 'http://localhost/newunvierse/uploads/imgs/' . "LEVELS_ATTENDEES-01.png";
+                    return 'https://universeacg.xyz/uploads/imgs/' . "LEVELS_ATTENDEES-01.png";
                 } else {
-                    return 'http://localhost/newunvierse/uploads/imgs/' . "LEVELS_ATTENDEES-01.png";
+                    return 'https://universeacg.xyz/uploads/imgs/' . "LEVELS_ATTENDEES-01.png";
                 }
             } elseif ($this->getRole() == "Attendee") {
                 if ($this->getSpecialuser()) {
-                    return 'http://localhost/newunvierse/uploads/imgs/' . "special.png";
+                    return 'https://universeacg.xyz/uploads/imgs/' . "special.png";
                 }
                 $points = $this->getPoints();
                 
                 if ($points >= 1 && $points < 2) {
-                    return 'http://localhost/newunvierse/uploads/imgs/' . "smurf.png";
+                    return 'https://universeacg.xyz/uploads/imgs/' . "smurf.png";
                 }
                 
                 if ($points >= 2 && $points < 3) {
-                    return 'http://localhost/newunvierse/uploads/imgs/' . "ricky.png";
+                    return 'https://universeacg.xyz/uploads/imgs/' . "ricky.png";
                 }
                 
                 if ($points >= 3 && $points < 4) {
-                    return 'http://localhost/newunvierse/uploads/imgs/' . "force.png";
+                    return 'https://universeacg.xyz/uploads/imgs/' . "force.png";
                 }
                 
                 if ($points >= 4) {
-                    return 'http://localhost/newunvierse/uploads/imgs/' . "inter.png";
+                    return 'https://universeacg.xyz/uploads/imgs/' . "inter.png";
                 }
                 
             }
             
-            return 'http://localhost/newunvierse/uploads/imgs/' . "smurf.png";
+            return 'https://universeacg.xyz/uploads/imgs/' . "smurf.png";
         }
         
         /**

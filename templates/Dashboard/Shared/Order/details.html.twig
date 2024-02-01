@@ -290,7 +290,7 @@
                                                                 {% endif %}
 
                                                                 {% if order.status == 1 or order.status == 2 %}
-                                                                    <a href="{{ path('dashboard_tickets_print', { reference: order.reference, link: "http://localhost/newunvierse/event/" ~ orderelement.eventticket.eventdate.event.slug }) }}"
+                                                                    <a href="{{ path('dashboard_tickets_print', { reference: order.reference, link: "https://universeacg.xyz/event/" ~ orderelement.eventticket.eventdate.event.slug }) }}"
                                                                        class="btn btn-primary" target="_blank"><i
                                                                                 class="fas fa-ticket-alt"></i> {{ "Print" }}
                                                                     </a>

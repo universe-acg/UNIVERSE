@@ -265,6 +265,7 @@
             $this->listings = new ArrayCollection();
             $this->followedby = new ArrayCollection();
             $this->events = new ArrayCollection();
+            $this->isathletics = false;
             $this->views = 0;
         }
         

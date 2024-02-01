@@ -80,7 +80,7 @@
                                     </a>
                                 {% elseif is_granted('ROLE_ORGANIZER') %}
                                     <a class="dropdown-item"
-                                       href="http://localhost/newunvierse/dashboard/organizer/my-events">
+                                       href="https://universeacg.xyz/dashboard/organizer/my-events">
                                         <i class="fas fa-tachometer-alt fa-fw"></i> {{ 'Dashboard' }}
                                     </a>
                                 {% elseif is_granted('ROLE_ATTENDEE') %}
@@ -166,7 +166,7 @@
                                 </div>
                             </li>
                         {% else %}
-                            {% if link != "/events" and link != "/dashboard/attendee/my-tickets" and link != "/dashboard/organizer/my-events/add" and menuElement.customLink  != "http://localhost/newunvierse/scanqr" and menuElement.customLink  != "http://localhost/newunvierse/open-events" %}
+                            {% if link != "/events" and link != "/dashboard/attendee/my-tickets" and link != "/dashboard/organizer/my-events/add" and menuElement.customLink  != "https://universeacg.xyz/scanqr" and menuElement.customLink  != "https://universeacg.xyz/open-events" %}
                                 <li class="nav-item {% if app.request.pathinfo == link %}active{% endif %}">
                                     <a class="nav-link" href="{{ link }}">
                                         {% if menuElement.icon %}
@@ -202,7 +202,7 @@
                                         </a>
                                     </li>
                                 {% endif %}
-                                {% if menuElement.customLink == "http://localhost/newunvierse/open-events"  and  app.user is empty %}
+                                {% if menuElement.customLink == "https://universeacg.xyz/open-events"  and  app.user is empty %}
                                     <li class="nav-item {% if app.request.pathinfo == link %}active{% endif %}">
                                         <a class="nav-link" href="{{ link }}">
                                             {% if menuElement.icon %}
@@ -225,7 +225,7 @@
                                         {% endif %}
                                     </a>
                                 {% endif %}
-                                {% if menuElement.customLink == "http://localhost/newunvierse/scanqr" and is_granted('ROLE_ORGANIZER') %}
+                                {% if menuElement.customLink == "https://universeacg.xyz/scanqr" and is_granted('ROLE_ORGANIZER') %}
                                     <li class="nav-item {% if app.request.pathinfo == link %}active{% endif %}">
                                         <a class="nav-link" href="{{ link }}">
                                             {% if menuElement.icon %}
@@ -246,17 +246,17 @@
                                aria-haspopup="true" aria-expanded="false"><i
                                         class="fa-fw"></i>Alpha Stage Features</a>
                             <div class="dropdown-menu dropdown-menu-arrow">
-                                <a class="dropdown-item" href="http://localhost/newunvierse/leaderboards"><i
+                                <a class="dropdown-item" href="https://universeacg.xyz/leaderboards"><i
                                             class="fa-fw"></i>Leaderboards</a>
-                                <a class="dropdown-item" href="http://localhost/newunvierse/venues"><i
+                                <a class="dropdown-item" href="https://universeacg.xyz/venues"><i
                                             class="fa-fw"></i>Venues</a>
-                                <a class="dropdown-item" href="http://localhost/newunvierse/athletics"><i
+                                <a class="dropdown-item" href="https://universeacg.xyz/athletics"><i
                                             class="fa-fw"></i>Athletics</a>
-                                <a class="dropdown-item" href="http://localhost/newunvierse/listings"><i
+                                <a class="dropdown-item" href="https://universeacg.xyz/listings"><i
                                             class="fa-fw"></i>Listings</a>
-                                <a class="dropdown-item" href="http://localhost/newunvierse/reels"><i
+                                <a class="dropdown-item" href="https://universeacg.xyz/reels"><i
                                             class="fa-fw"></i>Reels</a>
-                                <a class="dropdown-item" href="http://localhost/newunvierse/chat"><i
+                                <a class="dropdown-item" href="https://universeacg.xyz/chat"><i
                                             class="fa-fw"></i>Chat</a>
                             </div>
                         </li>
@@ -291,8 +291,13 @@
 
         // Check if there are unread notifications and update the badge
         {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-        var hasUnreadNotifications = {{ services.hasUnreadNotifications()|default(false) }};
+        {% if services.hasUnreadNotifications()|default(false) %}
+        var hasUnreadNotifications = true;
+        {% else %}
+        var hasUnreadNotifications = false;
         {% endif %}
+        {% endif %}
+
         var badge = document.querySelector('.badge');
         if (hasUnreadNotifications) {
             badge.style.display = 'block';

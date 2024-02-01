@@ -15,7 +15,6 @@
 
         <meta name="twitter:card" content="summary_large_image"/>
         <meta name="twitter:site" content="@{{ services.getSetting("website_slug") }}"/>
-        <link rel="manifest" href="/manifest.json">
 
         {% block meta_dynamic_seo %}
             <meta name="description" content="{{ services.getSetting("website_description_" ~ app.request.locale) }}"/>
@@ -48,159 +47,164 @@
         {{ encore_entry_link_tags('app') }}
         {{ encore_entry_script_tags('app') }}
 
-        {# Application theme #}
-        {#    {{ encore_entry_link_tags('app.'~services.getSetting('app_theme')) }} #}
+        {{ encore_entry_link_tags('app.'~services.getSetting('app_theme')) }}
         {{ encore_entry_link_tags('app.'~services.getSetting('app_theme')) }}
 
         {% block stylesheets %}
         {% endblock %}
 
-        {% if services.getSetting('custom_css') != "" and services.getSetting('custom_css') is not null %}
-            <style>
-                {{ services.getSetting('custom_css')|raw }}
+        {#        {% if services.getSetting('custom_css') != "" and services.getSetting('custom_css') is not null %} #}
+        <style>
+            {{ services.getSetting('custom_css')|raw }}
 
-                .vich-image a img {
-                    width: 250px;
-                }
+            .vich-image a img {
+                width: 250px;
+            }
 
-                .cookies-popup {
-                    position: fixed;
-                    bottom: 0;
-                    left: 0;
-                    width: 100%;
-                    background-color: #333;
-                    color: #fff;
-                    text-align: center;
-                    padding: 10px;
-                    display: none;
-                }
+            .cookies-popup {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background-color: #333;
+                color: #fff;
+                text-align: center;
+                padding: 10px;
+                display: none;
+            }
 
-                .cookies-popup-content {
-                    max-width: 600px;
-                    margin: 0 auto;
-                }
+            .cookies-popup-content {
+                max-width: 600px;
+                margin: 0 auto;
+            }
 
-                #accept-cookies {
-                    background-color: #4CAF50;
-                    color: white;
-                    border: none;
-                    padding: 10px 20px;
-                    cursor: pointer;
-                }
+            #accept-cookies {
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                cursor: pointer;
+            }
 
-                .cookies-popup1 {
-                    position: fixed;
-                    bottom: 0;
-                    left: 0;
-                    width: 100%;
-                    background-color: #333;
-                    color: #fff;
-                    text-align: center;
-                    padding: 10px;
-                    display: none;
-                }
+            .cookies-popup1 {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background-color: #333;
+                color: #fff;
+                text-align: center;
+                padding: 10px;
+                display: none;
+            }
 
-                .cookies-popup-content1 {
-                    max-width: 600px;
-                    margin: 0 auto;
-                }
+            .cookies-popup-content1 {
+                max-width: 600px;
+                margin: 0 auto;
+            }
 
-                #accept-cookies1 {
-                    background-color: #4CAF50;
-                    color: white;
-                    border: none;
-                    padding: 10px 20px;
-                    cursor: pointer;
-                }
+            #accept-cookies1 {
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                cursor: pointer;
+            }
 
-                /* Style for the circular image container */
-                .circular-image-container {
-                    position: relative;
-                    width: 100px; /* Set your desired size for the circular image container */
-                    height: 100px; /* Set your desired size for the circular image container */
-                    border-radius: 50%; /* Makes the container round */
-                }
+            /* Style for the circular image container */
+            .circular-image-container {
+                position: relative;
+                width: 100px; /* Set your desired size for the circular image container */
+                height: 100px; /* Set your desired size for the circular image container */
+                border-radius: 50%; /* Makes the container round */
+            }
 
-                /* Style for the circular image */
-                .circular-image {
-                    display: block;
-                    width: 90%;
-                    height: 90%;
-                    object-fit: cover !important; /* Adjust this for image positioning */
-                    border-radius: 50%; /* Makes the image itself round */
-                }
+            /* Style for the circular image */
+            .circular-image {
+                display: block;
+                width: 90%;
+                height: 90%;
+                object-fit: cover !important; /* Adjust this for image positioning */
+                border-radius: 50%; /* Makes the image itself round */
+            }
 
-                /* Style for the surrounding image */
-                .surrounding-image {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 110%; /* Set your desired size for the surrounding image */
-                    height: 110%; /* Set your desired size for the surrounding image */
-                    object-fit: contain !important; /* Adjust this for image positioning */
-                }
+            /* Style for the surrounding image */
+            .surrounding-image {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 110%; /* Set your desired size for the surrounding image */
+                height: 110%; /* Set your desired size for the surrounding image */
+                object-fit: contain !important; /* Adjust this for image positioning */
+            }
 
-                .bottom-right-image {
-                    position: absolute;
-                    bottom: 0;
-                    right: 0;
-                    width: 40px; /* Set your desired size for the bottom-right image */
-                    height: 40px; /* Set your desired size for the bottom-right image */
-                    object-fit: contain; /* Adjust this for image positioning */
-                }
+            .bottom-right-image {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                width: 40px; /* Set your desired size for the bottom-right image */
+                height: 40px; /* Set your desired size for the bottom-right image */
+                object-fit: contain; /* Adjust this for image positioning */
+            }
 
-                .outer-image {
-                    position: relative;
-                    display: inline-block;
-                    z-index: 10;
-                }
+            .outer-image {
+                position: relative;
+                display: inline-block;
+                z-index: 10;
+            }
 
-                .outer-image img {
-                    width: 100px;
-                    height: 100px;
-                }
+            .outer-image img {
+                width: 100px;
+                height: 100px;
+            }
 
-                .styled-button2 {
-                    background-color: #44318D; /* Purple background color */
-                    color: #FFFFFF; /* White text color */
-                    border: none;
-                    border-radius: 10px; /* Adds a curved shape */
-                    padding: 7px 9px;
-                    margin: 5px;
-                    cursor: pointer;
-                    font-size: 12px;
-                }
+            .styled-button2 {
+                background-color: #44318D; /* Purple background color */
+                color: #FFFFFF; /* White text color */
+                border: none;
+                border-radius: 10px; /* Adds a curved shape */
+                padding: 7px 9px;
+                margin: 5px;
+                cursor: pointer;
+                font-size: 12px;
+            }
 
-                .inner-image {
-                    position: absolute;
-                    top: 50%;
-                    left: 52%;
-                    height: 100%;
-                    transform: translate(-46%, -45%);
-                    width: 100%;
-                    padding: 17px;
-                    z-index: -1;
-                }
+            .inner-image {
+                position: absolute;
+                top: 50%;
+                left: 52%;
+                height: 100%;
+                transform: translate(-46%, -45%);
+                width: 100%;
+                padding: 17px;
+                z-index: -1;
+            }
 
-                .inner-image img {
-                    width: 90%;
-                    height: 90%;
-                    border-radius: 50%;
-                }
+            .inner-image img {
+                width: 90%;
+                height: 90%;
+                border-radius: 50%;
+            }
 
-                /*p, div, h1, h2, h3, h4, h5, h6, ul, ol, li, pre, blockquote, table, form, header, footer, section, article, aside, main, nav, menu, details, summary, figure, figcaption,*/
-                /*.navbar *, .header-main, .section-header *, .section-content *, .section-pagetop *, *, html, body {*/
-                /*    background-color: #222 !important;*/
-                /*    color: #fff0ff !important;*/
-                /*}*/
+            /*p, div, h1, h2, h3, h4, h5, h6, ul, ol, li, pre, blockquote, table, form, header, footer, section, article, aside, main, nav, menu, details, summary, figure, figcaption,*/
+            /*.navbar *, .header-main, .section-header *, .section-content *, .section-pagetop *, *, html, body {*/
+            /*    background-color: #222 !important;*/
+            /*    color: #fff0ff !important;*/
+            /*}*/
 
-                .container, section, nav {
-                    /*max-width: 100% !important;*/
-                    /*width: 100% !important;*/
-                    /*margin: auto;*/
-                }
-            </style>
-        {% endif %}
+            .container, section, nav {
+                /*max-width: 100% !important;*/
+                /*width: 100% !important;*/
+                /*margin: auto;*/
+            }
+
+            .btn-group.white a.btn {
+                border-radius: 4px !important;
+                margin: 1px;
+            }
+
+        </style>
+        {#        {% endif %} #}
         <script src="https://unpkg.com/darkmode-js@1.3.4/lib/darkmode-js.js"></script>
 
         <script>
@@ -270,42 +274,42 @@
         {% if services.getSetting("show_back_to_top_button") == "yes" %}
         <a class="material-scrolltop cursor-pointer btn btn-sm btn-primary"></a>
         {% endif %}<!-- Cookies Popup -->
-        <div id="cookies-popup1" class="cookies-popup1"
-             style="position: fixed; bottom: 0; z-index: 99999 !important; background: orange">
-            <div class="cookies-popup-content1" style="padding: 10px;">
-                <a href="http://localhost/newunvierse/contact" style="color: #6f42c1; font-weight: bolder;">WE
-                    ARE LOOKING FOR
-                    DEVELOPERS/CONTRIBUTORS TO GET INVOLVED IN THE
-                    PROJECT</a>
-                <button id="accept-cookies1" style="margin-top: 10px">Accept</button>
-            </div>
-        </div>
+        {#        <div id="cookies-popup1" class="cookies-popup1" #}
+        {#             style="position: fixed; bottom: 0; z-index: 99999 !important; background: orange"> #}
+        {#            <div class="cookies-popup-content1" style="padding: 10px;"> #}
+        {#                <a href="https://universeacg.xyz/contact" style="color: #6f42c1; font-weight: bolder;">WE #}
+        {#                    ARE LOOKING FOR #}
+        {#                    DEVELOPERS/CONTRIBUTORS TO GET INVOLVED IN THE #}
+        {#                    PROJECT</a> #}
+        {#                <button id="accept-cookies1" style="margin-top: 10px">Accept</button> #}
+        {#            </div> #}
+        {#        </div> #}
         <div id="cookies-popup" class="cookies-popup" style="position: fixed; bottom: 0; z-index: 99999 !important;">
             <div class="cookies-popup-content">
                 <p>This website uses cookies to ensure you get the best experience on our website. By using this site
                     you agree to the
-                    <a href="http://localhost/newunvierse/page/cookie-policy">Cookie Policy</a>.</p>
+                    <a href="https://universeacg.xyz/page/cookie-policy">Cookie Policy</a>.</p>
                 <button id="accept-cookies">Accept</button>
             </div>
         </div>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 const cookiesPopup = document.getElementById("cookies-popup");
-                const cookiesPopup1 = document.getElementById("cookies-popup1");
+                // const cookiesPopup1 = document.getElementById("cookies-popup1");
                 const acceptCookiesButton = document.getElementById("accept-cookies");
-                const acceptCookiesButton1 = document.getElementById("accept-cookies1");
+                // const acceptCookiesButton1 = document.getElementById("accept-cookies1");
 
                 // Check if the user has already accepted cookies
                 const cookiesAccepted = localStorage.getItem("cookiesAccepted");
-                const cookiesAccepted1 = localStorage.getItem("cookiesAccepted1");
+                // const cookiesAccepted1 = localStorage.getItem("cookiesAccepted1");
 
                 if (!cookiesAccepted) {
                     cookiesPopup.style.display = "block";
                 }
 
-                if (!cookiesAccepted1) {
-                    cookiesPopup1.style.display = "block";
-                }
+                // if (!cookiesAccepted1) {
+                //     cookiesPopup1.style.display = "block";
+                // }
 
                 // When the user clicks "Accept," hide the popup and store their choice
                 acceptCookiesButton.addEventListener("click", function () {
@@ -313,10 +317,10 @@
                     localStorage.setItem("cookiesAccepted", "true");
                 });
 
-                acceptCookiesButton1.addEventListener("click", function () {
-                    cookiesPopup1.style.display = "none";
-                    localStorage.setItem("cookiesAccepted1", "true");
-                });
+                // acceptCookiesButton1.addEventListener("click", function () {
+                //     cookiesPopup1.style.display = "none";
+                //     localStorage.setItem("cookiesAccepted1", "true");
+                // });
             });
         </script>
         <!-- Google tag (gtag.js) -->

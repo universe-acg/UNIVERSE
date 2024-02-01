@@ -285,7 +285,7 @@
 
                 // If it's visible to all members, make an XHR request to retrieve member data
                 if (isVisibleToAllMembers) {
-                    $.get('http://localhost/newunvierse/api/getmembers', function (data) {
+                    $.get('https://universeacg.xyz/api/getmembers', function (data) {
                         $.each(data, function (userId, displayName) {
                             // Create a new option element
                             var option = new Option(displayName, userId, true, true);

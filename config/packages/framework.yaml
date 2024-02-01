@@ -9,7 +9,7 @@ framework:
     handler_id: 'session.handler.native_file'
     cookie_secure: auto
     cookie_samesite: lax
-    save_path: '/var/www/vhosts/universeacg.xyz/httpdocs/sessions/dev'
+    save_path: '/var/www/universe/sessions/dev'
   #        save_path: '%kernel.project_dir%/sessions/%kernel.environment%'
 
   #esi: true

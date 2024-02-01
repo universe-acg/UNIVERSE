@@ -1,3 +1,7 @@
+/*
+ * AUTHOR: ALEXANDROS KOURTIS
+ */
+
 // css & scss
 
 require('../vendor/HoldOn.js/HoldOn.min.css');
@@ -44,7 +48,7 @@ $(document).ready(function () {
                 theme: "sk-fading-circle",
                 content: 'Please wait while saving your configuration...',
                 backgroundColor: "#fff",
-                textColor: "#f67611"
+                textColor: "#2E7599"
             });
             window.location = $('#finish-step').data('save-configuration-path') + '?host=' + $('#host').val() + '&username=' + $('#username').val() + '&password=' + $('#password').val() + '&name=' + $('#name').val();
         }
@@ -89,7 +93,12 @@ $(document).ready(function () {
             $.ajax({
                 type: 'GET',
                 url: $('#finish-step').data('test-database-connection-path'),
-                data: {host: $('#host').val(), username: $('#username').val(), password: $('#password').val(), name: $('#name').val()},
+                data: {
+                    host: $('#host').val(),
+                    username: $('#username').val(),
+                    password: $('#password').val(),
+                    name: $('#name').val()
+                },
                 beforeSend: function () {
                     $('#database-connection-error').addClass('d-none');
                     $('#database-connection-success').addClass('d-none');
