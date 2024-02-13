@@ -45,6 +45,32 @@
             }
         }
 
+        .fixed-sidebar {
+            position: fixed;
+            top: 140px;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .col-lg-9 {
+            margin-left: 25%; /* Ensure proper spacing between the fixed sidebar and main content */
+        }
+
+        /* Responsive styles for mobile */
+        @media (max-width: 1000px) {
+            .fixed-sidebar {
+                position: relative;
+                top: initial;
+                left: initial;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .col-lg-9 {
+                margin-left: 0; /* Reset margin-left */
+            }
+        }
     </style>
 
     {#    {% include "Global/navigation.html.twig" with navigation %} #}
@@ -82,21 +108,10 @@
             <div id="events-calendar" data-default-date="{{ "now"|date('Y-m-d') }}"
                  data-events="{{ eventsoncalendar|json_encode() }}" class="mb-4 collapse"></div>
 
-            <div class="box shadow-none bg-gray mb-4">
-                <div class="row">
-                    <div class="col-sm-12 col-lg-2  mb-3 mb-lg-0">
-                        <span class="center-lg-y text-muted">{{ "%resultsCount% event(s) found"  |trans ({'%resultsCount%': events.getTotalItemCount}) }}</span>
-                    </div>
-                    <div class="col-sm-12 col-lg-6 ">
-                        <a href="#events-calendar" class="btn btn-primary has-tooltip" data-toggle="collapse"
-                           title="{{ "Show events calendar" }}" aria-expanded="false"
-                           aria-controls="events-calendar"><i class="far fa-calendar fa-fw"></i></a>
-                    </div>
-                </div>
-            </div>
 
             <div class="row" style="">
-                <aside class="col-lg-3 order-2 order-lg-1">
+
+                <aside class="col-lg-3 order-1 order-lg-1 fixed-sidebar">
                     <div class="card card-filter filters-section">
                         <form method="get">
                             <article class="card-group-item filter-item">
@@ -382,7 +397,7 @@
                         <div class="row" style="overflow-y: scroll">
                             {% for event in events %}
                                 {#                            <div class="col-12 col-sm-6 col-lg-6 mb-3"> #}
-                                <div class="col-12 col-sm-6 col-lg-6 mb-3">
+                                <div class="col-12 col-sm-3 col-lg-3 mb-3">
                                     {#                                    {% include "Global/event-card.html.twig" with {event: event, past: event.isPassed, attendeed: event.isAttnded} %} #}
                                     {% include "Global/event-card.html.twig" with {event: event, past: event.isPassed} %}
                                 </div>
@@ -400,13 +415,13 @@
 
 {% block javascripts %}
     {{ encore_entry_script_tags('events') }}
-    {% if services.getSetting("show_map_button") == "yes" and google_maps_api_key != "" %}
-        <script async defer
-                src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap">
-        </script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        {% include "Global/event-info-box.html.twig" %}
-    {% endif %}
+    {#    {% if services.getSetting("show_map_button") == "yes" and google_maps_api_key != "" %} #}
+    {#        <script async defer #}
+    {#                src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap"> #}
+    {#        </script> #}
+    {#        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> #}
+    {#        {% include "Global/event-info-box.html.twig" %} #}
+    {#    {% endif %} #}
 
     <script>
         $(document).ready(function () {

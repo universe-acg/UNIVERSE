@@ -107,8 +107,8 @@
             </div>
         {% endif %}
 
-        <a href="{{ path('organizer', {slug: (event.getOrganizer().getUser().getUsername())}) }}"
-           class="link-style text-dark">{{ (event.getOrganizer().getName()) }}</a>
+        Organized by: <a href="{{ path('organizer', {slug: (event.getOrganizer().getUser().getUsername())}) }}"
+                         class="link-style text-dark">{{ (event.getOrganizer().getName()) }}</a>
 
         {% if event.venue %}
             | <a

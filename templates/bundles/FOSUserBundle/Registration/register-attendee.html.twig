@@ -7,95 +7,150 @@
 {% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
-    <section class="section-content padding-y bg-white">
-        <div class="{{ services.getSetting("app_layout") }}">
-            <div class="row">
-                <div class="col-12 mb-5">
-                    <h1 class="card-title text-center">{{ pagetitle }}</h1>
-                </div>
-                <div class="col-xl-5 offset-xl-1 d-none d-xl-block">
-                    <img src="{{ asset('assets/img/illustrations/attendee-event.png') }}" class="img-fluid"/>
-                </div>
-                <div class="col-xl-4 col-12">
-                    {{ form_start(form, {'method': 'post', 'attr': {'novalidate': 'novalidate'}}) }}
-                    {{ form_errors(form) }}
+    <style>
+        .bg-image {
+            background-image: url('https://scontent.fath2-1.fna.fbcdn.net/v/t39.30808-6/295031855_450454157089539_8416018103947211841_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=783fdb&_nc_ohc=Ty9vKXJHaTgAX9Yl8Cb&_nc_ht=scontent.fath2-1.fna&oh=00_AfA2jlAj-Ud8AWnbiTkn5zdq9ad4YL-a-HIZv8NEX4XkKg&oe=65C7F31A');
+            background-size: cover;
+            background-position: center center;
+        }
+    </style>
 
-                    <div class="form-group input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text border-0"> <i class="fas fa-user"></i> </span>
+    <div class="container-fluid" style="height: 100vh">
+        <div class="row no-gutter" style="height: 100vh">
+            <!-- The image half -->
+            <div class="col-md-8 d-none d-md-flex bg-image"></div>
+            <div class="col-md-4 bg-light">
+                <div class="login d-flex align-items-center align-content-center justify-content-center">
+                    <div class="container">
+                        <div class="container d-flex align-items-center justify-content-center vh-100">
+                            <div class="row col">
+                                <div class="col-lg-12 col-xl-12 mx-auto">
+                                    <h3><b>Register as Attendee</b></h3>
+                                    <br>
+                                    {{ form_start(form, {'method': 'post', 'attr': {'novalidate': 'novalidate'}}) }}
+                                    {{ form_errors(form) }}
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text border-0"> <i
+                                                            class="fas fa-user"></i> </span>
+                                            </div>
+                                            {{ form_widget(form.firstname) }}
+                                        </div>
+                                        <small class="form-text text-muted">Enter your official first name.</small>
+                                        {{ form_errors(form.firstname) }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text border-0"> <i
+                                                            class="fas fa-user"></i> </span>
+                                            </div>
+                                            {{ form_widget(form.lastname) }}
+                                        </div>
+                                        <small class="form-text text-muted">Enter your official last name.</small>
+                                        {{ form_errors(form.lastname) }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text border-0"> <i
+                                                            class="fas fa-user"></i> </span>
+                                            </div>
+                                            {{ form_widget(form.studentid) }}
+                                        </div>
+                                        <small class="form-text text-muted">Enter your student ID issued by the
+                                            IRM.</small>
+                                        {{ form_errors(form.studentid) }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text border-0"> <i class="fas fa-user-tag"></i> </span>
+                                            </div>
+                                            {{ form_widget(form.username) }}
+                                        </div>
+                                        <small class="form-text text-muted">Choose a username. Usernames are
+                                            unique.</small>
+                                        {{ form_errors(form.username) }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text border-0"> <i class="fas fa-envelope"></i> </span>
+                                            </div>
+                                            {{ form_widget(form.email) }}
+                                        </div>
+                                        <small class="form-text text-muted">Enter your email address. Make sure you use
+                                            an official valid email that only you have access to.</small>
+                                        {{ form_errors(form.email) }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text border-0"> <i
+                                                            class="fas fa-user-lock"></i> </span>
+                                            </div>
+                                            {{ form_widget(form.plainPassword.first) }}
+                                        </div>
+                                        <small class="form-text text-muted">Enter your password.</small>
+                                        {{ form_errors(form.plainPassword.first) }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text border-0"> <i
+                                                            class="fas fa-user-lock"></i> </span>
+                                            </div>
+                                            {{ form_widget(form.plainPassword.second) }}
+                                        </div>
+                                        <small class="form-text text-muted">Confirm your password.</small>
+                                        {{ form_errors(form.plainPassword.second) }}
+                                    </div>
+
+                                    {% if services.getSetting('google_recaptcha_enabled') == "yes" %}
+                                        <div class="form-group">
+                                            {{ form_widget(form.recaptcha) }}
+                                            {{ form_errors(form.recaptcha) }}
+                                        </div>
+                                    {% endif %}
+
+                                    <div class="mb-3 text-sm text-center">
+                                        {#                                        {% if services.getSetting('show_terms_of_service_page') == "yes" %} #}
+                                        <span class="text-muted">{{ "By clicking the Sign Up button, I agree to" }}</span>
+                                        <a href="{{ path('page', { slug : services.getSetting('terms_of_service_page_slug') }) }}">{{ "Terms of service" }}</a>
+                                        {#                                        {% endif %} #}
+                                        {#                                        {% if services.getSetting('show_privacy_policy_page') == "yes" %} #}
+                                        <span class="text-muted">{{ "and" }}</span>
+                                        <a href="{{ path('page', { slug : services.getSetting('privacy_policy_page_slug') }) }}">{{ "Privacy policy" }}</a>
+                                        {#                                        {% endif %} #}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <button type="submit"
+                                                class="btn btn-primary btn-block">{{ "Create Account" }}</button>
+                                    </div>
+
+                                    <p class="text-center">{{ "Already have an account?" }} <a
+                                                href="{{ path('fos_user_security_login') }}">{{ "Sign in" }}</a>
+                                    </p>
+
+                                    {{ form_widget(form._token) }}
+                                    {{ form_end(form, {'render_rest': false}) }}
+
+                                </div>
+                            </div>
                         </div>
-                        {{ form_widget(form.firstname) }}
-                        {{ form_errors(form.firstname) }}
                     </div>
-                    <div class="form-group input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text border-0"> <i class="fas fa-user"></i> </span>
-                        </div>
-                        {{ form_widget(form.lastname) }}
-                        {{ form_errors(form.lastname) }}
-                    </div>
-                    <div class="form-group input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text border-0"> <i class="fas fa-user"></i> </span>
-                        </div>
-                        {{ form_widget(form.studentid) }}
-                        {{ form_errors(form.studentid) }}
-                    </div>
-                    <div class="form-group input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text border-0"> <i class="fas fa-user-tag"></i> </span>
-                        </div>
-                        {{ form_widget(form.username) }}
-                        {{ form_errors(form.username) }}
-                    </div>
-                    <div class="form-group input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text border-0"> <i class="fas fa-envelope"></i> </span>
-                        </div>
-                        {{ form_widget(form.email) }}
-                        {{ form_errors(form.email) }}
-                    </div>
-                    <div class="form-group input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text border-0"> <i class="fas fa-user-lock"></i> </span>
-                        </div>
-                        {{ form_widget(form.plainPassword.first) }}
-                        {{ form_errors(form.plainPassword.first) }}
-                    </div>
-                    <div class="form-group input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text border-0"> <i class="fas fa-user-lock"></i> </span>
-                        </div>
-                        {{ form_widget(form.plainPassword.second) }}
-                        {{ form_errors(form.plainPassword.second) }}
-                    </div>
-                    {% if services.getSetting('google_recaptcha_enabled') == "yes" %}
-                        <div class="form-group">
-                            {{ form_widget(form.recaptcha) }}
-                            {{ form_errors(form.recaptcha) }}
-                        </div>
-                    {% endif %}
-                    <div class="mb-3 text-sm text-center">
-                        {% if services.getSetting('show_terms_of_service_page') == "yes" %}
-                            <span class="text-muted">{{ "By clicking the Sign Up button, I agree to" }}</span>
-                            <a href="{{ path('page', { slug : services.getSetting('terms_of_service_page_slug') }) }}">{{ "Terms of service" }}</a>
-                        {% endif %}
-                        {% if services.getSetting('show_privacy_policy_page') == "yes" %}
-                            <span class="text-muted">{{ "and" }}</span>
-                            <a href="{{ path('page', { slug : services.getSetting('privacy_policy_page_slug') }) }}">{{ "Privacy policy" }}</a>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        <button type="submit"
-                                class="btn btn-primary btn-block">{{ "Create Account" }}</button>
-                    </div>
-                    <p class="text-center">{{ "Already have an account?" }} <a
-                                href="{{ path('fos_user_security_login') }}">{{ "Sign in" }}</a>
-                    </p>
-                    {{ form_widget(form._token) }}
-                    {{ form_end(form, {'render_rest': false}) }}
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 {% endblock %}

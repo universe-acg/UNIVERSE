@@ -62,7 +62,6 @@ class VenueController extends Controller
             if ($form->isValid()) {
 
                 $this->handleImageUpload($venue);
-
                 // Save event images
                 foreach ($venue->getSecondaryImages() as $image) {
                     $venue->addSecondaryImage($image);

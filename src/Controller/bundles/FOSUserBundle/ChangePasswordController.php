@@ -1,91 +1,90 @@
 <?php
-/*
+    /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-
-namespace App\Controller\bundles\FOSUserBundle;
-
-use FOS\UserBundle\Event\FilterUserResponseEvent;
-use FOS\UserBundle\Event\FormEvent;
-use FOS\UserBundle\Event\GetResponseUserEvent;
-use FOS\UserBundle\Form\Factory\FactoryInterface;
-use FOS\UserBundle\FOSUserEvents;
-use FOS\UserBundle\Model\UserInterface;
-use FOS\UserBundle\Model\UserManagerInterface;
-use PasswordStrength;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
-
-class ChangePasswordController extends Controller
-{
-
-    private $eventDispatcher;
-    private $formFactory;
-    private $userManager;
-    private ValidatorInterface $validator;
-
-    public function __construct(EventDispatcherInterface $eventDispatcher, FactoryInterface $formFactory, UserManagerInterface $userManager, ValidatorInterface $validator)
+    
+    namespace App\Controller\bundles\FOSUserBundle;
+    
+    use FOS\UserBundle\Event\FilterUserResponseEvent;
+    use FOS\UserBundle\Event\FormEvent;
+    use FOS\UserBundle\Event\GetResponseUserEvent;
+    use FOS\UserBundle\Form\Factory\FactoryInterface;
+    use FOS\UserBundle\FOSUserEvents;
+    use FOS\UserBundle\Model\UserInterface;
+    use FOS\UserBundle\Model\UserManagerInterface;
+    use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+    use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+    use Symfony\Component\HttpFoundation\RedirectResponse;
+    use Symfony\Component\HttpFoundation\Request;
+    use Symfony\Component\HttpFoundation\Response;
+    use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+    use Symfony\Component\Validator\Validator\ValidatorInterface;
+    
+    class ChangePasswordController extends Controller
     {
-        $this->eventDispatcher = $eventDispatcher;
-        $this->formFactory = $formFactory;
-        $this->userManager = $userManager;
-        $this->validator = $validator;
-    }
-
-    /**
-     * Change user password.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function changePasswordAction(Request $request): Response
-    {
-
-        $user = $this->getUser();
-        if (!is_object($user) || !$user instanceof UserInterface) {
-            throw new AccessDeniedException('This user does not have access to this section.');
+        
+        private $eventDispatcher;
+        private $formFactory;
+        private $userManager;
+        private ValidatorInterface $validator;
+        
+        public function __construct(EventDispatcherInterface $eventDispatcher, FactoryInterface $formFactory, UserManagerInterface $userManager, ValidatorInterface $validator)
+        {
+            $this->eventDispatcher = $eventDispatcher;
+            $this->formFactory = $formFactory;
+            $this->userManager = $userManager;
+            $this->validator = $validator;
         }
-
-        $event = new GetResponseUserEvent($user, $request);
-        $this->eventDispatcher->dispatch(FOSUserEvents::CHANGE_PASSWORD_INITIALIZE, $event);
-
-        if (null !== $event->getResponse()) {
-            return $event->getResponse();
-        }
-
-        $form = $this->formFactory->createForm();
-        $form->setData($user);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $password = $form->get('plainPassword')->getData();
-            $violations = $this->validator->validate($password, [new PasswordStrength()]);
-
-            $event = new FormEvent($form, $request);
-            $this->eventDispatcher->dispatch(FOSUserEvents::CHANGE_PASSWORD_SUCCESS, $event);
-
-            $this->userManager->updateUser($user);
-
-            if (null === $response = $event->getResponse()) {
-                $url = $this->generateUrl('dashboard_index');
-                $response = new RedirectResponse($url);
+        
+        /**
+         * Change user password.
+         *
+         * @param Request $request
+         *
+         * @return Response
+         */
+        public function changePasswordAction(Request $request): Response
+        {
+            
+            $user = $this->getUser();
+            if (!is_object($user) || !$user instanceof UserInterface) {
+                throw new AccessDeniedException('This user does not have access to this section.');
             }
-
-            $this->eventDispatcher->dispatch(FOSUserEvents::CHANGE_PASSWORD_COMPLETED, new FilterUserResponseEvent($user, $request, $response));
-
-            return $response;
+            
+            $event = new GetResponseUserEvent($user, $request);
+            $this->eventDispatcher->dispatch(FOSUserEvents::CHANGE_PASSWORD_INITIALIZE, $event);
+            
+            if (null !== $event->getResponse()) {
+                return $event->getResponse();
+            }
+            
+            $form = $this->formFactory->createForm();
+            $form->setData($user);
+            
+            $form->handleRequest($request);
+            
+            if ($form->isSubmitted() && $form->isValid()) {
+                $password = $form->get('plainPassword')->getData();
+//            $violations = $this->validator->validate($password, [new PasswordStrength()]);
+                
+                $event = new FormEvent($form, $request);
+                $this->eventDispatcher->dispatch(FOSUserEvents::CHANGE_PASSWORD_SUCCESS, $event);
+                
+                $this->userManager->updateUser($user);
+                
+                if (null === $response = $event->getResponse()) {
+                    $url = $this->generateUrl('dashboard_index');
+                    $response = new RedirectResponse($url);
+                }
+                
+                $this->eventDispatcher->dispatch(FOSUserEvents::CHANGE_PASSWORD_COMPLETED, new FilterUserResponseEvent($user, $request, $response));
+                
+                return $response;
+            }
+            
+            return $this->render('@FOSUser/ChangePassword/change_password.html.twig', array(
+                'form' => $form->createView(),
+            ));
         }
-
-        return $this->render('@FOSUser/ChangePassword/change_password.html.twig', array(
-            'form' => $form->createView(),
-        ));
+        
     }
-
-}

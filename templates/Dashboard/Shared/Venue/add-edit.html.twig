@@ -2,20 +2,21 @@
 
 {% form_theme form 'Global/jquery.collection.html.twig' %}
 
-{% set pagetitle = 'Add a new Athletic Facility' %}
+{% set pagetitle = 'Add a new Venue' %}
 
-{% if athleticfacility.id %}{% set pagetitle = 'Update the Athletic Facility' %}{% endif %}
+{% if venue.id %}{% set pagetitle = 'Update the Venue' %}{% endif %}
 
 {% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
 
     {#    {% if is_granted('ROLE_ADMINISTRATOR') %} #}
-    {#        {% set navigation = [{ "dashboard_index": ('Dashboard' ),  "dashboard_administrator_athleticfacility": ('Manage athleticfacilitys' ), "current":(pagetitle) }] %} #}
+    {#        {% set navigation = [{ "dashboard_index": ('Dashboard' ),  "dashboard_administrator_venue": ('Manage venues' ), "current":(pagetitle) }] %} #}
     {#    {% elseif is_granted('ROLE_ORGANIZER') %} #}
-    {#        {% set navigation = [{ "dashboard_index": ('Dashboard' ),  "dashboard_organizer_athleticfacility": ('my athleticfacilitys' ), "current":(pagetitle) }] %} #}
+    {#        {% set navigation = [{ "dashboard_index": ('Dashboard' ),  "dashboard_organizer_venue": ('my venues' ), "current":(pagetitle) }] %} #}
     {#    {% endif %} #}
-    {% include "Global/navigation.html.twig" with navigation %}
+    {#    {% set navigation = [{ "dashboard_index": ('Dashboard' ), "current":(pagetitle) }] %} #}
+    {#    {% include "Global/navigation.html.twig" with navigation %} #}
 
     <section class="section-content padding-y bg-white">
         <div class="{{ services.getSetting("app_layout") }}">

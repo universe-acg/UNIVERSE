@@ -42,15 +42,15 @@
                                 </form>
                             </div>
                             <div class="col-sm-12 col-lg-6 ">
-                                <label for="sortable-select" class="display-inline">{{ "Sort by" }}
-                                    <select id="sortable-select"
-                                            class="form-control display-inline-block bg-white select2 ml-3"
-                                            data-placeholder="{{ "Select an option" }}" style="width: 100%;">
-                                        {{ knp_pagination_sortable(blogposts, "Creation date" ~ ' (' ~ "desc" ~ ')', "b.createdAt", {"direction": "desc", "criteria": "b.createdAt"}) }}
-                                        {{ knp_pagination_sortable(blogposts, "Creation date" ~ ' (' ~ "asc" ~ ')', "b.createdAt", {"direction": "asc", "criteria": "b.createdAt"}) }}
-                                        {{ knp_pagination_sortable(blogposts, "Popularity" ~ ' (' ~ "desc" ~ ')', "b.views", {"direction": "desc", "criteria": "b.views"}) }}
-                                        {{ knp_pagination_sortable(blogposts, "Popularity" ~ ' (' ~ "asc" ~ ')', "b.views", {"direction": "asc", "criteria": "b.views"}) }}
-                                    </select>
+                                <label for="sortable-select" class="display-inline ml-3 mt-1">{# {{ "Sort by" }} #}
+                                    {#                                    <select id="sortable-select" #}
+                                    {#                                            class="form-control display-inline-block bg-white select2 ml-3" #}
+                                    {#                                            data-placeholder="{{ "Select an option" }}" style="width: 100%;"> #}
+                                    {#                                        {{ knp_pagination_sortable(blogposts, "Creation date" ~ ' (' ~ "desc" ~ ')', "b.createdAt", {"direction": "desc", "criteria": "b.createdAt"}) }} #}
+                                    {#                                        {{ knp_pagination_sortable(blogposts, "Creation date" ~ ' (' ~ "asc" ~ ')', "b.createdAt", {"direction": "asc", "criteria": "b.createdAt"}) }} #}
+                                    {#                                        {{ knp_pagination_sortable(blogposts, "Popularity" ~ ' (' ~ "desc" ~ ')', "b.views", {"direction": "desc", "criteria": "b.views"}) }} #}
+                                    {#                                        {{ knp_pagination_sortable(blogposts, "Popularity" ~ ' (' ~ "asc" ~ ')', "b.views", {"direction": "asc", "criteria": "b.views"}) }} #}
+                                    {#                                    </select> #}
                                 </label>
                                 <a href="{{ path('dashboard_administrator_blog_post_add') }}"
                                    class="btn btn-primary ml-3" data-toggle="tooltip"

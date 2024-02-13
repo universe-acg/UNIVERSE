@@ -137,6 +137,30 @@
                                     </div>
                                 </div>
                             {% endif %}
+
+                            {% set similareventscriteria = {"category" : event.category, "limit" : 8, "otherthan": event.slug} %}
+                            {% set similarevents = services.getEvents(similareventscriteria) %}
+                            <div class="p-5">
+
+                                <div class="mt-5">
+                                    {% include '@FOSComment/Thread/async.html.twig' with {'id':event.slug} %}
+                                </div>
+
+                                {% if similarevents %}
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h3 class="mt-5 mb-4 text-start">{{ "Similar events" }}</h3>
+                                            <div class="owl-init owl-carousel" data-margin="5" data-items="4"
+                                                 data-dots="false"
+                                                 data-nav="true" data-autoplay="true" data-loop="false">
+                                                {% for event in similarevents %}
+                                                    {% include "Global/similar-event-card.html.twig" with {event: event} %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                     <div class="col-12 col-lg-4 order-0 order-lg-1 ">
@@ -249,7 +273,8 @@
                                                                         {#                                                                                disabled="{{ eventDate.tickets[0].isalreadybooked ? 'true' : 'false' }}" #}
                                                                         {#                                                                                class="btn btn-primary" #}
                                                                         {#                                                                                data-dismiss="modal">{{ "Book" }}</button> #}
-                                                                        <button type="button" class="btn btn-primary"
+                                                                        <button type="button"
+                                                                                class="btn btn-primary"
                                                                                 data-dismiss="modal">{{ "Close"|trans }}</button>
                                                                     </div>
                                                                 </div>
@@ -320,21 +345,22 @@ height: 100%; display: grid; justify-content: center; align-items: center; align
                                                 {% endif %}
                                                 {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') or is_granted('ROLE_ATTENDEE') %}
                                                     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                                                        {% if event.organizer.isFollowedBy(app.user) %}
+                                                        {% if event.organizer.user.isFollowedBy(app.user) %}
                                                             <button class="organizer-unfollow btn btn-primary btn-sm"
-                                                                    data-target="{{ path('app_dashboard_attendee_following_remove', { slug : event.organizer.slug }) }}">
+                                                                    data-target="{{ path('app_dashboard_attendee_following_remove', { id : event.organizer.user.id }) }}">
                                                                 <i class="fas fa-folder-minus"></i> {{ "Unfollow" }}
                                                             </button>
                                                         {% else %}
                                                             <button class="organizer-follow btn btn-primary btn-sm"
-                                                                    data-target="{{ path('app_dashboard_attendee_following_add', { slug : event.organizer.slug }) }}">
+                                                                    data-target="{{ path('app_dashboard_attendee_following_add', { id : event.organizer.user.id }) }}">
                                                                 <i class="fas fa-folder-plus"></i> {{ "Follow" }}
                                                             </button>
                                                         {% endif %}
                                                     {% else %}
                                                         <a href="{{ path('fos_user_security_login')~'?_target_path='~app.request.getPathInfo }}"
                                                            class="btn btn-primary btn-sm"><i
-                                                                    class="fas fa-folder-plus"></i> {{ "Follow" }}</a>
+                                                                    class="fas fa-folder-plus"></i> {{ "Follow" }}
+                                                        </a>
                                                     {% endif %}
                                                 {% endif %}
                                             </article>
@@ -395,52 +421,41 @@ height: 100%; display: grid; justify-content: center; align-items: center; align
                                     {% endif %}
                                 {% endif %}
                                 {% if is_granted('ROLE_ATTENDEE') %}
-                                    {% if event.volsneeded %}
-                                        <dl class="mt-5">
-                                            <dt class="text-muted pb-1">The organizers are looking for volunteers
-                                                to
-                                                help.
-                                            </dt>
-                                            <div class="input-group">
-                                                <form method="post" class="input-group"
-                                                      action="{{ path('volunteer_event_make_request', {'eventid': event.id}) }}">
-        <textarea name="message" rows="3" class="mb-3 form-control">Hello, I would like to volunteer my time and skills to help out with the setting up of this event.
-        </textarea>
+                                {#                                {% if event.volsneeded %} #}
+                                {#                                {% if true %} #}
+                                <dl class="mt-5">
+                                    {#                                        <dt class="text-muted pb-1">The organizers are looking for volunteers #}
+                                    {#                                            to #}
+                                    {#                                            help. #}
+                                    {#                                        </dt> #}
+                                    {#                                        <div class="input-group"> #}
+                                    {#                                            <form method="post" class="input-group" #}
+                                    {#                                                  action="{{ path('volunteer_event_make_request', {'eventid': event.id}) }}"> #}
+                                    {#        <textarea name="message" rows="3" class="mb-3 form-control">Hello, I would like to volunteer my time and skills to help out with the setting up of this event. #}
+                                    {#        </textarea> #}
 
-                                                    <button type="submit" class="btn btn-primary btn-block"
-                                                            style="border-radius: 0.25em">
-                                                        Volunteer
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </dl>
-                                    {% endif %}
-                                {% endif %}
+                                    {#                                                <button type="submit" class="btn btn-primary btn-block" #}
+                                    {#                                                        style="border-radius: 0.25em"> #}
+                                    {#                                                    Volunteer #}
+                                    {#                                                </button> #}
+                                    {#                                            </form> #}
+                                    {#                                        </div> #}
+
+                                    <dt class="text-muted pb-1 mt-5">Open volunteer positions</dt>
+                                    {% for listing in listings %}
+                                        {% include "Global/listing-card-inevent.html.twig" with {listing: listing} %}
+                                    {% endfor %}
+                                </dl>
+                                {#                                {% endif %} #}
                             </div>
+                            {% endif %}
                         </div>
-                    </div>
-                    <div class="p-5">
-                        <div class="mt-5">
-                            {% include '@FOSComment/Thread/async.html.twig' with {'id':event.slug} %}
-                        </div>
-                        {% set similareventscriteria = {"category" : event.category, "limit" : 8, "otherthan": event.slug} %}
-                        {% set similarevents = services.getEvents(similareventscriteria) %}
-                        {% if similarevents %}
-                            <div class="row">
-                                <div class="col-12">
-                                    <h3 class="mt-5 mb-4 text-center">{{ "Similar events" }}</h3>
-                                    <div class="owl-init owl-carousel" data-margin="5" data-items="4" data-dots="false"
-                                         data-nav="true" data-autoplay="true" data-loop="false">
-                                        {% for event in similarevents %}
-                                            {% include "Global/similar-event-card.html.twig" with {event: event} %}
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            </div>
-                        {% endif %}
                     </div>
                 </div>
+
+
             </div>
+        </div>
         </div>
     </section>
 

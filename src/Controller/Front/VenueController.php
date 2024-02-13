@@ -51,7 +51,7 @@ class VenueController extends AbstractController
             throw $this->createNotFoundException('Venue not found');
         }
 
-        return $this->render('Dashboard/Shared/Venue/venue_details.html.twig', [
+        return $this->render('Front/Venue/venue_details.html.twig', [
             'venue' => $venue,
             'events' => $events
         ]);
@@ -61,7 +61,7 @@ class VenueController extends AbstractController
     {
         $events = $services->getEventsHomepageIndex([
             "elapsed" => "all",
-//            "venue" => $venue,
+            "venue" => $venue,
             'published' => true,
         ])->getQuery()->getResult();
         $attendedEventIds = [];

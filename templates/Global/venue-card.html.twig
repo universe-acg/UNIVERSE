@@ -5,7 +5,7 @@
         object-fit: contain !important;
     }
 </style>
-<a href="{{ path('venue', { slug : venue.slug }) }}" class="text-dark">
+<a href="{{ path('venue_details', { slug : venue.slug }) }}" class="text-dark">
 
     <div class="card card-event pb-2">
         <div class="img-wrap img-lazy-load image-container"
@@ -16,7 +16,7 @@
         <div class="info-wrap" style="min-height: initial !important;">
             <div class="event-info">
                 <h5>
-                    <a href="{{ path('venue', { slug : venue.slug }) }}"
+                    <a href="{{ path('venue_details', { slug : venue.slug }) }}"
                        class="text-dark">{{ venue.title }}</a>
                 </h5>
             </div>

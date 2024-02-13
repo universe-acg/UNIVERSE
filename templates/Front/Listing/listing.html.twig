@@ -9,17 +9,21 @@
 {% endblock %}
 
 {% block content %}
-
+    <style>
+        .mycontainer {
+            max-width: 75vw !important;
+        }
+    </style>
     {% if is_granted('ROLE_ORGANIZER') %}
         {% if listing.organizer == app.user.organizer %}
             {% include "Global/message.html.twig" with { type: 'info', icon: 'fas fa-info-circle', message: ('<a href="'~ path('dashboard_organizer_listing', {slug: listing.slug}) ~'">' ~ 'Click here' ~ '</a> ' ~ 'to manage your listing') } %}
         {% endif %}
     {% endif %}
 
-    {% set navigation = [{"listings": "Listings", "current" : (pagetitle)}] %}
-    {% include "Global/navigation.html.twig" with navigation %}
+    {#    {% set navigation = [{"listings": "Listings", "current" : (pagetitle)}] %} #}
+    {#    {% include "Global/navigation.html.twig" with navigation %} #}
 
-    <section class="section-content padding-y bg-white">
+    <section class="section-content padding-y bg-white mycontainer mx-auto">
         <div class="{{ services.getSetting("app_layout") }}">
             <div class="card">
                 <div class="row">

@@ -7,6 +7,7 @@ namespace App\Controller\Front;
 
 use App\Entity\Listing;
 use App\Entity\Organizer;
+use App\Entity\UniverseGbMember;
 use App\Repository\OrganizerRepository;
 use App\Repository\UserRepository;
 use App\Service\AppServices;
@@ -71,7 +72,7 @@ class OrganizerController extends AbstractController
 
         $news = $this->getDoctrine()->getRepository(Organizer::class)->findNewsByUser($user);
         $listings = $this->getDoctrine()->getRepository(Listing::class)->getListingsByOrganizerId($user->getOrganizer()->getId());
-
+        $gb = $this->getDoctrine()->getRepository(UniverseGbMember::class)->getByOrg($org->getId());
         $org->setMembers($managementClubsSocietiesService->findUsersOfOrganization($org->getId()));
 
         return $this->render('Front/Organizer/profile.html.twig',
@@ -81,6 +82,7 @@ class OrganizerController extends AbstractController
                 'pastevents' => $pastevents,
                 'listings' => $listings,
                 'news' => $news,
+                'gb' => $gb,
                 'managementClubsSocietiesService' => $managementClubsSocietiesService]
         );
     }

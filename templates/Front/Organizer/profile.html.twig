@@ -100,14 +100,14 @@
                                     <br>
                                     <br>
                                     <br>
-                                    {% if organizer.showfollowers and organizer.followedby|length %}
+                                    {% if organizer.user.showfollowers and organizer.user.followedby|length %}
                                         <div class="py-4 px-4">
                                             <h4 class="mb-2"><i
                                                         class="fas fa-user-plus mr-1"></i> {{ "Followers" }}
                                             </h4>
                                             <div class="card border-0 card-body overflow-auto text-nowrap">
                                                 <div class="avatar-list py-4">
-                                                    {% for user in organizer.followedby %}
+                                                    {% for user in organizer.user.followedby %}
                                                         {% if user.id != organizer.user.id %}
                                                             {% include "Global/user-avatar-events.html.twig" with { user: user, showusernametooltip: true } %}
                                                         {% endif %}
@@ -161,7 +161,7 @@
                                                 </small>
                                             </li>
                                             <li class="list-inline-item">
-                                                <h5 class="font-weight-bold mb-0 d-block">{{ organizer.followedby|length }}</h5>
+                                                <h5 class="font-weight-bold mb-0 d-block">{{ organizer.user.followedby|length }}</h5>
                                                 <small class="text-muted"> <i
                                                             class="fas fa-users mr-1"></i>{{ "Followers" }}
                                                 </small>
@@ -184,14 +184,14 @@
                                             <li class="list-inline-item">
                                                 {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') or is_granted('ROLE_ATTENDEE') %}
                                                     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                                                        {% if organizer.isFollowedBy(app.user) %}
+                                                        {% if organizer.user.isFollowedBy(app.user) %}
                                                             <button class="organizer-unfollow btn btn-outline-primary btn-sm btn-block"
-                                                                    data-target="{{ path('app_dashboard_attendee_following_remove', { slug : organizer.slug }) }}">
+                                                                    data-target="{{ path('app_dashboard_attendee_following_remove', { id : organizer.user.id }) }}">
                                                                 <i class="fas fa-bell-slash"></i>
                                                             </button>
                                                         {% else %}
                                                             <button class="organizer-follow btn btn-outline-primary btn-sm btn-block"
-                                                                    data-target="{{ path('app_dashboard_attendee_following_add', { slug : organizer.slug }) }}"
+                                                                    data-target="{{ path('app_dashboard_attendee_following_add', { id : organizer.user.id }) }}"
                                                             >
                                                                 <i class="fas fa-bell"></i>
                                                             </button>
@@ -265,6 +265,7 @@
                                 {% set pasteventscount = pastevents | length %}
                                 {% set newscount = news | length %}
                                 {% set listingscount = listings | length %}
+                                {% set gbcount = gb | length %}
 
                                 <div class="py-4 px-4">
                                     <ul class="nav nav-pills mb-3">
@@ -296,6 +297,15 @@
                                                    aria-controls="organizer-listings"
                                                    aria-selected="true">{{ "Listings" }}
                                                     ({{ listingscount }})</a>
+                                            </li>
+                                        {% endif %}
+                                        {% if gb|length> 0 %}
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-toggle="pill"
+                                                   href="#organizer-gb" role="tab"
+                                                   aria-controls="organizer-gb"
+                                                   aria-selected="true">{{ "Governing Body Members" }}
+                                                    ({{ gbcount }})</a>
                                             </li>
                                         {% endif %}
                                     </ul>
@@ -343,6 +353,18 @@
                                                 <div class="row">
                                                     {% for listing in listings %}
                                                         {% include "Global/listing-card-inprofile.html.twig" with {listing: listing} %}
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {% include "Global/message.html.twig" with { type: "info", message: ('No listings published yet') } %}
+                                            {% endif %}
+                                        </div>
+                                        <div class="tab-pane fade active" id="organizer-gb"
+                                             role="tabpanel" aria-labelledby="organizer-gb-tab">
+                                            {% if gbcount > 0 %}
+                                                <div class="row">
+                                                    {% for gbmember in gb %}
+                                                        {% include "Global/gb-card.html.twig" with {gbmember: gbmember} %}
                                                     {% endfor %}
                                                 </div>
                                             {% else %}

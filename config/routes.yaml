@@ -126,6 +126,35 @@ dashboard_administrator_venue:
   controller: 'App\Controller\Admin\VenueController::manageVenues'
   methods: GET
 
+# admin athletics
+dashboard_administrator_venues:
+  path: /administrator/manage-venues
+  controller: 'App\Controller\Dashboard\Shared\VenueController::manage'
+  methods: GET
+
+dashboard_administrator_venue_show:
+  path: /administrator/manage-venues/show
+  controller: 'App\Controller\Dashboard\Shared\VenueController::addedit'
+
+dashboard_administrator_venue_hide:
+  path: /administrator/manage-venues/{slug}/hide
+  controller: 'App\Controller\Dashboard\Shared\VenueController::showhide'
+
+dashboard_administrator_venue_add:
+  path: /administrator/manage-venues/add
+  controller: 'App\Controller\Dashboard\Shared\VenueController::addedit'
+  methods: GET|POST
+
+dashboard_administrator_venue_edit:
+  path: /administrator/manage-venues/{slug}/edit
+  controller: 'App\Controller\Dashboard\Shared\VenueController::addedit'
+  methods: GET|POST
+
+dashboard_administrator_venue_delete:
+  path: /administrator/manage-venues/{slug}/delete
+  controller: 'App\Controller\Dashboard\Shared\VenueController::delete'
+  methods: GET
+
 venue_details:
   path: /venue/{slug}
   controller: 'App\Controller\Front\VenueController::venueBySlug'
@@ -436,19 +465,33 @@ dashboard_attendee_bookevent:
   trailing_slash_on_root: false
 
 app_dashboard_attendee_following_add:
-  path: /dashboard/attendee/following/add/{slug}
+  path: /dashboard/attendee/following/add/{id}
+  controller: 'App\Controller\Dashboard\Attendee\FollowingController::addRemove'
+  methods: [ 'GET' ]
+  condition: 'request.isXmlHttpRequest()'
+  trailing_slash_on_root: false
+
+app_dashboard_attendee_following_remove:
+  path: /dashboard/attendee/following/remove/{id}
   controller: 'App\Controller\Dashboard\Attendee\FollowingController::addRemove'
   methods: [ 'GET' ]
   condition: 'request.isXmlHttpRequest()'
   
   trailing_slash_on_root: false
 
-app_dashboard_attendee_following_remove:
-  path: /dashboard/attendee/following/remove/{slug}
-  controller: 'App\Controller\Dashboard\Attendee\FollowingController::addRemove'
+app_dashboard_attendee_following_add_attendee:
+  path: /dashboard/attendee/following/add/attendee/{id}
+  controller: 'App\Controller\Dashboard\Attendee\FollowingController::addRemoveAttendee'
   methods: [ 'GET' ]
   condition: 'request.isXmlHttpRequest()'
-  
+  trailing_slash_on_root: false
+
+app_dashboard_attendee_following_remove_attendee:
+  path: /dashboard/attendee/following/remove/attendee/{id}
+  controller: 'App\Controller\Dashboard\Attendee\FollowingController::addRemoveAttendee'
+  methods: [ 'GET' ]
+  condition: 'request.isXmlHttpRequest()'
+
   trailing_slash_on_root: false
 
 # Dashboard routes

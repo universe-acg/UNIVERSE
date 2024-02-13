@@ -1,9 +1,10 @@
 {% set runtimeConfig = {"thumbnail": {"size": [500, 250] }} %}
 {% set link = "https://universeacg.xyz/listing" ~ listing.slug %}
-<div class="col-12 col-lg-6">
+<div class="col-12 col-lg-4">
     <div class="card mb-4 border-0">
-        <a href="{{ path('listing', { slug : listing.slug }) }}">
+        <a href="{{ path('listing', { slug : listing.slug }) }}" style="height: 300px">
             <img class="card-img-top img-lazy-load" src="{{ asset('assets/img/loader.svg') }}"
+                 style="object-fit: cover; height: 100%"
                  data-src="{{ listing.imageName ? asset(listing.getImagePath) : listing.getImagePlaceholder }}"
                  alt="{{ listing.name }}">
         </a>

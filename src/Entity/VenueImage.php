@@ -52,7 +52,7 @@ class VenueImage
     /**
      * @ORM\Column(type="integer", nullable=true)
      *
-     * @var integer
+     * @var ?integer
      */
     private $imageSize;
 
@@ -109,8 +109,7 @@ class VenueImage
         $this->imageFile = $imageFile;
 
         if (null !== $imageFile) {
-// It is required that at least one field changes if you are using doctrine
-// otherwise the event listeners won't be called and the file is lost
+            $this->imageSize = $imageFile->getSize(); // Set the size of the uploaded file
             $this->updatedAt = new DateTimeImmutable();
         }
     }

@@ -90,13 +90,14 @@
 
                         {% if services.getSetting("contact_phone") != "" or services.getSetting("contact_email") != "" %}
                             <p>
+
                                 {#                                {% if services.getSetting("contact_phone") != "" %} #}
                                 {#                                    <strong>{{ "Phone" }}: </strong> {{ services.getSetting("contact_phone") }} #}
                                 {#                                {% endif %} #}
+
                                 {% if services.getSetting("contact_email") != "" %}
                                     <strong>{{ "Email" }}:</strong> {{ services.getSetting("contact_email") }}
                                 {% endif %}
-
                             </p>
                         {% endif %}
 
@@ -112,13 +113,11 @@
                                        href="{{ services.getSetting("instagram_url") }}"><i
                                                 class="fab fa-instagram fa-fw"></i></a>
                                 {% endif %}
-
                                 {% if services.getSetting("youtube_url") != "" %}
                                     <a class="btn btn-youtube" title="{{ "Youtube" }}" target="_blank"
                                        href="{{ services.getSetting("youtube_url") }}"><i
                                                 class="fab fa-youtube fa-fw"></i></a>
                                 {% endif %}
-
                                 {% if services.getSetting("twitter_url") != "" %}
                                     <a class="btn btn-twitter" title="{{ "Twitter" }}" target="_blank"
                                        href="{{ services.getSetting("twitter_url") }}"><i
@@ -126,9 +125,7 @@
                                 {% endif %}
                             </div>
                         {% endif %}
-
                         <div class="clearfix"></div>
-
                     </article>
                 </aside>
             </div>

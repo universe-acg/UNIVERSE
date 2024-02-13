@@ -36,9 +36,9 @@
                                  style="height: 350px !important; width: 100% !important; object-fit: cover; object-position: center"
                                  src="{{ asset(attendee.getCoverPath) }}">{% endif %}
 
-                        <div class="row mt-5">
+                        <div class="row">
                             <div class="col-12 col-lg-4" style="background: white !important;">
-                                <div class="attendee-profile-sidebar text-center {% if not attendee.getCrossRoleName() %}mt-3 mb-3{% endif %}">
+                                <div class="attendee-profile-sidebar mt-5 text-center {% if not attendee.getCrossRoleName() %}mt-3 mb-3{% endif %}">
                                     <div class="avatar-container">
     <span class="avatar organizer-profile-logo"
           style="background: url('{{ attendee.logoName ? asset(attendee.getLogoPath) : attendee.getLogoPlaceholder }}');"></span>
@@ -143,6 +143,28 @@
                                             <small class="text-muted">
                                                 {{ "Comments" }}
                                             </small>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') or is_granted('ROLE_ATTENDEE') %}
+                                                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                                                    {% if attendee.isFollowedBy(app.user) %}
+                                                        <button class="attendee-unfollow btn btn-outline-primary btn-sm btn-block"
+                                                                data-target="{{ path('app_dashboard_attendee_following_remove_attendee', { id: attendee.id }) }}">
+                                                            <i class="fas fa-bell-slash"></i>
+                                                        </button>
+                                                    {% else %}
+                                                        <button class="attendee-follow btn btn-outline-primary btn-sm btn-block"
+                                                                data-target="{{ path('app_dashboard_attendee_following_add_attendee', { id : attendee.id }) }}"
+                                                        >
+                                                            <i class="fas fa-bell"></i>
+                                                        </button>
+                                                    {% endif %}
+                                                {% else %}
+                                                    <a href="{{ path('fos_user_security_login')~'?_target_path='~app.request.getPathInfo }}"
+                                                       class="btn btn-outline-primary btn-sm btn-block"><i
+                                                                class="fas fa-bell"></i></a>
+                                                {% endif %}
+                                            {% endif %}
                                         </li>
                                         {% if app.user.organizer and app.user.organizer.category == 'Club' %}
                                             <li class="list-inline-item">

@@ -6,19 +6,76 @@
 
 {% block content %}
 
-    {% set navigation = [{"current" : (pagetitle)}] %}
-    {% include "Global/navigation.html.twig" with navigation %}
+    <style>
+
+        .mycontainer {
+            height: 60vh;
+            aspect-ratio: 1.5 / 1;
+            display: flex;
+            overflow: hidden;
+            width: 100vw;
+        }
+
+        .mycontainer:has(.myimg.active) .myimg:not(.active) {
+            filter: grayscale(100%)
+        }
+
+        .myimg {
+            height: 100%;
+            width: calc(100% / 5);
+            object-fit: cover;
+            overflow: hidden;
+            border: 2px solid #141414;
+            transition: all 0.4s cubic-bezier(0.32, 0, 0.67, 0);
+            cursor: pointer;
+        }
+
+        .active {
+            width: 200%;
+        }
+    </style>
+    {#    {% set navigation = [{"current" : (pagetitle)}] %} #}
+    {#    {% include "Global/navigation.html.twig" with navigation %} #}
 
     <section class="section-content padding-y bg-white">
         <div class="{{ services.getSetting("app_layout") }}">
-            <div class="row">
-                {% for category in services.getCategories({"sort": "name", "order": "DESC"}).getQuery().getResult() %}
-                    <div class="col-sm-6 col-md-4">
-                        {% include "Global/category-card.html.twig" with {category: category} %}
-                    </div>
-                {% endfor %}
+            <div class="row pl-5 pr-5">
+                <div class="mycontainer">
+                    {% for category in services.getCategories({"sort": "name", "order": "DESC"}).getQuery().getResult() %}
+                        <img class="myimg"
+                             src="{{ category.imageName ? asset(category.getImagePath) : category.getImagePlaceholder }}"
+                             alt="">
+                        {#                                        {% include "Global/category-card.html.twig" with {category: category} %} #}
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </section>
 
+    <script>
+        const images = document.querySelectorAll(".myimg")
+
+        function clearActiveImage() {
+            images.forEach(function (image) {
+                image.classList.remove("active");
+            });
+        }
+
+        images.forEach(function (image, index) {
+            image.onclick = function () {
+                event.stopPropagation() //important to not call the clearActiveImage() on every click
+                if (images[index].classList.contains("active")) {
+                    images[index].classList.remove("active")
+                } else {
+                    clearActiveImage(index)
+                    images[index].classList.add("active")
+                }
+            }
+        })
+
+        window.addEventListener("click", () => {
+            clearActiveImage()
+        })
+
+    </script>
 {% endblock %}

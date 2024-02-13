@@ -12,92 +12,202 @@
     <section class="section-content padding-y bg-white">
         <div class="{{ services.getSetting("app_layout") }}">
 
-            <div class="box shadow-none bg-gray mb-4">
-                <div class="row flex-wrap flex-md-nowrap">
-                    <div class="col-sm-12 col-md-2 mb-3 mb-lg-0">
-                        <span class="center-lg-y text-muted">{{ "%resultsCount% post(s) found"  |trans ({'%resultsCount%': blogposts.getTotalItemCount}) }}</span>
+            <div class="row" style="">
+                <aside class="col-lg-3 order-2 order-lg-1">
+
+                    <div class="box shadow-none bg-gray mb-4">
+                        <div class="row flex-wrap flex-md-nowrap">
+                            <div class="col-sm-12">
+                                <span class="center-lg-y text-muted">{{ "%resultsCount% announcements(s) found"  |trans ({'%resultsCount%': blogposts.getTotalItemCount}) }}</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-11 text-right">
+                    <div class="card card-filter filters-section">
                         <form method="get" action="{{ path('blog') }}" id="search-form">
-                            <div class="d-flex flex-wrap w-100 justify-content-center">
-                                <div class="col-md-2 col-sm-6">
-                                    <select class="form-control bg-white col-12" name="sortedby">
-                                        <option selected value="all">Sort By</option>
-                                        <option value="created_desc"
-                                                {% if app.request.get('sortedby') == 'created_desc' %}selected{% endif %}>
-                                            Created Recently
-                                        </option>
-                                        <option value="created_asc"
-                                                {% if app.request.get('sortedby') == 'created_asc' %}selected{% endif %}>
-                                            Created Lately
-                                        </option>
-                                        <option value="updated_desc"
-                                                {% if app.request.get('sortedby') == 'updated_desc' %}selected{% endif %}>
-                                            Updated Recently
-                                        </option>
-                                        <option value="updated_asc"
-                                                {% if app.request.get('sortedby') == 'updated_asc' %}selected{% endif %}>
-                                            Updated Lately
-                                        </option>
-                                        <option value="title_asc"
-                                                {% if app.request.get('sortedby') == 'title_asc' %}selected{% endif %}>
-                                            Title - Ascending
-                                        </option>
-                                        <option value="title_desc"
-                                                {% if app.request.get('sortedby') == 'title_desc' %}selected{% endif %}>
-                                            Title - Descending
-                                        </option>
-                                    </select>
-                                </div>
-                                <!-- Use d-flex and flex-wrap to control the wrapping on mobile -->
-                                <div class="col-md-2 col-sm-6">
-                                    <select class="form-control bg-white col-12" name="tag">
-                                        <option value="">Tags</option>
-                                        {% for tag in tags %}
-                                            <option value="{{ tag }}"
-                                                    {% if tag == app.request.get('tag') %}selected{% endif %}>{{ tag }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="col-md-2 col-sm-6">
-                                    <select class="form-control bg-white col-12" name="category">
-                                        <option value="">All Categories</option>
-                                        {% for category in blogpostcategories %}
-                                            <option value="{{ category.slug }}"
-                                                    {% if category.slug == app.request.get('category') %}selected{% endif %}>{{ category.name }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="col-md-3 col-sm-12">
-                                    <input type="text" class="form-control bg-white col-12" name="keyword"
-                                           placeholder="{{ "Search announcements and news " }}"
-                                           value="{{ app.request.get('keyword') }}"/>
-                                </div>
-                                <div class="col-md-2 col-sm-12 text-left mt-2 mt-sm-0">
-                                    <button type="submit" class="btn btn-primary d-inline-block"><i
-                                                class="fas fa-search"></i></button>
-                                    <button type="reset" class="btn btn-primary d-inline-block"
-                                            onclick="clearForm()"><i
-                                                class="fas fa-eraser"></i>
-                                    </button>
-                                </div>
+                            <div class="card card-filter filters-section">
+                                <article class="card-group-item filter-item">
+                                    <header class="card-header">
+                                        <a href="#" data-toggle="collapse" data-target="#filter-sortby">
+                                            <i class="icon-action fa fa-chevron-down"></i>
+                                            <h6 class="title">Sort By</h6>
+                                        </a>
+                                    </header>
+                                    <div class="filter-content collapse show" id="filter-sortby">
+                                        <div class="card-body">
+                                            <select class="form-control bg-white col-12" name="sortedby">
+                                                <option selected value="all">Sort By</option>
+                                                <option value="created_desc"
+                                                        {% if app.request.get('sortedby') == 'created_desc' %}selected{% endif %}>
+                                                    Created Recently
+                                                </option>
+                                                <option value="created_asc"
+                                                        {% if app.request.get('sortedby') == 'created_asc' %}selected{% endif %}>
+                                                    Created Lately
+                                                </option>
+                                                <option value="updated_desc"
+                                                        {% if app.request.get('sortedby') == 'updated_desc' %}selected{% endif %}>
+                                                    Updated Recently
+                                                </option>
+                                                <option value="updated_asc"
+                                                        {% if app.request.get('sortedby') == 'updated_asc' %}selected{% endif %}>
+                                                    Updated Lately
+                                                </option>
+                                                <option value="title_asc"
+                                                        {% if app.request.get('sortedby') == 'title_asc' %}selected{% endif %}>
+                                                    Title - Ascending
+                                                </option>
+                                                <option value="title_desc"
+                                                        {% if app.request.get('sortedby') == 'title_desc' %}selected{% endif %}>
+                                                    Title - Descending
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </article>
+                                <article class="card-group-item filter-item">
+                                    <header class="card-header">
+                                        <a href="#" data-toggle="collapse" data-target="#filter-tag">
+                                            <i class="icon-action fa fa-chevron-down"></i>
+                                            <h6 class="title">Tags</h6>
+                                        </a>
+                                    </header>
+                                    <div class="filter-content collapse show" id="filter-tag">
+                                        <div class="card-body">
+                                            <select class="form-control bg-white col-12" name="tag">
+                                                <option value="">Tags</option>
+                                                {% for tag in tags %}
+                                                    <option value="{{ tag }}"
+                                                            {% if tag == app.request.get('tag') %}selected{% endif %}>{{ tag }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </article>
+                                <article class="card-group-item filter-item">
+                                    <header class="card-header">
+                                        <a href="#" data-toggle="collapse" data-target="#filter-category">
+                                            <i class="icon-action fa fa-chevron-down"></i>
+                                            <h6 class="title">Category</h6>
+                                        </a>
+                                    </header>
+                                    <div class="filter-content collapse show" id="filter-category">
+                                        <div class="card-body">
+                                            <select class="form-control bg-white col-12" name="category">
+                                                <option value="">All Categories</option>
+                                                {% for category in blogpostcategories %}
+                                                    <option value="{{ category.slug }}"
+                                                            {% if category.slug == app.request.get('category') %}selected{% endif %}>{{ category.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </article>
+                                <article class="card-group-item filter-item">
+                                    <header class="card-header">
+                                        <a href="#" data-toggle="collapse" data-target="#filter-keyword">
+                                            <i class="icon-action fa fa-chevron-down"></i>
+                                            <h6 class="title">Keyword</h6>
+                                        </a>
+                                    </header>
+                                    <div class="filter-content collapse show" id="filter-keyword">
+                                        <div class="card-body">
+                                            <input type="text" class="form-control bg-white col-12" name="keyword"
+                                                   placeholder="Search announcements and news"
+                                                   value="{{ app.request.get('keyword') }}">
+                                        </div>
+                                    </div>
+                                    <div class="text-left mt-2 mt-sm-0 pl-3 pb-5">
+                                        <button type="submit" class="btn btn-primary d-inline-block"><i
+                                                    class="fas fa-search"></i> Search
+                                        </button>
+                                        <button type="reset" class="btn btn-primary d-inline-block"
+                                                onclick="clearForm()"><i
+                                                    class="fas fa-eraser"></i> Clear
+                                        </button>
+                                    </div>
+                                </article>
                             </div>
                         </form>
+
+                        {#                        <form method="get" action="{{ path('blog') }}" id="search-form"> #}
+                        {#                            <div class="d-flex flex-wrap w-100 justify-content-center"> #}
+                        {#                                <div class="col-md-2 col-sm-6"> #}
+                        {#                                    <select class="form-control bg-white col-12" name="sortedby"> #}
+                        {#                                        <option selected value="all">Sort By</option> #}
+                        {#                                        <option value="created_desc" #}
+                        {#                                                {% if app.request.get('sortedby') == 'created_desc' %}selected{% endif %}> #}
+                        {#                                            Created Recently #}
+                        {#                                        </option> #}
+                        {#                                        <option value="created_asc" #}
+                        {#                                                {% if app.request.get('sortedby') == 'created_asc' %}selected{% endif %}> #}
+                        {#                                            Created Lately #}
+                        {#                                        </option> #}
+                        {#                                        <option value="updated_desc" #}
+                        {#                                                {% if app.request.get('sortedby') == 'updated_desc' %}selected{% endif %}> #}
+                        {#                                            Updated Recently #}
+                        {#                                        </option> #}
+                        {#                                        <option value="updated_asc" #}
+                        {#                                                {% if app.request.get('sortedby') == 'updated_asc' %}selected{% endif %}> #}
+                        {#                                            Updated Lately #}
+                        {#                                        </option> #}
+                        {#                                        <option value="title_asc" #}
+                        {#                                                {% if app.request.get('sortedby') == 'title_asc' %}selected{% endif %}> #}
+                        {#                                            Title - Ascending #}
+                        {#                                        </option> #}
+                        {#                                        <option value="title_desc" #}
+                        {#                                                {% if app.request.get('sortedby') == 'title_desc' %}selected{% endif %}> #}
+                        {#                                            Title - Descending #}
+                        {#                                        </option> #}
+                        {#                                    </select> #}
+                        {#                                </div> #}
+                        {#                                <!-- Use d-flex and flex-wrap to control the wrapping on mobile --> #}
+                        {#                                <div class="col-md-2 col-sm-6"> #}
+                        {#                                    <select class="form-control bg-white col-12" name="tag"> #}
+                        {#                                        <option value="">Tags</option> #}
+                        {#                                        {% for tag in tags %} #}
+                        {#                                            <option value="{{ tag }}" #}
+                        {#                                                    {% if tag == app.request.get('tag') %}selected{% endif %}>{{ tag }}</option> #}
+                        {#                                        {% endfor %} #}
+                        {#                                    </select> #}
+                        {#                                </div> #}
+                        {#                                <div class="col-md-2 col-sm-6"> #}
+                        {#                                    <select class="form-control bg-white col-12" name="category"> #}
+                        {#                                        <option value="">All Categories</option> #}
+                        {#                                        {% for category in blogpostcategories %} #}
+                        {#                                            <option value="{{ category.slug }}" #}
+                        {#                                                    {% if category.slug == app.request.get('category') %}selected{% endif %}>{{ category.name }}</option> #}
+                        {#                                        {% endfor %} #}
+                        {#                                    </select> #}
+                        {#                                </div> #}
+                        {#                                <div class="col-md-3 col-sm-12"> #}
+                        {#                                    <input type="text" class="form-control bg-white col-12" name="keyword" #}
+                        {#                                           placeholder="{{ "Search announcements and news " }}" #}
+                        {#                                           value="{{ app.request.get('keyword') }}"/> #}
+                        {#                                </div> #}
+                        {#                                <div class="col-md-2 col-sm-12 text-left mt-2 mt-sm-0"> #}
+                        {#                                    <button type="submit" class="btn btn-primary d-inline-block"><i #}
+                        {#                                                class="fas fa-search"></i></button> #}
+                        {#                                    <button type="reset" class="btn btn-primary d-inline-block" #}
+                        {#                                            onclick="clearForm()"><i #}
+                        {#                                                class="fas fa-eraser"></i> #}
+                        {#                                    </button> #}
+                        {#                                </div> #}
+                        {#                            </div> #}
+                        {#                        </form> #}
                     </div>
+                </aside>
+                <div class="col-lg-9 order-1 order-lg-2 mt-4 mt-md-0 ">
+                    {% for blogpost in blogposts %}
+                        <div class="col-12 col-sm-6 col-lg-2">
+                            {% include "Global/blog-card.html.twig" with {blogpost: blogpost, thumbnailsize: [397, 397], showdate: 1} %}
+                        </div>
+                    {% endfor %}
                 </div>
+
+                {{ knp_pagination_render(blogposts, null, {}, {'align': 'center'}) }}
+
             </div>
-
-            <div class="row">
-                {% for blogpost in blogposts %}
-                    <div class="col-12 col-sm-6 col-lg-2">
-                        {% include "Global/blog-card.html.twig" with {blogpost: blogpost, thumbnailsize: [397, 397], showdate: 1} %}
-                    </div>
-                {% endfor %}
-            </div>
-
-            {{ knp_pagination_render(blogposts, null, {}, {'align': 'center'}) }}
-
         </div>
     </section>
 

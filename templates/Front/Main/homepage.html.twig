@@ -3,6 +3,12 @@
  {% block title %}{{ services.getSetting("website_description_" ~ "en") }}{% endblock %}
 
  {% block content %}
+     <style>
+         .mycontainer {
+             max-width: 75vw !important;
+         }
+     </style>
+
      <div class="mainblock">
          {% if herosettings.content == "events" and herosettings.events|length %}
              <section class="section-main">
@@ -13,7 +19,7 @@
                               data-src="{{ event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder }}">
                              <div class="loader"></div>
                              <div class="content-container">
-                                 <div class="{{ services.getSetting("app_layout") }}">
+                                 <div class="{{ services.getSetting("app_layout") }} mycontainer">
                                      <div class="row-sm">
                                          <div class="col-md-12">
                                              <h2 class="text-light mb-4">{{ event.name }}</h2>
@@ -198,9 +204,9 @@
                          <header class="section-headin mb-5">
                              <h4 class="title-section text-center text-muted text-uppercase">{{ 'Happening now' }}</h4>
                          </header>
-                         <div class="row-sm">
+                         <div class="row-sm mycontainer mx-auto">
                              {% for event in homepageEvents %}
-                                 <div class="col-12 col-sm-6 col-lg-4">
+                                 <div class="col-12 col-sm-6 col-lg-3">
                                      {% include "Global/event-card.html.twig" with {event: event} %}
                                  </div>
                              {% endfor %}
@@ -216,7 +222,7 @@
                      <header class="section-headin mb-5">
                          <h4 class="title-section text-center text-muted text-uppercase">{{ 'Featured categories' }}</h4>
                      </header>
-                     <div class="row-sm"
+                     <div class="row-sm mycontainer mx-auto"
                           style="display: flex; justify-content: center; align-content: center; align-items: center;">
                          {% for category in services.getCategories({ "featured": true, "limit": services.getSetting('homepage_categories_number') }).getQuery().getResult() %}
                              <div class="col-md-4 col-sm-2">
@@ -236,7 +242,7 @@
                          <header class="section-headin mb-5">
                              <h4 class="title-section text-center text-muted text-uppercase">{{ 'Lastest news from our community' }}</h4>
                          </header>
-                         <div class="row">
+                         <div class="row mycontainer mx-auto">
                              <div class="col-12">
                                  <div class="owl-init owl-carousel" data-margin="15" data-items="5" data-dots="true"
                                       data-nav="false" data-autoplay="false">

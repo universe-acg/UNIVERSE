@@ -1,262 +1,264 @@
 <?php
-    /*
+/*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-    
-    namespace App\Controller\Dashboard\Administrator;
-    
-    use App\Entity\AppLayoutSettings;
-    use App\Entity\HomepageHeroSettings;
-    use App\Form\AppLayoutSettingsType;
-    use App\Form\HomepageHeroSettingsType;
-    use App\Form\MenuType;
-    use App\Service\AppServices;
-    use Exception;
-    use Swift_Mailer;
-    use Swift_Message;
-    use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-    use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-    use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-    use Symfony\Component\Form\Extension\Core\Type\TextType;
-    use Symfony\Component\HttpFoundation\Request;
-    use Symfony\Component\Routing\Annotation\Route;
-    use Twig_Environment;
-    
-    class SettingsController extends Controller
+
+namespace App\Controller\Dashboard\Administrator;
+
+use App\Entity\AppLayoutSettings;
+use App\Entity\HomepageHeroSettings;
+use App\Form\AppLayoutSettingsType;
+use App\Form\HomepageHeroSettingsType;
+use App\Form\MenuType;
+use App\Service\AppServices;
+use Exception;
+use Swift_Mailer;
+use Swift_Message;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+use Twig_Environment;
+
+class SettingsController extends Controller
+{
+
+    /**
+     * @Route("/settings/homepage-hero", name="settings_homepage", methods="GET|POST")
+     */
+    public function homepagehero(Request $request, AppServices $services)
     {
-        
-        /**
-         * @Route("/settings/homepage-hero", name="settings_homepage", methods="GET|POST")
-         */
-        public function homepagehero(Request $request, AppServices $services)
-        {
-            
-            $em = $this->getDoctrine()->getManager();
-            $homepageherosettings = $em->getRepository(HomepageHeroSettings::class)->find(1);
-            
-            if (!$homepageherosettings) {
-                $services->redirectToReferer("index");
-                $this->addFlash('error', 'The homepage settings could not be loaded');
-            }
-            
-            $form = $this->createForm(HomepageHeroSettingsType::class, $homepageherosettings);
-            $form->handleRequest($request);
-            
-            if ($form->isSubmitted()) {
-                if ($form->isValid()) {
-                    $homeSliderEvents = $services->getEvents(array("isOnHomepageSlider" => true));
-                    foreach ($homeSliderEvents as $event) {
-                        $event->setIsonhomepageslider(null);
-                        $em->persist($event);
-                    }
-                    $em->flush();
-                    foreach ($homepageherosettings->getEvents() as $event) {
-                        $event->setIsonhomepageslider($homepageherosettings);
-                        $em->persist($event);
-                    }
-                    
-                    $homeSliderOrganizers = $services->getUsers(array("isOnHomepageSlider" => true, "role" => "organizer"))->getQuery()->getResult();
-                    foreach ($homeSliderOrganizers as $user) {
-                        $user->setIsorganizeronhomepageslider(null);
-                        $em->persist($user);
-                    }
-                    $em->flush();
-                    foreach ($homepageherosettings->getOrganizers() as $organizer) {
-                        $organizer->setIsorganizeronhomepageslider($homepageherosettings);
-                        $em->persist($organizer);
-                    }
-                    
-                    $em->persist($homepageherosettings);
-                    $em->flush();
-                    
-                    $settings = $request->request->all()['homepage_hero_settings'];
-                    $services->setSetting("homepage_show_search_box", $settings['homepage_show_search_box']);
-                    $services->setSetting("homepage_events_number", $settings['homepage_events_number']);
-                    $services->setSetting("homepage_categories_number", $settings['homepage_categories_number']);
-                    $services->setSetting("homepage_blogposts_number", $settings['homepage_blogposts_number']);
-                    $services->setSetting("homepage_show_call_to_action", $settings['homepage_show_call_to_action']);
-                    
-                    $this->addFlash('success', 'The settings have been updated');
-                    return $this->redirectToRoute('dashboard_administrator_settings_homepage');
-                } else {
-                    $this->addFlash('error', 'The form contains invalid data');
-                }
-            } else {
-                
-                $form->get('homepage_show_search_box')->setData($services->getSetting("homepage_show_search_box"));
-                $form->get('homepage_events_number')->setData($services->getSetting("homepage_events_number"));
-                $form->get('homepage_categories_number')->setData($services->getSetting("homepage_categories_number"));
-                $form->get('homepage_blogposts_number')->setData($services->getSetting("homepage_blogposts_number"));
-                $form->get('homepage_show_call_to_action')->setData($services->getSetting("homepage_show_call_to_action"));
-            }
-            
-            return $this->render('Dashboard/Administrator/Settings/homepage.html.twig', [
-                'form' => $form->createView()
-            ]);
+
+        $em = $this->getDoctrine()->getManager();
+        $homepageherosettings = $em->getRepository(HomepageHeroSettings::class)->find(1);
+
+        if (!$homepageherosettings) {
+            $services->redirectToReferer("index");
+            $this->addFlash('error', 'The homepage settings could not be loaded');
         }
-        
-        /**
-         * @Route("/settings/layout", name="settings_layout", methods="GET|POST")
-         */
-        public function layout(Request $request, AppServices $services)
-        {
-            
-            $em = $this->getDoctrine()->getManager();
-            
-            $appLayoutSettings = $em->getRepository(AppLayoutSettings::class)->find(1);
-            if (!$appLayoutSettings) {
-                $services->redirectToReferer("index");
-                $this->addFlash('error', 'The layout settings could not be loaded');
+
+        $form = $this->createForm(HomepageHeroSettingsType::class, $homepageherosettings);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $homeSliderEvents = $services->getEvents(array("isOnHomepageSlider" => true));
+                foreach ($homeSliderEvents as $event) {
+                    $event->setIsonhomepageslider(null);
+                    $em->persist($event);
+                }
+                $em->flush();
+                foreach ($homepageherosettings->getEvents() as $event) {
+                    $event->setIsonhomepageslider($homepageherosettings);
+                    $em->persist($event);
+                }
+
+                $homeSliderOrganizers = $services->getUsers(array("isOnHomepageSlider" => true, "role" => "organizer"))->getQuery()->getResult();
+                foreach ($homeSliderOrganizers as $user) {
+                    $user->setIsorganizeronhomepageslider(null);
+                    $em->persist($user);
+                }
+                $em->flush();
+                foreach ($homepageherosettings->getOrganizers() as $organizer) {
+                    $organizer->setIsorganizeronhomepageslider($homepageherosettings);
+                    $em->persist($organizer);
+                }
+
+                $em->persist($homepageherosettings);
+                $em->flush();
+
+                $settings = $request->request->all()['homepage_hero_settings'];
+                $services->setSetting("homepage_show_search_box", $settings['homepage_show_search_box']);
+                $services->setSetting("homepage_events_number", $settings['homepage_events_number']);
+                $services->setSetting("homepage_categories_number", $settings['homepage_categories_number']);
+                $services->setSetting("homepage_blogposts_number", $settings['homepage_blogposts_number']);
+                $services->setSetting("homepage_show_call_to_action", $settings['homepage_show_call_to_action']);
+
+                $this->addFlash('success', 'The settings have been updated');
+                return $this->redirectToRoute('dashboard_administrator_settings_homepage');
+            } else {
+                $this->addFlash('error', 'The form contains invalid data');
             }
-            $form = $this->createForm(AppLayoutSettingsType::class, $appLayoutSettings);
-            $form->handleRequest($request);
-            
-            if ($form->isSubmitted()) {
-                
-                $settings = $request->request->all()['app_layout_settings'];
-                
-                if ($form->isValid()) {
-                    $em->persist($appLayoutSettings);
-                    $em->flush();
-                    
-                    $services->setSetting("maintenance_mode_custom_message", $settings['maintenance_mode_custom_message']);
-                    $services->setSetting("date_format", $settings['date_format']);
-                    $services->setSetting("date_format_simple", $settings['date_format_simple']);
-                    $services->setSetting("date_format_date_only", $settings['date_format_date_only']);
-                    $services->setSetting("date_timezone", $settings['date_timezone']);
-                    $services->setSetting("date_timezone", $settings['date_timezone']);
-                    $services->setSetting("website_name", $settings['website_name']);
-                    $services->setSetting("website_slug", $settings['website_slug']);
-                    $services->setSetting("website_url", $settings['website_url']);
-                    $services->setSetting("website_root_url", $settings['website_root_url']);
-                    $services->setSetting("website_description_en", $settings['website_description_en']);
-                    $services->setSetting("website_keywords_en", $settings['website_keywords_en']);
-                    $services->setSetting("contact_phone", $settings['contact_phone']);
-                    $services->setSetting("contact_email", $settings['contact_email']);
-                    $services->setSetting("contact_address", $settings['contact_address']);
-                    $services->setSetting("facebook_url", $settings['facebook_url']);
-                    $services->setSetting("instagram_url", $settings['instagram_url']);
-                    $services->setSetting("youtube_url", $settings['youtube_url']);
-                    $services->setSetting("twitter_url", $settings['twitter_url']);
-                    $services->setSetting("app_layout", $settings['app_layout']);
+        } else {
+
+            $form->get('homepage_show_search_box')->setData($services->getSetting("homepage_show_search_box"));
+            $form->get('homepage_events_number')->setData($services->getSetting("homepage_events_number"));
+            $form->get('homepage_categories_number')->setData($services->getSetting("homepage_categories_number"));
+            $form->get('homepage_blogposts_number')->setData($services->getSetting("homepage_blogposts_number"));
+            $form->get('homepage_show_call_to_action')->setData($services->getSetting("homepage_show_call_to_action"));
+        }
+
+        return $this->render('Dashboard/Administrator/Settings/homepage.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/settings/layout", name="settings_layout", methods="GET|POST")
+     */
+    public function layout(Request $request, AppServices $services)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $appLayoutSettings = $em->getRepository(AppLayoutSettings::class)->find(1);
+        if (!$appLayoutSettings) {
+            $services->redirectToReferer("index");
+            $this->addFlash('error', 'The layout settings could not be loaded');
+        }
+        $form = $this->createForm(AppLayoutSettingsType::class, $appLayoutSettings);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+
+            $settings = $request->request->all()['app_layout_settings'];
+
+            if ($form->isValid()) {
+                $em->persist($appLayoutSettings);
+                $em->flush();
+
+                $services->setSetting("maintenance_mode_custom_message", $settings['maintenance_mode_custom_message']);
+                $services->setSetting("date_format", $settings['date_format']);
+                $services->setSetting("date_format_simple", $settings['date_format_simple']);
+                $services->setSetting("date_format_date_only", $settings['date_format_date_only']);
+                $services->setSetting("date_timezone", $settings['date_timezone']);
+                $services->setSetting("date_timezone", $settings['date_timezone']);
+                $services->setSetting("website_name", $settings['website_name']);
+                $services->setSetting("website_slug", $settings['website_slug']);
+                $services->setSetting("website_url", $settings['website_url']);
+                $services->setSetting("website_root_url", $settings['website_root_url']);
+                $services->setSetting("website_description_en", $settings['website_description_en']);
+                $services->setSetting("website_keywords_en", $settings['website_keywords_en']);
+                $services->setSetting("contact_phone", $settings['contact_phone']);
+                $services->setSetting("contact_email", $settings['contact_email']);
+                $services->setSetting("contact_address", $settings['contact_address']);
+                $services->setSetting("facebook_url", $settings['facebook_url']);
+                $services->setSetting("instagram_url", $settings['instagram_url']);
+                $services->setSetting("youtube_url", $settings['youtube_url']);
+                $services->setSetting("twitter_url", $settings['twitter_url']);
+                $services->setSetting("app_layout", $settings['app_layout']);
 //                    $services->setSetting("app_theme", $settings['app_theme']);
-                    $services->setSetting("primary_color", $settings['primary_color']);
-                    $services->setSetting("custom_css", $settings['custom_css']);
-                    $services->setSetting("google_analytics_code", $settings['google_analytics_code']);
-                    $services->setSetting("show_back_to_top_button", $settings['show_back_to_top_button']);
-                    $services->setSetting("show_terms_of_service_page", $settings['show_terms_of_service_page']);
-                    $services->setSetting("terms_of_service_page_slug", $settings['terms_of_service_page_slug']);
-                    $services->setSetting("show_privacy_policy_page", $settings['show_privacy_policy_page']);
-                    $services->setSetting("privacy_policy_page_slug", $settings['privacy_policy_page_slug']);
-                    $services->setSetting("show_cookie_policy_page", $settings['show_cookie_policy_page']);
-                    $services->setSetting("cookie_policy_page_slug", $settings['cookie_policy_page_slug']);
-                    $services->setSetting("show_cookie_policy_bar", $settings['show_cookie_policy_bar']);
-                    $services->setSetting("show_gdpr_compliance_page", $settings['show_gdpr_compliance_page']);
-                    $services->setSetting("gdpr_compliance_page_slug", $settings['gdpr_compliance_page_slug']);
-                    
-                    $services->updateEnv("APP_ENV", $settings['app_environment']);
-                    $services->updateEnv("APP_DEBUG", $settings['app_debug']);
-                    $services->updateEnv("APP_SECRET", $settings['app_secret']);
-                    $services->updateEnv("MAINTENANCE_MODE", $settings['maintenance_mode']);
-                    $services->updateEnv("DATE_FORMAT", $settings['date_format']);
-                    $services->updateEnv("DATE_FORMAT_SIMPLE", $settings['date_format_simple']);
-                    $services->updateEnv("DATE_FORMAT_DATE_ONLY", $settings['date_format_date_only']);
-                    $services->updateEnv("DATE_TIMEZONE", $settings['date_timezone']);
-                    
-                    $this->addFlash('success', 'The settings have been updated');
-                } else {
-                    $this->addFlash('error', 'The form contains invalid data');
-                }
+                $services->setSetting("primary_color", $settings['primary_color']);
+                $services->setSetting("custom_css", $settings['custom_css']);
+                $services->setSetting("google_analytics_code", $settings['google_analytics_code']);
+                $services->setSetting("show_back_to_top_button", $settings['show_back_to_top_button']);
+                $services->setSetting("show_terms_of_service_page", $settings['show_terms_of_service_page']);
+                $services->setSetting("terms_of_service_page_slug", $settings['terms_of_service_page_slug']);
+                $services->setSetting("show_privacy_policy_page", $settings['show_privacy_policy_page']);
+                $services->setSetting("privacy_policy_page_slug", $settings['privacy_policy_page_slug']);
+                $services->setSetting("show_cookie_policy_page", $settings['show_cookie_policy_page']);
+                $services->setSetting("cookie_policy_page_slug", $settings['cookie_policy_page_slug']);
+                $services->setSetting("show_cookie_policy_bar", $settings['show_cookie_policy_bar']);
+                $services->setSetting("show_gdpr_compliance_page", $settings['show_gdpr_compliance_page']);
+                $services->setSetting("gdpr_compliance_page_slug", $settings['gdpr_compliance_page_slug']);
+
+                $services->updateEnv("APP_ENV", $settings['app_environment']);
+                $services->updateEnv("APP_DEBUG", $settings['app_debug']);
+                $services->updateEnv("APP_SECRET", $settings['app_secret']);
+                $services->updateEnv("MAINTENANCE_MODE", $settings['maintenance_mode']);
+                $services->updateEnv("DATE_FORMAT", $settings['date_format']);
+                $services->updateEnv("DATE_FORMAT_SIMPLE", $settings['date_format_simple']);
+                $services->updateEnv("DATE_FORMAT_DATE_ONLY", $settings['date_format_date_only']);
+                $services->updateEnv("DATE_TIMEZONE", $settings['date_timezone']);
+
+                $this->addFlash('success', 'The settings have been updated');
             } else {
-                $form->get('app_environment')->setData($services->getEnv("APP_ENV"));
-                $form->get('app_debug')->setData($services->getEnv("APP_DEBUG"));
-                $form->get('app_secret')->setData($services->getEnv("APP_SECRET"));
-                $form->get('maintenance_mode')->setData($services->getEnv("MAINTENANCE_MODE"));
-                $form->get('date_format')->setData($services->getEnv("DATE_FORMAT"));
-                $form->get('date_format_simple')->setData($services->getEnv("DATE_FORMAT_SIMPLE"));
-                $form->get('date_format_date_only')->setData($services->getEnv("DATE_FORMAT_DATE_ONLY"));
-                $form->get('date_timezone')->setData($services->getEnv("DATE_TIMEZONE"));
-                $form->get('maintenance_mode_custom_message')->setData($services->getSetting("maintenance_mode_custom_message"));
-                $form->get('website_name')->setData($services->getSetting("website_name"));
-                $form->get('website_slug')->setData($services->getSetting("website_slug"));
-                $form->get('website_url')->setData($services->getSetting("website_url"));
-                $form->get('website_root_url')->setData($services->getSetting("website_root_url"));
-                $form->get('website_description_en')->setData($services->getSetting("website_description_en"));
-                $form->get('website_keywords_en')->setData($services->getSetting("website_keywords_en"));
-                $form->get('contact_phone')->setData($services->getSetting("contact_phone"));
-                $form->get('contact_email')->setData($services->getSetting("contact_email"));
-                $form->get('contact_address')->setData($services->getSetting("contact_address"));
-                $form->get('facebook_url')->setData($services->getSetting("facebook_url"));
-                $form->get('instagram_url')->setData($services->getSetting("instagram_url"));
-                $form->get('youtube_url')->setData($services->getSetting("youtube_url"));
-                $form->get('twitter_url')->setData($services->getSetting("twitter_url"));
-                $form->get('app_layout')->setData($services->getSetting("app_layout"));
-                $form->get('app_theme')->setData($services->getSetting("app_theme"));
-                $form->get('primary_color')->setData($services->getSetting("primary_color"));
-                $form->get('custom_css')->setData($services->getSetting("custom_css"));
-                $form->get('google_analytics_code')->setData($services->getSetting("google_analytics_code"));
-                $form->get('show_back_to_top_button')->setData($services->getSetting("show_back_to_top_button"));
-                $form->get('show_terms_of_service_page')->setData($services->getSetting("show_terms_of_service_page"));
-                $form->get('terms_of_service_page_slug')->setData($services->getSetting("terms_of_service_page_slug"));
-                $form->get('show_privacy_policy_page')->setData($services->getSetting("show_privacy_policy_page"));
-                $form->get('privacy_policy_page_slug')->setData($services->getSetting("privacy_policy_page_slug"));
-                $form->get('show_cookie_policy_page')->setData($services->getSetting("show_cookie_policy_page"));
-                $form->get('cookie_policy_page_slug')->setData($services->getSetting("cookie_policy_page_slug"));
-                $form->get('show_cookie_policy_bar')->setData($services->getSetting("show_cookie_policy_bar"));
-                $form->get('show_gdpr_compliance_page')->setData($services->getSetting("show_gdpr_compliance_page"));
-                $form->get('gdpr_compliance_page_slug')->setData($services->getSetting("gdpr_compliance_page_slug"));
+                $this->addFlash('error', 'The form contains invalid data');
             }
-            
-            return $this->render('Dashboard/Administrator/Settings/layout.html.twig', [
-                'form' => $form->createView()
-            ]);
+        } else {
+            $form->get('app_environment')->setData($services->getEnv("APP_ENV"));
+            $form->get('app_debug')->setData($services->getEnv("APP_DEBUG"));
+            $form->get('app_secret')->setData($services->getEnv("APP_SECRET"));
+            $form->get('maintenance_mode')->setData($services->getEnv("MAINTENANCE_MODE"));
+            $form->get('date_format')->setData($services->getEnv("DATE_FORMAT"));
+            $form->get('date_format_simple')->setData($services->getEnv("DATE_FORMAT_SIMPLE"));
+            $form->get('date_format_date_only')->setData($services->getEnv("DATE_FORMAT_DATE_ONLY"));
+            $form->get('date_timezone')->setData($services->getEnv("DATE_TIMEZONE"));
+            $form->get('maintenance_mode_custom_message')->setData($services->getSetting("maintenance_mode_custom_message"));
+            $form->get('website_name')->setData($services->getSetting("website_name"));
+            $form->get('website_slug')->setData($services->getSetting("website_slug"));
+            $form->get('website_url')->setData($services->getSetting("website_url"));
+            $form->get('website_root_url')->setData($services->getSetting("website_root_url"));
+            $form->get('website_description_en')->setData($services->getSetting("website_description_en"));
+            $form->get('website_keywords_en')->setData($services->getSetting("website_keywords_en"));
+            $form->get('contact_phone')->setData($services->getSetting("contact_phone"));
+            $form->get('contact_email')->setData($services->getSetting("contact_email"));
+            $form->get('contact_address')->setData($services->getSetting("contact_address"));
+            $form->get('facebook_url')->setData($services->getSetting("facebook_url"));
+            $form->get('instagram_url')->setData($services->getSetting("instagram_url"));
+            $form->get('youtube_url')->setData($services->getSetting("youtube_url"));
+            $form->get('twitter_url')->setData($services->getSetting("twitter_url"));
+            $form->get('app_layout')->setData($services->getSetting("app_layout"));
+            $form->get('app_theme')->setData($services->getSetting("app_theme"));
+            $form->get('primary_color')->setData($services->getSetting("primary_color"));
+            $form->get('custom_css')->setData($services->getSetting("custom_css"));
+            $form->get('google_analytics_code')->setData($services->getSetting("google_analytics_code"));
+            $form->get('show_back_to_top_button')->setData($services->getSetting("show_back_to_top_button"));
+            $form->get('show_terms_of_service_page')->setData($services->getSetting("show_terms_of_service_page"));
+            $form->get('terms_of_service_page_slug')->setData($services->getSetting("terms_of_service_page_slug"));
+            $form->get('show_privacy_policy_page')->setData($services->getSetting("show_privacy_policy_page"));
+            $form->get('privacy_policy_page_slug')->setData($services->getSetting("privacy_policy_page_slug"));
+            $form->get('show_cookie_policy_page')->setData($services->getSetting("show_cookie_policy_page"));
+            $form->get('cookie_policy_page_slug')->setData($services->getSetting("cookie_policy_page_slug"));
+            $form->get('show_cookie_policy_bar')->setData($services->getSetting("show_cookie_policy_bar"));
+            $form->get('show_gdpr_compliance_page')->setData($services->getSetting("show_gdpr_compliance_page"));
+            $form->get('gdpr_compliance_page_slug')->setData($services->getSetting("gdpr_compliance_page_slug"));
         }
-        
-        /**
-         * @Route("/settings/events-list-page", name="settings_events_list_page", methods="GET|POST")
-         */
-        public function eventsListPage(Request $request, AppServices $services)
-        {
-            
-            $form = $this->createFormBuilder()
-                ->add('events_per_page', TextType::class, [
-                    'required' => false,
-                    'label' => 'Number of events per page',
-                    'attr' => ['class' => 'touchspin-integer']
-                ])
-//                ->add('show_map_button', ChoiceType::class, [
-//                    'required' => false,
-//                    'multiple' => false,
-//                    'expanded' => true,
-//                    'label' => 'Show map button',
-//                    'choices' => ['Yes' => 'yes', 'No' => 'no'],
-//                    'label_attr' => ['class' => 'radio-custom radio-inline'],
+
+        return $this->render('Dashboard/Administrator/Settings/layout.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/settings/events-list-page", name="settings_events_list_page", methods="GET|POST")
+     */
+    public function eventsListPage(Request $request, AppServices $services)
+    {
+
+        $form = $this->createFormBuilder()
+            ->add('events_per_page', TextType::class, [
+                'required' => false,
+                'label' => 'Number of events per page',
+                'attr' => ['class' => 'touchspin-integer']
+            ])
+//            ->add('show_map_button', ChoiceType::class, [
+//                'required' => false,
+//                'multiple' => false,
+//                'expanded' => true,
+//                'label' => 'Show map button',
+//                'choices' => ['Yes' => 'yes', 'No' => 'no'],
+//                'label_attr' => ['class' => 'radio-custom radio-inline'],
 ////                    'constraints' => array(
 ////                        new NotNull()
 ////                    ),
-//                ])
-                ->add('show_calendar_button', ChoiceType::class, [
-                    'required' => false,
-                    'multiple' => false,
-                    'expanded' => true,
-                    'label' => 'Show calendar button',
-                    'choices' => ['Yes' => 'yes', 'No' => 'no'],
-                    'label_attr' => ['class' => 'radio-custom radio-inline'],
+//            ])
+            ->add('show_calendar_button', ChoiceType::class, [
+                'required' => false,
+                'multiple' => false,
+                'expanded' => true,
+                'label' => 'Show calendar button',
+                'placeholder' => false,
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
+                'label_attr' => ['class' => 'radio-custom radio-inline'],
 //                    'constraints' => array(
 //                        new NotNull()
 //                    ),
-                ])
-                ->add('show_category_filter', ChoiceType::class, [
-                    'required' => false,
-                    'multiple' => false,
-                    'expanded' => true,
-                    'label' => 'Show category filter',
-                    'choices' => ['Yes' => 'yes', 'No' => 'no'],
-                    'label_attr' => ['class' => 'radio-custom radio-inline'],
+            ])
+            ->add('show_category_filter', ChoiceType::class, [
+                'required' => false,
+                'multiple' => false,
+                'expanded' => true,
+                'placeholder' => false,
+                'label' => 'Show category filter',
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
+                'label_attr' => ['class' => 'radio-custom radio-inline'],
 //                    'constraints' => array(
 //                        new NotNull()
 //                    ),
-                ])
+            ])
 //                ->add('show_location_filter', ChoiceType::class, [
 //                    'required' => false,
 //                    'multiple' => false,
@@ -268,96 +270,98 @@
 ////                        new NotNull()
 ////                    ),
 //                ])
-                ->add('show_date_filter', ChoiceType::class, [
-                    'required' => false,
-                    'multiple' => false,
-                    'expanded' => true,
-                    'label' => 'Show date filter',
-                    'choices' => ['Yes' => 'yes', 'No' => 'no'],
-                    'label_attr' => ['class' => 'radio-custom radio-inline'],
+            ->add('show_date_filter', ChoiceType::class, [
+                'required' => false,
+                'multiple' => false,
+                'placeholder' => false,
+                'expanded' => true,
+                'label' => 'Show date filter',
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
+                'label_attr' => ['class' => 'radio-custom radio-inline'],
 //                    'constraints' => array(
 //                        new NotNull()
 //                    ),
-                ])
-                ->add('save', SubmitType::class, [
-                    'label' => 'Save',
-                    'attr' => ['class' => 'btn btn-primary'],
-                ])
-                ->getForm();
-            
-            $form->handleRequest($request);
-            
-            if ($form->isSubmitted()) {
-                if ($form->isValid()) {
-                    $settings = $form->getData();
+            ])
+            ->add('save', SubmitType::class, [
+                'label' => 'Save',
+                'attr' => ['class' => 'btn btn-primary'],
+            ])
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $settings = $form->getData();
 
 // Check if the key exists before trying to access it
-                    if (isset($settings['events_per_page'])) {
-                        $services->setSetting("events_per_page", $settings['events_per_page']);
-                    }
-                    
-                    if (isset($settings['show_map_button'])) {
-                        $services->setSetting("show_map_button", $settings['show_map_button']);
-                    }
-                    
-                    if (isset($settings['show_calendar_button'])) {
-                        $services->setSetting("show_calendar_button", $settings['show_calendar_button']);
-                    }
-                    
-                    if (isset($settings['show_category_filter'])) {
-                        $services->setSetting("show_category_filter", $settings['show_category_filter']);
-                    }
-                    
-                    if (isset($settings['show_location_filter'])) {
-                        $services->setSetting("show_location_filter", $settings['show_location_filter']);
-                    }
-                    
-                    if (isset($settings['show_date_filter'])) {
-                        $services->setSetting("show_date_filter", $settings['show_date_filter']);
-                    }
-                    $this->addFlash('success', 'The settings have been updated');
-                } else {
-                    $this->addFlash('error', 'The form contains invalid data');
+                if (isset($settings['events_per_page'])) {
+                    $services->setSetting("events_per_page", $settings['events_per_page']);
                 }
+
+//                if (isset($settings['show_map_button'])) {
+//                $services->setSetting("show_map_button", false);
+//                }
+
+                if (isset($settings['show_calendar_button'])) {
+                    $services->setSetting("show_calendar_button", $settings['show_calendar_button']);
+                }
+
+                if (isset($settings['show_category_filter'])) {
+                    $services->setSetting("show_category_filter", $settings['show_category_filter']);
+                }
+
+                if (isset($settings['show_location_filter'])) {
+                    $services->setSetting("show_location_filter", $settings['show_location_filter']);
+                }
+
+                if (isset($settings['show_date_filter'])) {
+                    $services->setSetting("show_date_filter", $settings['show_date_filter']);
+                }
+                $this->addFlash('success', 'The settings have been updated');
             } else {
-                $form->get('events_per_page')->setData($services->getSetting("events_per_page"));
-                $form->get('show_map_button')->setData($services->getSetting("show_map_button"));
-                $form->get('show_calendar_button')->setData($services->getSetting("show_calendar_button"));
-                $form->get('show_category_filter')->setData($services->getSetting("show_category_filter"));
-//                $form->get('show_location_filter')->setData($services->getSetting("show_location_filter"));
-                $form->get('show_date_filter')->setData($services->getSetting("show_date_filter"));
+                $this->addFlash('error', 'The form contains invalid data');
             }
-            
-            return $this->render('Dashboard/Administrator/Settings/events-list-page.html.twig', [
-                'form' => $form->createView()
-            ]);
+        } else {
+            $form->get('events_per_page')->setData($services->getSetting("events_per_page"));
+//            $form->get('show_map_button')->setData($services->getSetting("show_map_button"));
+            $form->get('show_calendar_button')->setData($services->getSetting("show_calendar_button"));
+            $form->get('show_category_filter')->setData($services->getSetting("show_category_filter"));
+//                $form->get('show_location_filter')->setData($services->getSetting("show_location_filter"));
+            $form->get('show_date_filter')->setData($services->getSetting("show_date_filter"));
         }
-        
-        
-        /**
-         * @Route("/settings/blog", name="settings_blog", methods="GET|POST")
-         */
-        public function blog(Request $request, AppServices $services)
-        {
-            
-            $form = $this->createFormBuilder()
-                ->add('blog_posts_per_page', TextType::class, [
-                    'required' => false,
-                    'label' => 'Number of blog posts per page',
-                    'attr' => ['class' => 'touchspin-integer']
-                ])
-                ->add('blog_comments_enabled', ChoiceType::class, [
-                    'required' => false,
-                    'multiple' => false,
-                    'expanded' => true,
-                    'label' => 'Enable comments',
-                    //'choices' => ['No' => 'no', 'Native comments' => 'native', 'Facebook comments' => 'facebook', 'Disqus comments' => 'disqus'],
-                    'choices' => ['No' => 'no', 'Facebook comments' => 'facebook', 'Disqus comments' => 'disqus'],
-                    'label_attr' => ['class' => 'radio-custom radio-inline'],
+
+        return $this->render('Dashboard/Administrator/Settings/events-list-page.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+
+    /**
+     * @Route("/settings/blog", name="settings_blog", methods="GET|POST")
+     */
+    public function blog(Request $request, AppServices $services)
+    {
+
+        $form = $this->createFormBuilder()
+            ->add('blog_posts_per_page', TextType::class, [
+                'required' => false,
+                'label' => 'Number of blog posts per page',
+                'attr' => ['class' => 'touchspin-integer']
+            ])
+            ->add('blog_comments_enabled', ChoiceType::class, [
+                'required' => false,
+                'multiple' => false,
+                'expanded' => true,
+                'placeholder' => false, // explicitly set placeholder to false
+                'label' => 'Enable comments',
+                //'choices' => ['No' => 'no', 'Native comments' => 'native', 'Facebook comments' => 'facebook', 'Disqus comments' => 'disqus'],
+                'choices' => ['No' => 'no', 'Facebook comments' => 'facebook', 'Disqus comments' => 'disqus'],
+                'label_attr' => ['class' => 'radio-custom radio-inline'],
 //                    'constraints' => array(
 //                        new NotNull()
 //                    ),
-                ])
+            ])
 //                ->add('facebook_app_id', TextType::class, [
 //                    'required' => false,
 //                    'label' => 'Facebook app id',
@@ -368,434 +372,435 @@
 //                    'label' => 'Disqus subdomain',
 //                    'help' => 'Go to the documentation to get help about setting up Disqus'
 //                ])
-                ->add('save', SubmitType::class, [
-                    'label' => 'Save',
-                    'attr' => ['class' => 'btn btn-primary'],
-                ])
-                ->getForm();
-            
-            $form->handleRequest($request);
-            
-            if ($form->isSubmitted()) {
-                if ($form->isValid()) {
-                    $settings = $form->getData();
-                    $services->setSetting("blog_posts_per_page", $settings['blog_posts_per_page']);
-                    $services->setSetting("blog_comments_enabled", $settings['blog_comments_enabled']);
+            ->add('save', SubmitType::class, [
+                'label' => 'Save',
+                'attr' => ['class' => 'btn btn-primary'],
+            ])
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $settings = $form->getData();
+                $services->setSetting("blog_posts_per_page", $settings['blog_posts_per_page']);
+                $services->setSetting("blog_comments_enabled", $settings['blog_comments_enabled']);
 //                    $services->setSetting("facebook_app_id", $settings['facebook_app_id']);
 //                    $services->setSetting("disqus_subdomain", $settings['disqus_subdomain']);
-                    $this->addFlash('success', 'The settings have been updated');
-                } else {
-                    $this->addFlash('error', 'The form contains invalid data');
-                }
+                $this->addFlash('success', 'The settings have been updated');
             } else {
-                $form->get('blog_posts_per_page')->setData($services->getSetting("blog_posts_per_page"));
-                $form->get('blog_comments_enabled')->setData($services->getSetting("blog_comments_enabled"));
-//                $form->get('facebook_app_id')->setData($services->getSetting("facebook_app_id"));
-//                $form->get('disqus_subdomain')->setData($services->getSetting("disqus_subdomain"));
-            }
-            
-            return $this->render('Dashboard/Administrator/Settings/blog.html.twig', [
-                'form' => $form->createView()
-            ]);
-        }
-        
-        /**
-         * @Route("/settings/mail-server", name="settings_mail_server", methods="GET|POST")
-         */
-        public function mailServer(Request $request, AppServices $services)
-        {
-            
-            if ($services->getEnv("DEMO_MODE") == "1") {
-                $this->addFlash('error', 'This feature is disabled in demo mode', [], 'javascript');
-                return $this->redirectToRoute("dashboard_index");
-            }
-            
-            $form = $this->createFormBuilder()
-                ->add('mail_server_transport', ChoiceType::class, [
-                    'required' => false,
-                    'multiple' => false,
-                    'expanded' => true,
-                    'label' => 'Transport',
-                    'choices' => ['SMTP' => 'smtp', 'Gmail' => 'gmail', 'Sendmail' => 'sendmail'],
-                    'label_attr' => ['class' => 'radio-custom radio-inline'],
-//                    'constraints' => array(
-//                        new NotNull()
-//                    ),
-                ])
-                ->add('mail_server_host', TextType::class, [
-                    'required' => false,
-                    'label' => 'Host',
-                    'constraints' => array(// new NotBlank()
-                    ),
-                ])
-                ->add('mail_server_port', TextType::class, [
-                    'required' => false,
-                    'label' => 'Port',
-                ])
-                ->add('mail_server_encryption', ChoiceType::class, [
-                    'required' => false,
-                    'multiple' => false,
-                    'expanded' => true,
-                    'label' => 'Encryption',
-                    'choices' => ['None' => null, 'SSL' => 'ssl', 'TLS' => 'tls'],
-                    'label_attr' => ['class' => 'radio-custom radio-inline'],
-                ])
-                /* ->add('mail_server_auth_mode', ChoiceType::class, [
-                  'required' => false,
-                  'multiple' => false,
-                  'expanded' => true,
-                  'label' => 'Authentication mode',
-                  'choices' => ['None' => null, 'Login' => 'login', 'Cram-md5' => 'cram-md5', 'Plain' => 'plain'],
-                  'label_attr' => ['class' => 'radio-custom radio-inline'],
-                  ]) */
-                ->add('mail_server_username', TextType::class, [
-                    'required' => false,
-                    'label' => 'Username',
-                ])
-                ->add('mail_server_password', TextType::class, [
-                    'required' => false,
-                    'label' => 'Password',
-                ])
-                ->add('no_reply_email', TextType::class, [
-                    'purify_html' => true,
-                    'required' => false,
-                    'label' => 'No reply email address',
-                    'constraints' => array(// new NotBlank()
-                    ),
-                    'help' => 'This email address will be used as the sender of all the emails sent by the platform, in almost all cases, it is the same as the username above'
-                ])
-                ->add('contact_email', TextType::class, [
-                    'purify_html' => true,
-                    'required' => false,
-                    'label' => 'Contact email',
-                    'constraints' => array(// new NotBlank()
-                    ),
-                    'help' => 'This email address will receive the contact form messages'
-                ])
-                ->add('save', SubmitType::class, [
-                    'label' => 'Save',
-                    'attr' => ['class' => 'btn btn-primary'],
-                ])
-                ->getForm();
-            
-            $form->handleRequest($request);
-            
-            if ($form->isSubmitted()) {
-                if ($form->isValid()) {
-                    $settings = $form->getData();
-                    $services->setSetting("mail_server_transport", $settings['mail_server_transport']);
-                    $services->setSetting("mail_server_host", rawurlencode($settings['mail_server_host']));
-                    $services->setSetting("mail_server_port", $settings['mail_server_port']);
-                    $services->setSetting("mail_server_encryption", $settings['mail_server_encryption']);
-                    //$services->setSetting("mail_server_auth_mode", $settings['mail_server_auth_mode']);
-                    $services->setSetting("mail_server_username", rawurlencode($settings['mail_server_username']));
-                    $services->setSetting("mail_server_password", rawurlencode($settings['mail_server_password']));
-                    $services->setSetting("contact_email", $settings['contact_email']);
-                    $services->setSetting("no_reply_email", $settings['no_reply_email']);
-                    
-                    $dsnUrl = $settings['mail_server_transport'] . "://";
-                    if ($settings['mail_server_username'] != '') {
-//                        $dsnUrl .= rawurlencode($settings['mail_server_username']);
-                        $dsnUrl .= $settings['mail_server_username'];
-                    }
-                    if ($settings['mail_server_password'] != '') {
-                        $dsnUrl .= ":" . rawurlencode($settings['mail_server_password']);
-                    }
-                    if ($settings['mail_server_host'] != '') {
-                        $dsnUrl .= "@" . $settings['mail_server_host'];
-                    }
-                    if ($settings['mail_server_port'] != '') {
-                        $dsnUrl .= ":" . $settings['mail_server_port'];
-                    }
-                    if ($settings['mail_server_encryption'] != '') {
-                        $dsnUrl .= "/?encryption=" . $settings['mail_server_encryption'];
-                    }
-                    if ($settings['mail_server_transport'] == 'gmail') {
-                        if ($settings['mail_server_encryption'] != '') {
-                            $dsnUrl .= "&auth_mode=oauth";
-                        } else {
-                            $dsnUrl .= "?auth_mode=oauth";
-                        }
-                    }
-                    $services->updateEnv("MAILER_URL", $dsnUrl);
-                    
-                    $this->addFlash('success', 'The settings have been updated');
-                } else {
-                    $this->addFlash('error', 'The form contains invalid data');
-                }
-            } else {
-                $form->get('mail_server_transport')->setData($services->getSetting("mail_server_transport"));
-                $form->get('mail_server_host')->setData(rawurldecode($services->getSetting("mail_server_host")));
-                $form->get('mail_server_port')->setData($services->getSetting("mail_server_port"));
-                $form->get('mail_server_encryption')->setData($services->getSetting("mail_server_encryption"));
-                //$form->get('mail_server_auth_mode')->setData($services->getSetting("mail_server_auth_mode"));
-                $form->get('mail_server_username')->setData(rawurldecode($services->getSetting("mail_server_username")));
-                $form->get('mail_server_password')->setData(rawurldecode($services->getSetting("mail_server_password")));
-                $form->get('contact_email')->setData($services->getSetting("contact_email"));
-                $form->get('no_reply_email')->setData($services->getSetting("no_reply_email"));
-            }
-            
-            return $this->render('Dashboard/Administrator/Settings/mail-server.html.twig', [
-                'form' => $form->createView()
-            ]);
-        }
-        
-        /**
-         * @Route("/settings/mail-server/test", name="settings_mail_server_test", methods="GET|POST")
-         */
-        public function mailServerTest(Request $request, AppServices $services, Swift_Mailer $mailer, Twig_Environment $templating)
-        {
-            
-            $email = new Swift_Message("Mail server test email");
-            $email->setFrom($services->getSetting('no_reply_email'))
-                ->setTo($request->query->get('email'))
-                ->setBody($templating->render('Dashboard/Administrator/Settings/mail-server-test-email.html.twig'), 'text/html');
-            try {
-                $result = $mailer->send($email);
-                if ($result == 0) {
-                    $this->addFlash('danger', "The email could not be sent");
-                } else {
-                    $this->addFlash('success', "The test email has been sent, please check the inbox" . " " . $request->request->get('email'));
-                }
-            } catch (Exception $e) {
-                $this->addFlash('danger', "The email could not be sent");
-            }
-            
-            return $this->redirectToRoute('dashboard_administrator_settings_mail_server');
-        }
-        
-        /**
-         * @Route("/settings/google-recaptcha", name="settings_google_recaptcha", methods="GET|POST")
-         */
-        public function googleRecaptcha(Request $request, AppServices $services)
-        {
-            
-            $form = $this->createFormBuilder()
-                ->add('google_recaptcha_enabled', ChoiceType::class, [
-                    'required' => false,
-                    'multiple' => false,
-                    'expanded' => true,
-                    'label' => 'Enable Google Repatcha',
-                    'choices' => ['Yes' => 'yes', 'No' => 'no'],
-                    'label_attr' => ['class' => 'radio-custom radio-inline'],
-//                    'constraints' => array(
-//                        new NotNull()
-//                    ),
-                ])
-                ->add('google_recaptcha_site_key', TextType::class, [
-                    'required' => false,
-                    'label' => 'Site key',
-                ])
-                ->add('google_recaptcha_secret_key', TextType::class, [
-                    'required' => false,
-                    'label' => 'Secret key',
-                ])
-                ->add('save', SubmitType::class, [
-                    'label' => 'Save',
-                    'attr' => ['class' => 'btn btn-primary'],
-                ])
-                ->getForm();
-            
-            $form->handleRequest($request);
-            
-            if ($form->isSubmitted()) {
-                if ($form->isValid()) {
-                    $settings = $form->getData();
-                    $services->setSetting("google_recaptcha_enabled", $settings['google_recaptcha_enabled']);
-                    $services->setSetting("google_recaptcha_site_key", $settings['google_recaptcha_site_key']);
-                    $services->setSetting("google_recaptcha_secret_key", $settings['google_recaptcha_secret_key']);
-                    
-                    $services->updateEnv("EWZ_RECAPTCHA_SITE_KEY", $settings['google_recaptcha_site_key']);
-                    $services->updateEnv("EWZ_RECAPTCHA_SECRET", $settings['google_recaptcha_secret_key']);
-                    
-                    $this->addFlash('success', 'The settings have been updated');
-                } else {
-                    $this->addFlash('error', 'The form contains invalid data');
-                }
-            } else {
-                $form->get('google_recaptcha_enabled')->setData($services->getSetting("google_recaptcha_enabled"));
-                $form->get('google_recaptcha_site_key')->setData($services->getSetting("google_recaptcha_site_key"));
-                $form->get('google_recaptcha_secret_key')->setData($services->getSetting("google_recaptcha_secret_key"));
-            }
-            
-            return $this->render('Dashboard/Administrator/Settings/google-recaptcha.html.twig', [
-                'form' => $form->createView()
-            ]);
-        }
-        
-        /**
-         * @Route("/settings/google-maps", name="settings_google_maps", methods="GET|POST")
-         */
-        public function googleMaps(Request $request, AppServices $services)
-        {
-            
-            $form = $this->createFormBuilder()
-                ->add('google_maps_api_key', TextType::class, [
-                    'required' => false,
-                    'label' => 'Google Maps Api Key',
-                    'help' => 'Leave api key empty to disable google maps project wide'
-                ])
-                ->add('save', SubmitType::class, [
-                    'label' => 'Save',
-                    'attr' => ['class' => 'btn btn-primary'],
-                ])
-                ->getForm();
-            
-            $form->handleRequest($request);
-            
-            if ($form->isSubmitted()) {
-                if ($form->isValid()) {
-                    $settings = $form->getData();
-                    $services->updateEnv("GOOGLE_MAPS_API_KEY", $settings['google_maps_api_key']);
-                    
-                    $this->addFlash('success', 'The settings have been updated');
-                } else {
-                    $this->addFlash('error', 'The form contains invalid data');
-                }
-            } else {
-                $form->get('google_maps_api_key')->setData($services->getEnv("GOOGLE_MAPS_API_KEY"));
-            }
-            
-            return $this->render('Dashboard/Administrator/Settings/google-maps.html.twig', [
-                'form' => $form->createView()
-            ]);
-        }
-        
-        /**
-         * @Route("/settings/social-login", name="settings_social_login", methods="GET|POST")
-         */
-        public function socialLogin(Request $request, AppServices $services)
-        {
-            
-            $form = $this->createFormBuilder()
-                ->add('social_login_facebook_enabled', ChoiceType::class, [
-                    'required' => false,
-                    'multiple' => false,
-                    'expanded' => true,
-                    'label' => 'Enable Facebook Social Login',
-                    'choices' => ['Yes' => 'yes', 'No' => 'no'],
-                    'label_attr' => ['class' => 'radio-custom radio-inline'],
-//                    'constraints' => array(
-//                        new NotNull()
-//                    ),
-                ])
-                ->add('social_login_facebook_id', TextType::class, [
-                    'required' => false,
-                    'label' => 'Facebook Id',
-                ])
-                ->add('social_login_facebook_secret', TextType::class, [
-                    'required' => false,
-                    'label' => 'Facebook Secret',
-                ])
-                ->add('social_login_google_enabled', ChoiceType::class, [
-                    'required' => false,
-                    'multiple' => false,
-                    'expanded' => true,
-                    'label' => 'Enable Google Social Login',
-                    'choices' => ['Yes' => 'yes', 'No' => 'no'],
-                    'label_attr' => ['class' => 'radio-custom radio-inline'],
-//                    'constraints' => array(
-//                        new NotNull()
-//                    ),
-                ])
-                ->add('social_login_google_id', TextType::class, [
-                    'required' => false,
-                    'label' => 'Google Id',
-                ])
-                ->add('social_login_google_secret', TextType::class, [
-                    'required' => false,
-                    'label' => 'Google Secret',
-                ])
-                ->add('save', SubmitType::class, [
-                    'label' => 'Save',
-                    'attr' => ['class' => 'btn btn-primary'],
-                ])
-                ->getForm();
-            
-            $form->handleRequest($request);
-            
-            if ($form->isSubmitted()) {
-                if ($form->isValid()) {
-                    $settings = $form->getData();
-                    $services->setSetting("social_login_facebook_enabled", $settings['social_login_facebook_enabled']);
-                    $services->setSetting("social_login_facebook_id", $settings['social_login_facebook_id']);
-                    $services->setSetting("social_login_facebook_secret", $settings['social_login_facebook_secret']);
-                    $services->setSetting("social_login_google_enabled", $settings['social_login_google_enabled']);
-                    $services->setSetting("social_login_google_id", $settings['social_login_google_id']);
-                    $services->setSetting("social_login_google_secret", $settings['social_login_google_secret']);
-                    
-                    $services->updateEnv("FB_ID", $settings['social_login_facebook_id']);
-                    $services->updateEnv("FB_SECRET", $settings['social_login_facebook_secret']);
-                    $services->updateEnv("GOOGLE_ID", $settings['social_login_google_id']);
-                    $services->updateEnv("GOOGLE_SECRET", $settings['social_login_google_secret']);
-                    
-                    $this->addFlash('success', 'The settings have been updated');
-                } else {
-                    $this->addFlash('error', 'The form contains invalid data');
-                }
-            } else {
-                $form->get('social_login_facebook_enabled')->setData($services->getSetting("social_login_facebook_enabled"));
-                $form->get('social_login_facebook_id')->setData($services->getSetting("social_login_facebook_id"));
-                $form->get('social_login_facebook_secret')->setData($services->getSetting("social_login_facebook_secret"));
-                $form->get('social_login_google_enabled')->setData($services->getSetting("social_login_google_enabled"));
-                $form->get('social_login_google_id')->setData($services->getSetting("social_login_google_id"));
-                $form->get('social_login_google_secret')->setData($services->getSetting("social_login_google_secret"));
-            }
-            
-            return $this->render('Dashboard/Administrator/Settings/social-login.html.twig', [
-                'form' => $form->createView()
-            ]);
-        }
-        
-        /**
-         * @Route("/settings/menus", name="settings_menus", methods="GET")
-         */
-        public function menus(AppServices $services)
-        {
-            
-            $menus = $services->getMenus(array())->getQuery()->getResult();
-            
-            return $this->render('Dashboard/Administrator/Settings/menus.html.twig', [
-                'menus' => $menus
-            ]);
-        }
-        
-        /**
-         * @Route("/settings/menus/{slug}/edit", name="settings_menus_edit", methods="GET|POST")
-         */
-        public function menuEdit(Request $request, AppServices $services, $slug)
-        {
-            
-            $em = $this->getDoctrine()->getManager();
-            
-            $menu = $services->getMenus(array("slug" => $slug))->getQuery()->getOneOrNullResult();
-            
-            if (!$menu) {
-                $this->addFlash('error', 'The menu can not be found');
-                return $this->redirectToRoute('dashboard_administrator_settings_menus');
-            }
-            
-            $form = $this->createForm(MenuType::class, $menu);
-            $form->handleRequest($request);
-            
-            if ($form->isSubmitted()) {
-                if ($form->isValid()) {
-                    foreach ($menu->getMenuElements() as $menuElement) {
-                        $menuElement->setMenu($menu);
-                    }
-                    $em->persist($menu);
-                    $em->flush();
-                    $this->addFlash('success', 'The menu has been successfully updated');
-                    return $this->redirectToRoute('dashboard_administrator_settings_menus');
-                }
-                
                 $this->addFlash('error', 'The form contains invalid data');
             }
-            
-            return $this->render('Dashboard/Administrator/Settings/menu-edit.html.twig', [
-                'menu' => $menu,
-                'form' => $form->createView()
-            ]);
+        } else {
+            $form->get('blog_posts_per_page')->setData($services->getSetting("blog_posts_per_page"));
+            $form->get('blog_comments_enabled')->setData($services->getSetting("blog_comments_enabled"));
+//                $form->get('facebook_app_id')->setData($services->getSetting("facebook_app_id"));
+//                $form->get('disqus_subdomain')->setData($services->getSetting("disqus_subdomain"));
         }
-        
+
+        return $this->render('Dashboard/Administrator/Settings/blog.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
+
+    /**
+     * @Route("/settings/mail-server", name="settings_mail_server", methods="GET|POST")
+     */
+    public function mailServer(Request $request, AppServices $services)
+    {
+
+        if ($services->getEnv("DEMO_MODE") == "1") {
+            $this->addFlash('error', 'This feature is disabled in demo mode', [], 'javascript');
+            return $this->redirectToRoute("dashboard_index");
+        }
+
+        $form = $this->createFormBuilder()
+            ->add('mail_server_transport', ChoiceType::class, [
+                'required' => false,
+                'multiple' => false,
+                'expanded' => true,
+                'label' => 'Transport',
+                'choices' => ['SMTP' => 'smtp', 'Gmail' => 'gmail', 'Sendmail' => 'sendmail'],
+                'label_attr' => ['class' => 'radio-custom radio-inline'],
+//                    'constraints' => array(
+//                        new NotNull()
+//                    ),
+            ])
+            ->add('mail_server_host', TextType::class, [
+                'required' => false,
+                'label' => 'Host',
+                'constraints' => array(// new NotBlank()
+                ),
+            ])
+            ->add('mail_server_port', TextType::class, [
+                'required' => false,
+                'label' => 'Port',
+            ])
+            ->add('mail_server_encryption', ChoiceType::class, [
+                'required' => false,
+                'multiple' => false,
+                'expanded' => true,
+                'label' => 'Encryption',
+                'choices' => ['SSL' => 'ssl', 'TLS' => 'tls'],
+                'label_attr' => ['class' => 'radio-custom radio-inline'],
+            ])
+            /* ->add('mail_server_auth_mode', ChoiceType::class, [
+              'required' => false,
+              'multiple' => false,
+              'expanded' => true,
+              'label' => 'Authentication mode',
+              'choices' => ['None' => null, 'Login' => 'login', 'Cram-md5' => 'cram-md5', 'Plain' => 'plain'],
+              'label_attr' => ['class' => 'radio-custom radio-inline'],
+              ]) */
+            ->add('mail_server_username', TextType::class, [
+                'required' => false,
+                'label' => 'Username',
+            ])
+            ->add('mail_server_password', TextType::class, [
+                'required' => false,
+                'label' => 'Password',
+            ])
+            ->add('no_reply_email', TextType::class, [
+                'purify_html' => true,
+                'required' => false,
+                'label' => 'No reply email address',
+                'constraints' => array(// new NotBlank()
+                ),
+                'help' => 'This email address will be used as the sender of all the emails sent by the platform, in almost all cases, it is the same as the username above'
+            ])
+            ->add('contact_email', TextType::class, [
+                'purify_html' => true,
+                'required' => false,
+                'label' => 'Contact email',
+                'constraints' => array(// new NotBlank()
+                ),
+                'help' => 'This email address will receive the contact form messages'
+            ])
+            ->add('save', SubmitType::class, [
+                'label' => 'Save',
+                'attr' => ['class' => 'btn btn-primary'],
+            ])
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $settings = $form->getData();
+                $services->setSetting("mail_server_transport", $settings['mail_server_transport']);
+                $services->setSetting("mail_server_host", rawurlencode($settings['mail_server_host']));
+                $services->setSetting("mail_server_port", $settings['mail_server_port']);
+                $services->setSetting("mail_server_encryption", $settings['mail_server_encryption']);
+                //$services->setSetting("mail_server_auth_mode", $settings['mail_server_auth_mode']);
+                $services->setSetting("mail_server_username", rawurlencode($settings['mail_server_username']));
+                $services->setSetting("mail_server_password", rawurlencode($settings['mail_server_password']));
+                $services->setSetting("contact_email", $settings['contact_email']);
+                $services->setSetting("no_reply_email", $settings['no_reply_email']);
+
+                $dsnUrl = $settings['mail_server_transport'] . "://";
+                if ($settings['mail_server_username'] != '') {
+//                        $dsnUrl .= rawurlencode($settings['mail_server_username']);
+                    $dsnUrl .= $settings['mail_server_username'];
+                }
+                if ($settings['mail_server_password'] != '') {
+                    $dsnUrl .= ":" . rawurlencode($settings['mail_server_password']);
+                }
+                if ($settings['mail_server_host'] != '') {
+                    $dsnUrl .= "@" . $settings['mail_server_host'];
+                }
+                if ($settings['mail_server_port'] != '') {
+                    $dsnUrl .= ":" . $settings['mail_server_port'];
+                }
+                if ($settings['mail_server_encryption'] != '') {
+                    $dsnUrl .= "/?encryption=" . $settings['mail_server_encryption'];
+                }
+                if ($settings['mail_server_transport'] == 'gmail') {
+                    if ($settings['mail_server_encryption'] != '') {
+                        $dsnUrl .= "&auth_mode=oauth";
+                    } else {
+                        $dsnUrl .= "?auth_mode=oauth";
+                    }
+                }
+                $services->updateEnv("MAILER_URL", $dsnUrl);
+
+                $this->addFlash('success', 'The settings have been updated');
+            } else {
+                $this->addFlash('error', 'The form contains invalid data');
+            }
+        } else {
+            $form->get('mail_server_transport')->setData($services->getSetting("mail_server_transport"));
+            $form->get('mail_server_host')->setData(rawurldecode($services->getSetting("mail_server_host")));
+            $form->get('mail_server_port')->setData($services->getSetting("mail_server_port"));
+            $form->get('mail_server_encryption')->setData($services->getSetting("mail_server_encryption"));
+            //$form->get('mail_server_auth_mode')->setData($services->getSetting("mail_server_auth_mode"));
+            $form->get('mail_server_username')->setData(rawurldecode($services->getSetting("mail_server_username")));
+            $form->get('mail_server_password')->setData(rawurldecode($services->getSetting("mail_server_password")));
+            $form->get('contact_email')->setData($services->getSetting("contact_email"));
+            $form->get('no_reply_email')->setData($services->getSetting("no_reply_email"));
+        }
+
+        return $this->render('Dashboard/Administrator/Settings/mail-server.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/settings/mail-server/test", name="settings_mail_server_test", methods="GET|POST")
+     */
+    public function mailServerTest(Request $request, AppServices $services, Swift_Mailer $mailer, Twig_Environment $templating)
+    {
+
+        $email = new Swift_Message("Mail server test email");
+        $email->setFrom($services->getSetting('no_reply_email'))
+            ->setTo($request->query->get('email'))
+            ->setBody($templating->render('Dashboard/Administrator/Settings/mail-server-test-email.html.twig'), 'text/html');
+        try {
+            $result = $mailer->send($email);
+            if ($result == 0) {
+                $this->addFlash('danger', "The email could not be sent");
+            } else {
+                $this->addFlash('success', "The test email has been sent, please check the inbox" . " " . $request->request->get('email'));
+            }
+        } catch (Exception $e) {
+            $this->addFlash('danger', "The email could not be sent");
+        }
+
+        return $this->redirectToRoute('dashboard_administrator_settings_mail_server');
+    }
+
+    /**
+     * @Route("/settings/google-recaptcha", name="settings_google_recaptcha", methods="GET|POST")
+     */
+    public function googleRecaptcha(Request $request, AppServices $services)
+    {
+
+        $form = $this->createFormBuilder()
+            ->add('google_recaptcha_enabled', ChoiceType::class, [
+                'required' => false,
+                'multiple' => false,
+                'expanded' => true,
+                'placeholder' => false,
+                'label' => 'Enable Google Recaptcha',
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
+                'label_attr' => ['class' => 'radio-custom radio-inline'],
+//                    'constraints' => array(
+//                        new NotNull()
+//                    ),
+            ])
+            ->add('google_recaptcha_site_key', TextType::class, [
+                'required' => false,
+                'label' => 'Site key',
+            ])
+            ->add('google_recaptcha_secret_key', TextType::class, [
+                'required' => false,
+                'label' => 'Secret key',
+            ])
+            ->add('save', SubmitType::class, [
+                'label' => 'Save',
+                'attr' => ['class' => 'btn btn-primary'],
+            ])
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $settings = $form->getData();
+                $services->setSetting("google_recaptcha_enabled", $settings['google_recaptcha_enabled']);
+                $services->setSetting("google_recaptcha_site_key", $settings['google_recaptcha_site_key']);
+                $services->setSetting("google_recaptcha_secret_key", $settings['google_recaptcha_secret_key']);
+
+                $services->updateEnv("EWZ_RECAPTCHA_SITE_KEY", $settings['google_recaptcha_site_key']);
+                $services->updateEnv("EWZ_RECAPTCHA_SECRET", $settings['google_recaptcha_secret_key']);
+
+                $this->addFlash('success', 'The settings have been updated');
+            } else {
+                $this->addFlash('error', 'The form contains invalid data');
+            }
+        } else {
+            $form->get('google_recaptcha_enabled')->setData($services->getSetting("google_recaptcha_enabled"));
+            $form->get('google_recaptcha_site_key')->setData($services->getSetting("google_recaptcha_site_key"));
+            $form->get('google_recaptcha_secret_key')->setData($services->getSetting("google_recaptcha_secret_key"));
+        }
+
+        return $this->render('Dashboard/Administrator/Settings/google-recaptcha.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/settings/google-maps", name="settings_google_maps", methods="GET|POST")
+     */
+    public function googleMaps(Request $request, AppServices $services)
+    {
+
+        $form = $this->createFormBuilder()
+            ->add('google_maps_api_key', TextType::class, [
+                'required' => false,
+                'label' => 'Google Maps Api Key',
+                'help' => 'Leave api key empty to disable google maps project wide'
+            ])
+            ->add('save', SubmitType::class, [
+                'label' => 'Save',
+                'attr' => ['class' => 'btn btn-primary'],
+            ])
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $settings = $form->getData();
+                $services->updateEnv("GOOGLE_MAPS_API_KEY", $settings['google_maps_api_key']);
+
+                $this->addFlash('success', 'The settings have been updated');
+            } else {
+                $this->addFlash('error', 'The form contains invalid data');
+            }
+        } else {
+            $form->get('google_maps_api_key')->setData($services->getEnv("GOOGLE_MAPS_API_KEY"));
+        }
+
+        return $this->render('Dashboard/Administrator/Settings/google-maps.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/settings/social-login", name="settings_social_login", methods="GET|POST")
+     */
+    public function socialLogin(Request $request, AppServices $services)
+    {
+
+        $form = $this->createFormBuilder()
+            ->add('social_login_facebook_enabled', ChoiceType::class, [
+                'required' => false,
+                'multiple' => false,
+                'expanded' => true,
+                'label' => 'Enable Facebook Social Login',
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
+                'label_attr' => ['class' => 'radio-custom radio-inline'],
+//                    'constraints' => array(
+//                        new NotNull()
+//                    ),
+            ])
+            ->add('social_login_facebook_id', TextType::class, [
+                'required' => false,
+                'label' => 'Facebook Id',
+            ])
+            ->add('social_login_facebook_secret', TextType::class, [
+                'required' => false,
+                'label' => 'Facebook Secret',
+            ])
+            ->add('social_login_google_enabled', ChoiceType::class, [
+                'required' => false,
+                'multiple' => false,
+                'expanded' => true,
+                'label' => 'Enable Google Social Login',
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
+                'label_attr' => ['class' => 'radio-custom radio-inline'],
+//                    'constraints' => array(
+//                        new NotNull()
+//                    ),
+            ])
+            ->add('social_login_google_id', TextType::class, [
+                'required' => false,
+                'label' => 'Google Id',
+            ])
+            ->add('social_login_google_secret', TextType::class, [
+                'required' => false,
+                'label' => 'Google Secret',
+            ])
+            ->add('save', SubmitType::class, [
+                'label' => 'Save',
+                'attr' => ['class' => 'btn btn-primary'],
+            ])
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $settings = $form->getData();
+                $services->setSetting("social_login_facebook_enabled", $settings['social_login_facebook_enabled']);
+                $services->setSetting("social_login_facebook_id", $settings['social_login_facebook_id']);
+                $services->setSetting("social_login_facebook_secret", $settings['social_login_facebook_secret']);
+                $services->setSetting("social_login_google_enabled", $settings['social_login_google_enabled']);
+                $services->setSetting("social_login_google_id", $settings['social_login_google_id']);
+                $services->setSetting("social_login_google_secret", $settings['social_login_google_secret']);
+
+                $services->updateEnv("FB_ID", $settings['social_login_facebook_id']);
+                $services->updateEnv("FB_SECRET", $settings['social_login_facebook_secret']);
+                $services->updateEnv("GOOGLE_ID", $settings['social_login_google_id']);
+                $services->updateEnv("GOOGLE_SECRET", $settings['social_login_google_secret']);
+
+                $this->addFlash('success', 'The settings have been updated');
+            } else {
+                $this->addFlash('error', 'The form contains invalid data');
+            }
+        } else {
+            $form->get('social_login_facebook_enabled')->setData($services->getSetting("social_login_facebook_enabled"));
+            $form->get('social_login_facebook_id')->setData($services->getSetting("social_login_facebook_id"));
+            $form->get('social_login_facebook_secret')->setData($services->getSetting("social_login_facebook_secret"));
+            $form->get('social_login_google_enabled')->setData($services->getSetting("social_login_google_enabled"));
+            $form->get('social_login_google_id')->setData($services->getSetting("social_login_google_id"));
+            $form->get('social_login_google_secret')->setData($services->getSetting("social_login_google_secret"));
+        }
+
+        return $this->render('Dashboard/Administrator/Settings/social-login.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/settings/menus", name="settings_menus", methods="GET")
+     */
+    public function menus(AppServices $services)
+    {
+
+        $menus = $services->getMenus(array())->getQuery()->getResult();
+
+        return $this->render('Dashboard/Administrator/Settings/menus.html.twig', [
+            'menus' => $menus
+        ]);
+    }
+
+    /**
+     * @Route("/settings/menus/{slug}/edit", name="settings_menus_edit", methods="GET|POST")
+     */
+    public function menuEdit(Request $request, AppServices $services, $slug)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $menu = $services->getMenus(array("slug" => $slug))->getQuery()->getOneOrNullResult();
+
+        if (!$menu) {
+            $this->addFlash('error', 'The menu can not be found');
+            return $this->redirectToRoute('dashboard_administrator_settings_menus');
+        }
+
+        $form = $this->createForm(MenuType::class, $menu);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                foreach ($menu->getMenuElements() as $menuElement) {
+                    $menuElement->setMenu($menu);
+                }
+                $em->persist($menu);
+                $em->flush();
+                $this->addFlash('success', 'The menu has been successfully updated');
+                return $this->redirectToRoute('dashboard_administrator_settings_menus');
+            }
+
+            $this->addFlash('error', 'The form contains invalid data');
+        }
+
+        return $this->render('Dashboard/Administrator/Settings/menu-edit.html.twig', [
+            'menu' => $menu,
+            'form' => $form->createView()
+        ]);
+    }
+
+}

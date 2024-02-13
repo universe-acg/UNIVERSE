@@ -66,81 +66,81 @@
                                     <div class="table-responsive">
                                         <table class="table table-hover table-vcenter text-nowrap">
                                             <thead>
-                                            <tr>
-                                                <th>{{ 'Name' }}</th>
-                                                <th>{{ 'Venues count' }}</th>
-                                                <th>{{ 'Status' }}</th>
-                                                <th class="text-center"><i class="fas fa-cog"></i></th>
-                                            </tr>
+                                                <tr>
+                                                    <th>{{ 'Name' }}</th>
+                                                    <th>{{ 'Venues count' }}</th>
+                                                    <th>{{ 'Status' }}</th>
+                                                    <th class="text-center"><i class="fas fa-cog"></i></th>
+                                                </tr>
                                             </thead>
                                             <tbody>
 
-                                            {% for venuetype in venuestypes %}
+                                                {% for venuetype in venuestypes %}
 
-                                                <tr>
-                                                    <td>
-                                                        {{ venuetype.name }}
-                                                    </td>
-                                                    <td>
-                                                        {{ venuetype.venues|length }}
-                                                    </td>
-                                                    <td>
-                                                        {% if venuetype.hidden %}
-                                                            <span class="badge badge-danger"><i
-                                                                        class="fas fa-eye-slash fa-fw"></i> {{ "Hidden" }}</span>
-                                                        {% else %}
-                                                            <span class="badge badge-success"><i
-                                                                        class="fas fa-eye fa-fw"></i> {{ "Visible" }}</span>
-                                                        {% endif %}
-                                                        {% if venuetype.deletedAt %}
-                                                            <br>
-                                                            <br>
-                                                            <span class="badge badge-danger"><i
-                                                                        class="fas fa-times fa-fw"></i> {{ "Deleted" }}</span>
-                                                        {% endif %}
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <div class="item-action dropdown">
-                                                            <a href="javascript:void(0)" data-toggle="dropdown"
-                                                               data-boundary="window" class="icon"><i
-                                                                        class="fas fa-ellipsis-v"></i></a>
-                                                            <div class="dropdown-menu dropdown-menu-right">
-                                                                <a href="{{ path('dashboard_administrator_venuetype_edit', { slug : venuetype.slug }) }}"
-                                                                   class="dropdown-item"><i
-                                                                            class="dropdown-icon fas fa-edit fa-fw text-muted"></i> {{ "Edit" }}
-                                                                </a>
-                                                                {% if venuetype.hidden %}
-                                                                    <a href="{{ path('dashboard_administrator_venuetype_show', { slug : venuetype.slug }) }}"
+                                                    <tr>
+                                                        <td>
+                                                            {{ venuetype.name }}
+                                                        </td>
+                                                        <td>
+                                                            {{ venuetype.venues|length }}
+                                                        </td>
+                                                        <td>
+                                                            {% if venuetype.hidden %}
+                                                                <span class="badge badge-danger"><i
+                                                                            class="fas fa-eye-slash fa-fw"></i> {{ "Hidden" }}</span>
+                                                            {% else %}
+                                                                <span class="badge badge-success"><i
+                                                                            class="fas fa-eye fa-fw"></i> {{ "Visible" }}</span>
+                                                            {% endif %}
+                                                            {% if venuetype.deletedAt %}
+                                                                <br>
+                                                                <br>
+                                                                <span class="badge badge-danger"><i
+                                                                            class="fas fa-times fa-fw"></i> {{ "Deleted" }}</span>
+                                                            {% endif %}
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <div class="item-action dropdown">
+                                                                <a href="javascript:void(0)" data-toggle="dropdown"
+                                                                   data-boundary="window" class="icon"><i
+                                                                            class="fas fa-ellipsis-v"></i></a>
+                                                                <div class="dropdown-menu dropdown-menu-right">
+                                                                    <a href="{{ path('dashboard_administrator_venuetype_edit', { slug : venuetype.slug }) }}"
                                                                        class="dropdown-item"><i
-                                                                                class="dropdown-icon fas fa-eye fa-fw text-muted"></i> {{ "Show" }}
+                                                                                class="dropdown-icon fas fa-edit fa-fw text-muted"></i> {{ "Edit" }}
                                                                     </a>
-                                                                {% else %}
-                                                                    <a href="{{ path('dashboard_administrator_venuetype_hide', { slug : venuetype.slug }) }}"
-                                                                       class="dropdown-item"><i
-                                                                                class="dropdown-icon fas fa-eye-slash fa-fw text-muted"></i> {{ "Hide" }}
-                                                                    </a>
-                                                                {% endif %}
-                                                                {% if venuetype.deletedAt %}
-                                                                    <a href="{{ path('dashboard_administrator_venuetype_restore', { slug : venuetype.slug }) }}"
-                                                                       class="dropdown-item"><i
-                                                                                class="dropdown-icon fas fa-trash-restore fa-fw text-muted"></i> {{ "Restore" }}
-                                                                    </a>
-                                                                    <span data-target="{{ path('dashboard_administrator_venuetype_delete', { slug : venuetype.slug }) }}"
-                                                                          class="dropdown-item requires-confirmation"
-                                                                          data-confirmation-text="{{ "You are about to delete the venue type PERMANENTLY" }}"><i
-                                                                                class="dropdown-icon fas fa-trash fa-fw text-muted"></i> {{ "Delete permanently" }}</span>
-                                                                {% else %}
-                                                                    <a href="{{ path('dashboard_administrator_venuetype_disable', { slug : venuetype.slug }) }}"
-                                                                       class="dropdown-item"><i
-                                                                                class="dropdown-icon fas fa-times fa-fw text-muted"></i> {{ "Delete" }}
-                                                                    </a>
-                                                                {% endif %}
+                                                                    {% if venuetype.hidden %}
+                                                                        <a href="{{ path('dashboard_administrator_venuetype_show', { slug : venuetype.slug }) }}"
+                                                                           class="dropdown-item"><i
+                                                                                    class="dropdown-icon fas fa-eye fa-fw text-muted"></i> {{ "Show" }}
+                                                                        </a>
+                                                                    {% else %}
+                                                                        <a href="{{ path('dashboard_administrator_venuetype_hide', { slug : venuetype.slug }) }}"
+                                                                           class="dropdown-item"><i
+                                                                                    class="dropdown-icon fas fa-eye-slash fa-fw text-muted"></i> {{ "Hide" }}
+                                                                        </a>
+                                                                    {% endif %}
+                                                                    {% if venuetype.deletedAt %}
+                                                                        <a href="{{ path('dashboard_administrator_venuetype_restore', { slug : venuetype.slug }) }}"
+                                                                           class="dropdown-item"><i
+                                                                                    class="dropdown-icon fas fa-trash-restore fa-fw text-muted"></i> {{ "Restore" }}
+                                                                        </a>
+                                                                        <span data-target="{{ path('dashboard_administrator_venuetype_delete', { slug : venuetype.slug }) }}"
+                                                                              class="dropdown-item requires-confirmation"
+                                                                              data-confirmation-text="{{ "You are about to delete the venue type PERMANENTLY" }}"><i
+                                                                                    class="dropdown-icon fas fa-trash fa-fw text-muted"></i> {{ "Delete permanently" }}</span>
+                                                                    {% else %}
+                                                                        <a href="{{ path('dashboard_administrator_venuetype_disable', { slug : venuetype.slug }) }}"
+                                                                           class="dropdown-item"><i
+                                                                                    class="dropdown-icon fas fa-times fa-fw text-muted"></i> {{ "Delete" }}
+                                                                        </a>
+                                                                    {% endif %}
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                        </td>
+                                                    </tr>
 
-                                            {% endfor %}
+                                                {% endfor %}
                                             </tbody>
                                         </table>
                                     </div>

@@ -1335,6 +1335,61 @@ $(document).ready(function () {
             }
         });
     });
+    $(document).on("click", ".attendee-follow, .attendee-unfollow", function () {
+        const $thisButton = $(this);
+        if ($thisButton.attr("data-action-done") == "1") {
+            // Prevent multiple clicks
+            return false;
+        }
+
+        const targetUrl = $thisButton.data('target'); // Get the URL from data attribute
+
+        $.ajax({
+            type: "GET",
+            url: targetUrl, // Use the extracted URL
+            beforeSend: function () {
+                // Set the data-action-done attribute to prevent multiple clicks
+                $thisButton.attr("data-action-done", "1");
+
+                // Update button text with spinner and action description
+                if ($thisButton.hasClass('attendee-follow')) {
+                    $thisButton.html('<i class="fas fa-spinner fa-spin"></i>');
+                } else {
+                    $thisButton.html('<i class="fas fa-spinner fa-spin"></i>');
+                }
+            },
+            success: function (response) {
+                // Restore the original button text
+                if ($thisButton.hasClass('attendee-follow')) {
+                    $thisButton.html('<i class="fas fa-bell-slash"></i>');
+                } else {
+                    $thisButton.html('<i class="fas fa-bell"></i>');
+                }
+
+                if (response.hasOwnProperty('success')) {
+                    // Show success message
+                    showStackBarTop('success', '', response.success);
+                } else if (response.hasOwnProperty('error')) {
+                    // Show error message
+                    showStackBarTop('error', '', response.error);
+                } else {
+                    // Show a generic error message
+                    showStackBarTop('error', '', 'An error has occurred');
+                }
+            },
+            error: function () {
+                // Restore the original button text on error
+                if ($thisButton.hasClass('attendee-follow')) {
+                    $thisButton.html('<i class="fas fa-bell"></i>');
+                } else {
+                    $thisButton.html('<i class="fas fa-bell-slash"></i>');
+                }
+
+                // Show a generic error message
+                showStackBarTop('error', '', 'An error has occurred');
+            }
+        });
+    });
 
     $(document).on("click", ".organizer-join, .organizer-leave, .organizer-cancel, .organizer-reject, .organizer-accept", function () {
         const $thisButton = $(this);

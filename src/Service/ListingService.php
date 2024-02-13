@@ -69,6 +69,11 @@ class ListingService
         return $this->em->getRepository(Listing::class)->getListings($hidden, $keyword, $slug, $limit, $count);
     }
 
+    public function getListingsForEvent($eventId, $limit = null)
+    {
+        return $this->em->getRepository(Listing::class)->getListingsForEvent($eventId, $limit);
+    }
+
     public function getMyListings($criterias)
     {
         $hidden = array_key_exists('hidden', $criterias) ? $criterias['hidden'] : false;

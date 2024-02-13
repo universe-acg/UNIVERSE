@@ -25,6 +25,12 @@
 
 {% block content %}
 
+    <style>
+        .img-lazy-load {
+            max-width: 70vh;
+        }
+    </style>
+
     {% set navigation = [{"blog": "News", "current" : (pagetitle)}] %}
     {% include "Global/navigation.html.twig" with navigation %}
 

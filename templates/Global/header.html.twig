@@ -143,7 +143,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white {% if app.request.get("_route") == "homepage" and herosettings is defined and herosettings.content != "none" %}border-0{% endif %}">
         <div class="{{ services.getSetting("app_layout") }}">
             <div class="collapse navbar-collapse" id="main_nav">
-                <ul class="navbar-nav nav-fill w-100">
+                <ul class="navbar-nav nav-fill ">
                     {% for menuElement in services.getMenus({"slug" : "header-menu"}).getQuery().getOneOrNullResult().getMenuElements() %}
                         {% set link = "#0" %}
                         {% if menuElement.customLink %}
@@ -240,27 +240,27 @@
                             {% endif %}
                         {% endif %}
                     {% endfor %}
-                    {% if is_granted('ROLE_ADMINISTRATOR') %}
-                        <li class="nav-item dropdown dropdown-hover">
-                            <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown"
-                               aria-haspopup="true" aria-expanded="false"><i
-                                        class="fa-fw"></i>Alpha Stage Features</a>
-                            <div class="dropdown-menu dropdown-menu-arrow">
-                                <a class="dropdown-item" href="https://universeacg.xyz/leaderboards"><i
-                                            class="fa-fw"></i>Leaderboards</a>
-                                <a class="dropdown-item" href="https://universeacg.xyz/venues"><i
-                                            class="fa-fw"></i>Venues</a>
-                                <a class="dropdown-item" href="https://universeacg.xyz/athletics"><i
-                                            class="fa-fw"></i>Athletics</a>
-                                <a class="dropdown-item" href="https://universeacg.xyz/listings"><i
-                                            class="fa-fw"></i>Listings</a>
-                                <a class="dropdown-item" href="https://universeacg.xyz/reels"><i
-                                            class="fa-fw"></i>Reels</a>
-                                <a class="dropdown-item" href="https://universeacg.xyz/chat"><i
-                                            class="fa-fw"></i>Chat</a>
-                            </div>
-                        </li>
-                    {% endif %}
+                    {#                    {% if is_granted('ROLE_ADMINISTRATOR') %} #}
+                    {#                        <li class="nav-item dropdown dropdown-hover"> #}
+                    {#                            <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown" #}
+                    {#                               aria-haspopup="true" aria-expanded="false"><i #}
+                    {#                                        class="fa-fw"></i>Alpha Stage Features</a> #}
+                    {#                            <div class="dropdown-menu dropdown-menu-arrow"> #}
+                    {#                                <a class="dropdown-item" href="https://universeacg.xyz/leaderboards"><i #}
+                    {#                                            class="fa-fw"></i>Leaderboards</a> #}
+                    {#                                <a class="dropdown-item" href="https://universeacg.xyz/venues"><i #}
+                    {#                                            class="fa-fw"></i>Venues</a> #}
+                    {#                                <a class="dropdown-item" href="https://universeacg.xyz/athletics"><i #}
+                    {#                                            class="fa-fw"></i>Athletics</a> #}
+                    {#                                <a class="dropdown-item" href="https://universeacg.xyz/listings"><i #}
+                    {#                                            class="fa-fw"></i>Listings</a> #}
+                    {#                                <a class="dropdown-item" href="https://universeacg.xyz/reels"><i #}
+                    {#                                            class="fa-fw"></i>Reels</a> #}
+                    {#                                <a class="dropdown-item" href="https://universeacg.xyz/chat"><i #}
+                    {#                                            class="fa-fw"></i>Chat</a> #}
+                    {#                            </div> #}
+                    {#                        </li> #}
+                    {#                    {% endif %} #}
                 </ul>
             </div>
         </div>

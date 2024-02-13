@@ -33,7 +33,7 @@ class OrganizerProfileType extends AbstractType
                 'purify_html' => true,
                 'required' => true,
                 'label' => 'Organizer name',
-                'attr' => ['placeholder' => 'Enter the organizer name'],
+                'attr' => ['placeholder' => 'Enter the creator name'],
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'About the organizer',
@@ -88,7 +88,7 @@ class OrganizerProfileType extends AbstractType
                 'purify_html' => true,
                 'required' => false,
                 'label' => 'Email',
-                'attr' => ['placeholder' => 'Enter the organizer email'],
+                'attr' => ['placeholder' => 'Enter the creator email'],
             ])
             ->add('instagram', TextType::class, [
                 'purify_html' => true,

@@ -27,6 +27,28 @@ class ListingRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function getListingsForEvent($eventId, $limit = null)
+    {
+        $qb = $this->createQueryBuilder("l");
+
+        // Join with events table
+        $qb->leftJoin('l.event', 'e');
+
+        // Select listings associated with the specified event
+        $qb->andWhere("e.id = :eventId")->setParameter("eventId", $eventId);
+
+        // Optionally limit the number of results
+        if ($limit !== null) {
+            $qb->setMaxResults($limit);
+        }
+
+        // Order by createdAt in descending order
+        $qb->orderBy("l.createdAt", "DESC");
+
+        // Execute query and return result
+        return $qb->getQuery()->getResult();
+    }
+
 
     public function getListings($hidden, $keyword, $slug, $limit, $count)
     {

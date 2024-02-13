@@ -13,7 +13,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AccountController extends Controller
 {
-
     /**
      * @Route("/attendee/account/settings", name="dashboard_attendee_account_settings")
      */
@@ -26,9 +25,10 @@ class AccountController extends Controller
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
-                $this->getUser()->setSelectedImage($form->get('selectedImage')->getData());
-//                dump($form->get('selectedImage'));
-//                die();
+                $selectedImage = $form->get('selectedImage')->getData();
+                if ($selectedImage !== null) {
+                    $this->getUser()->setSelectedImage($selectedImage);
+                }
                 $em->persist($this->getUser());
                 $em->flush();
                 $this->addFlash('success', 'Your account settings have been updated');

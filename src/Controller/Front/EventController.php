@@ -13,6 +13,7 @@ use App\Repository\EventTicketRepository;
 use App\Repository\OrderElementRepository;
 use App\Repository\OrderRepository;
 use App\Service\AppServices;
+use App\Service\ListingService;
 use App\Service\VenueService;
 use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
@@ -599,7 +600,7 @@ class EventController extends AbstractController
     /**
      * @Route("/event/{slug}", name="event")
      */
-    public function event($slug, OrderRepository $orderRepository, AppServices $services): Response
+    public function event($slug, OrderRepository $orderRepository, AppServices $services, ListingService $listingService): Response
     {
 
         $event = $services->getEvents(array("slug" => $slug, "elapsed" => "all"))[0];
@@ -642,7 +643,9 @@ class EventController extends AbstractController
             }
         }
 
-        return $this->render('Front/Event/event.html.twig', ["event" => $event]);
+        $listings = $listingService->getListingsForEvent($event, null);
+
+        return $this->render('Front/Event/event.html.twig', ["event" => $event, "listings" => $listings]);
     }
 
     /**

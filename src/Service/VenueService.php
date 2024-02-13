@@ -74,10 +74,17 @@ class VenueService
     // Remove secondary images for a specific venue ID
     public function removeSecondaryImagesByVenueId($venueId)
     {
-        $secondaryImages = $this->em->getRepository(VenueImage::class)->findBy(['venue' => $venueId]);
+        // Check if $venueId is null
+        if ($venueId === null) {
+            // Handle the case where $venueId is null, for example, by logging an error or returning early
+            return;
+        }
 
-        foreach ($secondaryImages as $image) {
-            $this->em->remove($image);
+        $secondaryImages = $this->em->getRepository(VenueImage::class)->findBy(['venue' => $venueId]);
+        if ($secondaryImages) {
+            foreach ($secondaryImages as $image) {
+                $this->em->remove($image);
+            }
         }
 
         $this->em->flush();
