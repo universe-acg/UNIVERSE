@@ -9,11 +9,40 @@
     {% set navigation = [{"current" : (pagetitle)}] %}
     {#    {% include "Global/navigation.html.twig" with navigation %} #}
 
-    <section class="section-content padding-y bg-white">
+    <style>
+        .fixed-sidebar {
+            position: fixed;
+            top: 140px;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .col-lg-9 {
+            margin-left: 25%; /* Ensure proper spacing between the fixed sidebar and main content */
+        }
+
+        /* Responsive styles for mobile */
+        @media (max-width: 1000px) {
+            .fixed-sidebar {
+                position: relative;
+                top: initial;
+                left: initial;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .col-lg-9 {
+                margin-left: 0; /* Reset margin-left */
+            }
+        }
+    </style>
+
+    <section class="section-content padding-y bg-white" style="min-height: 800px">
         <div class="{{ services.getSetting("app_layout") }}">
 
             <div class="row" style="">
-                <aside class="col-lg-3 order-2 order-lg-1">
+                <aside class="col-lg-3 order-1 order-lg-1 fixed-sidebar">
 
                     <div class="box shadow-none bg-gray mb-4">
                         <div class="row flex-wrap flex-md-nowrap">
@@ -198,11 +227,16 @@
                     </div>
                 </aside>
                 <div class="col-lg-9 order-1 order-lg-2 mt-4 mt-md-0 ">
-                    {% for blogpost in blogposts %}
-                        <div class="col-12 col-sm-6 col-lg-2">
-                            {% include "Global/blog-card.html.twig" with {blogpost: blogpost, thumbnailsize: [397, 397], showdate: 1} %}
-                        </div>
-                    {% endfor %}
+                    <div class="row">
+                        {% for blogpost in blogposts %}
+                            <div class="col-12 col-sm-6 col-lg-2">
+                                {% include "Global/blog-card.html.twig" with {blogpost: blogpost, thumbnailsize: [397, 397], showdate: 1} %}
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-2">
+                                {% include "Global/blog-card.html.twig" with {blogpost: blogpost, thumbnailsize: [397, 397], showdate: 1} %}
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
 
                 {{ knp_pagination_render(blogposts, null, {}, {'align': 'center'}) }}
@@ -213,7 +247,7 @@
 
     <script>
         function clearForm() {
-            window.location.href = "https://universeacg.xyz/blog";
+            window.location.href = "https://universe.alexandroskourtis.me/blog";
         }
     </script>
 {% endblock %}

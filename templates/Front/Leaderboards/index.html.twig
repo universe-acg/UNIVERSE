@@ -234,7 +234,7 @@
                         {% if user.orggoodrole %}
                             <tr class="trrow{% if not dancingRowCreator %} dancing-rowc{% set dancingRowCreator = true %}{% endif %}">
                                 <td>
-                                    <div class="outer-image">
+                                    <div class="outer-image-image">
                                         <img src="{{ asset(user.imagiifypointslevel) }}">
                                         <div class="inner-image">
                                             <img src="{{ user.organizer.logoName ? asset(user.organizer.getLogoPath) : user.organizer.getLogoPlaceholder }}"

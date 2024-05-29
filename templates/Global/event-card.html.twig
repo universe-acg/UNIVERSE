@@ -57,7 +57,8 @@
                  href="{{ path('organizer', {slug: (event.getOrganizer().getUser().getUsername())}) }}">
                           <div class="outer-image">
 {#                                 {% if event.getOrganizer().getUser().getPoints() > 0 and event.getOrganizer().getUser().orggoodrole %} #}
-                                     <img src="{{ asset(event.getOrganizer().getUser().imagiifypointslevel) }}">
+                              {#                                     <img src="{{ asset(event.getOrganizer().getUser().imagiifypointslevel) }}"> #}
+                              <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wcAAgAB/axikW8AAAAASUVORK5CYII=">
 {#                                 {% endif %} #}
                                 <div class="inner-image">
                                             <img src="{{ event.getOrganizer().logoName ? asset(event.getOrganizer().getLogoPath) : event.getOrganizer().getLogoPlaceholder }}">

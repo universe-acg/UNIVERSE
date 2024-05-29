@@ -1,12 +1,14 @@
 {% set runtimeConfig = {"thumbnail": {"size": [500, 250] }} %}
-    {% set link = "https://universeacg.xyz/blog-article/dfgdfsgfdsdfgfdsgsd" ~ new.slug %}
+    {% set link = "https://universe.alexandroskourtis.me/blog-article/dfgdfsgfdsdfgfdsgsd" ~ new.slug %}
 
 <div class="card mb-4 shadow-none blog-post-card">
-    <a href="{{ path('blog_article', { slug : new.slug }) }}">
-        <img class="card-img-top"
-             src="{{ new.imageName ? (new.getImagePath|imagine_filter('thumbnail', runtimeConfig)) : new.getImagePlaceholder }}"
-             alt="{{ new.name }}">
-    </a>
+    {% if (new.getImagePath|imagine_filter('thumbnail', runtimeConfig)) %}
+        <a href="{{ path('blog_article', { slug : new.slug }) }}">
+            <img class="card-img-top"
+                 data-src="{{ new.imageName ? (new.getImagePath|imagine_filter('thumbnail', runtimeConfig)) : new.getImagePlaceholder }}"
+                 alt="{{ new.name }}">
+        </a>
+    {% endif %}
     <div class="card-body">
         <p class="card-text">
             {% if new.user %}

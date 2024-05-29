@@ -119,7 +119,7 @@ class OrganizerController extends AbstractController
         foreach ($organizers as $organizer) {
             $organizer->setNewscount(count($this->getDoctrine()->getRepository(Organizer::class)->findNewsByUser($organizer->getUser())));
             $organizer->setEventscount(count($appServices->getEvents(array("elapsed" => "all", "organizer" => $organizer->getSlug()))));
-            $organizer->setFollowerscount(count($organizer->getFollowedby()));
+            $organizer->getUser()->setFollowerscount(count($organizer->getUser()->getFollowedby()));
         }
 
         // remove all those offices and orgs if level is set

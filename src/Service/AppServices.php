@@ -373,7 +373,7 @@
                 $title = $event->getName(),
                 $description = $event->getDescription(),
                 $startson = $event->getEventdates()[0]->getStartdate()->format('D j M Y, g:i A'),
-                $link = "https://universeacg.xyz/event/" . $event->getSlug(),
+                $link = "https://universe.alexandroskourtis.me/event/" . $event->getSlug(),
             ];
             
             // send email to organizer and user

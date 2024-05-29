@@ -217,57 +217,6 @@ class EventController extends Controller
         return $this->renderEventForm($event, $form, $formsimple);
     }
 
-    private function mapCategoryName($category)
-    {
-        // Implement your mapping logic here
-        return ($category === 'Club') ? 'Clubs' : (($category === 'Society') ? 'Societies' : ($category === 'Organization' ? 'Organizations' : 'Offices'));
-    }
-
-    private function getCategoryByName($categoryName, $categoryRepository)
-    {
-        return $categoryRepository->findByName($categoryName);
-    }
-
-    private function getEventChoices($eventRepository, $organizer, $authChecker)
-    {
-        $eventChoices = [];
-
-        // Implement logic to fetch event choices, e.g., based on user roles
-        if ($authChecker->isGranted('ROLE_ORGANIZER')) {
-            // Fetch events for the current organizer
-            $events = $eventRepository->getEventsByOrganizerId($organizer->getId())->getQuery()->getResult();
-
-        } else {
-            // Fetch all events
-            $events = $eventRepository->findAll();
-        }
-
-        // Create an array of event choices
-        foreach ($events as $event) {
-            $eventKey = $event->getName() . '_' . $event->getId();
-            $eventChoices[$eventKey] = $event->getId();
-        }
-
-        return $eventChoices;
-    }
-
-    private function initializeEvent($slug)
-    {
-        if (!$slug) {
-            // If no slug is provided, create a new event
-            $event = new Event();
-        } else {
-            $event = $this->getEventBySlug($slug);
-
-            if (!$event) {
-                $this->addFlash('error', 'The event can not be found');
-                return null;
-            }
-        }
-
-        return $event;
-    }
-
     public function getEventBySlug($slug)
     {
         // Use the repository to find the event by its slug
@@ -279,260 +228,6 @@ class EventController extends Controller
 
         return $event;
     }
-
-    // Helper method to map category name
-
-    private function generateCommonValue()
-    {
-        // Define characters that can be used in the common value
-        $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-        // Length of the common value
-        $length = 40; // You can adjust the length as needed
-
-        $commonValue = '';
-
-        // Generate a random common value of the specified length
-        for ($i = 0; $i < $length; $i++) {
-            $randomIndex = random_int(0, strlen($characters) - 1);
-            $commonValue .= $characters[$randomIndex];
-        }
-
-        return $commonValue;
-    }
-
-    // Helper method to generate a unique slug
-
-    private function processSubmittedEvent($event, $category, $commonValue, $em, $services, $authChecker)
-    {
-        $event->setOrganizer($this->getUser()->getOrganizer());
-        $newSlug = $this->generateUniqueSlug($event->getName());
-        $event->setSlug($newSlug);
-        $event->setCategory($category);
-
-        $em->persist($event);
-        $em->flush();
-
-        if ($event->isPublishOnSpecificDate()) {
-            $event->setPublished(false);
-            // Get the selected publication date from the form
-            $publishDate = $event->getPublishDate();
-
-            // Check if the publication date is in the future
-            $now = new DateTime(); // Get the current date and time
-            if ($publishDate > $now) {
-                // Schedule the publication using Symfony's Messenger component
-                $message = new PublishEventMessage($event->getId());
-                $message->setScheduledAt($publishDate);
-
-                // Dispatch the message to the Messenger component
-                $this->messageBus->dispatch($message);
-            } else {
-                // If the publication date is in the past or now, set the event as published
-                $event->setPublished(true);
-            }
-        } else {
-            $event->setPublished(true);
-        }
-        $em->persist($event);
-        $em->flush();
-
-        $this->processFormSubmission($event, $em, $services, $category, $newSlug);
-    }
-
-    private function generateUniqueSlug($title)
-    {
-        // Generate a slug based on the title
-        $baseSlug = strtolower(trim(preg_replace('/[^a-zA-Z0-9]+/', '-', $title), '-'));
-
-        // Generate a random string (e.g., 6 characters) to append to the slug
-        $randomString = bin2hex(random_bytes(10)); // Adjust the number of bytes for desired length
-
-        // Combine the base slug and random string
-        $uniqueSlug = $baseSlug . '-' . $randomString;
-
-        // Check if the generated slug already exists in the database
-        $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository(Event::class);
-
-        // Keep incrementing the random string until you find a unique slug
-        $counter = 1;
-        while ($repository->findOneBy(['slug' => $uniqueSlug])) {
-            $counter++;
-            $uniqueSlug = $baseSlug . '-' . $randomString . '-' . $counter;
-        }
-
-        return $uniqueSlug;
-    }
-
-    // Helper method to get category by name
-
-    private function processFormSubmission($event, $em, $services, $category, $slug)
-    {
-
-        // Save event images
-        foreach ($event->getImages() as $image) {
-            $event->addImage($image);
-            $em->persist($image);
-            $em->flush();
-        }
-
-        // Set references for event dates and tickets
-        foreach ($event->getEventdates() as $eventdate) {
-            $eventdate->setEvent($event);
-            if (!$slug || !$eventdate->getReference()) {
-                $eventdate->setReference($services->generateReference(10));
-            }
-            foreach ($eventdate->getTickets() as $eventticket) {
-                $eventdate->setTitle($event->getName());
-                $eventdate->setDescription($event->getDescription());
-                $eventticket->setEventdate($eventdate);
-                if (!$slug || !$eventticket->getReference()) {
-                    $eventticket->setReference($services->generateReference(10));
-                }
-            }
-        }
-//
-//        // Handle new event creation or update
-//        if (!$slug) {
-//            $event->setOrganizer($this->getUser()->getOrganizer());
-//            $event->setReference($services->generateReference(10));
-//            $this->addFlash('success', 'The event has been successfully created');
-//        } else {
-//            $this->addFlash('success', 'The event has been successfully updated');
-//        }
-
-        // Set the event category
-        $event->setCategory($category);
-
-        // Persist and flush changes to the database
-        return $event;
-    }
-
-    private function processRepeatingEvent($event, $category, $commonValue, $em, $services)
-    {
-        $repeatEndDate = $event->getRepeatenddate();
-        $copiesOfEvent = $event->getRepeatweeks();
-        $repeatStartDate = $event->getEventdates()[0]->getStartdate();
-
-        $event->setCommonvalue($commonValue);
-
-        // Calculate the time interval between start and end dates
-        $interval = $repeatStartDate->diff($repeatEndDate);
-
-// Calculate the total number of weeks within the interval
-        $totalWeeks = $interval->days / 7;
-
-// Calculate the number of times the event repeats
-        $numberOfRepeats = round($totalWeeks / $copiesOfEvent);
-
-        $copiesOfEvent = (int)$numberOfRepeats;
-
-        for ($index = 1; $index <= $copiesOfEvent; $index++) {
-            $newEventCopy = $this->copyEvent($event);
-            $newEventCopy->setCommonvalue($commonValue);
-            $newEventCopy->setPublished(true);
-
-            foreach ($newEventCopy->getEventdates() as $copyEventDate) {
-                $newStartDate = $this->setNewStartDateOfEventDateAndReturnThatDate($copyEventDate, $event->getRepeatweeks(), $index);
-                $copyEventDate->setStartdate($newStartDate);
-                $newEndDate = $this->setNewEndDateOfEventDateAndReturnThatDate($copyEventDate, $event->getRepeatweeks(), $index);
-                $copyEventDate->setEnddate($newEndDate);
-                $newEventCopy->addEventdate($copyEventDate);
-            }
-
-            $neweventtobesaved = $this->processFormSubmission($newEventCopy, $em, $services, $category, $newEventCopy->getSlug());
-            $this->saveCopiedEvent($neweventtobesaved, $em);
-        }
-    }
-
-    private function copyEvent(Event $event)
-    {
-        $newEvent = new Event();
-        $newEvent->mapFromEvent($event);
-        $newEvent->setPublished(false);
-        return $newEvent;
-    }
-
-    // Helper method to get event choices
-
-    private function setNewStartDateofeventdateAndReturnThatdate(EventDate $eventdate, int $everyxweeks, int $index)
-    {
-        $newstartdate = $eventdate->getStartdate();
-        $addeddays = $everyxweeks * 7;
-        $newstartdate->modify("+$addeddays days");
-        $eventdate->setStartdate($newstartdate);
-        return $eventdate->getStartdate();
-    }
-
-    // Helper method to initialize the event
-
-    private function setNewEndDateofeventdateAndReturnThatdate(EventDate $eventdate, int $everyxweeks, int $index)
-    {
-        $newendtdate = $eventdate->getEnddate();
-        $addeddays = $everyxweeks * 7;
-        $newendtdate->modify("+$addeddays days");
-        $eventdate->setEnddate($newendtdate);
-        return $eventdate->getEnddate();
-    }
-
-    private function saveCopiedEvent(Event $event, $em)
-    {
-        $em->persist($event);
-        $em->flush();
-
-        if ($event->isPublishOnSpecificDate()) {
-            // Get the selected publication date from the form
-            $publishDate = $event->getPublishDate();
-
-            // Check if the publication date is in the future
-            $now = new DateTime(); // Get the current date and time
-            if ($publishDate > $now) {
-                // Schedule the publication using Symfony's Messenger component
-                $event->setPublished(false);
-                $message = new PublishEventMessage($event->getId());
-                $message->setScheduledAt($publishDate);
-
-                // Dispatch the message to the Messenger component
-                $this->messageBus->dispatch($message);
-            } else {
-                // If the publication date is in the past or now, set the event as published
-                $event->setPublished(true);
-            }
-        } else {
-            $event->setPublished(true);
-        }
-        $em->persist($event);
-        $em->flush();
-    }
-
-    // Helper method to process form submission
-
-    private function redirectToRouteAfterSubmission($authChecker)
-    {
-        // Implement logic to determine the route based on user roles
-        if ($authChecker->isGranted('ROLE_ORGANIZER')) {
-            return $this->redirectToRoute("dashboard_organizer_event");
-        }
-
-        if ($authChecker->isGranted('ROLE_ADMINISTRATOR')) {
-            return $this->redirectToRoute("dashboard_administrator_event");
-        }
-
-        // Default route if no role matches
-        return $this->redirectToRoute("dashboard_organizer_event");
-    }
-
-    private function renderEventForm($event, $form, $formsimple)
-    {
-        return $this->render('Dashboard/Shared/Event/add-edit.html.twig', [
-            "event" => $event,
-            "form" => $form->createView(),
-            "formsimple" => $formsimple->createView(),
-        ]);
-    }
-
-    // Helper method to initialize the event
 
     /**
      * @Route("/my-attendeed", name="attendeed_events")
@@ -546,8 +241,6 @@ class EventController extends Controller
             'events' => $events
         ]);
     }
-
-    // Helper method to determine the redirection route after form submission
 
     /**
      * @Route("/organizer/my-events/{slug}/edit", name="dashboard_organizer_event_edit", methods="GET|POST")
@@ -698,17 +391,6 @@ class EventController extends Controller
         return $this->renderEventForm($event, $form, $formsimple);
     }
 
-    // Helper method to render the event form
-
-    private function informAttendeesEventhasbeenupdated($event, $appservices)
-    {
-        // get attendeees
-        $attendees = $appservices->findBookedAttendeesOfEvent($event);
-        foreach ($attendees as $attendee) {
-            $appservices->sendmaileventhasbeenupdate($event, $attendee->getEmail());
-        }
-    }
-
     /**
      * @Route("/organizer/my-events/{slug}/prefill", name="dashboard_organizer_event_prefill", methods="GET|POST")
      * @throws InvalidDatabaseException
@@ -774,14 +456,6 @@ class EventController extends Controller
         return $this->renderEventFormprefill($event, $form);
     }
 
-    private function renderEventFormprefill($event, $form)
-    {
-        return $this->render('Dashboard/Shared/Event/prefill.html.twig', [
-            "event" => $event,
-            "form" => $form->createView(),
-        ]);
-    }
-
     /**
      * @Route("/administrator/my-events/{slug}/delete-permanently-repeating", name="dashboard_organizer_event_delete_permanently_repeating_admin", methods="GET")
      * @throws InvalidDatabaseException
@@ -815,6 +489,8 @@ class EventController extends Controller
         $this->addFlash('success', 'The event(s) has/have been deleted');
         return $services->redirectToReferer('event');
     }
+
+    // Helper method to map category name
 
     /**
      * @Route("/organizer/my-events/{slug}/delete-permanently-repeating", name="dashboard_organizer_event_delete_permanently_repeating_organizer", methods="GET")
@@ -851,6 +527,8 @@ class EventController extends Controller
         $this->addFlash('success', 'The event(s) has/have been deleted');
         return $services->redirectToReferer('event');
     }
+
+    // Helper method to generate a unique slug
 
     /**
      * @Route("/organizer/my-events/{slug}/delete-permanently-repeating", name="dashboard_organizer_event_delete_permanently_repeating", methods="GET")
@@ -912,6 +590,8 @@ class EventController extends Controller
         $em->flush();
         return $services->redirectToReferer('event');
     }
+
+    // Helper method to get category by name
 
     /**
      * @Route("/administrator/manage-events/{slug}/delete-permanently", name="dashboard_administrator_event_delete_permanently", methods="GET")
@@ -1008,7 +688,7 @@ class EventController extends Controller
             $emaildata = [
                 $title = $event->getName(),
                 $startdate = $event->getEventdates()[0]->getStartdate()->format('Y-m-d H:i:s'),
-                $link = "https://universeacg.xyz/event/" . $event->getSlug(),
+                $link = "https://universe.alexandroskourtis.me/event/" . $event->getSlug(),
             ];
 
             $message = "The creator you are following has just created a new event: " . $event->getName();
@@ -1036,6 +716,8 @@ class EventController extends Controller
         return $services->redirectToReferer('event');
     }
 
+    // Helper method to get event choices
+
     /**
      * @Route("/administrator/manage-events/{slug}/details", name="dashboard_administrator_event_details", methods="GET", condition="request.isXmlHttpRequest()")
      * @Route("/organizer/my-events/{slug}/details", name="dashboard_organizer_event_details", methods="GET", condition="request.isXmlHttpRequest()")
@@ -1055,6 +737,324 @@ class EventController extends Controller
         }
         return $this->render('Dashboard/Shared/Event/details.html.twig', [
             'event' => $event,
+        ]);
+    }
+
+    // Helper method to initialize the event
+
+    private function mapCategoryName($category)
+    {
+        // Implement your mapping logic here
+        return ($category === 'Club') ? 'Clubs' : (($category === 'Society') ? 'Societies' : ($category === 'Organization' ? 'Organizations' : 'Offices'));
+    }
+
+    private function getCategoryByName($categoryName, $categoryRepository)
+    {
+        return $categoryRepository->findByName($categoryName);
+    }
+
+    // Helper method to process form submission
+
+    private function getEventChoices($eventRepository, $organizer, $authChecker)
+    {
+        $eventChoices = [];
+
+        // Implement logic to fetch event choices, e.g., based on user roles
+        if ($authChecker->isGranted('ROLE_ORGANIZER')) {
+            // Fetch events for the current organizer
+            $events = $eventRepository->getEventsByOrganizerId($organizer->getId())->getQuery()->getResult();
+
+        } else {
+            // Fetch all events
+            $events = $eventRepository->findAll();
+        }
+
+        // Create an array of event choices
+        foreach ($events as $event) {
+            $eventKey = $event->getName() . '_' . $event->getId();
+            $eventChoices[$eventKey] = $event->getId();
+        }
+
+        return $eventChoices;
+    }
+
+    private function initializeEvent($slug)
+    {
+        if (!$slug) {
+            // If no slug is provided, create a new event
+            $event = new Event();
+        } else {
+            $event = $this->getEventBySlug($slug);
+
+            if (!$event) {
+                $this->addFlash('error', 'The event can not be found');
+                return null;
+            }
+        }
+
+        return $event;
+    }
+
+    // Helper method to initialize the event
+
+    private function generateCommonValue()
+    {
+        // Define characters that can be used in the common value
+        $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+        // Length of the common value
+        $length = 40; // You can adjust the length as needed
+
+        $commonValue = '';
+
+        // Generate a random common value of the specified length
+        for ($i = 0; $i < $length; $i++) {
+            $randomIndex = random_int(0, strlen($characters) - 1);
+            $commonValue .= $characters[$randomIndex];
+        }
+
+        return $commonValue;
+    }
+
+    // Helper method to determine the redirection route after form submission
+
+    private function processSubmittedEvent($event, $category, $commonValue, $em, $services, $authChecker)
+    {
+        $event->setOrganizer($this->getUser()->getOrganizer());
+        $newSlug = $this->generateUniqueSlug($event->getName());
+        $event->setSlug($newSlug);
+        $event->setCategory($category);
+
+        $em->persist($event);
+        $em->flush();
+
+        if ($event->isPublishOnSpecificDate()) {
+            $event->setPublished(false);
+            // Get the selected publication date from the form
+            $publishDate = $event->getPublishDate();
+
+            // Check if the publication date is in the future
+            $now = new DateTime(); // Get the current date and time
+            if ($publishDate > $now) {
+                // Schedule the publication using Symfony's Messenger component
+                $message = new PublishEventMessage($event->getId());
+                $message->setScheduledAt($publishDate);
+
+                // Dispatch the message to the Messenger component
+                $this->messageBus->dispatch($message);
+            } else {
+                // If the publication date is in the past or now, set the event as published
+                $event->setPublished(true);
+            }
+        } else {
+            $event->setPublished(true);
+        }
+        $em->persist($event);
+        $em->flush();
+
+        $this->processFormSubmission($event, $em, $services, $category, $newSlug);
+    }
+
+    // Helper method to render the event form
+
+    private function generateUniqueSlug($title)
+    {
+        // Generate a slug based on the title
+        $baseSlug = strtolower(trim(preg_replace('/[^a-zA-Z0-9]+/', '-', $title), '-'));
+
+        // Generate a random string (e.g., 6 characters) to append to the slug
+        $randomString = bin2hex(random_bytes(10)); // Adjust the number of bytes for desired length
+
+        // Combine the base slug and random string
+        $uniqueSlug = $baseSlug . '-' . $randomString;
+
+        // Check if the generated slug already exists in the database
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository(Event::class);
+
+        // Keep incrementing the random string until you find a unique slug
+        $counter = 1;
+        while ($repository->findOneBy(['slug' => $uniqueSlug])) {
+            $counter++;
+            $uniqueSlug = $baseSlug . '-' . $randomString . '-' . $counter;
+        }
+
+        return $uniqueSlug;
+    }
+
+    private function processFormSubmission($event, $em, $services, $category, $slug)
+    {
+
+        // Save event images
+        foreach ($event->getImages() as $image) {
+            $event->addImage($image);
+            $em->persist($image);
+            $em->flush();
+        }
+
+        // Set references for event dates and tickets
+        foreach ($event->getEventdates() as $eventdate) {
+            $eventdate->setEvent($event);
+            if (!$slug || !$eventdate->getReference()) {
+                $eventdate->setReference($services->generateReference(10));
+            }
+            foreach ($eventdate->getTickets() as $eventticket) {
+                $eventdate->setTitle($event->getName());
+                $eventdate->setDescription($event->getDescription());
+                $eventticket->setEventdate($eventdate);
+                if (!$slug || !$eventticket->getReference()) {
+                    $eventticket->setReference($services->generateReference(10));
+                }
+            }
+        }
+//
+//        // Handle new event creation or update
+//        if (!$slug) {
+//            $event->setOrganizer($this->getUser()->getOrganizer());
+//            $event->setReference($services->generateReference(10));
+//            $this->addFlash('success', 'The event has been successfully created');
+//        } else {
+//            $this->addFlash('success', 'The event has been successfully updated');
+//        }
+
+        // Set the event category
+        $event->setCategory($category);
+
+        // Persist and flush changes to the database
+        return $event;
+    }
+
+    private function processRepeatingEvent($event, $category, $commonValue, $em, $services)
+    {
+        $repeatEndDate = $event->getRepeatenddate();
+        $copiesOfEvent = $event->getRepeatweeks();
+        $repeatStartDate = $event->getEventdates()[0]->getStartdate();
+
+        $event->setCommonvalue($commonValue);
+
+        // Calculate the time interval between start and end dates
+        $interval = $repeatStartDate->diff($repeatEndDate);
+
+// Calculate the total number of weeks within the interval
+        $totalWeeks = $interval->days / 7;
+
+// Calculate the number of times the event repeats
+        $numberOfRepeats = round($totalWeeks / $copiesOfEvent);
+
+        $copiesOfEvent = (int)$numberOfRepeats;
+
+        for ($index = 1; $index <= $copiesOfEvent; $index++) {
+            $newEventCopy = $this->copyEvent($event);
+            $newEventCopy->setCommonvalue($commonValue);
+            $newEventCopy->setPublished(true);
+
+            foreach ($newEventCopy->getEventdates() as $copyEventDate) {
+                $newStartDate = $this->setNewStartDateOfEventDateAndReturnThatDate($copyEventDate, $event->getRepeatweeks(), $index);
+                $copyEventDate->setStartdate($newStartDate);
+                $newEndDate = $this->setNewEndDateOfEventDateAndReturnThatDate($copyEventDate, $event->getRepeatweeks(), $index);
+                $copyEventDate->setEnddate($newEndDate);
+                $newEventCopy->addEventdate($copyEventDate);
+            }
+
+            $neweventtobesaved = $this->processFormSubmission($newEventCopy, $em, $services, $category, $newEventCopy->getSlug());
+            $this->saveCopiedEvent($neweventtobesaved, $em);
+        }
+    }
+
+    private function copyEvent(Event $event)
+    {
+        $newEvent = new Event();
+        $newEvent->mapFromEvent($event);
+        $newEvent->setPublished(false);
+        return $newEvent;
+    }
+
+    private function setNewStartDateofeventdateAndReturnThatdate(EventDate $eventdate, int $everyxweeks, int $index)
+    {
+        $newstartdate = $eventdate->getStartdate();
+        $addeddays = $everyxweeks * 7;
+        $newstartdate->modify("+$addeddays days");
+        $eventdate->setStartdate($newstartdate);
+        return $eventdate->getStartdate();
+    }
+
+    private function setNewEndDateofeventdateAndReturnThatdate(EventDate $eventdate, int $everyxweeks, int $index)
+    {
+        $newendtdate = $eventdate->getEnddate();
+        $addeddays = $everyxweeks * 7;
+        $newendtdate->modify("+$addeddays days");
+        $eventdate->setEnddate($newendtdate);
+        return $eventdate->getEnddate();
+    }
+
+    private function saveCopiedEvent(Event $event, $em)
+    {
+        $em->persist($event);
+        $em->flush();
+
+        if ($event->isPublishOnSpecificDate()) {
+            // Get the selected publication date from the form
+            $publishDate = $event->getPublishDate();
+
+            // Check if the publication date is in the future
+            $now = new DateTime(); // Get the current date and time
+            if ($publishDate > $now) {
+                // Schedule the publication using Symfony's Messenger component
+                $event->setPublished(false);
+                $message = new PublishEventMessage($event->getId());
+                $message->setScheduledAt($publishDate);
+
+                // Dispatch the message to the Messenger component
+                $this->messageBus->dispatch($message);
+            } else {
+                // If the publication date is in the past or now, set the event as published
+                $event->setPublished(true);
+            }
+        } else {
+            $event->setPublished(true);
+        }
+        $em->persist($event);
+        $em->flush();
+    }
+
+    private function redirectToRouteAfterSubmission($authChecker)
+    {
+        // Implement logic to determine the route based on user roles
+        if ($authChecker->isGranted('ROLE_ORGANIZER')) {
+            return $this->redirectToRoute("dashboard_organizer_event");
+        }
+
+        if ($authChecker->isGranted('ROLE_ADMINISTRATOR')) {
+            return $this->redirectToRoute("dashboard_administrator_event");
+        }
+
+        // Default route if no role matches
+        return $this->redirectToRoute("dashboard_organizer_event");
+    }
+
+    private function renderEventForm($event, $form, $formsimple)
+    {
+        return $this->render('Dashboard/Shared/Event/add-edit.html.twig', [
+            "event" => $event,
+            "form" => $form->createView(),
+            "formsimple" => $formsimple->createView(),
+        ]);
+    }
+
+    private function informAttendeesEventhasbeenupdated($event, $appservices)
+    {
+        // get attendeees
+        $attendees = $appservices->findBookedAttendeesOfEvent($event);
+        foreach ($attendees as $attendee) {
+            $appservices->sendmaileventhasbeenupdate($event, $attendee->getEmail());
+        }
+    }
+
+    private function renderEventFormprefill($event, $form)
+    {
+        return $this->render('Dashboard/Shared/Event/prefill.html.twig', [
+            "event" => $event,
+            "form" => $form->createView(),
         ]);
     }
 

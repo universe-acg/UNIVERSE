@@ -25,7 +25,7 @@
             <div class="clearfix"></div>
             <div class="text-black-50 small mb-1">
                 <p style="font-size: 12px; margin-bottom: 0">Events: {{ creator.getEventscount() }} |
-                    Followers: {{ creator.getFollowerscount() }} |
+                    Followers: {{ creator.user.getFollowerscount() }} |
                     Members: {{ creator.getMembers()|length }}</p>
             </div>
             <div class="clearfix"></div>
@@ -34,10 +34,10 @@
 
             {% if creator.user.isAdministratorUser %}
                 <p style="margin-bottom: 7px">Official Universe Creator profile</p>
-            {% elseif creator.followedby|length ==0 %}
+            {% elseif creator.user.followedby|length ==0 %}
                 <p style="margin-bottom: 7px">No followers yet</p>
             {% else %}
-                {% for follower in creator.followedby %}
+                {% for follower in creator.user.followedby %}
                     {% if displayedAvatars < maxAvatars %}
                         {% include "Global/follower-avatar-events.html.twig" with { user: follower, showusernametooltip: true } %}
                         {% set displayedAvatars = displayedAvatars + 1 %}
@@ -50,7 +50,7 @@
             {% if user.isAdministratorUser %}
                 <b>Universe</b>
             {% elseif user.organizer.category == "Club" or user.organizer.category == "Society" %}
-                <a href="https://universeacg.xyz/leaderboards?tag={{ organizer.user.stringifypointslevel }}"
+                <a href="https://universe.alexandroskourtis.me/leaderboards?tag={{ organizer.user.stringifypointslevel }}"
                 > <span class="text-dark">{{ user.stringifypointslevel }}</span></a>
 
                 <br>

@@ -8,7 +8,6 @@ namespace App\Form;
 use App\Entity\Organizer;
 use App\Service\AppServices;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -96,15 +95,15 @@ class OrganizerProfileType extends AbstractType
                 'label' => 'Instagram',
                 'attr' => ['placeholder' => 'Enter the Instagram link'],
             ])
-            ->add('showfollowers', ChoiceType::class, [
-                'required' => true,
-                'multiple' => false,
-                'expanded' => true,
-                'label' => 'Show followers',
-                'choices' => ['Show' => true, 'Hide' => false],
-                'label_attr' => ['class' => 'radio-custom radio-inline'],
-                'help' => 'Choose whether to display the number and list of people that follow your organizer.',
-            ])
+//            ->add('showfollowers', ChoiceType::class, [
+//                'required' => true,
+//                'multiple' => false,
+//                'expanded' => true,
+//                'label' => 'Show followers',
+//                'choices' => ['Show' => true, 'Hide' => false],
+//                'label_attr' => ['class' => 'radio-custom radio-inline'],
+//                'help' => 'Choose whether to display the number and list of people that follow your organizer.',
+//            ])
             ->add('save', SubmitType::class, [
                 'label' => 'Save',
                 'attr' => ['class' => 'btn btn-primary btn-block'],

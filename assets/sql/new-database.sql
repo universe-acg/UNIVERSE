@@ -1624,27 +1624,27 @@ INSERT INTO `universe_menu_element`
 VALUES (2, 3, 'fas fa-home', 'home', '/', NULL, 'Home', 0),
        (3, 3, 'fas fa-calendar-alt', 'events', '/events', NULL, 'Events', 1),
        (4, 3, 'fas fa-stream', 'categories', NULL, NULL, 'Categories', 2),
-       (5, 3, 'far fa-building', 'venues', NULL, 'https://universeacg.xyz/venues', 'Venues', 3),
-       (6, 3, 'far fa-newspaper', 'announcements', NULL, 'https://universeacg.xyz/blog', 'Announcements', 4),
-       (7, 3, 'fas fa-ticket-alt', 'my-tickets', NULL, 'https://universeacg.xyz/dashboard/attendee/my-tickets',
+       (5, 3, 'far fa-building', 'venues', NULL, 'https://universe.alexandroskourtis.me/venues', 'Venues', 3),
+       (6, 3, 'far fa-newspaper', 'announcements', NULL, 'https://universe.alexandroskourtis.me/blog', 'Announcements', 4),
+       (7, 3, 'fas fa-ticket-alt', 'my-tickets', NULL, 'https://universe.alexandroskourtis.me/dashboard/attendee/my-tickets',
         'My Tickets', 5),
        (8, 4, NULL, 'about-us', '/page/about-us', NULL, 'About us', 0),
-       (9, 4, NULL, 'help-center', NULL, 'https://universeacg.xyz/help-center', 'Help center', 1),
-       (10, 4, NULL, 'privacy-policy', NULL, 'https://universeacg.xyz/page/privacy-policy', 'Privacy policy', 2),
-       (11, 4, NULL, 'cookie-policy', NULL, 'https://universeacg.xyz/page/cookie-policy', 'Cookie policy', 3),
-       (12, 4, NULL, 'terms-of-service', NULL, 'https://universeacg.xyz/page/terms-of-service', 'Terms of service', 4),
-       (13, 5, NULL, 'register-as-attendee', NULL, 'https://universeacg.xyz/signup/attendee', 'Register as attendee',
+       (9, 4, NULL, 'help-center', NULL, 'https://universe.alexandroskourtis.me/help-center', 'Help center', 1),
+       (10, 4, NULL, 'privacy-policy', NULL, 'https://universe.alexandroskourtis.me/page/privacy-policy', 'Privacy policy', 2),
+       (11, 4, NULL, 'cookie-policy', NULL, 'https://universe.alexandroskourtis.me/page/cookie-policy', 'Cookie policy', 3),
+       (12, 4, NULL, 'terms-of-service', NULL, 'https://universe.alexandroskourtis.me/page/terms-of-service', 'Terms of service', 4),
+       (13, 5, NULL, 'register-as-attendee', NULL, 'https://universe.alexandroskourtis.me/signup/attendee', 'Register as attendee',
         0),
-       (14, 5, NULL, 'register-as-creator', NULL, 'https://universeacg.xyz/signup/organizer', 'Register as creator', 1),
-       (15, 5, NULL, 'my-tickets-1', NULL, 'https://universeacg.xyz/dashboard/attendee/my-tickets', 'My tickets', 2),
-       (16, 5, NULL, 'update-password', NULL, 'https://universeacg.xyz/dashboard/change-password', 'Update password',
+       (14, 5, NULL, 'register-as-creator', NULL, 'https://universe.alexandroskourtis.me/signup/organizer', 'Register as creator', 1),
+       (15, 5, NULL, 'my-tickets-1', NULL, 'https://universe.alexandroskourtis.me/dashboard/attendee/my-tickets', 'My tickets', 2),
+       (16, 5, NULL, 'update-password', NULL, 'https://universe.alexandroskourtis.me/dashboard/change-password', 'Update password',
         3),
-       (17, 5, NULL, 'update-email', NULL, 'https://universeacg.xyz/api/profile/change-email', 'Update email', 4),
-       (18, 6, NULL, 'categories-1', NULL, 'https://universeacg.xyz/categories', 'Categories', 0),
-       (19, 6, NULL, 'leaderboards', NULL, 'https://universeacg.xyz/leaderboards', 'Leaderboards', 1),
-       (20, 6, NULL, 'venues-1', NULL, 'https://universeacg.xyz/venues', 'Venues', 2),
-       (21, 6, NULL, 'athletics', NULL, 'https://universeacg.xyz/athletics', 'Athletics', 3),
-       (22, 6, NULL, 'listings', NULL, 'https://universeacg.xyz/listings', 'Listings', 4);
+       (17, 5, NULL, 'update-email', NULL, 'https://universe.alexandroskourtis.me/api/profile/change-email', 'Update email', 4),
+       (18, 6, NULL, 'categories-1', NULL, 'https://universe.alexandroskourtis.me/categories', 'Categories', 0),
+       (19, 6, NULL, 'leaderboards', NULL, 'https://universe.alexandroskourtis.me/leaderboards', 'Leaderboards', 1),
+       (20, 6, NULL, 'venues-1', NULL, 'https://universe.alexandroskourtis.me/venues', 'Venues', 2),
+       (21, 6, NULL, 'athletics', NULL, 'https://universe.alexandroskourtis.me/athletics', 'Athletics', 3),
+       (22, 6, NULL, 'listings', NULL, 'https://universe.alexandroskourtis.me/listings', 'Listings', 4);
 /*!40000 ALTER TABLE `universe_menu_element`
     ENABLE KEYS */;
 UNLOCK TABLES;
@@ -2176,7 +2176,7 @@ VALUES (1, 'currency_ccy', 'USD'),
        (50, 'show_tickets_left_on_cart_modal', 'yes'),
        (51, 'website_name', 'Universe'),
        (52, 'website_slug', 'Universe'),
-       (54, 'website_root_url', 'universeacg.xyz'),
+       (54, 'website_root_url', 'universe.alexandroskourtis.me'),
        (55, 'website_description_en', 'Say goodbye to media clutter with a one-stop seamless experience!'),
        (56, 'website_keywords_en', 'deree, acg, universe'),
        (57, 'contact_email', 'universeaug@gmail.com'),
@@ -2188,7 +2188,7 @@ VALUES (1, 'currency_ccy', 'USD'),
        (63, 'youtube_url', 'https://www.youtube.com/channel/UCsKRxeDrt98BoHCz247WQwg'),
        (64, 'twitter_url', 'https://twitter.com/acguniverse'),
        (65, 'primary_color', '#2E7599'),
-       (66, 'no_reply_email', 'no-reply@universeacg.xyz'),
+       (66, 'no_reply_email', 'no-reply@universe.alexandroskourtis.me'),
        (67, 'show_back_to_top_button', 'yes'),
        (68, 'show_cookie_policy_bar', 'yes'),
        (69, 'custom_css', ''),
@@ -2218,7 +2218,7 @@ VALUES (1, 'currency_ccy', 'USD'),
        (97, 'maintenance_mode_custom_message', ''),
        (98, 'app_theme', 'orange'),
        (99, 'app_layout', 'container'),
-       (100, 'website_url', 'https://universeacg.xyz'),
+       (100, 'website_url', 'https://universe.alexandroskourtis.me'),
        (101, 'website_description_es', 'Gestión de eventos y venta de entradas'),
        (102, 'website_keywords_es', 'organizar mi evento, entradas online, comprar entradas');
 /*!40000 ALTER TABLE `universe_settings`
@@ -2254,7 +2254,7 @@ LOCK TABLES `universe_thread` WRITE;
     DISABLE KEYS */;
 INSERT INTO `universe_thread`
 VALUES ('capture-the-flag-ctf-competition-i-b48189a1a7e1df5f511c',
-        'https://universeacg.xyz/event/capture-the-flag-ctf-competition-i-b48189a1a7e1df5f511c', 1, 0, NULL);
+        'https://universe.alexandroskourtis.me/event/capture-the-flag-ctf-competition-i-b48189a1a7e1df5f511c', 1, 0, NULL);
 /*!40000 ALTER TABLE `universe_thread`
     ENABLE KEYS */;
 UNLOCK TABLES;

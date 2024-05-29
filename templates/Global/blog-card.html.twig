@@ -1,17 +1,19 @@
 {% set runtimeConfig = {"thumbnail": {"size": thumbnailsize }} %}
 <div class="card card-event shadow-sm mb-4" style="z-index: 999 !important; border-radius: 10px;">
-    <a href="{{ path('blog_article', { slug : blogpost.slug }) }}">
-        <img class="card-img-top img-lazy-load" src="{{ asset('assets/img/loader.svg') }}"
-             data-src="{{ blogpost.imageName ? (blogpost.getImagePath|imagine_filter('thumbnail', runtimeConfig)) : blogpost.getImagePlaceholder }}"
-             alt="{{ blogpost.name }}">
-    </a>
+    {% if (blogpost.getImagePath|imagine_filter('thumbnail', runtimeConfig)) %}
+        <a href="{{ path('blog_article', { slug : blogpost.slug }) }}">
+            <img class="card-img-top img-lazy-load" src="{{ asset('assets/img/loader.svg') }}"
+                 data-src="{{ blogpost.imageName ? (blogpost.getImagePath|imagine_filter('thumbnail', runtimeConfig)) : blogpost.getImagePlaceholder }}"
+                 alt="{{ blogpost.name }}">
+        </a>
+    {% endif %}
     <div class="card-body p-3">
         <p class="card-title"><b><a href="{{ path('blog_article', { slug : blogpost.slug }) }}"
                                     class="text-dark">{{ blogpost.name }}</a></b></p>
         </p>
         {% if blogpost.user.organizer %}
             <small class="text-muted mr-3"><a href={{ "/organizer/" ~ blogpost.user.username }} class="text-dark"><i
-                            class="fas fa-user"></i> {{ blogpost.user.username }}</a></small>
+                            class="fas fa-user"></i> {{ blogpost.user.getCrossRoleName }}</a></small>
         {% else %}
             <small class="text-muted "><a
                         href={{ "/attendee-profile/" ~ blogpost.user.slug }} class="text-dark"><i
