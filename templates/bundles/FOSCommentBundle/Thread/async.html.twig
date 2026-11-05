@@ -25,7 +25,7 @@
     (function () {
         var fos_comment_script = document.createElement('script');
         fos_comment_script.async = true;
-        fos_comment_script.src = '{{ asset('bundles/foscomment/js/comments.js') }}';
+        fos_comment_script.src = '{{ asset('js/comments.js') }}';
 
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(fos_comment_script);
     })();
