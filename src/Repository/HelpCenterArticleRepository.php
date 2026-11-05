@@ -42,7 +42,7 @@
                 }
                 $qb->leftJoin("a.category", "category");
                 if ($hidden !== "all") {
-                    $qb->andWhere("category.hidden = false");
+                    $qb->andWhere("category.hidden = false AND category.deletedAt IS NULL AND a.deletedAt IS NULL");
                 }
                 if ($category !== "all") {
                     $qb->andWhere("category.slug = :category")->setParameter("category", $category);

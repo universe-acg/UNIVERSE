@@ -1,36 +1,24 @@
-<div class="sticky-top sticky-sidebar dashboard-sidebar d-none d-lg-block d-xl-block" style="height: 100%">
-    <ul id="dashboard-menu" class="nav nav-pills nav-pills-vertical-styled overflow-auto"
-        style="max-height: 60vh; min-height: 100%;">
-        {% for contact in contacts %}
-            <li class="nav-item card mt-3 mx-3 py-2">
-                <div style="display: flex; justify-content: space-between; align-content: center; align-items: center; padding-right: 20px; padding-left: 20px">
-                    {% if contact.isorganizer %}
-                        <a href="{{ path('chat_show', {chatId: contact.id}) }}"
-                           class="link-style text-dark">
-                            <img style="width: 30px; height: 30px; object-fit: contain" class="circular-image"
-                                 src="{{ contact.profile_image }}">
-                        </a>
-                    {% else %}
-                        <a href="{{ path('chat_show', {chatId: contact.id}) }}"
-                           class="link-style text-dark">
-                            <img style="width: 30px; height: 30px; object-fit: contain" class="circular-image"
-                                 src="{{ contact.profile_image }}">
-                        </a>
-                    {% endif %}
-                    {% if contact.isorganizer %}
-                        <a href="{{ path('chat_show', {chatId: contact.id}) }}"
-                           class="link-style text-dark"><h6>{{ contact.name }}</h6></a>
-                    {% else %}
-                        <a href="{{ path('chat_show', {chatId: contact.id}) }}"
-                           class="link-style text-dark"><h6>{{ contact.name }}</h6></a>
-                    {% endif %}
-                </div>
-                <a class="nav-link" href="{{ path('chat_show', {chatId: contact.id}) }}" style="margin-bottom: 0 !important; padding-bottom: 0 !important;">
-                    <div class="chatbox-info pt-1 mt-1">
-                        <p>{{ contact.last_message|length > 50 ? contact.last_message|slice(0, 50) ~ '...' : contact.last_message }}</p>
-                    </div>
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
+<div class="dashboard-sidebar mb-3">
+    <form action="{{ path('chat_create') }}" method="post" class="card p-3 mb-3">
+        <input type="hidden" name="_action_token" value="{{ csrf_token('action') }}">
+        <label for="chat-recipient">Start a conversation</label>
+        <input id="chat-recipient" name="username" class="form-control mb-2" placeholder="Enter a username" value="{{ chatRecipient ? chatRecipient.username : '' }}" required maxlength="180" autocomplete="off">
+        <button class="btn btn-primary btn-sm" type="submit">Start chat</button>
+    </form>
+    <nav aria-label="Conversations">
+        <ul id="chat-conversations" class="nav nav-pills nav-pills-vertical-styled overflow-auto" style="max-height:60vh">
+            {% for contact in contacts %}
+                <li class="nav-item card mt-2 py-2 w-100">
+                    <a class="nav-link{% if chatRoom and chatRoom.id == contact.id %} active{% endif %}" href="{{ path('chat_show',{chatId:contact.id}) }}"{% if chatRoom and chatRoom.id == contact.id %} aria-current="page"{% endif %}>
+                        <span class="d-flex align-items-center">{% if contact.profile_image %}<img src="{{ contact.profile_image }}" alt="" width="30" height="30" style="object-fit:contain" class="mr-2">{% endif %}<strong>{{ contact.name }}</strong></span>
+                        {% if contact.unread %}<span class="badge badge-warning" aria-label="{{ contact.unread }} unread messages">{{ contact.unread }}</span>{% endif %}
+                        {% if contact.muted %}<i class="fas fa-bell-slash" aria-label="Muted"></i>{% endif %}
+                        <p class="mb-0 text-break">{{ contact.last_message|slice(0,75) }}</p>
+                    </a>
+                </li>
+            {% else %}
+                <li class="p-3">No conversations yet. Enter another user’s username to start chatting.</li>
+            {% endfor %}
+        </ul>
+    </nav>
 </div>

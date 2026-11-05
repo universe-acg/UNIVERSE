@@ -2,7 +2,7 @@
     <a href="{{ path('live', {slug:live.slug}) }}" class="text-dark">
         <div class="img-wrap img-lazy-load" style="height:260px" data-src="{{ live.imagePath ? asset(live.imagePath) : live.imagePlaceholder }}"><div class="loader"></div></div>
         <div class="info-wrap">
-            <h5>{{ live.title }}</h5>
+            <h5>{{ live.title }}</h5><span class="badge badge-primary">{{ live.statusStringified }}</span>
             <p>{{ live.description|striptags|slice(0,150) }}</p>
         </div>
     </a>

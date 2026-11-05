@@ -1,55 +1,15 @@
 <?php
-/*
- * AUTHOR: ALEXANDROS KOURTIS
- */
-
 namespace App\Service;
-
-class LeaderboardsService
+use App\Repository\UserRepository;
+final class LeaderboardsService
 {
-
-    private $userService;
-
-    public function __construct(UserService $userService)
+    public function __construct(private UserRepository $users) {}
+    public function getAllAttendees(): array { return $this->ranked('ROLE_ATTENDEE'); }
+    public function getAllCreators(): array { return $this->ranked('ROLE_ORGANIZER'); }
+    private function ranked(string $role): array
     {
-        $this->userService = $userService;
-    }
-
-    /**
-     * Get all attendees from the leaderboard.
-     *
-     * @return array
-     */
-    public function getAllAttendees()
-    {
-        $users = $this->userService->getUsers([])->getQuery()->getResult();
-        $filteredUsers = [];
-
-        foreach ($users as $user) {
-            if ($user->getOrganizer() == null) {
-                $filteredUsers[] = $user;
-            }
-        }
-
-        return $filteredUsers;
-    }
-
-    /**
-     * Get all creators from the leaderboard.
-     *
-     * @return array
-     */
-    public function getAllCreators()
-    {
-        $users = $this->userService->getUsers([])->getQuery()->getResult();
-        $filteredUsers = [];
-
-        foreach ($users as $user) {
-            if ($user->getOrganizer()) {
-                $filteredUsers[] = $user;
-            }
-        }
-
-        return $filteredUsers;
+        $qb=$this->users->createQueryBuilder('u')->where('u.enabled=true AND u.deletedAt IS NULL')->andWhere('u.roles LIKE :role')->setParameter('role','%'.$role.'%')->orderBy('u.points','DESC')->addOrderBy('u.username','ASC');
+        if ($role==='ROLE_ORGANIZER') $qb->join('u.organizer','o')->addSelect('o');
+        return $qb->getQuery()->getResult();
     }
 }

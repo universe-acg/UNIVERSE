@@ -36,17 +36,18 @@ class Live
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
     #[ORM\Column(length: 255, unique: true)]
-    #[Gedmo\Slug(fields: ['title'], updatable: true)]
+    #[Gedmo\Slug(fields: ['title'], updatable: false)]
     private $slug;
 
     #[ORM\Column(type: 'boolean')]
-    private $hidden;
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    private $hidden = false;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     private $title;
 
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    #[Assert\NotBlank]
+    #[ORM\Column(type: 'string', length: 2048, nullable: true)]
+    #[Assert\Length(max: 2048)]
     private $link;
     #[ORM\Column(type: 'text', nullable: true)]
     #[Assert\NotBlank]
@@ -68,7 +69,7 @@ class Live
      * @var integer
      */
     #[ORM\Column(type: 'integer', nullable: true)]
-    private $status;
+    private $status = 0;
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $imageMimeType;
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -81,6 +82,17 @@ class Live
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $deletedAt;
 
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'owner_id', nullable: true, onDelete: 'SET NULL')]
+    private ?User $owner = null;
+    public function getOwner(): ?User { return $this->owner; }
+    public function setOwner(?User $owner): void { $this->owner=$owner; }
+    #[Assert\Callback]
+    public function validateStream(\Symfony\Component\Validator\Context\ExecutionContextInterface $context): void
+    {
+        if ($this->link && !\App\Service\StreamPlayer::resolve($this->link)) $context->buildViolation('Use an HTTPS streaming URL or a local video path.')->atPath('link')->addViolation();
+    }
+
     public function __construct()
     {
     }
@@ -90,16 +102,7 @@ class Live
      */
     public function getStatusStringified(): string
     {
-        $status = $this->getStatus();
-
-        if ($status == 1) {
-            return "Standby";
-        }
-        if ($status == 2) {
-            return "Live";
-        }
-
-        return "";
+        return [0=>'Preview',1=>'Upcoming',2=>'Live',3=>'Ended'][$this->getStatus()] ?? 'Preview';
     }
 
     /**
@@ -272,6 +275,7 @@ class Live
     public function setMainImageFile($mainImageFile): void
     {
         $this->mainImageFile = $mainImageFile;
+        if ($mainImageFile) $this->updatedAt=new \DateTime();
     }
 
     /**

@@ -43,7 +43,7 @@ class ReelImageType extends AbstractType
                 ],
             ])
             ->add('mainImageFile', VichImageType::class, [
-                'required' => true,
+                'required' => false,
                 'allow_delete' => false,
                 'download_label' => false,
                 'download_uri' => true,
@@ -61,7 +61,6 @@ class ReelImageType extends AbstractType
                 ],
                 'attr' => ['placeholder' => 'Choose an Image', 'class' => 'inputimage'],
                 'help' => 'Choose an image',
-                'data' => $options['data']->getMainImageFile(), // Pre-fill with the existing main image file name
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Publish Reel',
@@ -73,7 +72,7 @@ class ReelImageType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Reel::class,
-            'validation_groups' => ['create', 'update'],
+            'validation_groups' => ['Default'],
         ]);
     }
 }

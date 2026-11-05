@@ -284,7 +284,7 @@ class ReelsController extends Controller
             $this->addFlash('success', 'The reel has been deleted');
         }
 
-        $em->remove($reel);
+        $reel->setDeletedAt(new \DateTime());
         $em->flush();
         return $appServices->redirectToReferer('reel');
     }

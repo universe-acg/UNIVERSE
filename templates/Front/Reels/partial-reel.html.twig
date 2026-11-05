@@ -1,8 +1,7 @@
 {% for reel in reels %}
-    <div class="card_medium card_exp">
-        <img class="img_card" data-reel-id="{{ reel.id }}"
-             src="{{ reel.getMainImage ? asset(reel.getImagePath) : reel.getImagePlaceholder }}"
-             alt="">
-        <figcaption>{{ reel.title }}</figcaption>
-    </div>
+    <a class="card_medium card_exp" href="{{ path('reel',{slug:reel.slug}) }}" data-reel-open data-reel-id="{{ reel.id }}" data-title="{{ reel.title }}" data-caption="{{ reel.content }}" data-image="{{ reel.mainImage ? asset(reel.imagePath) : reel.imagePlaceholder }}" data-video="{{ reel.type == 'video' and reel.videoFileName ? asset(reel.videoPath) : '' }}" aria-label="Open reel: {{ reel.title }}">
+        {% if reel.user %}<span class="avatar" style="position:absolute;top:12px;right:12px;width:23px;height:23px;z-index:2"><img src="{{ reel.user.logoName ? asset(reel.user.logoPath) : reel.user.logoPlaceholder }}" alt="" width="23" height="23" style="border-radius:50%;object-fit:cover"></span>{% endif %}
+        <img class="img_card" src="{{ reel.mainImage ? asset(reel.imagePath) : reel.imagePlaceholder }}" alt="{{ reel.title }}" loading="lazy">
+        <figcaption><h4 class="font-weight-bold">{% if reel.type == 'video' %}<i class="fas fa-play-circle" aria-hidden="true"></i> {% endif %}{{ reel.title }}</h4></figcaption>
+    </a>
 {% endfor %}

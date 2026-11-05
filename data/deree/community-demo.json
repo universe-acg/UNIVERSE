@@ -1,0 +1,722 @@
+{
+  "version": 1,
+  "reels": [
+    {
+      "key": "reel-0",
+      "slug": "demo-reel-0",
+      "title": "Campus welcome: Welcome session",
+      "content": "Fictional Deree campus-community example: welcome session with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "video",
+      "mainImage": "community-0.svg",
+      "videoFileName": "campus-preview.webm",
+      "tags": "campus,demo,campus welcome"
+    },
+    {
+      "key": "reel-1",
+      "slug": "demo-reel-1",
+      "title": "Sustainability in action: Welcome session",
+      "content": "Fictional Deree campus-community example: welcome session with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-1.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,sustainability in action"
+    },
+    {
+      "key": "reel-2",
+      "slug": "demo-reel-2",
+      "title": "Creative arts workshop: Welcome session",
+      "content": "Fictional Deree campus-community example: welcome session with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-2.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,creative arts workshop"
+    },
+    {
+      "key": "reel-3",
+      "slug": "demo-reel-3",
+      "title": "Technology community: Welcome session",
+      "content": "Fictional Deree campus-community example: welcome session with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-3.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,technology community"
+    },
+    {
+      "key": "reel-4",
+      "slug": "demo-reel-4",
+      "title": "Career connections: Welcome session",
+      "content": "Fictional Deree campus-community example: welcome session with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-4.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,career connections"
+    },
+    {
+      "key": "reel-5",
+      "slug": "demo-reel-5",
+      "title": "Sports and teamwork: Welcome session",
+      "content": "Fictional Deree campus-community example: welcome session with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-5.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,sports and teamwork"
+    },
+    {
+      "key": "reel-6",
+      "slug": "demo-reel-6",
+      "title": "Culture and languages: Welcome session",
+      "content": "Fictional Deree campus-community example: welcome session with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "video",
+      "mainImage": "community-6.svg",
+      "videoFileName": "campus-preview.webm",
+      "tags": "campus,demo,culture and languages"
+    },
+    {
+      "key": "reel-7",
+      "slug": "demo-reel-7",
+      "title": "Student volunteering: Welcome session",
+      "content": "Fictional Deree campus-community example: welcome session with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-7.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,student volunteering"
+    },
+    {
+      "key": "reel-8",
+      "slug": "demo-reel-8",
+      "title": "Campus performance: Welcome session",
+      "content": "Fictional Deree campus-community example: welcome session with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-8.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,campus performance"
+    },
+    {
+      "key": "reel-9",
+      "slug": "demo-reel-9",
+      "title": "Project showcase: Welcome session",
+      "content": "Fictional Deree campus-community example: welcome session with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-9.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,project showcase"
+    },
+    {
+      "key": "reel-10",
+      "slug": "demo-reel-10",
+      "title": "New student orientation: Welcome session",
+      "content": "Fictional Deree campus-community example: welcome session with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-10.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,new student orientation"
+    },
+    {
+      "key": "reel-11",
+      "slug": "demo-reel-11",
+      "title": "Community collaboration: Welcome session",
+      "content": "Fictional Deree campus-community example: welcome session with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-11.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,community collaboration"
+    },
+    {
+      "key": "reel-12",
+      "slug": "demo-reel-12",
+      "title": "Campus welcome: Practical workshop",
+      "content": "Fictional Deree campus-community example: practical workshop with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "video",
+      "mainImage": "community-0.svg",
+      "videoFileName": "campus-preview.webm",
+      "tags": "campus,demo,campus welcome"
+    },
+    {
+      "key": "reel-13",
+      "slug": "demo-reel-13",
+      "title": "Sustainability in action: Practical workshop",
+      "content": "Fictional Deree campus-community example: practical workshop with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-1.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,sustainability in action"
+    },
+    {
+      "key": "reel-14",
+      "slug": "demo-reel-14",
+      "title": "Creative arts workshop: Practical workshop",
+      "content": "Fictional Deree campus-community example: practical workshop with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-2.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,creative arts workshop"
+    },
+    {
+      "key": "reel-15",
+      "slug": "demo-reel-15",
+      "title": "Technology community: Practical workshop",
+      "content": "Fictional Deree campus-community example: practical workshop with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-3.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,technology community"
+    },
+    {
+      "key": "reel-16",
+      "slug": "demo-reel-16",
+      "title": "Career connections: Practical workshop",
+      "content": "Fictional Deree campus-community example: practical workshop with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-4.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,career connections"
+    },
+    {
+      "key": "reel-17",
+      "slug": "demo-reel-17",
+      "title": "Sports and teamwork: Practical workshop",
+      "content": "Fictional Deree campus-community example: practical workshop with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-5.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,sports and teamwork"
+    },
+    {
+      "key": "reel-18",
+      "slug": "demo-reel-18",
+      "title": "Culture and languages: Practical workshop",
+      "content": "Fictional Deree campus-community example: practical workshop with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "video",
+      "mainImage": "community-6.svg",
+      "videoFileName": "campus-preview.webm",
+      "tags": "campus,demo,culture and languages"
+    },
+    {
+      "key": "reel-19",
+      "slug": "demo-reel-19",
+      "title": "Student volunteering: Practical workshop",
+      "content": "Fictional Deree campus-community example: practical workshop with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-7.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,student volunteering"
+    },
+    {
+      "key": "reel-20",
+      "slug": "demo-reel-20",
+      "title": "Campus performance: Practical workshop",
+      "content": "Fictional Deree campus-community example: practical workshop with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-8.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,campus performance"
+    },
+    {
+      "key": "reel-21",
+      "slug": "demo-reel-21",
+      "title": "Project showcase: Practical workshop",
+      "content": "Fictional Deree campus-community example: practical workshop with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-9.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,project showcase"
+    },
+    {
+      "key": "reel-22",
+      "slug": "demo-reel-22",
+      "title": "New student orientation: Practical workshop",
+      "content": "Fictional Deree campus-community example: practical workshop with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-10.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,new student orientation"
+    },
+    {
+      "key": "reel-23",
+      "slug": "demo-reel-23",
+      "title": "Community collaboration: Practical workshop",
+      "content": "Fictional Deree campus-community example: practical workshop with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-11.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,community collaboration"
+    },
+    {
+      "key": "reel-24",
+      "slug": "demo-reel-24",
+      "title": "Campus welcome: Meet the team",
+      "content": "Fictional Deree campus-community example: meet the team with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "video",
+      "mainImage": "community-0.svg",
+      "videoFileName": "campus-preview.webm",
+      "tags": "campus,demo,campus welcome"
+    },
+    {
+      "key": "reel-25",
+      "slug": "demo-reel-25",
+      "title": "Sustainability in action: Meet the team",
+      "content": "Fictional Deree campus-community example: meet the team with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-1.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,sustainability in action"
+    },
+    {
+      "key": "reel-26",
+      "slug": "demo-reel-26",
+      "title": "Creative arts workshop: Meet the team",
+      "content": "Fictional Deree campus-community example: meet the team with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-2.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,creative arts workshop"
+    },
+    {
+      "key": "reel-27",
+      "slug": "demo-reel-27",
+      "title": "Technology community: Meet the team",
+      "content": "Fictional Deree campus-community example: meet the team with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-3.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,technology community"
+    },
+    {
+      "key": "reel-28",
+      "slug": "demo-reel-28",
+      "title": "Career connections: Meet the team",
+      "content": "Fictional Deree campus-community example: meet the team with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-4.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,career connections"
+    },
+    {
+      "key": "reel-29",
+      "slug": "demo-reel-29",
+      "title": "Sports and teamwork: Meet the team",
+      "content": "Fictional Deree campus-community example: meet the team with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-5.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,sports and teamwork"
+    },
+    {
+      "key": "reel-30",
+      "slug": "demo-reel-30",
+      "title": "Culture and languages: Meet the team",
+      "content": "Fictional Deree campus-community example: meet the team with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "video",
+      "mainImage": "community-6.svg",
+      "videoFileName": "campus-preview.webm",
+      "tags": "campus,demo,culture and languages"
+    },
+    {
+      "key": "reel-31",
+      "slug": "demo-reel-31",
+      "title": "Student volunteering: Meet the team",
+      "content": "Fictional Deree campus-community example: meet the team with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-7.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,student volunteering"
+    },
+    {
+      "key": "reel-32",
+      "slug": "demo-reel-32",
+      "title": "Campus performance: Meet the team",
+      "content": "Fictional Deree campus-community example: meet the team with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-8.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,campus performance"
+    },
+    {
+      "key": "reel-33",
+      "slug": "demo-reel-33",
+      "title": "Project showcase: Meet the team",
+      "content": "Fictional Deree campus-community example: meet the team with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-9.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,project showcase"
+    },
+    {
+      "key": "reel-34",
+      "slug": "demo-reel-34",
+      "title": "New student orientation: Meet the team",
+      "content": "Fictional Deree campus-community example: meet the team with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-10.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,new student orientation"
+    },
+    {
+      "key": "reel-35",
+      "slug": "demo-reel-35",
+      "title": "Community collaboration: Meet the team",
+      "content": "Fictional Deree campus-community example: meet the team with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-11.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,community collaboration"
+    },
+    {
+      "key": "reel-36",
+      "slug": "demo-reel-36",
+      "title": "Campus welcome: Project highlights",
+      "content": "Fictional Deree campus-community example: project highlights with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "video",
+      "mainImage": "community-0.svg",
+      "videoFileName": "campus-preview.webm",
+      "tags": "campus,demo,campus welcome"
+    },
+    {
+      "key": "reel-37",
+      "slug": "demo-reel-37",
+      "title": "Sustainability in action: Project highlights",
+      "content": "Fictional Deree campus-community example: project highlights with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-1.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,sustainability in action"
+    },
+    {
+      "key": "reel-38",
+      "slug": "demo-reel-38",
+      "title": "Creative arts workshop: Project highlights",
+      "content": "Fictional Deree campus-community example: project highlights with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-2.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,creative arts workshop"
+    },
+    {
+      "key": "reel-39",
+      "slug": "demo-reel-39",
+      "title": "Technology community: Project highlights",
+      "content": "Fictional Deree campus-community example: project highlights with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-3.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,technology community"
+    },
+    {
+      "key": "reel-40",
+      "slug": "demo-reel-40",
+      "title": "Career connections: Project highlights",
+      "content": "Fictional Deree campus-community example: project highlights with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-4.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,career connections"
+    },
+    {
+      "key": "reel-41",
+      "slug": "demo-reel-41",
+      "title": "Sports and teamwork: Project highlights",
+      "content": "Fictional Deree campus-community example: project highlights with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-5.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,sports and teamwork"
+    },
+    {
+      "key": "reel-42",
+      "slug": "demo-reel-42",
+      "title": "Culture and languages: Project highlights",
+      "content": "Fictional Deree campus-community example: project highlights with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "video",
+      "mainImage": "community-6.svg",
+      "videoFileName": "campus-preview.webm",
+      "tags": "campus,demo,culture and languages"
+    },
+    {
+      "key": "reel-43",
+      "slug": "demo-reel-43",
+      "title": "Student volunteering: Project highlights",
+      "content": "Fictional Deree campus-community example: project highlights with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-7.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,student volunteering"
+    },
+    {
+      "key": "reel-44",
+      "slug": "demo-reel-44",
+      "title": "Campus performance: Project highlights",
+      "content": "Fictional Deree campus-community example: project highlights with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-8.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,campus performance"
+    },
+    {
+      "key": "reel-45",
+      "slug": "demo-reel-45",
+      "title": "Project showcase: Project highlights",
+      "content": "Fictional Deree campus-community example: project highlights with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-9.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,project showcase"
+    },
+    {
+      "key": "reel-46",
+      "slug": "demo-reel-46",
+      "title": "New student orientation: Project highlights",
+      "content": "Fictional Deree campus-community example: project highlights with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-10.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,new student orientation"
+    },
+    {
+      "key": "reel-47",
+      "slug": "demo-reel-47",
+      "title": "Community collaboration: Project highlights",
+      "content": "Fictional Deree campus-community example: project highlights with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-11.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,community collaboration"
+    },
+    {
+      "key": "reel-48",
+      "slug": "demo-reel-48",
+      "title": "Campus welcome: Behind the scenes",
+      "content": "Fictional Deree campus-community example: behind the scenes with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "video",
+      "mainImage": "community-0.svg",
+      "videoFileName": "campus-preview.webm",
+      "tags": "campus,demo,campus welcome"
+    },
+    {
+      "key": "reel-49",
+      "slug": "demo-reel-49",
+      "title": "Sustainability in action: Behind the scenes",
+      "content": "Fictional Deree campus-community example: behind the scenes with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-1.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,sustainability in action"
+    },
+    {
+      "key": "reel-50",
+      "slug": "demo-reel-50",
+      "title": "Creative arts workshop: Behind the scenes",
+      "content": "Fictional Deree campus-community example: behind the scenes with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-2.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,creative arts workshop"
+    },
+    {
+      "key": "reel-51",
+      "slug": "demo-reel-51",
+      "title": "Technology community: Behind the scenes",
+      "content": "Fictional Deree campus-community example: behind the scenes with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-3.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,technology community"
+    },
+    {
+      "key": "reel-52",
+      "slug": "demo-reel-52",
+      "title": "Career connections: Behind the scenes",
+      "content": "Fictional Deree campus-community example: behind the scenes with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-4.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,career connections"
+    },
+    {
+      "key": "reel-53",
+      "slug": "demo-reel-53",
+      "title": "Sports and teamwork: Behind the scenes",
+      "content": "Fictional Deree campus-community example: behind the scenes with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-5.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,sports and teamwork"
+    },
+    {
+      "key": "reel-54",
+      "slug": "demo-reel-54",
+      "title": "Culture and languages: Behind the scenes",
+      "content": "Fictional Deree campus-community example: behind the scenes with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "video",
+      "mainImage": "community-6.svg",
+      "videoFileName": "campus-preview.webm",
+      "tags": "campus,demo,culture and languages"
+    },
+    {
+      "key": "reel-55",
+      "slug": "demo-reel-55",
+      "title": "Student volunteering: Behind the scenes",
+      "content": "Fictional Deree campus-community example: behind the scenes with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-7.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,student volunteering"
+    },
+    {
+      "key": "reel-56",
+      "slug": "demo-reel-56",
+      "title": "Campus performance: Behind the scenes",
+      "content": "Fictional Deree campus-community example: behind the scenes with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-8.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,campus performance"
+    },
+    {
+      "key": "reel-57",
+      "slug": "demo-reel-57",
+      "title": "Project showcase: Behind the scenes",
+      "content": "Fictional Deree campus-community example: behind the scenes with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-9.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,project showcase"
+    },
+    {
+      "key": "reel-58",
+      "slug": "demo-reel-58",
+      "title": "New student orientation: Behind the scenes",
+      "content": "Fictional Deree campus-community example: behind the scenes with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-10.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,new student orientation"
+    },
+    {
+      "key": "reel-59",
+      "slug": "demo-reel-59",
+      "title": "Community collaboration: Behind the scenes",
+      "content": "Fictional Deree campus-community example: behind the scenes with students sharing ideas and preparing their next activity. Illustrative demo media.",
+      "type": "image",
+      "mainImage": "community-11.svg",
+      "videoFileName": null,
+      "tags": "campus,demo,community collaboration"
+    }
+  ],
+  "lives": [
+    {
+      "key": "live-0",
+      "slug": "demo-live-0",
+      "title": "Campus welcome and activities fair",
+      "description": "<p>Preview of a fictional campus-community session for testing UNIVERSE. Use the player to test playback. This illustrative clip is not a live College broadcast.</p>",
+      "mainImage": "community-0.svg",
+      "link": "/uploads/videos/campus-preview.webm",
+      "status": 0,
+      "owner": "organizer-001"
+    },
+    {
+      "key": "live-1",
+      "slug": "demo-live-1",
+      "title": "Sustainability project briefing",
+      "description": "<p>Preview of a fictional campus-community session for testing UNIVERSE. Use the player to test playback. This illustrative clip is not a live College broadcast.</p>",
+      "mainImage": "community-3.svg",
+      "link": "/uploads/videos/campus-preview.webm",
+      "status": 0,
+      "owner": "organizer-002"
+    },
+    {
+      "key": "live-2",
+      "slug": "demo-live-2",
+      "title": "Student creative showcase",
+      "description": "<p>Preview of a fictional campus-community session for testing UNIVERSE. Use the player to test playback. This illustrative clip is not a live College broadcast.</p>",
+      "mainImage": "community-6.svg",
+      "link": "/uploads/videos/campus-preview.webm",
+      "status": 0,
+      "owner": "organizer-003"
+    },
+    {
+      "key": "live-3",
+      "slug": "demo-live-3",
+      "title": "Career readiness conversation",
+      "description": "<p>Preview of a fictional campus-community session for testing UNIVERSE. Use the player to test playback. This illustrative clip is not a live College broadcast.</p>",
+      "mainImage": "community-9.svg",
+      "link": "/uploads/videos/campus-preview.webm",
+      "status": 0,
+      "owner": "organizer-004"
+    }
+  ],
+  "rooms": [
+    {
+      "key": "community-welcome",
+      "title": "Demo campus welcome team",
+      "users": [
+        "student-001",
+        "student-002",
+        "organizer-001"
+      ],
+      "messages": [
+        "Welcome to the fictional campus welcome team. Shall we plan a short introduction?",
+        "I can prepare a list of questions for new students.",
+        "Great. Let us review the sample event and venue together.",
+        "I will bring the draft agenda to our next demo session."
+      ]
+    },
+    {
+      "key": "community-sustainability",
+      "title": "Demo sustainability project",
+      "users": [
+        "student-001",
+        "student-003",
+        "organizer-002"
+      ],
+      "messages": [
+        "This is our demo sustainability planning room.",
+        "Could we compare a workshop and a volunteering activity?",
+        "I will draft a fictional activity outline for the team.",
+        "Thanks. Let us check the example schedule before publishing."
+      ]
+    },
+    {
+      "key": "community-workshop",
+      "title": "Demo workshop preparation",
+      "users": [
+        "student-002",
+        "organizer-003"
+      ],
+      "messages": [
+        "Welcome to the demo workshop team.",
+        "I have a sample outline ready for review.",
+        "Let us include time for questions and introductions.",
+        "Agreed. I will update the fictional plan."
+      ]
+    },
+    {
+      "key": "community-careers",
+      "title": "Demo career readiness group",
+      "users": [
+        "student-001",
+        "organizer-004"
+      ],
+      "messages": [
+        "This is an example career-readiness discussion.",
+        "I will use a fictional CV to test the application steps.",
+        "Please check the sample listing description before submitting.",
+        "Thanks. I will report how the demo application behaves."
+      ]
+    },
+    {
+      "key": "community-support",
+      "title": "Demo support desk",
+      "users": [
+        "demo-admin",
+        "student-001",
+        "organizer-001"
+      ],
+      "messages": [
+        "Welcome to the demo support conversation.",
+        "I am testing the attendee and organizer views in separate browsers.",
+        "Please share the page and steps if something does not work.",
+        "The Help Center has guidance for the common workflows."
+      ]
+    }
+  ]
+}

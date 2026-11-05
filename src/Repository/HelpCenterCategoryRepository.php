@@ -33,7 +33,7 @@
                 }
             }
             if ($hidden !== "all") {
-                $qb->andWhere("c.hidden = :hidden")->setParameter("hidden", $hidden);
+                $qb->andWhere("c.hidden = :hidden AND c.deletedAt IS NULL")->setParameter("hidden", $hidden);
             }
             if ($keyword !== "all") {
                 $qb->andWhere("c.name LIKE :keyword or :keyword LIKE c.name")->setParameter("keyword", "%" . $keyword . "%");

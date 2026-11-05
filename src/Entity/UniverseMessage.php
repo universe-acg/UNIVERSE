@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'universe_message')]
 #[ORM\Entity(repositoryClass: \App\Repository\UniverseMessageRepository::class)]
+#[ORM\UniqueConstraint(name: 'uniq_chat_message_client', columns: ['universe_chat_id','sender_id','client_id'])]
 class UniverseMessage
 {
     #[ORM\Id]
@@ -30,6 +31,11 @@ class UniverseMessage
 
     #[ORM\Column(type: 'datetime')]
     private $sentAt;
+
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $clientId = null;
+    public function getClientId(): ?string { return $this->clientId; }
+    public function setClientId(?string $id): void { $this->clientId=$id; }
 
     /**
      * @return mixed

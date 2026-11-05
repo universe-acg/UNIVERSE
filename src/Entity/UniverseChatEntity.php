@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'universe_chat')]
 #[ORM\Entity(repositoryClass: \App\Repository\UniverseChatRepository::class)]
+#[ORM\UniqueConstraint(name: 'uniq_chat_direct', columns: ['direct_key'])]
 class UniverseChatEntity
 {
     #[ORM\Id]
@@ -22,6 +23,11 @@ class UniverseChatEntity
     #[ORM\JoinTable(name: 'chat_user')]
     #[ORM\ManyToMany(targetEntity: \App\Entity\User::class)]
     private $participants;
+
+    #[ORM\Column(length: 80, nullable: true)]
+    private ?string $directKey = null;
+    public function getDirectKey(): ?string { return $this->directKey; }
+    public function setDirectKey(?string $key): void { $this->directKey=$key; }
 
     public function __construct() { $this->participants = new \Doctrine\Common\Collections\ArrayCollection(); }
 

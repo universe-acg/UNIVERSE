@@ -23,24 +23,24 @@
     class Reel
     {
 
-        #[Gedmo\Slug(fields: ['title'], updatable: true)]
-        #[ORM\Column(type: 'string', length: 180)]
+        #[Gedmo\Slug(fields: ['title'], updatable: false)]
+        #[ORM\Column(type: 'string', length: 180, unique: true)]
         protected $slug;
 
         #[ORM\Column(type: 'string', length: 45, nullable: true)]
-        protected $type;
+        protected $type = 'image';
         #[ORM\Column(type: 'string', length: 180)]
-        protected $linkvideo;
+        protected $linkvideo = '';
         /**
          * @EnglishOnly
          * @Profanity
          */
-        #[ORM\Column(length: 255, unique: true)]
-        protected $tags;
+        #[ORM\Column(length: 255)]
+        protected $tags = '';
         /**
          * @var File
          */
-        #[Assert\NotBlank(message: 'Please choose a video file.')]
+        #[Assert\File(maxSize: '25M', mimeTypes: ['video/mp4','video/webm'])]
         #[Vich\UploadableField(mapping: 'video_mapping', fileNameProperty: 'videoFileName')]
         private $videoFile;
         /**
@@ -64,7 +64,7 @@
          * @Profanity
          *  * @Assert\NotBlank(message="Please provide a caption.")
          */
-        #[ORM\Column(type: 'string', length: 180)]
+        #[ORM\Column(type: 'string', length: 1000)]
         #[Assert\Length(max: 1000, maxMessage: 'The caption cannot be longer than {{ limit }} characters.')]
         private $content;
         #[ORM\Id]
@@ -76,7 +76,7 @@
          *
          * @var File
          */
-        #[Assert\NotBlank(message: 'Please choose a thumbnail image.')]
+
         #[Assert\File(maxSize: '32M', mimeTypes: ['image/jpeg', 'image/jpg', 'image/gif', 'image/png'], mimeTypesMessage: 'The file should be an image')]
         #[Vich\UploadableField(mapping: 'reel_main_image', fileNameProperty: 'mainImage', size: 'imageSize', mimeType: 'imageMimeType', originalName: 'imageOriginalName', dimensions: 'imageDimensions')]
         private $mainImageFile;
@@ -154,7 +154,7 @@
 
             if ($videoFile) {
                 // It's important to update changedAt field to trigger Doctrine events
-                $this->updatedAt = new DateTimeImmutable();
+                $this->updatedAt = new DateTime();
             }
         }
 
@@ -355,8 +355,15 @@
             if (null !== $imageFile) {
 // It is required that at least one field changes if you are using doctrine
 // otherwise the event listeners won't be called and the file is lost
-                $this->updatedAt = new DateTimeImmutable();
+                $this->updatedAt = new DateTime();
             }
+        }
+
+        #[Assert\Callback]
+        public function validateMedia(\Symfony\Component\Validator\Context\ExecutionContextInterface $context): void
+        {
+            if ($this->type==='video' && !$this->videoFile && !$this->videoFileName) $context->buildViolation('Choose a video file.')->atPath('videoFile')->addViolation();
+            if ($this->type==='image' && !$this->mainImageFile && !$this->mainImage) $context->buildViolation('Choose an image.')->atPath('mainImageFile')->addViolation();
         }
 
         public function getImagePath()

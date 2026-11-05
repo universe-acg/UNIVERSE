@@ -27,6 +27,7 @@
         <div class="{{ services.getSetting("app_layout") }}">
 
             {% if lives.getTotalItemCount > 0 %}
+            <form method="get" class="mb-3"><input class="form-control" type="search" name="keyword" aria-label="Search live sessions" placeholder="Search live sessions" value="{{ app.request.query.get('keyword') }}"></form>
             <section class="section-main mb-5">
                 <div class="owl-init slider-main homepage-slider owl-carousel" data-items="1" data-dots="true"
                      data-nav="true" data-autoplay="true" data-rtl="true">

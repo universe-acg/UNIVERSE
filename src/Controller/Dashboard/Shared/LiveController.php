@@ -1,168 +1,49 @@
 <?php
-/*
- * AUTHOR: ALEXANDROS KOURTIS
- */
-
 namespace App\Controller\Dashboard\Shared;
-
+use App\Controller\BaseController;
 use App\Entity\Live;
 use App\Form\LiveType;
-use App\Service\AppServices;
-use App\Service\LiveService;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use App\Controller\BaseController as Controller;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\{Request,Response};
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-
-class LiveController extends Controller
+final class LiveController extends BaseController
 {
-    /**
-     *
-     */
-#[Route("/organizer/manage-lives", name: "dashboard_organizer_live", methods: ["GET"])]
-    public function index(Request $request, PaginatorInterface $paginator, LiveService $liveService)
+    public function __construct(private EntityManagerInterface $em) {}
+    #[Route('/organizer/manage-lives',name:'dashboard_organizer_live',methods:['GET'])]
+    public function index(Request $request,PaginatorInterface $paginator): Response
     {
-        $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
-
-        $lives = $paginator->paginate($liveService->getLives(array('keyword' => $keyword, 'hidden' => 'all')), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
-
-        return $this->render('Dashboard/Shared/Live/index.html.twig', [
-            'lives' => $lives,
-        ]);
+        $qb=$this->em->getRepository(Live::class)->createQueryBuilder('l')->where('l.owner=:owner')->setParameter('owner',$this->getUser())->orderBy('l.id','DESC');
+        return $this->render('Dashboard/Shared/Live/index.html.twig',['lives'=>$paginator->paginate($qb,max(1,$request->query->getInt('page',1)),12)]);
     }
-
-    /**
-     *
-     *
-     */
-#[Route("/organizer/manage-lives/add", name: "dashboard_organizer_live_add", methods: ["GET","POST"])]
-#[Route("/organizer/manage-lives/{slug}/edit", name: "dashboard_organizer_live_edit", methods: ["GET","POST"])]
-    public function addedit(Request $request, AppServices $appServices, LiveService $liveService, AuthorizationCheckerInterface $authChecker, $slug = null)
+    #[Route('/organizer/manage-lives/add',name:'dashboard_organizer_live_add',methods:['GET','POST'])]
+    #[Route('/organizer/manage-lives/{slug}/edit',name:'dashboard_organizer_live_edit',methods:['GET','POST'])]
+    public function addedit(Request $request,?string $slug=null): Response
     {
-        $em = $this->getDoctrine()->getManager();
-
-        if (!$slug) {
-            $live = new Live();
-        } else {
-            $live = $liveService->getLives(array('hidden' => 'all', 'slug' => $slug))[0];
-            if (!$live) {
-                $this->addFlash('error', 'The live can not be found');
-                return $appServices->redirectToReferer('live');
-            }
-        }
-
-        $form = $this->createForm(LiveType::class, $live);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-
-                $this->handleImageUpload($live);
-
-                $em->persist($live);
-                $em->flush();
-
-                if (!$slug) {
-                    $this->addFlash('success', 'The live has been successfully created');
-                } else {
-                    $this->addFlash('success', 'The live has been successfully updated');
-                }
-            } else {
-                $this->addFlash('error', 'The form contains invalid data');
-            }
-        }
-        return $this->render('Dashboard/Shared/Live/add-edit.html.twig', array(
-            "live" => $live,
-            "form" => $form->createView(),
-        ));
+        $live=$slug?$this->owned($slug):new Live(); if (!$slug) $live->setOwner($this->getUser());
+        $form=$this->createForm(LiveType::class,$live); $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) { $this->em->persist($live); $this->em->flush(); $this->addFlash('success','Live session saved.'); return $this->redirectToRoute('dashboard_organizer_live'); }
+        return $this->render('Dashboard/Shared/Live/add-edit.html.twig',['live'=>$live,'form'=>$form->createView()]);
     }
-
-    /**
-     * Handle image upload and update the entity.
-     *
-     * @param Live $live
-     */
-
-    private function handleImageUpload(Live $live)
+    #[Route('/organizer/manage-lives/{slug}/delete',name:'dashboard_organizer_live_delete',methods:['POST'])]
+    #[Route('/organizer/manage-lives/{slug}/disable',name:'dashboard_organizer_live_disable',methods:['POST'])]
+    public function delete(string $slug): Response { $this->owned($slug)->setDeletedAt(new \DateTime()); $this->em->flush(); return $this->redirectToRoute('dashboard_organizer_live'); }
+    #[Route('/organizer/manage-lives/{slug}/restore',name:'dashboard_organizer_live_restore',methods:['POST'])]
+    public function restore(string $slug): Response
     {
-        if ($live->getMainImageFile()) {
-            $mainImageFile = $live->getMainImageFile();
-            $live->setMainImage($mainImageFile->getFileName()); // Update the entity with the file name
-        }
+        $filters=$this->em->getFilters(); $enabled=$filters->isEnabled('softdeleteable'); if ($enabled) $filters->disable('softdeleteable');
+        try { $live=$this->owned($slug); $live->setDeletedAt(null); $this->em->flush(); } finally { if ($enabled) $filters->enable('softdeleteable'); }
+        return $this->redirectToRoute('dashboard_organizer_live');
     }
-
-    /**
-     *
-     *
-     */
-#[Route("/organizer/manage-lives/{slug}/disable", name: "dashboard_organizer_live_disable", methods: ["POST"])]
-#[Route("/organizer/manage-lives/{slug}/delete", name: "dashboard_organizer_live_delete", methods: ["POST"])]
-    public function delete(AppServices $appServices, LiveService $liveService, $slug, AuthorizationCheckerInterface $authChecker)
+    #[Route('/organizer/manage-lives/{slug}/show',name:'dashboard_organizer_live_show',methods:['POST'])]
+    #[Route('/organizer/manage-lives/{slug}/hide',name:'dashboard_organizer_live_hide',methods:['POST'])]
+    public function showhide(string $slug,Request $request): Response
     {
-        $em = $this->getDoctrine()->getManager();
-        $live = $liveService->getLives(array('hidden' => 'all', 'slug' => $slug))[0];
-
-        if (!$live) {
-            $this->addFlash('error', 'The live can not be found');
-            return $appServices->redirectToReferer('live');
-        }
-
-        if ($live->getDeletedAt() !== null) {
-            $this->addFlash('success', 'The live has been deleted');
-        } else {
-            $this->addFlash('success', 'The live has been deleted');
-        }
-
-        $em->remove($live);
-        $em->flush();
-        return $appServices->redirectToReferer('live');
+        $live=$this->owned($slug); $live->setHidden(str_ends_with($request->getPathInfo(),'/hide')); $this->em->flush(); return $this->redirectToRoute('dashboard_organizer_live');
     }
-
-    /**
-     *
-     */
-#[Route("/organizer/manage-lives/{slug}/restore", name: "dashboard_organizer_live_restore", methods: ["POST"])]
-    public function restore($slug, Request $request, AppServices $appServices, LiveService $liveService)
+    private function owned(string $slug): Live
     {
-        $live = $liveService->getLives(array('organizer' => "all", 'hidden' => 'all', 'slug' => $slug, "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();
-        if (!$live) {
-            $this->addFlash('error', 'The live can not be found');
-            return $appServices->redirectToReferer('live');
-        }
-        $live->setDeletedAt(null);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($live);
-        $em->flush();
-        $this->addFlash('success', 'The live has been succesfully restored');
-
-        return $appServices->redirectToReferer('live');
-    }
-
-    /**
-     *
-     *
-     */
-#[Route("/organizer/manage-lives/{slug}/show", name: "dashboard_organizer_live_show", methods: ["POST"])]
-#[Route("/organizer/manage-lives/{slug}/hide", name: "dashboard_organizer_live_hide", methods: ["POST"])]
-    public function showhide(AppServices $appServices, LiveService $liveService, $slug, AuthorizationCheckerInterface $authChecker)
-    {
-        $live = $liveService->getLives(array('hidden' => 'all', 'slug' => $slug))[0];
-
-        if (!$live) {
-            $this->addFlash('error', 'The live can not be found');
-            return $appServices->redirectToReferer('live');
-        }
-        if ($live->getHidden() === true) {
-            $live->setHidden(false);
-            $this->addFlash('success', 'The live is visible');
-        } else {
-            $live->setHidden(true);
-            $this->addFlash('error', 'The live is hidden');
-        }
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($live);
-        $em->flush();
-        return $appServices->redirectToReferer('live');
+        $live=$this->em->getRepository(Live::class)->findOneBy(['slug'=>$slug]); if (!$live) throw $this->createNotFoundException();
+        if (!$this->isGranted('ROLE_ADMINISTRATOR') && $live->getOwner()?->getId()!==$this->getUser()->getId()) throw $this->createAccessDeniedException(); return $live;
     }
 }

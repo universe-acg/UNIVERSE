@@ -1,7 +1,7 @@
 <?php
 namespace App\Controller\Front;
 use App\Controller\BaseController;
-use App\Entity\{Comment,Thread,Event,BlogPost};
+use App\Entity\{Comment,Thread,Event,BlogPost,Reel};
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\{Request,Response,JsonResponse};
@@ -58,9 +58,12 @@ final class CommentController extends BaseController
     private function owner(Comment $comment): void {if(!$this->isGranted('ROLE_ADMINISTRATOR')&&(!$this->getUser()||$comment->getAuthor()?->getId()!==$this->getUser()->getId()))throw $this->createAccessDeniedException();}
     private function comment(string $id,int $commentId): Comment {$comment=$this->em->getRepository(Comment::class)->findOneBy(['id'=>$commentId,'thread'=>$id]);if(!$comment)throw $this->createNotFoundException();return $comment;}
     private function thread(string $id): Thread {
+        $event=$this->em->getRepository(Event::class)->findOneBy(['slug'=>$id,'published'=>true,'deletedAt'=>null]);
+        $blog=$this->em->getRepository(BlogPost::class)->findOneBy(['slug'=>$id,'hidden'=>false,'deletedAt'=>null]);
+        $reel=$this->em->getRepository(Reel::class)->findOneBy(['slug'=>$id,'hidden'=>false,'deletedAt'=>null]);
+        if(!$event&&!$blog&&!$reel)throw $this->createNotFoundException();
         $thread=$this->em->find(Thread::class,$id);if($thread)return $thread;
-        $event=$this->em->getRepository(Event::class)->findOneBy(['slug'=>$id,'published'=>true]);$blog=$this->em->getRepository(BlogPost::class)->findOneBy(['slug'=>$id]);
-        if(!$event&&!$blog)throw $this->createNotFoundException();
-        $thread=new Thread();$thread->setId($id);$thread->setPermalink($event?'/event/'.$id:'/blog/'.$id);$this->em->persist($thread);$this->em->flush();return $thread;
+        $thread=new Thread();$thread->setId($id);$thread->setPermalink(($event?'/event/':($reel?'/reel/':'/blog-article/')).$id);
+        $this->em->persist($thread);$this->em->flush();return $thread;
     }
 }

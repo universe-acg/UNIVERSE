@@ -1,115 +1,18 @@
-{# {% extends "Global/layout.html.twig" %} #}
-
-{# {% set pagetitle = venue.title %} #}
-
-{# {% block title %}{{ pagetitle }}{% endblock %} #}
-
-{# {% block meta_dynamic_seo %} #}
-{# {% endblock %} #}
-
-{# {% block content %} #}
-
-{#    {% set navigation = [{"venues": "venues", "current" : (pagetitle)}] %} #}
-{#    {% include "Global/navigation.html.twig" with navigation %} #}
-
-{#    <div class="row no-gutters"> #}
-{#        <div class="col-12 p-0"> #}
-{#            <section class="section-main"> #}
-{#                <div class="owl-init slider-main owl-carousel" data-items="1" data-dots="false" data-nav="false" #}
-{#                     data-autoplay="false"> #}
-{#                    <div class="item-slide d-flex" style="height: 600px; width: 100% !important;"> #}
-{#                        <img class="slider-img justify-content-center align-self-center" #}
-{#                             style="object-fit: cover; width: 100% !important;" #}
-{#                             src="{{ asset(venue.getImagePath  ? asset(venue.getImagePath) : venue.getImagePlaceholder ) }}" #}
-{#                             alt="{{ venue.title }}"/> #}
-{#                        #}{#                        <img class="slider-img justify-content-center align-self-center img-lazy-load" #}
-{#                        #}{#                             src="{{ asset('assets/img/loader.gif') }}" #}
-{#                        #}{#                             data-src="{{ venue.mainImage ? asset(venue.getMainImage) : venue.getImagePlaceholder }}" #}
-{#                        #}{#                             alt="{{ venue.title }}"/> #}
-{#                        <div class="slider-blured-background" #}
-{#                             style="background-image: url('{{ venue.mainImage ? asset(venue.getMainImage) : venue.getImagePlaceholder }}');"></div> #}
-{#                    </div> #}
-{#                </div> #}
-{#            </section> #}
-{#        </div> #}
-{#    </div> #}
-{#    <section class="section-content padding-y bg-white"> #}
-{#        <div class="{{ services.getSetting("app_layout") }}"> #}
-{#            <div class="card"> #}
-{#                <div class="row"> #}
-{#                    <div class="col-12 col-lg-8 order-1 order-lg-0"> #}
-{#                        <div class="card-body"> #}
-{#                            <h1 class="card-title b d-none d-lg-block">{{ venue.title }}</h1> #}
-{#                            {% if venue.description %} #}
-{#                                <dl class="mt-5 venue-description"> #}
-{#                                    <dt class="text-muted">{{ "Description" }}</dt> #}
-{#                                    <dd class="line-height-2 readmore" data-collapsed-height="500" #}
-{#                                        data-height-margin="20"> #}
-{#                                        {{ venue.description|raw|nl2br }} #}
-{#                                    </dd> #}
-{#                                </dl> #}
-{#                            {% endif %} #}
-{#                            {% if venue.amenities|length > 0 %} #}
-{#                                <dl class="dlist-align dlist-border clearfix mb-0"> #}
-{#                                    <dt>{{ "Amenities" }}</dt> #}
-{#                                    <dd class="pb-0"> #}
-{#                                        <ul class="fa-ul list-lg list-inline ml-0"> #}
-{#                                            {% for amenity in venue.amenities %} #}
-{#                                                <li class="list-inline-item text-muted mr-3 mb-3"><i #}
-{#                                                            class="icon {{ amenity.icon }} fa-fw"></i> #}
-{#                                                    <span>{{ amenity.name }}</span></li> #}
-{#                                            {% endfor %} #}
-{#                                        </ul> #}
-{#                                    </dd> #}
-{#                                </dl> #}
-{#                            {% endif %} #}
-{#                            {% if venue.getSecondaryImages|length > 0 %} #}
-{#                                <dl class="mt-5"> #}
-{#                                    <dt class="text-muted">{{ "Photos" }}</dt> #}
-{#                                    <dd class="mr-0"> #}
-{#                                        <div class="gallery photos-gallery clearfix"> #}
-{#                                            {% for image in venue.getSecondaryImages %} #}
-{#                                                <figure> #}
-{#                                                    <a href="{{ asset(image.getImagePath) }}" #}
-{#                                                       data-size="{{ image.imageDimensions is not empty ? image.imageDimensions[0] ~ 'x' ~ image.imageDimensions[1] : 'N/A' }} #}
-{#                                                        " #}
-{#                                                    > #}
-{#                                                        <img class="img-lazy-load img-thumbnail img-100-100" #}
-{#                                                             src="{{ asset('assets/img/loader.gif') }}" #}
-{#                                                             data-src="{{ asset(image.getImagePath  ? asset(image.getImagePath) : image.getImagePlaceholder ) }}" #}
-{#                                                             alt="{{ venue.title }}"/> #}
-{#                                                    </a> #}
-{#                                                </figure> #}
-{#                                            {% endfor %} #}
-
-{#                                        </div> #}
-{#                                    </dd> #}
-{#                                </dl> #}
-{#                            {% endif %} #}
-{#                        </div> #}
-{#                    </div> #}
-{#                    <div class="col-lg-12 order-1 order-lg-2 mt-4 mt-md-0 "> #}
-{#                        {% if events.getTotalItemCount > 0 %} #}
-{#                            <div class="row px-4" style="overflow-y: scroll"> #}
-{#                                {% for event in events %} #}
-{#                                    <div class="col-12 col-sm-6 col-lg-4 mb-3 p-3"> #}
-{#                                        {% include "Global/event-card.html.twig" with {event: event, past: event.isPassed} %} #}
-{#                                    </div> #}
-{#                                {% endfor %} #}
-{#                            </div> #}
-{#                        {% else %} #}
-{#                            <div class="p-3"> #}
-{#                                {% include "Global/message.html.twig" with { type: "info", message: ('No events found'), icon: "fas fa-exclamation-circle" } %} #}
-{#                            </div> #}
-{#                        {% endif %} #}
-{#                        {{ knp_pagination_render(events, null, {}, {'align': 'center'}) }} #}
-{#                    </div> #}
-{#                </div> #}
-{#            </div> #}
-{#        </div> #}
-{#    </section> #}
-
-{# {% endblock %} #}
-
-{# {% block javascripts %} #}
-{# {% endblock %} #}
+{% extends 'Global/layout.html.twig' %}
+{% set pagetitle=reel.title %}
+{% block title %}{{ pagetitle }}{% endblock %}
+{% block content %}
+    {% set navigation=[{'reels':'Reels','current':pagetitle}] %}{% include 'Global/navigation.html.twig' with navigation %}
+    <section class="section-content padding-y bg-white"><div class="{{ services.getSetting('app_layout') }}"><article class="card box"><div class="card-body">
+        <div class="row"><div class="col-lg-8">
+            {% if reel.type == 'video' and reel.videoFileName %}<video controls playsinline preload="metadata" class="w-100" poster="{{ reel.mainImage ? asset(reel.imagePath) : reel.imagePlaceholder }}" src="{{ asset(reel.videoPath) }}"></video>
+            {% else %}<img class="img-fluid" src="{{ reel.mainImage ? asset(reel.imagePath) : reel.imagePlaceholder }}" alt="{{ reel.title }}">{% endif %}
+        </div><div class="col-lg-4"><h1>{{ reel.title }}</h1><p>{{ reel.content }}</p>
+            {% if reel.user %}<p>By {{ reel.user.crossRoleName }}</p>{% endif %}
+            {% if app.user %}<button type="button" class="btn btn-outline-primary" id="reel-like" data-url="{{ path('reel_set_like',{slug:reel.slug}) }}" aria-pressed="{{ liked ? 'true':'false' }}">{{ liked ? 'Unlike':'Like' }}</button>{% else %}<a href="{{ path('fos_user_security_login') }}">Sign in to like</a>{% endif %}
+            <span id="reel-like-count">{{ likeCount }}</span> likes <p id="reel-like-status" role="status"></p><a href="{{ path('reels') }}">All reels</a>
+        </div></div>
+        <h2 class="mt-4">Comments</h2>{% include '@FOSComment/Thread/async.html.twig' with {id:reel.slug} %}
+    </div></article></div></section>
+    <script src="{{ asset('js/reel-detail.js') }}" defer></script>
+{% endblock %}

@@ -43,18 +43,15 @@ class ReelVideoType extends AbstractType
                 ],
             ])
             ->add('videoFile', VichFileType::class, [
-                'required' => true,
+                'required' => false,
                 'allow_delete' => false,
                 'download_label' => false,
                 'download_uri' => true,
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please choose a file.',
-                    ]),
                     new File([
                         'maxSize' => '25M',
-                        'mimeTypes' => ['video/mp4'],
-                        'mimeTypesMessage' => 'Please upload a valid MP4 video file.',
+                        'mimeTypes' => ['video/mp4','video/webm'],
+                        'mimeTypesMessage' => 'Please upload an MP4 or WebM video file.',
                     ]),
                 ],
                 'attr' => [
@@ -62,7 +59,6 @@ class ReelVideoType extends AbstractType
                     'class' => 'inputvideo',
                 ],
                 'help' => 'Choose the video file',
-                'data' => $options['data']->getVideoFile(), // Pre-fill with the existing main image file name
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Save Reel',
@@ -74,14 +70,8 @@ class ReelVideoType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Reel::class,
-            'validation_groups' => ['create', 'update'],
+            'validation_groups' => ['Default'],
         ]);
 
-        $resolver->setDefined('user_choices'); // Define a custom option for user choices
-
-        $resolver->setDefault('choices', function (Options $options) {
-            // Return the choices as an array
-            return $options['user_choices'];
-        });
     }
 }

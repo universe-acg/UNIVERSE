@@ -174,8 +174,8 @@
         <div class="main {{ services.getSetting("app_layout") }}">
             <div class="tab-buttons"
                  style="display: flex; justify-content: start; align-items: center; align-content: center">
-                <button id="creators-tab" class="styled-button btn btn-primary d-inline-block">Creators</button>
-                <button id="attendees-tab" class="styled-button btn btn-primary d-inline-block">
+                <button type="button" id="creators-tab" class="styled-button btn btn-primary d-inline-block">Creators</button>
+                <button type="button" id="attendees-tab" class="styled-button btn btn-primary d-inline-block">
                     Attendees
                 </button>
                 <div class="input-icon" style="float: left;  width: 100%">
@@ -183,7 +183,7 @@
                            style="float: left; margin: 5px; height: 36px; border-radius: 10px; width: 100%"
                            class="form-control top-search"
                            placeholder="{{ "Filter users" }}"
-                           type="text" id="filter-input">
+                           type="search" aria-label="Filter leaderboard" id="filter-input">
                 </div>
             </div>
 
@@ -231,18 +231,18 @@
                     <tbody>
                     {% set dancingRowCreator = false %} <!-- Initialize the dancingRow variable -->
                     {% for user in creators %}
-                        {% if user.orggoodrole %}
+                        {% if user.organizer %}
                             <tr class="trrow{% if not dancingRowCreator %} dancing-rowc{% set dancingRowCreator = true %}{% endif %}">
                                 <td>
                                     <div class="outer-image-image">
-                                        <img src="{{ asset(user.imagiifypointslevel) }}">
+                                        <img src="{{ user.imagiifypointslevel ? asset(user.imagiifypointslevel) : user.logoPlaceholder }}" alt="Participation badge">
                                         <div class="inner-image">
                                             <img src="{{ user.organizer.logoName ? asset(user.organizer.getLogoPath) : user.organizer.getLogoPlaceholder }}"
                                             >
                                         </div>
                                     </div>
                                 </td>
-                                <td><a href="{{ path('organizer', { slug : user.slug }) }}"
+                                <td><a href="{{ path('organizer', { slug : user.username }) }}"
                                        data-toggle="tooltip">{{ user.getCrossRoleName }}</a></td>
                                 <td>{{ user.organizer.description|striptags }}</td>
                                 <td style="display: none;" class="points-level">{{ user.stringifypointslevel }}</td>
@@ -280,7 +280,7 @@
                                         {% endif %}
                                     </div>
                                 </td>
-                                <td><a href="{{ path('profile_attendee', { slug : user.slug }) }}"
+                                <td><a href="{{ path('profile_attendee', { slug : user.username }) }}"
                                        data-toggle="tooltip">{{ user.getCrossRoleName }}</a></td>
                                 <td>{{ user.bio|striptags }}</td>
                                 <td style="display: none;"
@@ -294,267 +294,7 @@
             </div>
         </div>
     </section>
-    <script>
-        // Store the initial lists of attendees and creators when the page loads
-        let initialCreatorsList;
-        let initialAttendeesList;
-
-        // Function to get the "tag" parameter from the URL
-        function getTagParameter() {
-            const params = new URLSearchParams(location.search);
-            return params.get("tag");
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            initialCreatorsList = document.getElementById("creators-content").innerHTML;
-            initialAttendeesList = document.getElementById("attendees-content").innerHTML;
-        });
-
-        // Rest of your code...
-
-        // Function to reset the list to show all users
-        function resetList() {
-            const creatorsContent = document.getElementById("creators-content");
-            const attendeesContent = document.getElementById("attendees-content");
-
-            // Reset the displayed content to the initial lists
-            creatorsContent.innerHTML = initialCreatorsList;
-            attendeesContent.innerHTML = initialAttendeesList;
-
-            // Reset the filter input field
-            filterInput.value = '';
-            clearDescription();
-        }
-
-        // Event listener to reset the list when the "Show All" button is clicked
-        document.getElementById("show-all-button").addEventListener("click", resetList);
-
-        // Function to toggle between Creators and Attendees tabs
-        function toggleTabs(tabId) {
-            const creatorsContent = document.getElementById("creators-content");
-            const attendeesContent = document.getElementById("attendees-content");
-
-            if (tabId === "creators-tab") {
-                creatorsContent.style.display = "block";
-                attendeesContent.style.display = "none";
-            } else if (tabId === "attendees-tab") {
-                creatorsContent.style.display = "none";
-                attendeesContent.style.display = "block";
-            }
-        }
-
-        document.getElementById("creators-tab").addEventListener("click", function () {
-            toggleTabs("creators-tab");
-        });
-
-        document.getElementById("attendees-tab").addEventListener("click", function () {
-            toggleTabs("attendees-tab");
-        });
-
-        // Function to filter the content
-        function filterContent() {
-            const filterInput = document.getElementById("filter-input");
-            const filterText = filterInput.value.trim().toLowerCase();
-
-            function filterTable(tableId, columnIndex, additionalColumnIndex) {
-                const table = document.getElementById(tableId);
-                const rows = table.querySelectorAll("tbody tr");
-
-                rows.forEach(row => {
-                    const cell = row.querySelector(`td:nth-child(${columnIndex})`);
-                    let additionalCell = null;
-
-                    if (additionalColumnIndex) {
-                        additionalCell = row.querySelector(`td:nth-child(${additionalColumnIndex})`);
-                    }
-
-                    if (cell) {
-                        const cellText = cell.innerText.toLowerCase();
-
-                        if (additionalCell) {
-                            const additionalCellText = additionalCell.innerText.toLowerCase();
-                            row.style.display =
-                                cellText.includes(filterText) || additionalCellText.includes(filterText) ?
-                                    "table-row" : "none";
-                        } else {
-                            row.style.display = cellText.includes(filterText) ? "table-row" : "none";
-                        }
-                    }
-                });
-            }
-
-            filterTable("creators-content", 2, 3); // Filter by Name and Bio, additionalColumnIndex is 3 for Bio
-            filterTable("attendees-content", 2, 3); // Filter by Name and Bio, additionalColumnIndex is 4 for Bio
-        }
-
-        const filterInput = document.getElementById("filter-input");
-        filterInput.addEventListener("input", filterContent);
-
-        // JavaScript to rotate dancing animation patterns
-        const dancingRow = document.querySelector(".dancing-row");
-        dancingRow.addEventListener("mouseenter", function () {
-            dancingRow.classList.add("paused-animation");
-        });
-
-        dancingRow.addEventListener("mouseleave", function () {
-            dancingRow.classList.remove("paused-animation");
-        });
-        let currentDancePattern = 1;
-        setInterval(() => {
-            currentDancePattern = (currentDancePattern % 3) + 1;
-            dancingRow.style.animationName = `dance${currentDancePattern}`;
-        }, 4000); // Change the pattern every 8 seconds
-
-        dancingRow.addEventListener("click", function () {
-            const link = dancingRow.querySelector("a");
-            if (link) {
-                window.location = link.href;
-            }
-        });
-
-        // JavaScript to rotate dancing animation patterns
-        const dancingRowCreator = document.querySelector(".dancing-rowc");
-        dancingRowCreator.addEventListener("mouseenter", function () {
-            dancingRowCreator.classList.add("paused-animation");
-        });
-
-        dancingRowCreator.addEventListener("mouseleave", function () {
-            dancingRowCreator.classList.remove("paused-animation");
-        });
-        let currentDancePatternc = 1;
-        setInterval(() => {
-            currentDancePatternc = (currentDancePatternc % 3) + 1;
-            dancingRowCreator.style.animationName = `dance${currentDancePatternc}`;
-        }, 4000); // Change the pattern every 8 seconds
-
-        dancingRowCreator.addEventListener("click", function () {
-            const link = dancingRowCreator.querySelector("a");
-            if (link) {
-                window.location = link.href;
-            }
-        });
-
-        // Function to show/hide creators and attendees
-        function toggleCreatorsAttendeesDisplay(showCreators) {
-            const creatorsContent = document.getElementById("creators-content");
-            const attendeesContent = document.getElementById("attendees-content");
-
-            if (showCreators) {
-                creatorsContent.style.display = "block";
-                attendeesContent.style.display = "none";
-            } else {
-                creatorsContent.style.display = "none";
-                attendeesContent.style.display = "block";
-            }
-        }
-
-        // Function to clear the description
-        function clearDescription() {
-            const descriptionText = document.getElementById("description-text");
-            descriptionText.textContent = ""; // Clear the description text
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-                // Function to filter the list based on user.stringifypointslevel
-                function filterListByPointsLevel(pointsLevel, listId) {
-                    const tableRows = document.querySelectorAll(`.trrow`);
-
-                    tableRows.forEach(row => {
-                        const userPointsLevel = row.querySelector(".points-level").innerText.toLowerCase();
-                        if (userPointsLevel === pointsLevel.toLowerCase()) {
-                            row.style.display = "table-row";
-                        } else {
-                            row.style.display = "none";
-                        }
-                    });
-
-                    // Set the relevant description unless "All" is clicked
-                    setDescription(getDescription(pointsLevel));
-                }
-
-                // Function to set the description
-                function setDescription(description) {
-                    const descriptionText = document.getElementById("description-text");
-                    descriptionText.textContent = "Description: " + description;
-                }
-
-// Function to get the description based on the points level
-                function getDescription(pointsLevel) {
-                    switch (pointsLevel.toLowerCase()) {
-                        case "master of the universe":
-                            return "You've conquered every corner of the cosmos, earning the ultimate title in our gamified universe.";
-                        case "master of most":
-                            return "You've mastered a multitude of skills and areas, making you a formidable force in the game.";
-                        case "master of one":
-                            return "Focusing your expertise on a particular skill or field has made you a standout player, demonstrating mastery in one key aspect.";
-                        case "learner of many things":
-                            return "You're an avid explorer, always eager to dive into new challenges and discover a wide range of skills.";
-                        case "learner of one":
-                            return "You've embarked on a journey of learning and are already making waves in your chosen discipline.";
-                        case "intergalactic":
-                            return "You've transcended planetary boundaries and become a true cosmic explorer, navigating through galaxies in this epic journey.";
-                        case "the force awakens":
-                            return "Just like the Force itself, your potential is awakening, and you're ready to wield incredible abilities in this ever-expanding universe.";
-                        case "wubba lubba dub dub!":
-                            return "Get ready for some wild and wacky adventures, as you embrace the zany and unpredictable aspects of this level. Anything can happen!";
-                        case "smurfantastic":
-                            return "Step into the whimsical world of Smurfs, where you'll join the ranks of these charming blue creatures on all sorts of delightful quests.";
-                        default:
-                            return "";
-                    }
-                }
-
-                // Event listeners for li elements (tags)
-                const tagElements = document.querySelectorAll("ul li");
-                tagElements.forEach(tagElement => {
-                    tagElement.addEventListener("click", function () {
-                        // Get the text of the clicked tag
-                        const pointsLevel = tagElement.innerText.trim();
-
-                        // Check if the clicked tag is "All"
-                        if (pointsLevel.toLowerCase() === "all") {
-                            resetList(); // Show all users
-                        } else if (tagElement.classList.contains("attendees-tags")) {
-                            filterListByPointsLevel(pointsLevel, "attendees-content");
-                            toggleCreatorsAttendeesDisplay(false); // Show attendees
-                        } else if (tagElement.classList.contains("creators-tags")) {
-                            filterListByPointsLevel(pointsLevel, "creators-content");
-                            toggleCreatorsAttendeesDisplay(true); // Show creators
-                        }
-                    });
-                });
-
-                // Event listener to reset the list when a "Show All" button is clicked
-                document.getElementById("show-all-button").addEventListener("click", resetList);
-
-                const tagToFeature = getTagParameter();
-
-                // Function to decode the URL-encoded tag
-                function decodeTag(tag) {
-                    return decodeURIComponent(tag);
-                }
-
-                // Function to find the matching tag by its ID
-                function findTagByText(tagtext) {
-                    const tagElements = document.querySelectorAll(".main ul li");
-                    for (const tagElement of tagElements) {
-                        if (tagElement.innerText.trim().toLowerCase() === tagtext.trim().toLowerCase()) {
-                            return tagElement;
-                        }
-                    }
-                    return null; // Tag not found
-                }
-
-                if (tagToFeature) {
-                    const decodedTag = decodeTag(tagToFeature).toLowerCase();
-
-                    const tagElement = findTagByText(decodedTag);
-                    if (tagElement) {
-                        tagElement.click();
-                    }
-                }
-            }
-        )
-        ;
-    </script>
+    <p class="text-center" id="leaderboard-status" role="status"></p>
+    <style>@media(prefers-reduced-motion:reduce){.dancing-row,.dancing-rowc{animation:none!important}} .tab-content{overflow-x:auto} .tab-content td{overflow-wrap:anywhere;max-width:40vw}</style>
+    <script src="{{ asset('js/leaderboards.js') }}" defer></script>
 {% endblock %}

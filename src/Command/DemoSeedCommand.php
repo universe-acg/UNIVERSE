@@ -113,6 +113,7 @@ final class DemoSeedCommand extends Command
         return self::SUCCESS;
     }
     private function seedDataset(OutputInterface $output): void {
+        $community=(new \App\Service\CommunityDemoData($this->projectDir))->load();
         $admin=$this->user('demo-admin','Demo','Administrator',['ROLE_ADMINISTRATOR']);
         $this->user('demo-admin-2','Campus','Administrator',['ROLE_ADMINISTRATOR']);
         $first=['Alex','Maria','Nikos','Eleni','Sofia','Andreas','Iris','Dimitris','Anna','Jason','Maya','Omar','Chloe','Sam','Leila','Daniel','Nina','Aris','Zoe','Theo'];
@@ -194,7 +195,7 @@ final class DemoSeedCommand extends Command
         $blogCategory=$this->make(E\BlogPostCategory::class,'blog-category',['name'=>'Campus community','slug'=>'campus-community']);
         for($i=0;$i<100;$i++) $this->make(E\BlogPost::class,'news-'.$i,['name'=>'Campus connections '.$i,'slug'=>'campus-connections-'.$i,'content'=>'<p>Demo campus update: students share ideas, practice teamwork and prepare their next community activity. This story is fictional.</p>','category'=>$blogCategory,'user'=>$orgs[$i%count($orgs)]->getUser(),'hidden'=>false]);
         for($i=0;$i<60;$i++) {
-            $reel=$this->make(E\Reel::class,'reel-'.$i,['title'=>'Demo campus moment '.$i,'content'=>'Fictional snapshot from campus life.','type'=>'image','user'=>$students[$i],'slug'=>'demo-reel-'.$i]);
+            $row=$community['reels'][$i];unset($row['key']);$reel=$this->make(E\Reel::class,'reel-'.$i,$row+['user'=>$students[$i]]);
             $this->make(E\ReelLike::class,'like-'.$i,['reel'=>$reel,'user'=>$students[($i+1)%500]]);
         }
         $helpCatalog=(new \App\Service\HelpCenterCatalog($this->projectDir))->load();
@@ -233,7 +234,13 @@ final class DemoSeedCommand extends Command
             for($j=0;$j<4;$j++) $this->make(E\UniverseMessage::class,'message-'.$i.'-'.$j,['universeChat'=>$chat,'sender'=>$students[$i+($j%2)],'receiver'=>$students[$i+(1-$j%2)],'content'=>['Welcome to our demo project group.','Let’s meet before the campus workshop.','I will prepare the discussion notes.','Thanks, see you at the venue.'][$j],'sentAt'=>(clone $this->reference)->modify('-'.(30-$j).' minutes')]);
         }
         for($i=0;$i<100;$i++) $this->make(E\Notification::class,'notification-'.$i,['name'=>'Demo campus update','userid'=>0,'description'=>'A fictional activity from one of your organizations is open for registration.','read'=>$i%3===0]);
-        for($i=0;$i<4;$i++)$this->make(E\Live::class,'live-'.$i,['title'=>'Demo live-session showcase '.($i+1),'slug'=>'demo-live-'.$i,'hidden'=>false,'description'=>'Provider streaming is not configured. This record demonstrates live-session management.','link'=>'','status'=>false]);
+        foreach($community['lives'] as $i=>$row){$key=$row['key'];$owner=$this->objects['user-'.$row['owner']][0];unset($row['key'],$row['owner']);$this->make(E\Live::class,$key,$row+['owner'=>$owner,'hidden'=>false]);}
+        foreach($community['rooms'] as $row){
+            $members=array_map(fn($name)=>$this->objects['user-'.$name][0],$row['users']);
+            $room=$this->make(E\UniverseChatEntity::class,$row['key'],['title'=>$row['title'],'participants'=>new ArrayCollection($members)]);
+            foreach($members as $i=>$member)$this->make(E\UniverseChatUser::class,$row['key'].'-member-'.$i,['universeChat'=>$room,'user'=>$member]);
+            foreach($row['messages'] as $i=>$text)$this->make(E\UniverseMessage::class,$row['key'].'-message-'.$i,['universeChat'=>$room,'sender'=>$members[$i%count($members)],'receiver'=>$members[($i+1)%count($members)],'content'=>$text,'sentAt'=>(clone $this->reference)->modify('-'.(30-$i*3).' minutes')]);
+        }
         $this->makeDemoDocuments($students,$events,$venues,$facilities);
     }
     private function makeDemoDocuments(array $students,array $events,array $venues,array $facilities): void {
@@ -263,9 +270,11 @@ final class DemoSeedCommand extends Command
         foreach(['events','venues','facilities','listings','reels','lives','blog','categories','layout','organizers','organizers/covers','users/avatars','homepage/hero'] as $folder){$dir=$this->projectDir.'/public/uploads/'.$folder;if(!is_dir($dir))mkdir($dir,0755,true);copy($file,$dir.'/campus-demo.jpg');}
         foreach($this->objects as [$object,$class]) {
             $meta=$this->em->getClassMetadata($class);
+            if($object instanceof E\Reel || $object instanceof E\Live)continue;
             foreach(['imageName','mainImage','coverName','avatarName','customBackgroundName'] as $field)if($meta->hasField($field))$meta->setFieldValue($object,$field,'campus-demo.jpg');
             foreach(['imageSize','coverSize','avatarSize','customBackgroundSize'] as $field)if($meta->hasField($field))$meta->setFieldValue($object,$field,filesize($file));
         }
+        (new \App\Service\CommunityDemoData($this->projectDir))->installAssets();
         $imageData=['imageName'=>'campus-demo.jpg','imageSize'=>filesize($file),'imageMimeType'=>'image/jpeg','imageOriginalName'=>'Illustrative demo campus.jpg','imageDimensions'=>[1200,675],'position'=>0];
         foreach(array_slice($events,0,12) as $i=>$event)$this->make(E\EventImage::class,'event-image-'.$i,$imageData+['event'=>$event]);
         foreach(array_slice($venues,0,12) as $i=>$venue)$this->make(E\VenueImage::class,'venue-image-'.$i,$imageData+['venue'=>$venue]);
@@ -275,7 +284,7 @@ final class DemoSeedCommand extends Command
     private function user(string $username,string $first,string $last,array $roles): E\User {
         $existingUser=$this->em->getRepository(E\User::class)->findOneBy(['username'=>$username]);
         $password=$existingUser && password_verify($this->demoPassword,$existingUser->getPassword())?$existingUser->getPassword():$this->passwordHash;
-        return $this->make(E\User::class,'user-'.$username,['username'=>$username,'usernameCanonical'=>$username,'email'=>$username.'@example.test','emailCanonical'=>$username.'@example.test','password'=>$password,'roles'=>$roles,'enabled'=>true,'firstname'=>$first,'lastname'=>$last,'slug'=>$username,'studentid'=>'DEMO-'.substr(hash('sha256',$username),0,10),'points'=>0]);
+        return $this->make(E\User::class,'user-'.$username,['username'=>$username,'usernameCanonical'=>$username,'email'=>$username.'@example.test','emailCanonical'=>$username.'@example.test','password'=>$password,'roles'=>$roles,'enabled'=>true,'firstname'=>$first,'lastname'=>$last,'slug'=>$username,'studentid'=>'DEMO-'.substr(hash('sha256',$username),0,10),'points'=>\App\Service\CommunityDemoData::points($username)]);
     }
     private function eventSession(E\Event $event,string $key,\DateTime $when,?\DateTime $end=null,bool $documented=false): array {
         $date=$this->make(E\EventDate::class,$key.'-date',['event'=>$event,'reference'=>$key.'-date','title'=>$event->getName(),'description'=>'Demo activity session','startdate'=>$when,'enddate'=>$documented?$end:(clone $when)->modify('+90 minutes'),'active'=>true]);

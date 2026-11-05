@@ -38,16 +38,13 @@ class LiveController extends AbstractController
      *
      */
 #[Route("/live/{slug}", name: "live")]
-    public function liveBySlug(string $slug): Response
+    public function liveBySlug(string $slug, Request $request): Response
     {
         $live = $this->liveService->getLiveBySlug($slug);
-        if (!$live || $live->getHidden()) {
+        if (!$live || $live->getHidden() || $live->getDeletedAt()) {
             throw $this->createNotFoundException('Live session not found.');
         }
-        $streamUrl = $live->getLink();
-        if (!filter_var($streamUrl, FILTER_VALIDATE_URL) || parse_url($streamUrl, PHP_URL_SCHEME) !== 'https') {
-            $streamUrl = null;
-        }
-        return $this->render('Front/Live/live_details.html.twig', ['live' => $live, 'streamUrl' => $streamUrl]);
+        $player = \App\Service\StreamPlayer::resolve($live->getLink(),$request->getHost());
+        return $this->render('Front/Live/live_details.html.twig', ['live'=>$live,'player'=>$player]);
     }
 }
