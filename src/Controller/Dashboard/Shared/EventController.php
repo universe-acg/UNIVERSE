@@ -802,7 +802,7 @@ class EventController extends Controller
                 $message = new PublishEventMessage($event->getId());
                 $message->setScheduledAt($publishDate);
 
-                $this->messageBus->dispatch($message);
+                $this->messageBus->dispatch($message, [new \Symfony\Component\Messenger\Stamp\DelayStamp(max(0, ($publishDate->getTimestamp() - time()) * 1000))]);
             } else {
 
                 $event->setPublished(true);
@@ -952,7 +952,7 @@ class EventController extends Controller
                 $message = new PublishEventMessage($event->getId());
                 $message->setScheduledAt($publishDate);
 
-                $this->messageBus->dispatch($message);
+                $this->messageBus->dispatch($message, [new \Symfony\Component\Messenger\Stamp\DelayStamp(max(0, ($publishDate->getTimestamp() - time()) * 1000))]);
             } else {
 
                 $event->setPublished(true);

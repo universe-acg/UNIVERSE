@@ -23,7 +23,7 @@ sources cannot prove completeness of deleted or undocumented historical content.
 
 Production main administrator/student/organizer smoke checks passed. Full route
 handler audit: 414 routes, zero unresolved handlers. 221 Twig templates lint.
-PHPUnit: four tests, twelve assertions. Schema validation passed. Composer and
+PHPUnit: seven tests, eighteen assertions. Schema validation passed. Composer and
 npm audits report no known vulnerabilities in installed dependencies.
 
 The browser/page crawl found guest profile, category query and invalid reel-link

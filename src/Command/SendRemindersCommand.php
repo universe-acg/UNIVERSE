@@ -12,12 +12,13 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 final class SendRemindersCommand extends Command
 {
     public function __construct(private EntityManagerInterface $em, private DemoMailer $mailer, private UrlGeneratorInterface $router) { parent::__construct(); }
-    protected function configure(): void { $this->addOption('date', null, InputOption::VALUE_REQUIRED, 'Reference date, YYYY-MM-DD')->addOption('dry-run', null, InputOption::VALUE_NONE); }
+    protected function configure(): void { $this->addOption('date', null, InputOption::VALUE_REQUIRED, 'Reference date, YYYY-MM-DD')->addOption('dry-run', null, InputOption::VALUE_NONE)->addOption('scheduled',null,InputOption::VALUE_NONE,'Only run at 08:00 Athens time.'); }
     protected function execute(InputInterface $input, OutputInterface $output): int {
+        if($input->getOption('scheduled') && (int)date('G')!==8)return Command::SUCCESS;
         $date=$input->getOption('date') ?: date('Y-m-d');
         $start=\DateTimeImmutable::createFromFormat('!Y-m-d',$date,new \DateTimeZone('Europe/Athens'));
         if(!$start || $start->format('Y-m-d')!==$date) { $output->writeln('<error>Invalid date.</error>'); return Command::INVALID; }
-        $lock=fopen(sys_get_temp_dir().'/universe-reminders-'.hash('sha256',__DIR__).'.lock','c');
+        $lock=fopen(dirname(__DIR__,2).'/var/private/reminders.lock','c');
         if(!$lock || !flock($lock,LOCK_EX|LOCK_NB)) { $output->writeln('Reminder job already running.');return Command::SUCCESS; }
         try {
             $elements=$this->em->createQueryBuilder()->select('oe,o,u,t,d,e')->from(OrderElement::class,'oe')->join('oe.order','o')->join('o.user','u')->join('oe.eventticket','t')->join('t.eventdate','d')->join('d.event','e')->where('o.status = 1')->andWhere('d.startdate >= :start AND d.startdate < :end')->setParameter('start',$start)->setParameter('end',$start->modify('+1 day'))->getQuery()->getResult();

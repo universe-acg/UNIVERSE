@@ -12,8 +12,11 @@ schema changes. Roll back code to the previous verified commit; restore the
 matching database backup for a migration rollback. Do not run migration down on
 an unreviewed production schema.
 
-Scheduler, Forge user, every day at 08:00 Europe/Athens:
-`cd /home/forge/universe-deree-live-3b97bb.on-forge.com/current && APP_ENV=prod APP_DEBUG=0 php8.2 bin/console app:send-reminders`
+Schedulers run as Forge user from the site's current directory:
+- Every minute, a nonoverlapping `messenger:consume async --time-limit=50` job
+  handles delayed event publication and retries failed messages.
+- Every hour, `app:send-reminders --scheduled` captures reminders only at 08:00
+  Europe/Athens. The command suppresses duplicate reminders across releases.
 
 The chat UI uses authenticated HTTP polling. The optional `websocket:server`
 command runs only on 127.0.0.1:8302 and requires signed, expiring subscriptions.
