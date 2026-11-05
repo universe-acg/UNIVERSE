@@ -28,4 +28,14 @@ final class CommunityTest extends TestCase
         foreach ($data['reels'] as $row) { self::assertFileExists(dirname(__DIR__,2).'/data/demo-media/'.$row['mainImage']); self::assertLessThanOrEqual(1000,mb_strlen($row['content'])); }
         self::assertGreaterThan(0,CommunityDemoData::points('student-001')); self::assertSame(0,CommunityDemoData::points('demo-admin'));
     }
+    public function testParticipationBadgesStayOnTheCurrentSite(): void
+    {
+        foreach (['ROLE_ATTENDEE','ROLE_ORGANIZER'] as $role) {
+            $user=new \App\Entity\User(); $user->setRoles([$role]);
+            $organizer=new \App\Entity\Organizer(); $organizer->setCategory('Club'); $user->setOrganizer($organizer);
+            foreach ([0,1,2,3,4,10,20,30,40,50] as $points) {
+                $user->setPoints($points); self::assertStringStartsWith('/uploads/imgs/',$user->imagiifypointslevel());
+            }
+        }
+    }
 }

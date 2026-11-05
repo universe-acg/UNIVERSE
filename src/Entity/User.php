@@ -1679,54 +1679,54 @@ class User extends BaseUser
                 $points = $this->getPoints();
 
                 if ($points >= 50) {
-                    return 'https://universe.alexandroskourtis.me/uploads/imgs/' . "LEVELS_ATTENDEES-05-05.png";
+                    return '/uploads/imgs/' . "LEVELS_ATTENDEES-05-05.png";
                 }
 
                 if ($points >= 40) {
-                    return 'https://universe.alexandroskourtis.me/uploads/imgs/' . "LEVELS_ATTENDEES-04.png";
+                    return '/uploads/imgs/' . "LEVELS_ATTENDEES-04.png";
                 }
 
                 if ($points >= 30) {
-                    return 'https://universe.alexandroskourtis.me/uploads/imgs/' . "LEVELS_ATTENDEES-03.png";
+                    return '/uploads/imgs/' . "LEVELS_ATTENDEES-03.png";
                 }
 
                 if ($points >= 20) {
-                    return 'https://universe.alexandroskourtis.me/uploads/imgs/' . "LEVELS_ATTENDEES-02.png";
+                    return '/uploads/imgs/' . "LEVELS_ATTENDEES-02.png";
                 }
 
 //                if ($points >= 10) {
-                return 'https://universe.alexandroskourtis.me/uploads/imgs/' . "LEVELS_ATTENDEES-01.png";
+                return '/uploads/imgs/' . "LEVELS_ATTENDEES-01.png";
 //                }
 
-                return 'https://universe.alexandroskourtis.me/uploads/imgs/' . "LEVELS_ATTENDEES-01.png";
+                return '/uploads/imgs/' . "LEVELS_ATTENDEES-01.png";
             } else {
-                return 'https://universe.alexandroskourtis.me/uploads/imgs/' . "LEVELS_ATTENDEES-01.png";
+                return '/uploads/imgs/' . "LEVELS_ATTENDEES-01.png";
             }
         } elseif ($this->getRole() == "Attendee") {
             if ($this->getSpecialuser()) {
-                return 'https://universe.alexandroskourtis.me/uploads/imgs/' . "special.png";
+                return '/uploads/imgs/' . "special.png";
             }
             $points = $this->getPoints();
 
             if ($points >= 1 && $points < 2) {
-                return 'https://universe.alexandroskourtis.me/uploads/imgs/' . "smurf.png";
+                return '/uploads/imgs/' . "smurf.png";
             }
 
             if ($points >= 2 && $points < 3) {
-                return 'https://universe.alexandroskourtis.me/uploads/imgs/' . "ricky.png";
+                return '/uploads/imgs/' . "ricky.png";
             }
 
             if ($points >= 3 && $points < 4) {
-                return 'https://universe.alexandroskourtis.me/uploads/imgs/' . "force.png";
+                return '/uploads/imgs/' . "force.png";
             }
 
             if ($points >= 4) {
-                return 'https://universe.alexandroskourtis.me/uploads/imgs/' . "inter.png";
+                return '/uploads/imgs/' . "inter.png";
             }
 
         }
 
-        return 'https://universe.alexandroskourtis.me/uploads/imgs/' . "smurf.png";
+        return '/uploads/imgs/' . "smurf.png";
     }
 
     /**
