@@ -11,21 +11,20 @@ use App\Form\FileTypeEdit;
 use App\Service\AppServices;
 use App\Service\FileService;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class FilesController extends Controller
 {
 
     private $parameterBag;
 
-    // Inject the ParameterBagInterface service into your controller
     private $uploaderHelper;
 
     public function __construct(ParameterBagInterface $parameterBag)
@@ -34,8 +33,9 @@ class FilesController extends Controller
     }
 
     /**
-     * @Route("/management/files", name="dashboard_organizer_management_files", methods="GET")
+     *
      */
+#[Route("/management/files", name: "management_files", methods: ["GET"])]
     public function index(FileService $fileService, Request $request, PaginatorInterface $paginator, Security $security)
     {
         $files = $fileService->getFilesByUserId($this->getUser()->getId());
@@ -54,24 +54,22 @@ class FilesController extends Controller
     }
 
     /**
-     * @Route("/management/files/download/{fileId}", name="dashboard_organizer_management_files_download_file")
+     *
      */
+#[Route("/management/files/download/{fileId}", name: "management_files_download_file")]
     public function download($fileId)
     {
-        // Retrieve the File entity based on $fileId
+
         $file = $this->getDoctrine()->getRepository(File::class)->find($fileId);
 
-        // Check if the file exists
         if (!$file) {
             throw $this->createNotFoundException('File not found');
         }
-        // Get the absolute file path
+
         $filePath = $this->parameterBag->get('kernel.project_dir') . "/public/uploads/files/" . $file->getFileName();
 
-        // Create a BinaryFileResponse for downloading the file
         $response = new BinaryFileResponse($filePath);
 
-        // Set the file name for the download
         $disposition = $response->headers->makeDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
             $file->getFileName() // Replace with your actual method to get the file name
@@ -88,8 +86,9 @@ class FilesController extends Controller
     }
 
     /**
-     * @Route("/management/files/add", name="dashboard_organizer_management_files_add", methods="POST")
+     *
      */
+#[Route("/management/files/add", name: "management_files_add", methods: ["GET","POST"])]
     public function add(Request $request, AppServices $services)
     {
         $em = $this->getDoctrine()->getManager();
@@ -120,8 +119,9 @@ class FilesController extends Controller
     }
 
     /**
-     * @Route("/management/files/edit/{id}", name="dashboard_organizer_management_files_edit", methods="POST")
+     *
      */
+#[Route("/management/files/edit/{id}", name: "management_files_edit", methods: ["POST"])]
     public function edit(Request $request, $id, FileService $fileService)
     {
         $em = $this->getDoctrine()->getManager();
@@ -129,7 +129,6 @@ class FilesController extends Controller
         $file = $fileService->getFileById($id);
         $filePath = $this->getParameter('kernel.project_dir') . '/public/uploads/files/' . $file->getFileName();
 
-        // Set the fileFile property of the File entity
         $form = $this->createForm(FileTypeEdit::class, $file);
         if (file_exists($filePath)) {
             $fileObject = new \Symfony\Component\HttpFoundation\File\File($filePath);
@@ -160,18 +159,18 @@ class FilesController extends Controller
     }
 
     /**
-     * @Route("/management/files/delete/{id}", name="dashboard_organizer_management_files_delete", methods="POST")
+     *
      */
+#[Route("/management/files/delete/{id}", name: "management_files_delete", methods: ["POST"])]
     public function delete($id, FileService $fileService, Filesystem $filesystem)
     {
         $em = $this->getDoctrine()->getManager();
         $file = $fileService->getFileById($id);
 
         if ($file) {
-            // Get the file path
+
             $filePath = $this->getParameter('kernel.project_dir') . '/public/uploads/files/' . $file->getFileName();
 
-            // Manually remove the file from the file system
             if (file_exists($filePath)) {
                 unlink($filePath);
             }

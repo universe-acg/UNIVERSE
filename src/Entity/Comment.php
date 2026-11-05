@@ -7,49 +7,51 @@ namespace App\Entity;
 
 use App\Repository\VoteRepository;
 use Doctrine\ORM\Mapping as ORM;
-use FOS\CommentBundle\Entity\Comment as BaseComment;
-use FOS\CommentBundle\Model\SignedCommentInterface;
-use FOS\CommentBundle\Model\ThreadInterface as ThreadInterface;
-use FOS\CommentBundle\Model\VotableCommentInterface;
+use App\Model\Comment as BaseComment;
+
+
+
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
- * @ORM\Table(name="universe_comment")
- * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
- */
-class Comment extends BaseComment implements SignedCommentInterface, VotableCommentInterface
+#[ORM\Table(name: 'universe_comment')]
+#[ORM\Entity(repositoryClass: \App\Repository\CommentRepository::class)]
+#[ORM\ChangeTrackingPolicy('DEFERRED_EXPLICIT')]
+class Comment extends BaseComment
 {
 
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     protected $id;
 
     /**
      * Thread of this comment
      *
      * @var Thread
-     * @ORM\ManyToOne(targetEntity="Thread")
      */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\Thread::class)]
     protected $thread;
 
     /**
      * Author of the comment
      *
-     * @ORM\ManyToOne(targetEntity="User")
      * @var User
      */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\User::class)]
     protected $author;
 
     /**
-     * @ORM\Column(type="integer")
      * @var int
      */
+    #[ORM\Column(type: 'integer')]
     protected $score = 0;
+
+    #[ORM\ManyToOne(targetEntity: self::class)]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?self $parent = null;
+    public function getParent(): ?self { return $this->parent; }
+    public function setParent(?self $parent): void { $this->parent = $parent; }
 
     private VoteRepository $voteRepository;
 
@@ -72,11 +74,11 @@ class Comment extends BaseComment implements SignedCommentInterface, VotableComm
     }
 
     /**
-     * @param ThreadInterface $thread
+     * @param Thread $thread
      *
      * @return void
      */
-    public function setThread(ThreadInterface $thread)
+    public function setThread(Thread $thread)
     {
         $this->thread = $thread;
     }

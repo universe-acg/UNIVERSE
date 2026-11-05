@@ -1,89 +1,29 @@
 security:
-  encoders:
-    App\Entity\User: bcrypt
-    Symfony\Component\Security\Core\User\User: bcrypt
-
+  password_hashers:
+    App\Entity\User: { algorithm: auto }
   role_hierarchy:
-    ROLE_ADMIN: ROLE_USER
-    ROLE_SUPER_ADMIN: [ ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH ]
-    ROLE_ADMINISTRATOR: ROLE_SUPER_ADMIN
-
+    ROLE_ADMINISTRATOR: [ROLE_ADMIN, ROLE_USER, ROLE_ALLOWED_TO_SWITCH]
+    ROLE_ORGANIZER: ROLE_USER
+    ROLE_ATTENDEE: ROLE_USER
   providers:
-    chain_provider:
-      chain:
-        providers:
-          [ in_memory, fos_userbundle ]
-    fos_userbundle:
-      id: fos_user.user_provider.username_email
-    in_memory:
-      memory:
-        users:
+    app_users: { id: App\Security\NativeUserProvider }
   firewalls:
-    dev:
-      pattern: ^/(_(profiler|wdt)|css|images|js)/
-      security: false
+    dev: { pattern: '^/(_(profiler|wdt)|assets|media)/', security: false }
     main:
-      provider: chain_provider
-      pattern: ^/
+      lazy: true
+      provider: app_users
+      user_checker: App\Security\UserChecker
       form_login:
         login_path: fos_user_security_login
         check_path: fos_user_security_check
-        #        default_target_path: dashboard_index
-        default_target_path: fos_user_security_login
-        csrf_token_generator: security.csrf.token_manager
-        remember_me: true
-      remember_me:
-        secret: '%kernel.secret%'
-        lifetime: 2592000 # 1 month in seconds
-        path: /
-        domain: ~
-      logout:
-        path: fos_user_security_logout
-      anonymous: true
-      oauth:
-        resource_owners:
-          facebook: "/login/check-facebook"
-          google: "/login/check-google"
-        login_path: fos_user_security_login
-        failure_path: fos_user_security_login
-
-        oauth_user_provider:
-          service: hwi_oauth_user_provider
-      switch_user: true
-      access_denied_handler: App\Security\AccessDeniedHandler
-
+        enable_csrf: true
+        default_target_path: dashboard_index
+      logout: { path: fos_user_security_logout, target: homepage, enable_csrf: true }
+      remember_me: { secret: '%kernel.secret%', lifetime: 2592000 }
+      login_throttling: { max_attempts: 5 }
   access_control:
-    - { path: /signin$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: /signup/attendee, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: /signup/organizer, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: /admin/signup/attendee, role: ROLE_ADMINISTRATOR }
-    - { path: /admin/signup/organizer, role: ROLE_ADMINISTRATOR }
-    - { path: /resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    #        - { path: /dashboard, role: IS_AUTHENTICATED_REMEMBERED }
-    - { path: /dashboard/administrator, role: ROLE_ADMINISTRATOR }
-    #    - { path: /_trans/, role: ROLE_ADMINISTRATOR }
-    #    - { path: /_console, role: ROLE_ADMINISTRATOR }
-    - { path: /dashboard/organizer, role: ROLE_ORGANIZER }
-    - { path: /dashboard/attendee, role: ROLE_ATTENDEE }
-    - { path: ^/$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/attendee-profile/, roles: ROLE_USER }
-    - { path: ^/page/legal-notice, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/page/about-us, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/page/community-guidelines, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/page/community-guidelines, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/page/contact, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/contact, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/help-center, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/open-events, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/page/help-center/organizer, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/help-center/attendee, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/page/cookie-policy, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/page/privacy-policy, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: '^/open-event/', role: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: '/leaderboards/',roles: [ ROLE_ATTENDEE, ROLE_ORGANIZER, ROLE_ADMINISTRATOR ] }
-    - { path: '^/check-upload-progress/[a-zA-Z0-9_-]+$', roles: [ ROLE_ATTENDEE, ROLE_ORGANIZER, ROLE_ADMINISTRATOR ] }
-    - { path: '/volunteer/',roles: [ ROLE_ATTENDEE, ROLE_ORGANIZER, ROLE_ADMINISTRATOR ] }
-    - { path: '/notifications/', roles: [ ROLE_ATTENDEE, ROLE_ORGANIZER, ROLE_ADMINISTRATOR ] }
-    - { path: '/chat/', role: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: '/twillio/', role: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: '^/.*', roles: [ ROLE_ATTENDEE, ROLE_ORGANIZER, ROLE_ADMINISTRATOR ] }
+    - { path: '^/(signin|login|signup|resetting|assets|media|health)', roles: PUBLIC_ACCESS }
+    - { path: '^/dashboard/administrator', roles: ROLE_ADMINISTRATOR }
+    - { path: '^/(administrator|manage-)', roles: ROLE_ADMINISTRATOR }
+    - { path: '^/dashboard/organizer', roles: ROLE_ORGANIZER }
+    - { path: '^/(dashboard|notifications|chat|download|api)', roles: ROLE_USER }

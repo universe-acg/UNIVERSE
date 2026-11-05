@@ -2,9 +2,9 @@
     /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-    
+
     namespace App\Form;
-    
+
     use App\Entity\Category;
     use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -13,12 +13,12 @@
     use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\OptionsResolver\OptionsResolver;
     use Vich\UploaderBundle\Form\Type\VichImageType;
-    
+
     class CategoryType extends AbstractType
     {
-        
-        public function buildForm(FormBuilderInterface $builder, array $options)
-        {
+
+        public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
             $builder
                 ->add('name', TextType::class, [
                     'required' => false,
@@ -66,12 +66,12 @@
                     'attr' => ['class' => 'btn btn-primary'],
                 ]);
         }
-        
-        public function configureOptions(OptionsResolver $resolver)
-        {
+
+        public function configureOptions(OptionsResolver $resolver): void
+    {
             $resolver->setDefaults([
                 'data_class' => Category::class,
             ]);
         }
-        
+
     }

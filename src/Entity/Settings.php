@@ -7,32 +7,26 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\SettingsRepository")
- * @ORM\Table(name="universe_settings")
- */
+#[ORM\Table(name: 'universe_settings')]
+#[ORM\Entity(repositoryClass: \App\Repository\SettingsRepository::class)]
 class Settings
 {
 
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(type="string", length=255)
      */
+    #[ORM\Column(name: '`key`', type: 'string', length: 255)]
     private $key;
 
     /**
      * @var string
-     *
-     * @ORM\Column(type="string", length=255, nullable=true)
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $value;
 
     public function getId()

@@ -8,17 +8,18 @@ namespace App\Controller\Dashboard\Attendee;
 use App\Service\AppServices;
 use App\Service\UserService;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class FollowingController extends Controller
 {
 
     /**
-     * @Route("/following", name="dashboard_attendee_following")
+     *
      */
+#[Route("/following", name: "following", methods: ["GET"])]
     public function index(Request $request, PaginatorInterface $paginator, AppServices $services)
     {
         $users = $paginator->paginate($services->getUsers(array("followedby" => $this->getUser()))->getQuery(), $request->query->getInt('page', 1), 12, array('wrap-queries' => true));
@@ -28,9 +29,11 @@ class FollowingController extends Controller
     }
 
     /**
-     * @Route("/dashboard/attendee/following/add/{id}", name="app_dashboard_attendee_following_add", condition="request.isXmlHttpRequest()")
-     * @Route("/dashboard/attendee/following/remove/{id}", name="app_dashboard_attendee_following_remove", condition="request.isXmlHttpRequest()")
+     *
+     *
      */
+#[Route("/following/add/{id}", name: "app_dashboard_attendee_following_add", condition: "request.isXmlHttpRequest()", methods: ["POST"])]
+#[Route("/following/remove/{id}", name: "app_dashboard_attendee_following_remove", condition: "request.isXmlHttpRequest()", methods: ["POST"])]
     public function addRemove($id, AppServices $services, UserService $userService)
     {
         $user = $userService->getUserById($id);
@@ -50,7 +53,6 @@ class FollowingController extends Controller
         $em->persist($user);
         $em->flush();
 
-        // Define the response data based on the outcome of the operation
         $responseData = [];
 
         if ($user->isFollowedBy($this->getUser())) {
@@ -59,15 +61,16 @@ class FollowingController extends Controller
             $responseData['success'] = 'You have unfollowed this organizer';
         }
 
-        // Return a JsonResponse with the $responseData
         return new JsonResponse($responseData);
     }
 
     /**
      *
-     * @Route("/dashboard/attendee/following/attendee/add/{id}", name="app_dashboard_attendee_following_add_attendee", condition="request.isXmlHttpRequest()")
-     * @Route("/dashboard/attendee/following/attendee/remove/{id}", name="app_dashboard_attendee_following_remove_attendee", condition="request.isXmlHttpRequest()")
+     *
+     *
      */
+#[Route("/following/attendee/add/{id}", name: "app_dashboard_attendee_following_add_attendee", condition: "request.isXmlHttpRequest()", methods: ["POST"])]
+#[Route("/following/attendee/remove/{id}", name: "app_dashboard_attendee_following_remove_attendee", condition: "request.isXmlHttpRequest()", methods: ["POST"])]
     public function addRemoveAttendee($id, AppServices $services, UserService $userService)
     {
         $user = $userService->getUserById($id);
@@ -87,7 +90,6 @@ class FollowingController extends Controller
         $em->persist($user);
         $em->flush();
 
-        // Define the response data based on the outcome of the operation
         $responseData = [];
 
         if ($user->isFollowedBy($this->getUser())) {
@@ -96,7 +98,6 @@ class FollowingController extends Controller
             $responseData['success'] = 'You have unfollowed this user';
         }
 
-        // Return a JsonResponse with the $responseData
         return new JsonResponse($responseData);
     }
 }

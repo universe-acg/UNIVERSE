@@ -13,10 +13,10 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use PDOException;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class UserController extends Controller
 {
@@ -28,8 +28,9 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/administrator/edit/user/{id}", name="user", methods="GET")
+     *
      */
+#[Route("/administrator/edit/user/{id}", name: "user", methods: ["GET"])]
     public function edituser(Request $request, $id, UserRepository $userRepository)
     {
         $user = $userRepository->find($id);
@@ -57,7 +58,7 @@ class UserController extends Controller
                 }
             } catch (PDOException $e) {
                 if ($e->getCode() === '23000') {
-                    // Check if it's a duplicate email entry
+
                     if (strpos($e->getMessage(), 'UNIQ_D01C6A22A0D96FBF') !== false) {
                         $this->addFlash('error', 'Duplicate email address. Please use a different email.');
                     } elseif (strpos($e->getMessage(), 'UNIQ_SOME_OTHER_CONSTRAINT') !== false) {
@@ -101,7 +102,7 @@ class UserController extends Controller
             }
         } catch (PDOException $e) {
             if ($e->getCode() === '23000') {
-                // Check if it's a duplicate email entry
+
                 if (strpos($e->getMessage(), 'UNIQ_D01C6A22A0D96FBF') !== false) {
                     $this->addFlash('error', 'Duplicate email address. Please use a different email.');
                 } elseif (strpos($e->getMessage(), 'UNIQ_SOME_OTHER_CONSTRAINT') !== false) {
@@ -122,8 +123,9 @@ class UserController extends Controller
 
 
     /**
-     * @Route("/manage-users", name="user", methods="GET")
+     *
      */
+#[Route("/manage-users", name: "user", methods: ["GET"])]
     public function index(Request $request, PaginatorInterface $paginator, AppServices $services)
     {
 
@@ -143,9 +145,11 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/manage-users/{slug}/delete-permanently", name="user_delete_permanently", methods="GET")
-     * @Route("/manage-users/{slug}/delete", name="user_delete", methods="GET")
+     *
+     *
      */
+#[Route("/manage-users/{slug}/delete-permanently", name: "user_delete_permanently", methods: ["POST"])]
+#[Route("/manage-users/{slug}/delete", name: "user_delete", methods: ["POST"])]
     public function delete(AppServices $services, $slug)
     {
         $user = $services->getUsers(array('slug' => $slug, 'enabled' => 'all'))->getQuery()->getOneOrNullResult();
@@ -157,11 +161,9 @@ class UserController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-// Check if the user has an associated organizer
         if ($user->getOrganizer()) {
             $organizer = $user->getOrganizer();
 
-            // Remove the association from both sides
             $organizer->setUser(null);
             $user->setOrganizer(null);
             $em->remove();
@@ -175,15 +177,15 @@ class UserController extends Controller
             $this->addFlash('notice', 'The user has been deleted');
         }
 
-// Remove the user entity itself
         $em->flush();
 
         return $services->redirectToReferer('user');
     }
 
     /**
-     * @Route("/manage-users/{slug}/restore", name="user_restore", methods="GET")
+     *
      */
+#[Route("/manage-users/{slug}/restore", name: "user_restore", methods: ["POST"])]
     public function restore($slug, AppServices $services)
     {
 
@@ -203,9 +205,11 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/manage-users/{slug}/enable", name="user_enable", methods="GET")
-     * @Route("/manage-users/{slug}/disable", name="user_disable", methods="GET")
+     *
+     *
      */
+#[Route("/manage-users/{slug}/enable", name: "user_enable", methods: ["GET"])]
+#[Route("/manage-users/{slug}/disable", name: "user_disable", methods: ["GET"])]
     public function enabledisable(AppServices $services, $slug)
     {
 
@@ -228,8 +232,9 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/administrator/manage-users/{slug}/more-information", name="user_information", methods="GET")
+     *
      */
+#[Route("/administrator/manage-users/{slug}/more-information", name: "user_information", methods: ["GET"])]
     public function details(AppServices $services, $slug)
     {
 

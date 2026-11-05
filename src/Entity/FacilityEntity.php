@@ -2,9 +2,9 @@
     /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-    
+
     namespace App\Entity;
-    
+
     use App\Validator\Constraints\EnglishOnly;
     use App\Validator\Constraints\Profanity;
     use Doctrine\Common\Collections\ArrayCollection;
@@ -13,161 +13,107 @@
     use Symfony\Component\HttpFoundation\File\File;
     use Symfony\Component\Validator\Constraints as Assert;
     use Vich\UploaderBundle\Mapping\Annotation as Vich;
-    
-    /**
-     * @ORM\Entity(repositoryClass="App\Repository\FacilityRepository")
-     * @ORM\Table(name="universe_facility")
-     * @Assert\Callback({"App\Validation\Validator", "validate"})
-     * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
-     * @Vich\Uploadable
-     */
+
+    #[ORM\Table(name: 'universe_facility')]
+    #[ORM\Entity(repositoryClass: \App\Repository\FacilityRepository::class)]
+    #[Assert\Callback(['App\Validation\Validator', 'validate'])]
+    #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
+    #[Vich\Uploadable]
     class FacilityEntity
     {
-        /**
-         * @ORM\Column(type="boolean")
-         */
+        #[ORM\Column(type: 'boolean')]
         private $hidden = false;
-        
-        /**
-         * @ORM\OneToMany(targetEntity="MonthlySchedule", mappedBy="facility", cascade={"persist", "remove"}, orphanRemoval=true, fetch = "EAGER")
-         */
+
+        #[ORM\OneToMany(targetEntity: \App\Entity\MonthlySchedule::class, mappedBy: 'facility', cascade: ['persist', 'remove'], orphanRemoval: true, fetch: 'LAZY')]
         private $monthlySchedule;
-        
-        /**
-         * @Gedmo\Timestampable(on="create")
-         * @ORM\Column(type="datetime")
-         */
+
+        #[Gedmo\Timestampable(on: 'create')]
+        #[ORM\Column(type: 'datetime')]
         private $createdAt;
-        
+
         /**
          * NOTE: This is not a mapped field of entity metadata, just a simple property.
          *
-         * @Vich\UploadableField(mapping="facility_main_image", fileNameProperty="mainImage", size="imageSize", mimeType="imageMimeType", originalName="imageOriginalName", dimensions="imageDimensions")
-         * @Assert\File(
-         *     maxSize = "32M",
-         *     mimeTypes = {"image/jpeg", "image/jpg", "image/gif", "image/png"},
-         *     mimeTypesMessage = "The file should be an image"
-         *     )
          * @var File
          */
+        #[Assert\File(maxSize: '32M', mimeTypes: ['image/jpeg', 'image/jpg', 'image/gif', 'image/png'], mimeTypesMessage: 'The file should be an image')]
+        #[Vich\UploadableField(mapping: 'facility_main_image', fileNameProperty: 'mainImage', size: 'imageSize', mimeType: 'imageMimeType', originalName: 'imageOriginalName', dimensions: 'imageDimensions')]
         private $mainImageFile;
-        
-        /**
-         * @ORM\Column(type="string", length=255, nullable=true)
-         */
+
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
         private $mainImage;
-        
-        /**
-         * @ORM\Id
-         * @ORM\GeneratedValue
-         * @ORM\Column(type="integer")
-         */
+
+        #[ORM\Id]
+        #[ORM\GeneratedValue]
+        #[ORM\Column(type: 'integer')]
         private $id;
-        
-        /**
-         * @ORM\Column(type="integer")
-         */
+
+        #[ORM\Column(type: 'integer')]
         private $duration;
-        
-        /**
-         * @ORM\Column(type="string", length=255)
-         */
+
+        #[ORM\Column(type: 'string', length: 255)]
         private $name;
-        
-        /**
-         * @ORM\Column(type="text", nullable=true)
-         */
+
+        #[ORM\Column(type: 'text', nullable: true)]
         private $description;
-        
-        /**
-         * @ORM\Column(type="integer")
-         */
+
+        #[ORM\Column(type: 'integer')]
         private $minPlayers;
-        
-        /**
-         * @ORM\Column(type="integer")
-         */
+
+        #[ORM\Column(type: 'integer')]
         private $maxPlayers;
         /**
-         * @ORM\Column(type="string", length=255, nullable=true)
          * @EnglishOnly
          * @Profanity
          */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
         private $reference;
-        /**
-         * @ORM\Column(type="integer", nullable=true)
-         */
+        #[ORM\Column(type: 'integer', nullable: true)]
         private $views;
         /**
-         * @ORM\Column(type="string", length=255, nullable=true)
          * @EnglishOnly
          * @Profanity
          */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
         private $externallink;
-        /**
-         * @ORM\Column(type="string", length=255, nullable=true)
-         */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
         private $phonenumber;
-        /**
-         * @ORM\Column(type="string", length=255, nullable=true)
-         * @Assert\Email
-         */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
+        #[Assert\Email]
         private $email;
-        /**
-         * @ORM\Column(type="string", length=255, nullable=true)
-         */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
         private $tags;
-        /**
-         * @ORM\Column(type="string", length=255, nullable=true)
-         */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
         private $imageName;
-        /**
-         * @ORM\Column(type="integer", nullable=true)
-         */
+        #[ORM\Column(type: 'integer', nullable: true)]
         private $imageSize;
-        /**
-         * @ORM\Column(type="string", length=255, nullable=true)
-         */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
         private $imageMimeType;
-        /**
-         * @ORM\Column(type="string", length=255, nullable=true)
-         */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
         private $imageOriginalName;
-        /**
-         * @ORM\Column(type="simple_array", nullable=true)
-         */
+        #[ORM\Column(type: 'simple_array', nullable: true)]
         private $imageDimensions;
-        /**
-         * @Gedmo\Timestampable(on="create")
-         * @ORM\Column(type="datetime")
-         */
+        #[Gedmo\Timestampable(on: 'create')]
+        #[ORM\Column(type: 'datetime')]
         private $updatedAt;
-        /**
-         * @ORM\Column(type="datetime", nullable=true)
-         */
+        #[ORM\Column(type: 'datetime', nullable: true)]
         private $deleted_at;
-        /**
-         * @ORM\Column(type="boolean")
-         */
+        #[ORM\Column(type: 'boolean')]
         private $published;
-        /**
-         * @ORM\Column(type="string", length=255, nullable=true)
-         * @Gedmo\Slug(fields={"name"}, updatable=true)
-         */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
+        #[Gedmo\Slug(fields: ['name'], updatable: true)]
         private $slug;
-        /**
-         * @ORM\OneToMany(targetEntity="FacilityEntityImage", mappedBy="facility", cascade={"persist"})
-         */
+        #[ORM\OneToMany(targetEntity: \App\Entity\FacilityEntityImage::class, mappedBy: 'facility', cascade: ['persist'])]
         private $secondaryImages;
-        
-        
+
+
         public function __construct()
         {
             $this->secondaryImages = new ArrayCollection();
             $this->monthlySchedule = new ArrayCollection();
         }
-        
-        
+
+
         /**
          * Add a monthly schedule to the collection.
          *
@@ -177,11 +123,11 @@
         {
             // Set the association
             $monthlySchedule->setFacility($this);
-            
+
             // Add the monthly schedule to the collection
             $this->monthlySchedule->add($monthlySchedule);
         }
-        
+
         /**
          * Remove a monthly schedule from the collection.
          *
@@ -192,7 +138,7 @@
             // Remove the monthly schedule from the collection
             $this->monthlySchedule->removeElement($monthlySchedule);
         }
-        
+
         /**
          * @return mixed
          */
@@ -200,7 +146,7 @@
         {
             return $this->monthlySchedule;
         }
-        
+
         /**
          * @param mixed $monthlySchedule
          */
@@ -208,7 +154,7 @@
         {
             $this->monthlySchedule = $monthlySchedule;
         }
-        
+
         /**
          * @return mixed
          */
@@ -216,7 +162,7 @@
         {
             return $this->createdAt;
         }
-        
+
         /**
          * @param mixed $createdAt
          */
@@ -224,7 +170,7 @@
         {
             $this->createdAt = $createdAt;
         }
-        
+
         /**
          * @return mixed
          */
@@ -232,7 +178,7 @@
         {
             return $this->updatedAt;
         }
-        
+
         /**
          * @param mixed $updatedAt
          */
@@ -240,7 +186,7 @@
         {
             $this->updatedAt = $updatedAt;
         }
-        
+
         /**
          * @return bool
          */
@@ -248,7 +194,7 @@
         {
             return $this->hidden == true;
         }
-        
+
         /**
          * @param bool $hidden
          */
@@ -256,7 +202,7 @@
         {
             $this->hidden = $hidden;
         }
-        
+
         /**
          * @return mixed
          */
@@ -264,7 +210,7 @@
         {
             return $this->mainImageFile;
         }
-        
+
         /**
          * @param File $mainImageFile
          */
@@ -272,7 +218,7 @@
         {
             $this->mainImageFile = $mainImageFile;
         }
-        
+
         /**
          * @return mixed
          */
@@ -280,7 +226,7 @@
         {
             return $this->mainImage;
         }
-        
+
         /**
          * @param mixed $mainImage
          */
@@ -288,7 +234,7 @@
         {
             $this->mainImage = $mainImage;
         }
-        
+
         public function getImagePlaceholder($size = "default")
         {
 //        if ($size == "small") {
@@ -297,17 +243,17 @@
 //        return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABgAAAAYACAMAAACHMHNZAAABVlBMVEUAAADd3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d18zGJfAAAAcXRSTlMAAQIDBAUHCAkLDA0PEBESExQWFxocHiAjJCUmKywtLzA0NTY3ODk6Pj9AQUJHSU1OT1BYWV9jZGZoaWtsbW90dXd7fH5/goOFjpSXmJqeoKOlpqq1t7nBw8XKzs/T1dfZ3N7g4uTm6+3v8fP19/n7/XM0K4AAABCKSURBVHja7d1bbxR1HMfhBSe1EKkYUEAjkaioCWjwUmO4IF544ZXR97GvZN+FhlTlwqChRoyHiASCLaek0FLLSqEFSkuB3e62XTmESqHF0m6Znfk9zz1Rvo799N/OzBYKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAECrWxV9gKJrAFJTMkGqVpsAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQCg2RITLE/JBARWNIETAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAA9KTACkpZjyP7/kBACAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACACAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACACAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAEBzJSZIV9EEpKhkAicAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAAmikxQbpKJgCcAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABABAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQAQAAAEAAABAEAAABAAAPIiMUG6iiZYlpL9U90PJwAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAADmSExAZCUT4AQAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgBA8yQmILJi8L9/ySXgBACAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACACAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACACAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAEAzJSYgspIJcAIAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEA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";
             return 'https://universe.alexandroskourtis.me/uploads/imgs/default.jpg';
         }
-        
+
         public function getImagePath()
         {
             return 'uploads/facilities/' . $this->mainImage;
         }
-        
+
         public function getReservationsCount()
         {
             return 0;
         }
-        
+
         /**
          * @return mixed
          */
@@ -315,7 +261,7 @@
         {
             return $this->id;
         }
-        
+
         /**
          * @param mixed $id
          */
@@ -323,7 +269,7 @@
         {
             $this->id = $id;
         }
-        
+
         /**
          * @return mixed
          */
@@ -331,7 +277,7 @@
         {
             return $this->duration;
         }
-        
+
         /**
          * @param mixed $duration
          */
@@ -339,7 +285,7 @@
         {
             $this->duration = $duration;
         }
-        
+
         /**
          * @return mixed
          */
@@ -347,7 +293,7 @@
         {
             return $this->name;
         }
-        
+
         /**
          * @param mixed $name
          */
@@ -355,7 +301,7 @@
         {
             $this->name = $name;
         }
-        
+
         /**
          * @return mixed
          */
@@ -363,7 +309,7 @@
         {
             return $this->description;
         }
-        
+
         /**
          * @param mixed $description
          */
@@ -371,7 +317,7 @@
         {
             $this->description = $description;
         }
-        
+
         /**
          * @return mixed
          */
@@ -379,7 +325,7 @@
         {
             return $this->minPlayers;
         }
-        
+
         /**
          * @param mixed $minPlayers
          */
@@ -387,7 +333,7 @@
         {
             $this->minPlayers = $minPlayers;
         }
-        
+
         /**
          * @return mixed
          */
@@ -395,7 +341,7 @@
         {
             return $this->maxPlayers;
         }
-        
+
         /**
          * @param mixed $maxPlayers
          */
@@ -403,7 +349,7 @@
         {
             $this->maxPlayers = $maxPlayers;
         }
-        
+
         /**
          * @return mixed
          */
@@ -411,7 +357,7 @@
         {
             return $this->reference;
         }
-        
+
         /**
          * @param mixed $reference
          */
@@ -419,7 +365,7 @@
         {
             $this->reference = $reference;
         }
-        
+
         /**
          * @return mixed
          */
@@ -427,7 +373,7 @@
         {
             return $this->views;
         }
-        
+
         /**
          * @param mixed $views
          */
@@ -435,7 +381,7 @@
         {
             $this->views = $views;
         }
-        
+
         /**
          * @return mixed
          */
@@ -443,7 +389,7 @@
         {
             return $this->externallink;
         }
-        
+
         /**
          * @param mixed $externallink
          */
@@ -451,7 +397,7 @@
         {
             $this->externallink = $externallink;
         }
-        
+
         /**
          * @return mixed
          */
@@ -459,7 +405,7 @@
         {
             return $this->phonenumber;
         }
-        
+
         /**
          * @param mixed $phonenumber
          */
@@ -467,7 +413,7 @@
         {
             $this->phonenumber = $phonenumber;
         }
-        
+
         /**
          * @return mixed
          */
@@ -475,7 +421,7 @@
         {
             return $this->email;
         }
-        
+
         /**
          * @param mixed $email
          */
@@ -483,7 +429,7 @@
         {
             $this->email = $email;
         }
-        
+
         /**
          * @return mixed
          */
@@ -491,7 +437,7 @@
         {
             return $this->tags;
         }
-        
+
         /**
          * @param mixed $tags
          */
@@ -499,7 +445,7 @@
         {
             $this->tags = $tags;
         }
-        
+
         /**
          * @return mixed
          */
@@ -507,7 +453,7 @@
         {
             return $this->imageName;
         }
-        
+
         /**
          * @param mixed $imageName
          */
@@ -515,7 +461,7 @@
         {
             $this->imageName = $imageName;
         }
-        
+
         /**
          * @return mixed
          */
@@ -523,7 +469,7 @@
         {
             return $this->imageSize;
         }
-        
+
         /**
          * @param mixed $imageSize
          */
@@ -531,7 +477,7 @@
         {
             $this->imageSize = $imageSize;
         }
-        
+
         /**
          * @return mixed
          */
@@ -539,7 +485,7 @@
         {
             return $this->imageMimeType;
         }
-        
+
         /**
          * @param mixed $imageMimeType
          */
@@ -547,7 +493,7 @@
         {
             $this->imageMimeType = $imageMimeType;
         }
-        
+
         /**
          * @return mixed
          */
@@ -555,7 +501,7 @@
         {
             return $this->imageOriginalName;
         }
-        
+
         /**
          * @param mixed $imageOriginalName
          */
@@ -563,7 +509,7 @@
         {
             $this->imageOriginalName = $imageOriginalName;
         }
-        
+
         /**
          * @return mixed
          */
@@ -571,7 +517,7 @@
         {
             return $this->imageDimensions;
         }
-        
+
         /**
          * @param mixed $imageDimensions
          */
@@ -579,7 +525,7 @@
         {
             $this->imageDimensions = $imageDimensions;
         }
-        
+
         /**
          * @return mixed
          */
@@ -587,7 +533,7 @@
         {
             return $this->deleted_at;
         }
-        
+
         /**
          * @param mixed $deleted_at
          */
@@ -595,7 +541,7 @@
         {
             $this->deleted_at = $deleted_at;
         }
-        
+
         /**
          * @return mixed
          */
@@ -603,7 +549,7 @@
         {
             return $this->published;
         }
-        
+
         /**
          * @param mixed $published
          */
@@ -611,7 +557,7 @@
         {
             $this->published = $published;
         }
-        
+
         /**
          * @return mixed
          */
@@ -619,7 +565,7 @@
         {
             return $this->slug;
         }
-        
+
         /**
          * @param mixed $slug
          */
@@ -627,7 +573,7 @@
         {
             $this->slug = $slug;
         }
-        
+
         /**
          * @return ArrayCollection
          */
@@ -635,13 +581,13 @@
         {
             return $this->secondaryImages;
         }
-        
+
         public function addSecondaryImage(FacilityEntityImage $image)
         {
             $image->setFacility($this);
             $this->secondaryImages->add($image);
         }
-        
+
         public function removeSecondaryImage(FacilityEntityImage $image)
         {
             $this->secondaryImages->removeElement($image);

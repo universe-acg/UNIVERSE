@@ -7,15 +7,15 @@ namespace App\Controller\Front;
 
 use App\Service\AppServices;
 use App\Service\NotificationService;
-use Swift_Mailer;
-use Swift_Message;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\DemoMailer as Swift_Mailer;
+use App\Service\MailMessage as Swift_Message;
+use App\Controller\BaseController as AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class PageController extends AbstractController
 {
@@ -28,8 +28,9 @@ class PageController extends AbstractController
     }
 
     /**
-     * @Route("/page/{slug}", name="page")
+     *
      */
+#[Route("/page/{slug}", name: "page")]
     public function page($slug, AppServices $services): Response
     {
         $page = $services->getPages(array('slug' => $slug))->getQuery()->getOneOrNullResult();
@@ -45,8 +46,9 @@ class PageController extends AbstractController
     }
 
     /**
-     * @Route("/contact", name="contact")
+     *
      */
+#[Route("/contact", name: "contact")]
     public function contact(Request $request, Swift_Mailer $mailer, AppServices $services): Response
     {
 
@@ -61,22 +63,22 @@ class PageController extends AbstractController
                 'required' => true,
                 'label' => 'Email',
                 'constraints' => array(
-                    // new NotBlank(),
-//                        new Assert\Email([
-//                            'checkMX' => true,
-//                        ])
+
+
+
+
                 ),
             ])
             ->add('subject', TextType::class, [
                 'required' => true,
                 'label' => 'Subject',
                 'constraints' => array(
-                    // new NotBlank(),
-//                        new Length([
-//                            'min' => 2,
-//                            'max' => 20,
-//                            'allowEmptyString' => false,
-//                        ])
+
+
+
+
+
+
                 ),
             ])
             ->add('message', TextareaType::class, [
@@ -84,12 +86,12 @@ class PageController extends AbstractController
                 'label' => 'Message',
                 'attr' => ['rows' => '10'],
                 'constraints' => array(
-                    // new NotBlank(),
-//                        new Length([
-//                            'min' => 10,
-//                            'max' => 500,
-//                            'allowEmptyString' => false,
-//                        ])
+
+
+
+
+
+
                 ),
             ])
             ->add('save', SubmitType::class, [
@@ -126,8 +128,9 @@ class PageController extends AbstractController
     }
 
     /**
-     * @Route("/access-denied", name="access_denied")
+     *
      */
+#[Route("/access-denied", name: "access_denied")]
     public function accessDenied(): Response
     {
         return $this->render('Front/Page/access-denied.html.twig');

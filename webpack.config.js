@@ -2,7 +2,8 @@
  * AUTHOR: ALEXANDROS KOURTIS
  */
 
-var Encore = require('@symfony/webpack-encore');
+const EncoreModule = require('@symfony/webpack-encore');
+const Encore = EncoreModule.default || EncoreModule;
 
 Encore
     // directory where compiled assets will be stored
@@ -26,7 +27,7 @@ Encore
     .addEntry('events', './assets/js/events.js')
     .addEntry('event', './assets/js/event.js')
     .addEntry('organizerprofile', './assets/js/organizerprofile.js')
-    .addEntry('installer', './assets/js/installer.js')
+
 
     // each filename will now include a hash that changes whenever the contents of that file change
     .enableVersioning()
@@ -50,17 +51,13 @@ Encore
     .enableSingleRuntimeChunk()
 
     .cleanupOutputBeforeBuild()
-    .enableBuildNotifications()
+
     .enableSourceMaps(!Encore.isProduction())
     // enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
 
     // enables @babel/preset-env polyfills
-    .configureBabel(() => {
-    }, {
-        useBuiltIns: 'usage',
-        corejs: 3
-    })
+
 
     // enables Sass/SCSS support
     .enableSassLoader()
@@ -76,10 +73,4 @@ Encore
     })
 ;
 
-const path = require('path');
-
-const config = Encore.getWebpackConfig();
-
-config.resolve.alias.jQuery = path.resolve(__dirname, "node_modules/jquery")
-
-module.exports = config;
+module.exports = Encore.getWebpackConfig();

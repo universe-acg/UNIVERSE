@@ -1,1060 +1,864 @@
-# Installer routes
-
 homepage:
   path: /
   controller: 'App\Controller\Front\MainController::homepage'
-
 access-denied:
   path: /access-denied
-  controller: 'App\Controller\Front\ErrorsController::homepage'
-
+  controller: 'App\Controller\Front\ErrorsController::accessDenied'
 error400:
   path: /error400
   controller: 'App\Controller\Front\ErrorsController::error400'
-
 error403:
   path: /error403
   controller: 'App\Controller\Front\ErrorsController::error403'
-
 error404:
   path: /error404
   controller: 'App\Controller\Front\ErrorsController::error404'
-
 error405:
   path: /error405
   controller: 'App\Controller\Front\ErrorsController::error405'
-
 error500:
   path: /error500
   controller: 'App\Controller\Front\ErrorsController::error500'
-
-app_installer:
-  resource: '../src/Controller/Installer'
-  prefix: /install
-  name_prefix: 'installer_'
-  trailing_slash_on_root: false
-
 mark_all_notifications_as_read:
   path: /notifications/mark/all_as_read
-  controller: App\Controller\NotificationController::markAllNotificationsAsRead
-  methods: [ 'GET' ]
-
-# Route to see details of a specific volunteer event
+  controller: 'App\Controller\NotificationController::markAllNotificationsAsRead'
+  methods:
+    - POST
 volunteer_event_see_details:
-  path: /volunteer-events/{id}/details
+  path: '/volunteer-events/{id}/details'
   controller: 'App\Controller\VolunteerEventController::seeDetails'
-  methods: [ 'GET' ]
-
-# Route to see all volunteer events for a user
+  methods:
+    - GET
 volunteer_event_see_all_for_user:
-  path: /volunteer-events/user/{userid}/{eventid}
+  path: '/volunteer-events/user/{userid}/{eventid}'
   controller: 'App\Controller\VolunteerEventController::seeAllForUser'
-  methods: [ 'GET' ]
-
-# Route to see all volunteer events
+  methods:
+    - GET
 volunteer_event_see_all:
   path: /volunteer-events/all
   controller: 'App\Controller\VolunteerEventController::seeAll'
-  methods: [ 'GET' ]
-
-# Route to make a request for volunteering in an event
+  methods:
+    - GET
 volunteer_event_make_request:
-  path: /volunteer-events/{id}/request
+  path: '/volunteer-events/{id}/request'
   controller: 'App\Controller\VolunteerEventController::makeRequest'
-  methods: [ 'POST' ]
-
+  methods:
+    - POST
 notification_list:
   path: /notifications
-  controller: App\Controller\Dashboard\Shared\NotificationController::listNotifications
-  methods: [ 'GET' ]
+  controller: 'App\Controller\Dashboard\Shared\NotificationController::listNotifications'
+  methods:
+    - GET
   requirements:
     _method: GET
-
 notification_show:
-  path: /notifications/{id}
-  controller: App\Controller\Dashboard\Shared\NotificationController::showNotification
-  methods: [ 'GET' ]
+  path: '/notifications/{id}'
+  controller: 'App\Controller\Dashboard\Shared\NotificationController::showNotification'
+  methods:
+    - GET
   requirements:
     _method: GET
     id: \d+
-
 notification_mark_as_read_xhr:
-  path: /notifications/mark-as-readxhr/{id}
-  controller: App\Controller\Dashboard\Shared\NotificationController::markNotificationAsReadxhr
-  methods: [ 'POST' ]
-  condition: 'request.isXmlHttpRequest()'
-
+  path: '/notifications/mark-as-readxhr/{id}'
+  controller: 'App\Controller\Dashboard\Shared\NotificationController::markNotificationAsReadxhr'
+  methods:
+    - POST
+  condition: request.isXmlHttpRequest()
 notification_mark_as_read:
-  path: /notifications/mark-as-read/{id}
-  controller: App\Controller\Dashboard\Shared\NotificationController::markNotificationAsRead
-  methods: [ 'POST' ]
+  path: '/notifications/mark-as-read/{id}'
+  controller: 'App\Controller\Dashboard\Shared\NotificationController::markNotificationAsRead'
+  methods:
+    - POST
   requirements:
     _method: POST
     id: \d+
-
-# Chat Routes
 chat_index:
   path: /chat
   controller: 'App\Controller\Dashboard\Shared\ChatController::index'
-
 chat_remove_user:
-  path: /chat/{chatId}/remove-user/{userId}
+  path: '/chat/{chatId}/remove-user/{userId}'
   controller: 'App\Controller\Dashboard\Shared\ChatController::removeUserFromChat'
-
+  methods:
+    - POST
 chat_mute:
-  path: /chat/{chatId}/mute-chat
+  path: '/chat/{chatId}/mute-chat'
   controller: 'App\Controller\Dashboard\Shared\ChatController::muteChat'
-
+  methods:
+    - POST
 chat_create:
   path: /chat/create
   controller: 'App\Controller\Dashboard\Shared\ChatController::createChat'
-
 chat_show:
-  path: /chat/{chatId}
+  path: '/chat/{chatId}'
   controller: 'App\Controller\Dashboard\Shared\ChatController::showChat'
-
 chat_add_user:
-  path: /chat/{chatId}/add-user
+  path: '/chat/{chatId}/add-user'
   controller: 'App\Controller\Dashboard\Shared\ChatController::addUserToChat'
-
+  methods:
+    - POST
 leaderboards:
   path: /leaderboards
   controller: 'App\Controller\Front\LeaderboardsController::index'
-
 dashboard_administrator_venue:
   path: /administrator/manage-venues
   controller: 'App\Controller\Admin\VenueController::manageVenues'
   methods: GET
-
-# admin athletics
 dashboard_administrator_venues:
   path: /administrator/manage-venues
-  controller: 'App\Controller\Dashboard\Shared\VenueController::manage'
+  controller: 'App\Controller\Dashboard\Shared\VenueController::index'
   methods: GET
-
 dashboard_administrator_venue_show:
   path: /administrator/manage-venues/show
   controller: 'App\Controller\Dashboard\Shared\VenueController::addedit'
-
 dashboard_administrator_venue_hide:
-  path: /administrator/manage-venues/{slug}/hide
+  path: '/administrator/manage-venues/{slug}/hide'
   controller: 'App\Controller\Dashboard\Shared\VenueController::showhide'
-
+  methods:
+    - POST
 dashboard_administrator_venue_add:
   path: /administrator/manage-venues/add
   controller: 'App\Controller\Dashboard\Shared\VenueController::addedit'
   methods: GET|POST
-
 dashboard_administrator_venue_edit:
-  path: /administrator/manage-venues/{slug}/edit
+  path: '/administrator/manage-venues/{slug}/edit'
   controller: 'App\Controller\Dashboard\Shared\VenueController::addedit'
   methods: GET|POST
-
 dashboard_administrator_venue_delete:
-  path: /administrator/manage-venues/{slug}/delete
+  path: '/administrator/manage-venues/{slug}/delete'
   controller: 'App\Controller\Dashboard\Shared\VenueController::delete'
-  methods: GET
-
+  methods:
+    - POST
 venue_details:
-  path: /venue/{slug}
+  path: '/venue/{slug}'
   controller: 'App\Controller\Front\VenueController::venueBySlug'
   methods: GET
-
 fos_user_change_email:
   path: /dashboard/change-email
   controller: 'App\Controller\Api\EmailChangeController::changeEmail'
-
 profile_attendee:
-  path: /attendee-profile/{slug}
+  path: '/attendee-profile/{slug}'
   controller: 'App\Controller\Front\AttendeeController::viewprofile'
-
 open_events:
   path: /open-events
   controller: 'App\Controller\Front\EventController::openevents'
-
 open_event:
-  path: /open-event/{slug}
+  path: '/open-event/{slug}'
   controller: 'App\Controller\Front\EventController::openevent'
-
 app_dashboard_attendee_join_leave:
-  path: /dashboard/attendee/management/leave/{attendeeid}/{organizerid}
+  path: '/dashboard/attendee/management/leave/{attendeeid}/{organizerid}'
   controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::leave'
-  methods: [ 'GET' ]
-  condition: 'request.isXmlHttpRequest()'
-
+  methods:
+    - GET
+  condition: request.isXmlHttpRequest()
 app_dashboard_attendee_join_leave_nonxml:
-  path: /dashboard/attendee/management/leavenonxml/{attendeeid}/{organizerid}
+  path: '/dashboard/attendee/management/leavenonxml/{attendeeid}/{organizerid}'
   controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::leavenonxml'
-  methods: [ 'GET' ]
-
+  methods:
+    - GET
 app_dashboard_attendee_join_accept:
-  path: /dashboard/attendee/management/accept/{attendeeid}/{organizerid}
+  path: '/dashboard/attendee/management/accept/{attendeeid}/{organizerid}'
   controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::accept'
-  methods: [ 'GET' ]
-
+  methods:
+    - GET
 app_dashboard_attendee_join_reject:
-  path: /dashboard/attendee/management/reject/{attendeeid}/{organizerid}
+  path: '/dashboard/attendee/management/reject/{attendeeid}/{organizerid}'
   controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::reject'
-  methods: [ 'GET' ]
-
+  methods:
+    - GET
 app_dashboard_attendee_join_cancel:
-  path: /dashboard/attendee/management/cancel/{attendeeid}/{organizerid}
+  path: '/dashboard/attendee/management/cancel/{attendeeid}/{organizerid}'
   controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::cancelxml'
-  condition: 'request.isXmlHttpRequest()'
-
+  condition: request.isXmlHttpRequest()
 app_dashboard_attendee_join_cancelnotxml:
-  path: /dashboard/attendee/management/cancelnotxml/{attendeeid}/{organizerid}
+  path: '/dashboard/attendee/management/cancelnotxml/{attendeeid}/{organizerid}'
   controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::cancelnotxml'
-  methods: [ 'GET' ]
-
+  methods:
+    - GET
 app_dashboard_attendee_join_add:
-  path: /dashboard/attendee/management/add/{attendeeid}/{organizerid}
+  path: '/dashboard/attendee/management/add/{attendeeid}/{organizerid}'
   controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::add'
-  methods: [ 'GET' ]
-  condition: 'request.isXmlHttpRequest()'
-
+  methods:
+    - GET
+  condition: request.isXmlHttpRequest()
 dashboard_attendee_management:
   path: /dashboard/attendee/management
   controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::index'
-
-# orgs start here
-
 app_dashboard_organizer_join_kick_xml:
-  path: /dashboard/organizer/management/kickxml/{organizerid}/{attendeeid}
+  path: '/dashboard/organizer/management/kickxml/{organizerid}/{attendeeid}'
   controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::kickxml'
-  methods: [ 'GET' ]
-  condition: 'request.isXmlHttpRequest()'
-
+  methods:
+    - GET
+  condition: request.isXmlHttpRequest()
 app_dashboard_organizer_join_kick:
-  path: /dashboard/organizer/management/kick/{organizerid}/{attendeeid}
+  path: '/dashboard/organizer/management/kick/{organizerid}/{attendeeid}'
   controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::kick'
-  methods: [ 'GET' ]
-
+  methods:
+    - GET
 app_dashboard_organizer_join_accept:
-  path: /dashboard/organizer/management/accept/{organizerid}/{attendeeid}
+  path: '/dashboard/organizer/management/accept/{organizerid}/{attendeeid}'
   controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::accept'
-  methods: [ 'GET' ]
-
+  methods:
+    - GET
 app_dashboard_organizer_join_accept_xml:
-  path: /dashboard/organizer/management/acceptxml/{organizerid}/{attendeeid}
+  path: '/dashboard/organizer/management/acceptxml/{organizerid}/{attendeeid}'
   controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::acceptxml'
-  methods: [ 'GET' ]
-
+  methods:
+    - GET
 app_dashboard_attendee_join_accept_xml:
-  path: /dashboard/attendee/management/acceptxml/{attendeeid}/{organizerid}
+  path: '/dashboard/attendee/management/acceptxml/{attendeeid}/{organizerid}'
   controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::acceptxml'
-  methods: [ 'GET' ]
-
+  methods:
+    - GET
 app_dashboard_organizer_join_reject:
-  path: /dashboard/organizer/management/reject/{organizerid}/{attendeeid}
+  path: '/dashboard/organizer/management/reject/{organizerid}/{attendeeid}'
   controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::reject'
-  methods: [ 'GET' ]
-
+  methods:
+    - GET
 app_dashboard_organizer_join_cancel:
-  path: /dashboard/organizer/management/cancel/{organizerid}/{attendeeid}
+  path: '/dashboard/organizer/management/cancel/{organizerid}/{attendeeid}'
   controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::cancelxml'
-  methods: [ 'GET' ]
-  condition: 'request.isXmlHttpRequest()'
-
+  methods:
+    - GET
+  condition: request.isXmlHttpRequest()
 app_dashboard_organizer_join_cancelnotxml:
-  path: /dashboard/organizer/management/cancelnotxml/{organizerid}/{attendeeid}
+  path: '/dashboard/organizer/management/cancelnotxml/{organizerid}/{attendeeid}'
   controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::cancelnotxml'
-  methods: [ 'GET' ]
-
+  methods:
+    - GET
 app_dashboard_organizer_join_add:
-  path: /dashboard/organizer/management/add/{organizerid}/{attendeeid}
+  path: '/dashboard/organizer/management/add/{organizerid}/{attendeeid}'
   controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::add'
-  methods: [ 'GET' ]
-  condition: 'request.isXmlHttpRequest()'
-
-#  end orgs
-
+  methods:
+    - GET
+  condition: request.isXmlHttpRequest()
 dashboard_organizer_management:
   path: /dashboard/organizer/management
   controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::index'
-
 dashboard_organizer_managementgb:
   path: /dashboard/organizer/managementgb
   controller: 'App\Controller\Dashboard\Organizer\GoverningBodyController::index'
-
 dashboard_organizer_managementgb_delete_xml:
   path: /dashboard/organizer/managementgb/delete
   controller: 'App\Controller\Dashboard\Organizer\GoverningBodyController::deleteGbMemberById'
-
+  methods:
+    - POST
 dashboard_organizer_managementgb_update_xml:
   path: /dashboard/organizer/managementgb/update
   controller: 'App\Controller\Dashboard\Organizer\GoverningBodyController::updateGbMembersByOrg'
-
+  methods:
+    - POST
 dashboard_organizer_managementgb_add:
   path: /dashboard/organizer/managementgb/add
   controller: 'App\Controller\Dashboard\Organizer\GoverningBodyController::addGbMembersByOrg'
-
+  methods:
+    - POST
 dashboard_organizer_management_files:
   path: /dashboard/organizer/management/files
   controller: 'App\Controller\Dashboard\Organizer\FilesController::index'
-
 dashboard_organizer_management_files_download_file_event:
-  path: /event/management/files/download/{fileId}
+  path: '/event/management/files/download/{fileId}'
   controller: 'App\Controller\Front\EventController::download'
-
 dashboard_organizer_management_files_download_file:
-  path: /dashboard/organizer/management/files/download/{fileId}
+  path: '/dashboard/organizer/management/files/download/{fileId}'
   controller: 'App\Controller\Dashboard\Organizer\FilesController::download'
-
 dashboard_organizer_management_files_add:
   path: /dashboard/organizer/management/files/add
   controller: 'App\Controller\Dashboard\Organizer\FilesController::add'
-
 dashboard_organizer_management_files_delete:
-  path: /dashboard/organizer/management/files/delete/{id}
+  path: '/dashboard/organizer/management/files/delete/{id}'
   controller: 'App\Controller\Dashboard\Organizer\FilesController::delete'
-
+  methods:
+    - POST
 dashboard_organizer_management_files_edit:
-  path: /dashboard/organizer/management/files/edit/{id}
+  path: '/dashboard/organizer/management/files/edit/{id}'
   controller: 'App\Controller\Dashboard\Organizer\FilesController::edit'
-
 dashboard_attendee_blog_post_delete:
-  path: /dashboard/attendee/manage-blog-posts/{slug}/delete
+  path: '/dashboard/attendee/manage-blog-posts/{slug}/delete'
   controller: 'App\Controller\Dashboard\Attendee\BlogPostController::delete'
-
+  methods:
+    - POST
 dashboard_attendee_blog_post_show:
-  path: /dashboard/attendee/manage-blog-posts/{slug}/show
+  path: '/dashboard/attendee/manage-blog-posts/{slug}/show'
   controller: 'App\Controller\Dashboard\Attendee\BlogPostController::showhide'
-
+  methods:
+    - POST
 dashboard_attendee_blog_post_hide:
-  path: /dashboard/attendee/manage-blog-posts/{slug}/hide
+  path: '/dashboard/attendee/manage-blog-posts/{slug}/hide'
   controller: 'App\Controller\Dashboard\Attendee\BlogPostController::showhide'
-
+  methods:
+    - POST
 dashboard_organizer_blog_post_delete:
-  path: /dashboard/organizer/manage-blog-posts/{slug}/delete
+  path: '/dashboard/organizer/manage-blog-posts/{slug}/delete'
   controller: 'App\Controller\Dashboard\Organizer\BlogPostController::delete'
-
+  methods:
+    - POST
 dashboard_organizer_blog_post_show:
-  path: /dashboard/organizer/manage-blog-posts/{slug}/show
+  path: '/dashboard/organizer/manage-blog-posts/{slug}/show'
   controller: 'App\Controller\Dashboard\Organizer\BlogPostController::showhide'
-
+  methods:
+    - POST
 dashboard_organizer_blog_post_hide:
-  path: /dashboard/organizer/manage-blog-posts/{slug}/hide
+  path: '/dashboard/organizer/manage-blog-posts/{slug}/hide'
   controller: 'App\Controller\Dashboard\Organizer\BlogPostController::showhide'
-
+  methods:
+    - POST
 fos_user_change_username:
   path: /dashboard/change-username
   controller: 'App\Controller\Api\UsernameChangeController::changeUsername'
-
 registration_register_attendee_admin:
   path: /dashboard/administrator/signup/attendee
   controller: 'App\Controller\Dashboard\Administrator\AdminRegistrationController::registerAttendeeAction'
-
 dashboard_administrator_attendees:
-  path: /administrator/manage-attendees/{event}
+  path: '/administrator/manage-attendees/{event}'
   controller: 'App\Controller\Dashboard\Shared\OrderController::attendeesAdmin'
-
 dashboard_administrator_attendees_details:
-  path: /administrator/manage-attendees-details/{eventslug}/
+  path: '/administrator/manage-attendees-details/{eventslug}/'
   controller: 'App\Controller\Dashboard\Shared\OrderController::attendeesAdminDetails'
-
 dashboard_organizer_attendees_details:
-  path: /organizer/manage-attendees-details/{eventslug}
+  path: '/organizer/manage-attendees-details/{eventslug}'
   controller: 'App\Controller\Dashboard\Shared\OrderController::attendeesAdminDetailsasOrganizer'
-
 attendace_details_see_attendeed_event_dates:
-  path: /organizer/manage-attendees-details-event-dates/{userid}/{eventid}
+  path: '/organizer/manage-attendees-details-event-dates/{userid}/{eventid}'
   controller: 'App\Controller\Dashboard\Shared\OrderController::attendeesAdminDetailsasOrganizerEventdates'
-
 admin_attendace_details_see_attendeed_event_dates:
-  path: /administrator/manage-attendees-details-event-dates/{userid}/{eventid}
+  path: '/administrator/manage-attendees-details-event-dates/{userid}/{eventid}'
   controller: 'App\Controller\Dashboard\Shared\OrderController::attendeesAdminDetailsEventdates'
-
 generate_attendees_pdf:
-  path: /dashboard/generate-attendees-pdf/{event}
+  path: '/dashboard/generate-attendees-pdf/{event}'
   controller: 'App\Controller\Dashboard\Shared\PdfController::generatePdf'
-
 generate_attendees_excel:
-  path: /dashboard/generate-attendees-excel/{event}
+  path: '/dashboard/generate-attendees-excel/{event}'
   controller: 'App\Controller\Dashboard\Shared\PdfController::generateExecl'
-
 get_event_details:
   path: '/get-event-details/{eventId}'
   controller: 'App\Controller\Api\EventController::getEventDetails'
-  methods: [ 'GET' ]
-
+  methods:
+    - GET
 fos_comment_delete:
   path: '/delete-comment/{id}'
-  controller: App\Controller\Front\CommentController::deleteComment
+  controller: 'App\Controller\Front\CommentController::deleteComment'
   requirements:
-    _format: json  # Restrict the route to respond to JSON requests
-
+    _format: json
+  methods:
+    - POST
 dashboard_organizer_blog_post_edit:
   path: '/manage-blog-posts/{slug}/edit'
-  controller: App\Controller\Dashboard\Organizer\BlogPostController::addedit
-
+  controller: 'App\Controller\Dashboard\Organizer\BlogPostController::addedit'
 dashboard_administrator_blog_post_edit:
   path: '/manage-blog-posts-admin/{slug}/edit'
-  controller: App\Controller\Dashboard\Administrator\BlogPostController::addeditadmin
-
+  controller: 'App\Controller\Dashboard\Administrator\BlogPostController::addeditadmin'
 dashboard_organizer_event_delete_permanently_admin:
   path: '/administrator/my-events/{slug}/delete-permanently-admin'
-  controller: App\Controller\Dashboard\Shared\EventController::deleteforadmin
-
+  controller: 'App\Controller\Dashboard\Shared\EventController::deleteforadmin'
 dashboard_organizer_event_prefill:
   path: '/dashboard/organizer/my-events/{slug}/prefill'
-  controller: App\Controller\Dashboard\Shared\EventController::prefillEvent
-
+  controller: 'App\Controller\Dashboard\Shared\EventController::prefillEvent'
 dashboard_organizer_profile_admin:
   path: '/profile/{id}'
   controller: 'App\Controller\Dashboard\Organizer\AccountController::editOrganizerAsAdmin'
-  methods: [ 'GET', 'POST' ]
-
+  methods:
+    - GET
+    - POST
 dashboard_edit_user:
   path: '/administrator/edit/user/{id}'
   controller: 'App\Controller\Dashboard\Administrator\UserController::edituser'
-  methods: [ 'GET', 'POST' ]
-
+  methods:
+    - GET
+    - POST
 attendee_attendeed_x_events:
   path: '/attendee/statistics/{attendeeid}'
   controller: 'App\Controller\Dashboard\Organizer\AccountController::editOrganizerAsAdmin'
-  methods: [ 'GET' ]
-
-#admin_statistics:
-#  path: '/admin/statistics/{attendeeid}'
-#  controller: 'App\Controller\Dashboard\Organizer\AccountController::editOrganizerAsAdmin'
-#  methods: [ 'GET' ]
-#
-#admin_statistics:
-#  path: '/admin/statistics/'
-#  controller: 'App\Controller\Dashboard\Organizer\AccountController::editOrganizerAsAdmin'
-#  methods: [ 'GET' ]
-
+  methods:
+    - GET
 organizer_statistics:
-  path: '/profile/'
+  path: /profile/
   controller: 'App\Controller\Dashboard\Organizer\AccountController::editOrganizerAsAdmin'
-  methods: [ 'GET' ]
-
+  methods:
+    - GET
 registration_register_organizer_admin:
   path: /dashboard/administrator/signup/organizer
   controller: 'App\Controller\Dashboard\Administrator\AdminRegistrationController::registerOrganizerAction'
-
 blog_post_category_add:
   path: /dashboard/organizer/manage-blog-post-categories/add
   controller: 'App\Controller\Dashboard\Organizer\BlogPostCategoryController::addedit'
-  methods: [ 'GET', 'POST' ]
-
+  methods:
+    - GET
+    - POST
 blog_post_organizer:
   path: /dashboard/organizer/manage-blog-posts-organizer/
   controller: 'App\Controller\Dashboard\Organizer\BlogPostController::index'
-  methods: [ 'GET', 'POST' ]
-
+  methods:
+    - GET
+    - POST
 blog_post_attendee:
   path: /dashboard/attendee/manage-blog-posts-attendee/
   controller: 'App\Controller\Dashboard\Attendee\BlogPostController::index'
-  methods: [ 'GET', 'POST' ]
-
-# Dashboard routes
+  methods:
+    - GET
+    - POST
 dashboard_attendee_following:
   path: /dashboard/attendee/following
   controller: 'App\Controller\Dashboard\Attendee\FollowingController::index'
-  methods: [ 'GET' ]
-
+  methods:
+    - GET
   trailing_slash_on_root: false
-
 dashboard_attendee_bookevent:
-  path: /dashboard/attendee/bookevent/{id}/{eventicketid}
+  path: '/dashboard/attendee/bookevent/{id}/{eventicketid}'
   controller: 'App\Controller\Dashboard\Shared\CartController::bookevent'
-  methods: [ 'GET', 'POST' ]
-  
+  methods:
+    - POST
   trailing_slash_on_root: false
-
 app_dashboard_attendee_following_add:
-  path: /dashboard/attendee/following/add/{id}
+  path: '/dashboard/attendee/following/add/{id}'
   controller: 'App\Controller\Dashboard\Attendee\FollowingController::addRemove'
-  methods: [ 'GET' ]
-  condition: 'request.isXmlHttpRequest()'
+  methods:
+    - POST
+  condition: request.isXmlHttpRequest()
   trailing_slash_on_root: false
-
 app_dashboard_attendee_following_remove:
-  path: /dashboard/attendee/following/remove/{id}
+  path: '/dashboard/attendee/following/remove/{id}'
   controller: 'App\Controller\Dashboard\Attendee\FollowingController::addRemove'
-  methods: [ 'GET' ]
-  condition: 'request.isXmlHttpRequest()'
-  
+  methods:
+    - POST
+  condition: request.isXmlHttpRequest()
   trailing_slash_on_root: false
-
 app_dashboard_attendee_following_add_attendee:
-  path: /dashboard/attendee/following/add/attendee/{id}
+  path: '/dashboard/attendee/following/add/attendee/{id}'
   controller: 'App\Controller\Dashboard\Attendee\FollowingController::addRemoveAttendee'
-  methods: [ 'GET' ]
-  condition: 'request.isXmlHttpRequest()'
+  methods:
+    - POST
+  condition: request.isXmlHttpRequest()
   trailing_slash_on_root: false
-
 app_dashboard_attendee_following_remove_attendee:
-  path: /dashboard/attendee/following/remove/attendee/{id}
+  path: '/dashboard/attendee/following/remove/attendee/{id}'
   controller: 'App\Controller\Dashboard\Attendee\FollowingController::addRemoveAttendee'
-  methods: [ 'GET' ]
-  condition: 'request.isXmlHttpRequest()'
-
+  methods:
+    - POST
+  condition: request.isXmlHttpRequest()
   trailing_slash_on_root: false
-
-# Dashboard routes
 favorites_add:
-  path: /dashboard/attendee/my-favorites/add/{slug}
+  path: '/dashboard/attendee/my-favorites/add/{slug}'
   controller: 'App\Controller\Dashboard\Attendee\FavoritesController::addRemove'
-  methods: [ 'GET' ]
-  condition: 'request.isXmlHttpRequest()'
-  
+  methods:
+    - POST
+  condition: request.isXmlHttpRequest()
   trailing_slash_on_root: false
-
 favorites_remove:
-  path: /dashboard/attendee/my-favorites/remove/{slug}
+  path: '/dashboard/attendee/my-favorites/remove/{slug}'
   controller: 'App\Controller\Dashboard\Attendee\FavoritesController::addRemove'
-  methods: [ 'GET' ]
-  condition: 'request.isXmlHttpRequest()'
-  
+  methods:
+    - POST
+  condition: request.isXmlHttpRequest()
   trailing_slash_on_root: false
-
 app_dashboard_main:
-  resource: '../src/Controller/Dashboard/Main'
+  resource: ../src/Controller/Dashboard/Main
   prefix: /dashboard
-  name_prefix: 'dashboard_'
-  
+  name_prefix: dashboard_
   trailing_slash_on_root: false
-
+  type: attribute
 app_dashboard_admin:
-  resource: '../src/Controller/Dashboard/Administrator'
+  resource: ../src/Controller/Dashboard/Administrator
   prefix: /dashboard/administrator
-  name_prefix: 'dashboard_administrator_'
-  
+  name_prefix: dashboard_administrator_
   trailing_slash_on_root: false
-
+  type: attribute
 app_dashboard_organizer:
-  resource: '../src/Controller/Dashboard/Organizer'
+  resource: ../src/Controller/Dashboard/Organizer
   prefix: /dashboard/organizer
-  name_prefix: 'dashboard_organizer_'
-  
+  name_prefix: dashboard_organizer_
   trailing_slash_on_root: false
-
-# Change the shared controller name prefixes manually
+  type: attribute
 app_dashboard_shared:
-  resource: '../src/Controller/Dashboard/Shared'
+  resource: ../src/Controller/Dashboard/Shared
   prefix: /dashboard
-  
   trailing_slash_on_root: false
-
+  type: attribute
 app_dashboard_attendee:
-  resource: '../src/Controller/Dashboard/Attendee'
+  resource: ../src/Controller/Dashboard/Attendee
   prefix: /dashboard/attendee
-  name_prefix: 'dashboard_attendee_'
-  
+  name_prefix: dashboard_attendee_
   trailing_slash_on_root: false
-
-# Front routes
-
+  type: attribute
 app_front:
-  resource: '../src/Controller/Front'
+  resource: ../src/Controller/Front
   prefix: /
-  
   trailing_slash_on_root: false
-
-# Api routes
-
+  type: attribute
 app_api:
-  resource: '../src/Controller/Api'
+  resource: ../src/Controller/Api
   prefix: /api/
-  
   trailing_slash_on_root: false
-
-# Bundles routes
-
-JMSTranslationBundle_ui:
-  resource: "@JMSTranslationBundle/Controller/"
-  type: annotation
-  prefix: /
-
-fos_user:
-  resource: 'routes/fos_user/'
-  type: directory
-  prefix: /
-  
-  trailing_slash_on_root: false
-
-fos_js_routing:
-  resource: "@FOSJsRoutingBundle/Resources/config/routing/routing-sf4.xml"
-
-presta_sitemap:
-  resource: "@PrestaSitemapBundle/Resources/config/routing.yml"
-
-rss_atom_bundle:
-  resource: "@DebrilRssAtomBundle/Resources/config/routing.yml"
-
+  type: attribute
 _liip_imagine:
-  resource: "@LiipImagineBundle/Resources/config/routing.yaml"
-
-bazinga_js_translation:
-  resource: "@BazingaJsTranslationBundle/Resources/config/routing/routing.yml"
-
-fos_comment_api:
-  type: rest
-  resource: "@FOSCommentBundle/Resources/config/routing.yml"
-  prefix: /api
-  defaults: { _format: html }
-
-hwi_oauth_redirect:
-  resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
-  prefix: /connect
-
-hwi_oauth_connect:
-  resource: "@HWIOAuthBundle/Resources/config/routing/connect.xml"
-  prefix: /connect
-
-hwi_oauth_login:
-  resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
-  prefix: /login
-
+  resource: '@LiipImagineBundle/Resources/config/routing.yaml'
 facebook_login:
   path: /login/check-facebook
-
 google_login:
   path: /login/check-google
-
 qr_reader:
   path: /scanqr
-  controller: App\Controller\Api\QrReaderController::qrReader
-
+  controller: 'App\Controller\Api\QrReaderController::qrReader'
 api_handle_post_request:
   path: /api/handle-post-request
-  controller: App\Controller\Api\QrReaderController::handlePostRequest
-  methods: POST
-
+  controller: 'App\Controller\Api\QrReaderController::handlePostRequest'
+  methods:
+    - POST
 twillio_route:
   path: /api/twillio
-  controller: 'App\Controller\Api\TwillioController::sendSMS'
-  methods: [ 'GET' ]
-
-
-# athletics
+  controller: 'App\Controller\Api\TwillioController::captureSMS'
+  methods:
+    - GET
 athletics:
   path: /athletics
   controller: 'App\Controller\Front\AthleticsController::index'
   methods: GET
-
 athletic_details:
-  path: /athleticfacility/{slug}
+  path: '/athleticfacility/{slug}'
   controller: 'App\Controller\Front\AthleticsController::athleticBySlug'
   methods: GET|POST
-
-# admin athletics
 dashboard_administrator_athletics:
   path: /administrator/manage-facilities
   controller: 'App\Controller\Dashboard\Shared\AthleticBookingController::manage'
   methods: GET
-
 dashboard_administrator_facilities_add:
   path: /administrator/manage-facilities/add
   controller: 'App\Controller\Dashboard\Shared\AthleticBookingController::addedit'
   methods: GET|POST
-
 dashboard_administrator_facilities_edit:
-  path: /administrator/manage-facilities/{slug}/edit
+  path: '/administrator/manage-facilities/{slug}/edit'
   controller: 'App\Controller\Dashboard\Shared\AthleticBookingController::addedit'
   methods: GET|POST
-
 dashboard_administrator_facilities_disable:
-  path: /administrator/manage-facilities/{slug}/disable
+  path: '/administrator/manage-facilities/{slug}/disable'
   controller: 'App\Controller\Dashboard\Shared\AthleticBookingController::delete'
-  methods: GET
-
+  methods:
+    - POST
 dashboard_administrator_facilities_delete:
-  path: /administrator/manage-facilities/{slug}/delete
+  path: '/administrator/manage-facilities/{slug}/delete'
   controller: 'App\Controller\Dashboard\Shared\AthleticBookingController::delete'
-  methods: GET
-
+  methods:
+    - POST
 dashboard_administrator_facilities_restore:
-  path: /administrator/manage-facilities/{slug}/restore
+  path: '/administrator/manage-facilities/{slug}/restore'
   controller: 'App\Controller\Dashboard\Shared\AthleticBookingController::restore'
-  methods: GET
-
+  methods:
+    - POST
 dashboard_administrator_facilities_show:
-  path: /administrator/manage-facilities/{slug}/show
+  path: '/administrator/manage-facilities/{slug}/show'
   controller: 'App\Controller\Dashboard\Shared\AthleticBookingController::showhide'
-  methods: GET
-
+  methods:
+    - POST
 dashboard_administrator_facilities_hide:
-  path: /administrator/manage-facilities/{slug}/hide
+  path: '/administrator/manage-facilities/{slug}/hide'
   controller: 'App\Controller\Dashboard\Shared\AthleticBookingController::showhide'
-  methods: GET
-
-# Delete Reservation
+  methods:
+    - POST
 delete_reservation:
-  path: /delete/{athleticBookingId}
-  controller: 'App\Controller\Dashboard\Shared\::deleteReservation'
-  methods: [ 'GET' ]  # Adjust the HTTP method as needed
-
-# Book Reservation
+  path: '/delete/{athleticBookingId}'
+  controller: 'App\Controller\Dashboard\Shared\AthleticBookingController::deleteReservation'
+  methods:
+    - POST
 book_reservation:
-  path: /book/{facilityId}/{scheduleId}/{bookingDate}/{duration}
-  controller: 'App\Controller\Dashboard\Shared\::bookReservation'
-  methods: [ 'GET' ]  # Adjust the HTTP method as needed
-
-# Cancel Reservation
+  path: '/book/{facilityId}/{scheduleId}/{bookingDate}/{duration}'
+  controller: 'App\Controller\Dashboard\Shared\AthleticBookingController::bookReservation'
+  methods:
+    - POST
 cancel_reservation:
-  path: /cancel/{athleticBookingId}
-  controller: 'App\Controller\Dashboard\Shared\::cancelReservation'
-  methods: [ 'GET' ]  # Adjust the HTTP method as needed
-
-#listings
-# routes.yaml
-
-# Index
-#  dashboard_attendee_orders
+  path: '/cancel/{athleticBookingId}'
+  controller: 'App\Controller\Dashboard\Shared\AthleticBookingController::cancelReservation'
+  methods:
+    - POST
 dashboard_attendee__my_listing:
   path: /dashboard/attendee/my-listing-applications
   controller: 'App\Controller\Dashboard\Shared\ListingController::mylistingapplicaitons'
-  methods: [ 'GET' ]
-
+  methods:
+    - GET
 download_cv:
   path: '/download-cv/{userId}'
   controller: 'App\Controller\Dashboard\Shared\DocumentController::downloadCVAction'
   requirements:
-    userId: '\d+'
-
+    userId: \d+
 dashboard_organizer__my_listing:
-  path: /dashboard/organizer/my-listing-applications-creator/{id}
+  path: '/dashboard/organizer/my-listing-applications-creator/{id}'
   controller: 'App\Controller\Dashboard\Shared\ListingController::mylistingapplicaitonscreator'
-  methods: [ 'GET' ]
-
+  methods:
+    - GET
 dashboard_attendee_cancel:
-  path: /dashboard/attendee/subcance/{id}/subcancel
+  path: '/dashboard/attendee/subcance/{id}/subcancel'
   controller: 'App\Controller\Dashboard\Shared\ListingController::cancel'
-  methods: [ 'GET' ]
-
+  methods:
+    - POST
 dashboard_organizer_listing:
   path: /dashboard/organizer/manage-listings
   controller: 'App\Controller\Dashboard\Shared\ListingController::index'
-  methods: [ 'GET' ]
-
-# Add Listing
+  methods:
+    - GET
 dashboard_organizer_listing_add:
   path: /dashboard/organizer/my-listings/add
   controller: 'App\Controller\Dashboard\Shared\ListingController::addListing'
-  methods: [ 'GET', 'POST' ]
-
-# Edit Listing
+  methods:
+    - GET
+    - POST
 dashboard_organizer_listing_edit:
-  path: /dashboard/organizer/my-listings/{slug}/edit
+  path: '/dashboard/organizer/my-listings/{slug}/edit'
   controller: 'App\Controller\Dashboard\Shared\ListingController::editListing'
-  methods: [ 'GET', 'POST' ]
-
-# Delete Listing (Soft Delete)
+  methods:
+    - GET
+    - POST
 dashboard_organizer_listing_delete:
-  path: /dashboard/organizer/my-listings/{slug}/delete
+  path: '/dashboard/organizer/my-listings/{slug}/delete'
   controller: 'App\Controller\Dashboard\Shared\ListingController::delete'
-  methods: [ 'GET' ]
-
-# Permanently Delete Listing
+  methods:
+    - POST
 dashboard_organizer_listing_delete_permanently:
-  path: /dashboard/organizer/my-listings/{slug}/delete-permanently
+  path: '/dashboard/organizer/my-listings/{slug}/delete-permanently'
   controller: 'App\Controller\Dashboard\Shared\ListingController::delete'
-  methods: [ 'GET' ]
-
-# Restore Deleted Listing
+  methods:
+    - POST
 dashboard_organizer_listing_restore:
-  path: /dashboard/organizer/manage-listings/{slug}/restore
+  path: '/dashboard/organizer/manage-listings/{slug}/restore'
   controller: 'App\Controller\Dashboard\Shared\ListingController::restore'
-  methods: [ 'GET' ]
-
-# Publish Listing
+  methods:
+    - POST
 dashboard_organizer_listing_publish:
-  path: /dashboard/organizer/my-listings/{slug}/publish
+  path: '/dashboard/organizer/my-listings/{slug}/publish'
   controller: 'App\Controller\Dashboard\Shared\ListingController::showhide'
-  methods: [ 'GET' ]
-
-# Unpublish Listing
+  methods:
+    - POST
 dashboard_organizer_listing_draft:
-  path: /dashboard/organizer/my-listings/{slug}/draft
+  path: '/dashboard/organizer/my-listings/{slug}/draft'
   controller: 'App\Controller\Dashboard\Shared\ListingController::showhide'
-  methods: [ 'GET' ]
-
-# Listing Details (Ajax)
+  methods:
+    - POST
 dashboard_organizer_listing_details:
-  path: /dashboard/organizer/my-listings/{slug}/details
+  path: '/dashboard/organizer/my-listings/{slug}/details'
   controller: 'App\Controller\Dashboard\Shared\ListingController::details'
-  methods: [ 'GET' ]
-  condition: 'request.isXmlHttpRequest()'
-
-# config/routes.yaml
-
+  methods:
+    - GET
+  condition: request.isXmlHttpRequest()
 download_listing_submission_file:
   path: '/download/listingsubmission/{id}/file'
   controller: 'App\Controller\Dashboard\Shared\ListingController::downloadFileAction'
   requirements:
-    id: '\d+'
-
+    id: \d+
 dashboard_listing_details:
-  path: /dashboard/my-listingsubs/{id}/details
+  path: '/dashboard/my-listingsubs/{id}/details'
   controller: 'App\Controller\Dashboard\Shared\ListingController::detailsattendee'
-  methods: [ 'GET' ]
-
-#reels likes
+  methods:
+    - GET
 get_likes_of_user:
   path: '/reel-likes/get-likes-of-user/{userId}'
-  methods: [ 'GET' ]
+  methods:
+    - GET
   controller: 'App\Controller\Front\ReelsLikesController::getLikesOfUser'
-
 has_user_liked_reel:
   path: '/reel-likes/has-user-liked-reel/{userId}/{reelId}'
-  methods: [ 'GET' ]
+  methods:
+    - GET
   controller: 'App\Controller\Front\ReelsLikesController::hasUserLikedReel'
-
 get_like_of_user_for_reel:
   path: '/reel-likes/get-like-of-user-for-reel/{userId}/{reelId}'
-  methods: [ 'GET' ]
+  methods:
+    - GET
   controller: 'App\Controller\Front\ReelsLikesController::getLikeOfUserForReel'
-
 get_like_count_for_reel:
   path: '/reel-likes/get-like-count-for-reel/{reelId}'
-  methods: [ 'GET' ]
+  methods:
+    - GET
   controller: 'App\Controller\Front\ReelsLikesController::getLikeCountForReel'
-
 get_users_who_liked_reel:
   path: '/reel-likes/get-users-who-liked-reel/{reelId}'
-  methods: [ 'GET' ]
+  methods:
+    - GET
   controller: 'App\Controller\Front\ReelsLikesController::getUsersWhoLikedReel'
-
 dashboard_organizer_listing_apply:
   path: '/dashboard/organizer/my-listings/{slug}/apply'
-  methods: [ 'POST' ]
+  methods:
+    - POST
   controller: 'App\Controller\Dashboard\Shared\ListingController::apply'
-
-# Listing Details (Ajax)
 applylisting:
-  path: /applylisting/{slug}/{userid}
+  path: '/applylisting/{slug}/{userid}'
   controller: 'App\Controller\Front\ListingController::applylisting'
-  methods: [ 'GET' ]
-  condition: 'request.isXmlHttpRequest()'
-
-#reels
-
+  methods:
+    - POST
+  condition: request.isXmlHttpRequest()
 load_more_reels_organizer:
   path: /dashboard/organizer/load-more-reels
   controller: 'App\Controller\Front\ReelsController::loadMoreReels'
-
 load_more_reels_attendee:
   path: /dashboard/attendee/load-more-reels
   controller: 'App\Controller\Front\ReelsController::loadMoreReels'
-
-# Index
 dashboard_organizer_reel:
   path: /dashboard/organizer/manage-reels
   controller: 'App\Controller\Dashboard\Shared\ReelsController::index'
-  methods: [ 'GET' ]
-
-# Add/Edit
+  methods:
+    - GET
 dashboard_organizer_reel_add_video:
   path: /dashboard/organizer/manage-reels-video/add
   controller: 'App\Controller\Dashboard\Shared\ReelsController::addeditvideoorg'
-  methods: [ 'GET', 'POST' ]
-
-# Add/Edit
+  methods:
+    - GET
+    - POST
 dashboard_organizer_reel_add_image:
   path: /dashboard/organizer/manage-reels-image/add
   controller: 'App\Controller\Dashboard\Shared\ReelsController::addeditimageorg'
-  methods: [ 'GET', 'POST' ]
-
+  methods:
+    - GET
+    - POST
 dashboard_attendee_reel_edit_image:
-  path: /dashboard/organizer/manage-reels-image/{slug}/edit
+  path: '/dashboard/organizer/manage-reels-image/{slug}/edit'
   controller: 'App\Controller\Dashboard\Shared\ReelsController::addeditimageorg'
-  methods: [ 'GET', 'POST' ]
+  methods:
+    - GET
+    - POST
   requirements:
     slug: '^[a-zA-Z0-9-]+$'
-
 dashboard_organizer_reel_edit_video:
-  path: /dashboard/organizer/manage-reels-video/{slug}/edit
+  path: '/dashboard/organizer/manage-reels-video/{slug}/edit'
   controller: 'App\Controller\Dashboard\Shared\ReelsController::addeditvideoorg'
-  methods: [ 'GET', 'POST' ]
+  methods:
+    - GET
+    - POST
   requirements:
     slug: '^[a-zA-Z0-9-]+$'
-
-# Disable/Delete
 dashboard_organizer_reel_disable_delete:
-  path: /dashboard/organizer/manage-reels/{slug}/disable
+  path: '/dashboard/organizer/manage-reels/{slug}/disable'
   controller: 'App\Controller\Dashboard\Shared\ReelsController::delete'
-  methods: [ 'GET' ]
-
-# Permanently Delete
+  methods:
+    - POST
 dashboard_organizer_reel_delete:
-  path: /dashboard/organizer/manage-reels/{slug}/delete
+  path: '/dashboard/organizer/manage-reels/{slug}/delete'
   controller: 'App\Controller\Dashboard\Shared\ReelsController::delete'
-  methods: [ 'GET' ]
-
-# Restore
+  methods:
+    - POST
 dashboard_organizer_reel_restore:
-  path: /dashboard/organizer/manage-reels/{slug}/restore
+  path: '/dashboard/organizer/manage-reels/{slug}/restore'
   controller: 'App\Controller\Dashboard\Shared\ReelsController::restore'
-  methods: [ 'GET' ]
-
-# Show/Hide
+  methods:
+    - POST
 dashboard_organizer_reel_showhide:
-  path: /dashboard/organizer/manage-reels/{slug}/{action}
+  path: '/dashboard/organizer/manage-reels/{slug}/{action}'
   controller: 'App\Controller\Dashboard\Shared\ReelsController::showhide'
-  methods: [ 'GET' ]
+  methods:
+    - POST
   requirements:
-    action: 'show|hide'
-
-
+    action: show|hide
 dashboard_attendee_reel:
   path: /dashboard/attendee/manage-reels
   controller: 'App\Controller\Dashboard\Shared\ReelsController::index'
-  methods: [ 'GET' ]
-
-# Edit
+  methods:
+    - GET
 dashboard_attendee_reel_addedit_image:
-  path: /dashboard/attendee/manage-reels-image/{slug}/edit
+  path: '/dashboard/attendee/manage-reels-image/{slug}/edit'
   controller: 'App\Controller\Dashboard\Shared\ReelsController::addeditimage'
-  methods: [ 'GET', 'POST' ]
+  methods:
+    - GET
+    - POST
   requirements:
     slug: '^[a-zA-Z0-9-]+$'
-
 dashboard_attendee_reel_addedit_video:
-  path: /dashboard/attendee/manage-reels-video/{slug}/edit
+  path: '/dashboard/attendee/manage-reels-video/{slug}/edit'
   controller: 'App\Controller\Dashboard\Shared\ReelsController::addeditvideo'
-  methods: [ 'GET', 'POST' ]
+  methods:
+    - GET
+    - POST
   requirements:
     slug: '^[a-zA-Z0-9-]+$'
-
-# Add
 dashboard_attendee_reel_add_video:
   path: /dashboard/attendee/manage-reels-video/add
   controller: 'App\Controller\Dashboard\Shared\ReelsController::addeditvideo'
-  methods: [ 'GET', 'POST' ]
-
+  methods:
+    - GET
+    - POST
 dashboard_attendee_reel_add_image:
   path: /dashboard/attendee/manage-reels-image/add
   controller: 'App\Controller\Dashboard\Shared\ReelsController::addeditimage'
-  methods: [ 'GET', 'POST' ]
-
-# Disable/Delete
+  methods:
+    - GET
+    - POST
 dashboard_attendee_reel_disable_delete:
-  path: /dashboard/attendee/manage-reels/{slug}/disable
+  path: '/dashboard/attendee/manage-reels/{slug}/disable'
   controller: 'App\Controller\Dashboard\Shared\ReelsController::delete'
-  methods: [ 'GET' ]
-
-# Permanently Delete
+  methods:
+    - POST
 dashboard_attendee_reel_delete:
-  path: /dashboard/attendee/manage-reels/{slug}/delete
+  path: '/dashboard/attendee/manage-reels/{slug}/delete'
   controller: 'App\Controller\Dashboard\Shared\ReelsController::delete'
-  methods: [ 'GET' ]
-
-# Restore
+  methods:
+    - POST
 dashboard_attendee_reel_restore:
-  path: /dashboard/attendee/manage-reels/{slug}/restore
+  path: '/dashboard/attendee/manage-reels/{slug}/restore'
   controller: 'App\Controller\Dashboard\Shared\ReelsController::restore'
-  methods: [ 'GET' ]
-
-# Show/Hide
+  methods:
+    - POST
 dashboard_attendee_reel_showhide:
-  path: /dashboard/attendee/manage-reels/{slug}/{action}
+  path: '/dashboard/attendee/manage-reels/{slug}/{action}'
   controller: 'App\Controller\Dashboard\Shared\ReelsController::showhide'
-  methods: [ 'GET' ]
+  methods:
+    - POST
   requirements:
-    action: 'show|hide'
-
-##lives
-#
-## Index
-#dashboard_organizer_live:
-#  path: /dashboard/organizer/manage-lives
-#  controller: 'App\Controller\Dashboard\Shared\LiveController::index'
-#  methods: [ 'GET' ]
-#
-## Add/Edit
-#dashboard_organizer_live_addedit:
-#  path: /dashboard/organizer/manage-lives/{slug}/edit
-#  controller: 'App\Controller\Dashboard\Shared\LiveController::addedit'
-#  methods: [ 'GET', 'POST' ]
-#  requirements:
-#    slug: '^[a-zA-Z0-9-]+$'
-#
-## Disable/Delete
-#dashboard_organizer_live_disable_delete:
-#  path: /dashboard/organizer/manage-lives/{slug}/disable
-#  controller: 'App\Controller\Dashboard\Shared\LiveController::delete'
-#  methods: [ 'GET' ]
-#
-## Permanently Delete
-#dashboard_organizer_live_delete:
-#  path: /dashboard/organizer/manage-lives/{slug}/delete
-#  controller: 'App\Controller\Dashboard\Shared\LiveController::delete'
-#  methods: [ 'GET' ]
-#
-## Restore
-#dashboard_organizer_live_restore:
-#  path: /dashboard/organizer/manage-lives/{slug}/restore
-#  controller: 'App\Controller\Dashboard\Shared\LiveController::restore'
-#  methods: [ 'GET' ]
-#
-## Show/Hide
-#dashboard_organizer_live_showhide:
-#  path: /dashboard/organizer/manage-lives/{slug}/{action}
-#  controller: 'App\Controller\Dashboard\Shared\LiveController::showhide'
-#  methods: [ 'GET' ]
-#  requirements:
-#    action: 'show|hide'
-
+    action: show|hide
 dashboard_administrator_listing_category_disable:
-  path: /manage-listing-categories/{slug}/disable
+  path: '/manage-listing-categories/{slug}/disable'
   controller: 'App\Controller\Dashboard\Administrator\ListingCategoryController::delete'
-  methods: [ 'GET' ]
-
+  methods:
+    - POST
 dashboard_administrator_listing_category_delete:
-  path: /manage-listing-categories/{slug}/delete
+  path: '/manage-listing-categories/{slug}/delete'
   controller: 'App\Controller\Dashboard\Administrator\ListingCategoryController::delete'
-  methods: [ 'GET' ]
-
+  methods:
+    - POST
 dashboard_administrator_listing_category_restore:
-  path: /manage-listing-categories/{slug}/restore
+  path: '/manage-listing-categories/{slug}/restore'
   controller: 'App\Controller\Dashboard\Administrator\ListingCategoryController::restore'
-  methods: [ 'GET' ]
-
+  methods:
+    - POST
 dashboard_administrator_listing_category_show:
-  path: /manage-listing-categories/{slug}/show
+  path: '/manage-listing-categories/{slug}/show'
   controller: 'App\Controller\Dashboard\Administrator\ListingCategoryController::showhide'
-  methods: [ 'GET' ]
-
+  methods:
+    - POST
 dashboard_administrator_listing_category_hide:
-  path: /manage-listing-categories/{slug}/hide
+  path: '/manage-listing-categories/{slug}/hide'
   controller: 'App\Controller\Dashboard\Administrator\ListingCategoryController::showhide'
-  methods: [ 'GET' ]
-
+  methods:
+    - POST
 dashboard_administrator_listing_category_featured:
-  path: /manage-listing-categories/{slug}/featured
+  path: '/manage-listing-categories/{slug}/featured'
   controller: 'App\Controller\Dashboard\Administrator\ListingCategoryController::featured'
-  methods: [ 'GET' ]
-
+  methods:
+    - POST
 dashboard_administrator_listing_category_notfeatured:
-  path: /manage-listing-categories/{slug}/notfeatured
+  path: '/manage-listing-categories/{slug}/notfeatured'
   controller: 'App\Controller\Dashboard\Administrator\ListingCategoryController::featured'
-  methods: [ 'GET' ]
-
+  methods:
+    - POST
 dashboard_administrator_listing_category:
   path: /manage-listing-categories
   controller: 'App\Controller\Dashboard\Administrator\ListingCategoryController::index'
-  methods: [ 'GET' ]
-
+  methods:
+    - GET
 dashboard_administrator_listing_category_add:
   path: /manage-listing-categories/add
   controller: 'App\Controller\Dashboard\Administrator\ListingCategoryController::addedit'
-  methods: [ 'GET', 'POST' ]
-
+  methods:
+    - GET
+    - POST
 dashboard_administrator_listing_category_edit:
-  path: /manage-listing-categories/{slug}/edit
+  path: '/manage-listing-categories/{slug}/edit'
   controller: 'App\Controller\Dashboard\Administrator\ListingCategoryController::addedit'
-  methods: [ 'GET', 'POST' ]
-
+  methods:
+    - GET
+    - POST
 dashboard_doc_edit:
   path: /dashboard/doc/edit
   controller: 'App\Controller\Dashboard\Shared\DocumentController::editDoc'
-  methods: [ 'GET', 'POST' ]
-
+  methods:
+    - GET
+    - POST
 dashboard_doc_delete:
   path: /dashboard/doc/delete
   controller: 'App\Controller\Dashboard\Shared\DocumentController::deleteDoc'
-  methods: [ 'POST' ]
+  methods:
+    - POST

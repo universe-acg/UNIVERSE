@@ -76,7 +76,7 @@ class UserRepository extends ServiceEntityRepository
             $qb->andWhere("u.slug = :slug")->setParameter("slug", $slug);
         }
         if ($followedby !== "all") {
-            $qb->andWhere(":followedby MEMBER OF organizer.followedby")->setParameter("followedby", $followedby);
+            $qb->andWhere(":followedby MEMBER OF u.followedby")->setParameter("followedby", $followedby);
         }
 
         if ($hasboughtticketforEvent !== "all" || $hasboughtticketforOrganizer != "all" || $hasbookedticketfor != "all") {
@@ -162,7 +162,7 @@ class UserRepository extends ServiceEntityRepository
             $qb->andWhere("u.slug = :slug")->setParameter("slug", $slug);
         }
         if ($followedby !== "all") {
-            $qb->andWhere(":followedby MEMBER OF organizer.followedby")->setParameter("followedby", $followedby);
+            $qb->andWhere(":followedby MEMBER OF u.followedby")->setParameter("followedby", $followedby);
         }
 
         if ($hasboughtticketforEvent !== "all" || $hasboughtticketforOrganizer != "all" || $hasbookedticketfor != "all") {

@@ -12,7 +12,7 @@
         </thead>
         <tbody>
 
-            {% for order in orders if order.orderelements %}
+            {% for order in orders|filter(order => order.orderelements) %}
                 {% if true %}
                     <tr>
                     <td class="text-sm">

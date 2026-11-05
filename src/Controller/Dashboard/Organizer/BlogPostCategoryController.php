@@ -2,27 +2,29 @@
     /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-    
+
     namespace App\Controller\Dashboard\Organizer;
-    
+
     use App\Entity\BlogPost;
     use App\Form\BlogPostType;
     use App\Service\AppServices;
-    use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+    use App\Controller\BaseController as Controller;
     use Symfony\Component\HttpFoundation\Request;
-    use Symfony\Component\Routing\Annotation\Route;
-    
+    use Symfony\Component\Routing\Attribute\Route;
+
     class BlogPostCategoryController extends Controller
     {
-        
+
         /**
-         * @Route("/manage-blog-post-categories/add", name="blog_post_category_add", methods="GET|POST")
-         * @Route("/manage-blog-post-categories/{slug}/edit", name="blog_post_category_edit", methods="GET|POST")
+         *
+         *
          */
+#[Route("/manage-blog-post-categories/add", name: "blog_post_category_add", methods: ["GET","POST"])]
+#[Route("/manage-blog-post-categories/{slug}/edit", name: "blog_post_category_edit", methods: ["GET","POST"])]
         public function addedit(Request $request, AppServices $services, $slug = null)
         {
             $em = $this->getDoctrine()->getManager();
-            
+
             if (!$slug) {
                 $blogpost = new BlogPost();
             } else {
@@ -32,10 +34,10 @@
                     return $services->redirectToReferer('blog_post');
                 }
             }
-            
+
             $form = $this->createForm(BlogPostType::class, $blogpost);
             $form->handleRequest($request);
-            
+
             if ($form->isSubmitted()) {
                 if ($form->isValid()) {
                     $em->persist($blogpost);
@@ -47,7 +49,7 @@
                     }
                     return $this->redirectToRoute("dashboard_organizer_index");
                 }
-                
+
                 $this->addFlash('error', 'The form contains invalid data');
             }
             return $this->render('Dashboard/Administrator/BlogPost/add-edit.html.twig', array(

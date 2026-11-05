@@ -5,17 +5,18 @@
 
 namespace App\Controller\Dashboard\Main;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class MainController extends Controller
 {
 
     /**
-     * @Route("/", name="index")
+     *
      */
+#[Route("/", name: "index")]
     public function index(AuthorizationCheckerInterface $authChecker): RedirectResponse
     {
         if ($authChecker->isGranted('ROLE_ADMINISTRATOR')) {

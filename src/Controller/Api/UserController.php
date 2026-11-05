@@ -7,31 +7,30 @@ namespace App\Controller\Api;
 
 use App\Service\AppServices;
 use App\Service\UserService;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
-// Used in orders page
 
 class UserController extends Controller
 {
 
     /**
-     * @Route("/getmembers", name="xhr_get_members", methods={"GET"})
+     *
      */
+#[Route("/getmembers", name: "xhr_get_members", methods: ["GET"])]
     public function getMembers(Request $request, UserService $userService)
     {
-        // Return the member data as JSON response
+
         return new JsonResponse($this->getAllMembers($userService));
     }
 
-    // Add your getAllMembers method here
     private function getAllMembers(UserService $userService)
     {
-        // Your existing logic to retrieve members
+
         $users = $userService->getMembers();
         $userChoices = [];
         foreach ($users as $user) {
@@ -41,9 +40,11 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/get-organizer/{slug}", name="get_organizer")
-     * @Route("/get-user/{slug}", name="get_user")
+     *
+     *
      */
+#[Route("/get-organizer/{slug}", name: "get_organizer")]
+#[Route("/get-user/{slug}", name: "get_user")]
     public function getUserEntity(Request $request, $slug, AppServices $services): ?Response
     {
         if ($request->get('_route') == "get_organizer") {
@@ -73,9 +74,11 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/get-organizers", name="get_organizers")
-     * @Route("/get-users", name="get_users")
+     *
+     *
      */
+#[Route("/get-organizers", name: "get_organizers")]
+#[Route("/get-users", name: "get_users")]
     public function getUsers(Request $request, AppServices $services): Response
     {
 
@@ -94,7 +97,7 @@ class UserController extends Controller
             } else {
                 $attendees = $services->getUsers(array('keyword' => $q, 'role' => 'attendee', 'limit' => $limit))->getQuery()->getResult();
             }
-            $users = array_merge($attendees, $pointsofsale);
+            $users = $attendees;
         }
 
         $results = array();

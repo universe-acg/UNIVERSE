@@ -6,7 +6,7 @@
     <![endif]-->
 
     <meta charset="utf-8"/>
-    <meta name="robots" content="index, follow, all"/>
+    <meta name="robots" content="noindex,nofollow"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <title>{% block title %}{% endblock %} | {{ services.getSetting("website_name") }}</title>
     <meta property="og:site_name" content="{{ services.getSetting("website_name") }}"/>
@@ -48,7 +48,7 @@
     {{ encore_entry_script_tags('app') }}
 
     {{ encore_entry_link_tags('app.'~services.getSetting('app_theme')) }}
-    {{ encore_entry_link_tags('app.'~services.getSetting('app_theme')) }}
+    {{ encore_entry_script_tags('app.'~services.getSetting('app_theme')) }}
 
     {% block stylesheets %}
     {% endblock %}
@@ -348,5 +348,18 @@
 
     gtag('config', 'G-08KD17D9LL');
 </script>
+<script>
+// Preserve the existing logout links while submitting the firewall's protected POST action.
+document.addEventListener('click', function (event) {
+    var link = event.target.closest('a');
+    if (!link || new URL(link.href, location.href).pathname !== {{ path('fos_user_security_logout')|json_encode|raw }}) return;
+    event.preventDefault();
+    var form = document.createElement('form'); form.method = 'post'; form.action = link.href;
+    var token = document.createElement('input'); token.type = 'hidden'; token.name = '_csrf_token'; token.value = {{ csrf_token('logout')|json_encode|raw }};
+    form.appendChild(token); document.body.appendChild(form); form.submit();
+});
+</script>
+<script id="universe-action-config" type="application/json">{{ {'paths': mutation_paths(), 'token': csrf_token('action')}|json_encode|raw }}</script>
+<script src="{{ asset('js/legacy-actions.js') }}"></script>
 </body>
 </html>

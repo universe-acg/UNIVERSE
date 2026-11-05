@@ -119,7 +119,7 @@
                                 {# Event Dates calendar used on multi date events #}
                                 {% if event.hasTwoOrMoreEventDatesOnSale %}
                                     {% set eventDatesCalendar = [] %}
-                                    {% for eventDate in event.eventdates if eventDate.isOnSale %}
+                                    {% for eventDate in event.eventdates|filter(eventDate => eventDate.isOnSale) %}
                                         {% set eventDatesCalendar = eventDatesCalendar|merge([{"Date": eventDate.startdate|date('Y-m-d'), "Title": eventDate.startdate|date('g:i A'), "Link": eventDate.reference}]) %}
                                     {% endfor %}
                                     {#                                {% include "Global/message.html.twig" with { type: 'info', icon: 'fas fa-info-circle', message: "Click on a date to view tickets" } %} #}
@@ -130,7 +130,7 @@
 
                                 <div>
                                     <input type="hidden" name="reference" value="{{ event.id }}">
-                                    {% for eventDate in event.eventdates if eventDate.isOnSale %}
+                                    {% for eventDate in event.eventdates|filter(eventDate => eventDate.isOnSale) %}
                                         <div id="eventDate-{{ eventDate.reference }}-wrapper"
                                              class="event-eventDate-wrapper">
                                             <dl>

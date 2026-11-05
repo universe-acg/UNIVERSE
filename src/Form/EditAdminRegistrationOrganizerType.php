@@ -2,12 +2,12 @@
     /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-    
+
     namespace App\Form;
-    
+
     use App\Entity\User;
     use App\Validator\Constraints\AcgEmailDomain;
-    use FOS\UserBundle\Form\Type\RegistrationFormType;
+    use App\Form\IdentityRegistrationType as RegistrationFormType;
     use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
     use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -16,12 +16,12 @@
     use Symfony\Component\OptionsResolver\OptionsResolver;
     use Symfony\Component\Validator\Constraints\NotBlank;
     use Symfony\Component\Validator\Constraints\NotNull;
-    
+
     class EditAdminRegistrationOrganizerType extends AbstractType
     {
-        
-        public function buildForm(FormBuilderInterface $builder, array $options)
-        {
+
+        public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
             $builder
                 ->add('username', TextType::class, [
                     'purify_html' => true,
@@ -65,19 +65,19 @@
                     'help' => 'Complete organizer details if they are an organizer.'
                 ]);
         }
-        
-        public function getParent()
-        {
+
+        public function getParent(): ?string
+    {
             return RegistrationFormType::class;
         }
-        
-        public function getBlockPrefix()
-        {
+
+        public function getBlockPrefix(): string
+    {
             return 'app_user_registration';
         }
-        
-        public function configureOptions(OptionsResolver $resolver)
-        {
+
+        public function configureOptions(OptionsResolver $resolver): void
+    {
             $resolver->setDefaults([
                 'data_class' => User::class, // Set the entity class for their user
                 'user' => null, // Pass the user object when creating the form

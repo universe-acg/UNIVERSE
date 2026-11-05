@@ -211,132 +211,17 @@
         </main>
 
         <div style="display: block; position: relative; bottom: 0 !important;">
-            <form class="msger-inputarea">
-                <input type="text" class="msger-input" placeholder="Enter your message...">
+            <form class="msger-inputarea" method="post"{% if chatRoom %} action="{{ path('chat_messages',{chatId:chatRoom.id}) }}"{% endif %}>
+                <input type="hidden" name="_action_token" value="{{ csrf_token('action') }}">
+                <input type="text" name="message" maxlength="4000" required {% if not chatRoom %}disabled{% endif %} class="msger-input" placeholder="Enter your message...">
                 <button type="submit" class="btn-primary btn-sm">Send</button>
             </form>
         </div>
 
     </section>
 
-    <script>
-        const socket = new WebSocket('ws://universe.alexandroskourtis.me:8080'); // Replace with your server details
-
-        // Add an event listener for when the WebSocket connection is open
-        socket.addEventListener('open', (event) => {
-            console.log('WebSocket connection is open.');
-        });
-        // Function to scroll to the bottom of the chat box
-        const chatBox = document.querySelector(".msger-chat");
-
-        function scrollToBottom() {
-            chatBox.scrollTop = chatBox.scrollHeight - chatBox.clientHeight;
-        }
-
-        const msgerForm = get(".msger-inputarea");
-        const msgerInput = get(".msger-input");
-        const msgerChat = get(".msger-chat");
-
-        const BOT_MSGS = [
-            "Hi, how are you?",
-            "You are not talking to Alex's Hologram",
-            "Jaime le fromage et le pain au chocolat et toi?",
-            "Fromage",
-            "Bye!"];
-
-
-        // Icons made by Freepik from www.flaticon.com
-        const BOT_NAME = "BOT";
-        const PERSON_NAME = "{{ app.user.getCrossRoleName() }}";
-
-        msgerForm.addEventListener("submit", event => {
-            event.preventDefault();
-
-            const msgText = msgerInput.value;
-            if (!msgText) return;
-
-            appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText);
-            msgerInput.value = "";
-
-
-            socket.onmessage = (event) => {
-                const message = event.data;
-                console.dir(message);
-                // const chatDiv = document.getElementById('chat');
-                // chatDiv.innerHTML += message + '<br>';
-            };
-            botResponse();
-        });
-
-        function appendMessage(name, img, side, text) {
-            socket.send(text);
-            //   Simple solution for small apps
-            const msgHTML = `<div class="msg right-msg">
-    <div class="msg-bubble">
-        <div class="msg-info">
-            <div class="msg-info-name">${name}</div>
-        </div>
-        <div class="msg-text">${text}</div>
-        <div class="mt-4">
-            <p class="text-muted" style="font-size: 10px; float: right; color: #fff !important;">
-                ${formatDate(new Date())}
-            </p>
-        </div>
-    </div>
-</div>`;
-
-            msgerChat.insertAdjacentHTML("beforeend", msgHTML);
-            msgerChat.scrollTop += 500;
-            scrollToBottom();
-        }
-
-        function appendMessageResponse(name, img, side, text) {
-            //   Simple solution for small apps
-            const msgHTML = `
-<div class="msg left-msg">
-    <div class="msg-bubble">
-        <div class="msg-info">
-            <div class="msg-info-name">${name}</div>
-        </div>
-        <div class="msg-text">${text}</div>
-        <div class="mt-4">
-            <p class="text-muted" style="font-size: 10px; float: left;">
-                ${formatDate(new Date())}
-            </p>
-        </div>
-    </div>
-</div>
-`;
-
-            msgerChat.insertAdjacentHTML("beforeend", msgHTML);
-            msgerChat.scrollTop += 500;
-        }
-
-        function botResponse() {
-            const r = random(0, BOT_MSGS.length - 1);
-            const msgText = BOT_MSGS[r];
-            const delay = msgText.split(" ").length * 100;
-
-            setTimeout(() => {
-                appendMessageResponse(BOT_NAME, BOT_IMG, "left", msgText);
-                scrollToBottom();
-            }, delay);
-        }
-
-        // Utils
-        function get(selector, root = document) {
-            return root.querySelector(selector);
-        }
-
-        function formatDate(date) {
-            const h = "0" + date.getHours();
-            const m = "0" + date.getMinutes();
-
-            return `${h.slice(-2)}:${m.slice(-2)}`;
-        }
-
-        function random(min, max) {
-            return Math.floor(Math.random() * (max - min) + min);
-        }
-    </script>
+    {% if chatRoom %}
+    <script id="universe-chat-config" type="application/json">{{ {url:path('chat_messages',{chatId:chatRoom.id}),token:csrf_token('action'),after:lastMessageId}|json_encode|raw }}</script>
+    <script src="{{ asset('js/chat.js') }}" defer></script>
+    {% endif %}
 {% endblock %}

@@ -1,31 +1,11 @@
 <?php
-/*
- * AUTHOR: ALEXANDROS KOURTIS
- */
-
 namespace App\Service;
-
-use Twilio\Rest\Client;
-
-class TwilioService
+/** Self-contained demo SMS capture; never contacts a delivery provider. */
+final class TwilioService
 {
-    private $twilioClient;
-
-    public function __construct(string $accountSid, string $authToken)
-    {
-        $this->twilioClient = new Client($accountSid, $authToken);
+    public function __construct(private DemoMailer $capture) {}
+    public function sendSMS(string $to,string $message): array {
+        $this->capture->captureSms($to,$message);
+        return ['status'=>'captured','delivery'=>'demo'];
     }
-
-    public function sendSMS(string $to, string $message)
-    {
-        $this->twilioClient->messages->create(
-            $to,
-            [
-                'from' => "+306989442438",
-                'body' => $message,
-            ]
-        );
-    }
-
-    // Add other methods for Twilio operations here
 }

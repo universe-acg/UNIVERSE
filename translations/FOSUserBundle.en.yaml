@@ -1,0 +1,5 @@
+registration.confirmed: 'Congrats %username%, your account is now activated.'
+registration.back: 'Back to the originating page.'
+registration.check_email: 'A message has been prepared for %email%.'
+resetting.request.username: 'Username or email address'
+resetting.check_email: 'If an eligible account exists, a password reset message has been prepared. The link expires in %tokenLifetime% hour.'

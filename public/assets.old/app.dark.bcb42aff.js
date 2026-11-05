@@ -1,1 +1,0 @@
-(self.webpackChunk=self.webpackChunk||[]).push([[924],{61994:(s,e,k)=>{k(72424)},72424:(s,e,k)=>{"use strict";k.r(e)}},s=>{var e;e=61994,s(s.s=e)}]);

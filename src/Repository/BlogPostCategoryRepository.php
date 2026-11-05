@@ -2,20 +2,20 @@
     /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-    
+
     namespace App\Repository;
-    
+
     use App\Entity\BlogPostCategory;
     use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
     use Doctrine\Persistence\ManagerRegistry;
-    
+
     class BlogPostCategoryRepository extends ServiceEntityRepository
     {
         public function __construct(ManagerRegistry $registry)
         {
             parent::__construct($registry, BlogPostCategory::class);
         }
-        
+
         public function getBlogPostCategories($hidden, $keyword, $slug, $limit)
         {
             $qb = $this->createQueryBuilder("b");
@@ -33,16 +33,16 @@
                 $qb->setMaxResults($limit);
             }
 //        if ($order == "blogpostscount") {
-            $qb->leftJoin("b.blogposts", "blogposts");
-            $qb->addSelect("COUNT(blogposts.id) AS HIDDEN blogpostscount");
+
+            $qb->addSelect("SIZE(b.blogposts) AS HIDDEN blogpostscount");
             $qb->orderBy("blogpostscount", "DESC");
-            $qb->groupBy("b.id");
+
 //        } else {
 //            $qb->orderBy($order, $sort);
 //        }
             return $qb;
         }
-        
+
         public function findByName($name)
         {
             return $this->createQueryBuilder('c')

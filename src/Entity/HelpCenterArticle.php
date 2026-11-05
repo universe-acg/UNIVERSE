@@ -12,83 +12,64 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\HelpCenterArticleRepository")
- * @ORM\Table(name="universe_help_center_article")
- * @Assert\Callback({"App\Validation\Validator", "validate"})
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
- */
+#[ORM\Table(name: 'universe_help_center_article')]
+#[ORM\Entity(repositoryClass: \App\Repository\HelpCenterArticleRepository::class)]
+#[Assert\Callback(['App\Validation\Validator', 'validate'])]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
 class HelpCenterArticle
 {
 
     /**
-     * @Gedmo\Slug(fields={"title"}, updatable=true)
      * @EnglishOnly
      * @Profanity
-     * @ORM\Column(length=255, unique=true)
      */
+    #[Gedmo\Slug(fields: ['title'], updatable: true)]
+    #[ORM\Column(length: 255, unique: true)]
     protected $slug;
     /**
      * @EnglishOnly
      * @Profanity
-     * @ORM\Column(length=255, unique=true)
      */
+    #[ORM\Column(length: 255, unique: true)]
     protected $tags;
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
-     * @Assert\Length(min = 2)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 2)]
     private $title;
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
-     * @Assert\Length(min = 2)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 2)]
     private $content;
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
-    /**
-     * @ORM\ManyToOne(targetEntity="HelpCenterCategory", inversedBy="articles", fetch="EAGER")
-     */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\HelpCenterCategory::class, inversedBy: 'articles', fetch: 'LAZY')]
     private $category;
     /**
      * @var integer
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $views = 0;
-    /**
-     * @ORM\Column(type="boolean")
-     * @Assert\NotNull
-     */
+    #[ORM\Column(type: 'boolean')]
+    #[Assert\NotNull]
     private $hidden = false;
-    /**
-     * @ORM\Column(type="boolean")
-     * @Assert\NotNull
-     */
+    #[ORM\Column(type: 'boolean')]
+    #[Assert\NotNull]
     private $featured = false;
     /**
      * @var DateTime $createdAt
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
      */
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(type: 'datetime')]
     private $createdAt;
     /**
      * @var DateTime $updatedAt
-     *
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[Gedmo\Timestampable(on: 'update')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updatedAt;
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $deletedAt;
 
     /**

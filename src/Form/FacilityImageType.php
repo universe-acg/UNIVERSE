@@ -15,7 +15,7 @@ use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class FacilityImageType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('imageFile', VichImageType::class, [
@@ -48,7 +48,7 @@ class FacilityImageType extends AbstractType
             ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => FacilityEntityImage::class,

@@ -9,16 +9,17 @@ use App\Entity\HelpCenterCategory;
 use App\Form\HelpCenterCategoryType;
 use App\Service\AppServices;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class HelpCenterCategoryController extends Controller
 {
 
     /**
-     * @Route("/manage-help-center/categories", name="help_center_category", methods="GET")
+     *
      */
+#[Route("/manage-help-center/categories", name: "help_center_category", methods: ["GET"])]
     public function index(Request $request, PaginatorInterface $paginator, AppServices $services)
     {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
@@ -32,9 +33,11 @@ class HelpCenterCategoryController extends Controller
     }
 
     /**
-     * @Route("/manage-help-center/categories/add", name="help_center_category_add", methods="GET|POST")
-     * @Route("/manage-help-center/categories/{slug}/edit", name="help_center_category_edit", methods="GET|POST")
+     *
+     *
      */
+#[Route("/manage-help-center/categories/add", name: "help_center_category_add", methods: ["GET","POST"])]
+#[Route("/manage-help-center/categories/{slug}/edit", name: "help_center_category_edit", methods: ["GET","POST"])]
     public function addedit(Request $request, AppServices $services, $slug = null)
     {
         $em = $this->getDoctrine()->getManager();
@@ -73,9 +76,11 @@ class HelpCenterCategoryController extends Controller
     }
 
     /**
-     * @Route("/manage-help-center/categories/{slug}/disable", name="help_center_category_disable", methods="GET")
-     * @Route("/manage-help-center/categories/{slug}/delete", name="help_center_category_delete", methods="GET")
+     *
+     *
      */
+#[Route("/manage-help-center/categories/{slug}/disable", name: "help_center_category_disable", methods: ["POST"])]
+#[Route("/manage-help-center/categories/{slug}/delete", name: "help_center_category_delete", methods: ["POST"])]
     public function delete(AppServices $services, $slug)
     {
 
@@ -104,8 +109,9 @@ class HelpCenterCategoryController extends Controller
     }
 
     /**
-     * @Route("/manage-help-center/categories/{slug}/restore", name="help_center_category_restore", methods="GET")
+     *
      */
+#[Route("/manage-help-center/categories/{slug}/restore", name: "help_center_category_restore", methods: ["POST"])]
     public function restore($slug, AppServices $services)
     {
 
@@ -124,9 +130,11 @@ class HelpCenterCategoryController extends Controller
     }
 
     /**
-     * @Route("/manage-help-center/categories/{slug}/show", name="help_center_category_show", methods="GET")
-     * @Route("/manage-help-center/categories/{slug}/hide", name="help_center_category_hide", methods="GET")
+     *
+     *
      */
+#[Route("/manage-help-center/categories/{slug}/show", name: "help_center_category_show", methods: ["POST"])]
+#[Route("/manage-help-center/categories/{slug}/hide", name: "help_center_category_hide", methods: ["POST"])]
     public function showhide(AppServices $services, $slug)
     {
 

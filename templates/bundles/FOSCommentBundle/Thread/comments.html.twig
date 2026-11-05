@@ -34,7 +34,7 @@ with this source code in the file LICENSE.
     {% endif %}
 
     {% set count = thread.numComments %}
-    <h4>{% transchoice count with {'%count%': count} from 'FOSCommentBundle' %}fos_comment_thread_comment_count{% endtranschoice %}</h4>
+    <h4>{{ count }} comments</h4>
 {% endif %}
 
 {% for commentinfo in comments %}

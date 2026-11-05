@@ -9,59 +9,50 @@ use App\Entity\HelpCenterArticle;
 use App\Form\HelpCenterArticleType;
 use App\Service\AppServices;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class HelpCenterArticleController extends Controller
 {
 
     /**
-     * @Route("/manage-help-center/articles", name="help_center_article", methods="GET")
+     *
      */
+#[Route("/manage-help-center/articles", name: "help_center_article", methods: ["GET"])]
     public function index(Request $request, PaginatorInterface $paginator, AppServices $services)
     {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
 
         $articles = $services->getHelpCenterArticles(array('keyword' => $keyword, 'hidden' => 'all', 'sort' => 'DESC', 'order' => 'updatedAt'))->getQuery()->getResult();
 
-        // Custom sorting function
         usort($articles, static function (HelpCenterArticle $a, HelpCenterArticle $b) {
             $categorya = $a->getCategory()->getSlug();
             $categoryb = $b->getCategory()->getSlug();
 
-            // Define the order of categories
             $categoryOrder = ['account', 'attendee', 'creator'];
 
-            // Compare the category order
             $categoryComparison = array_search($categorya, $categoryOrder, true) - array_search($categoryb, $categoryOrder, true);
 
-            // If categories are the same, sort by the first one or two letters (if numeric)
             if ($categoryComparison === 0) {
                 $aName = $a->getTitle();
                 $bName = $b->getTitle();
 
-                // Extract the first one or two letters (if numeric)
                 $aFirstLetters = preg_replace('/[^0-9]*/', '', substr($aName, 0, 2));
                 $bFirstLetters = preg_replace('/[^0-9]*/', '', substr($bName, 0, 2));
 
-                // Check if both first letters are non-numeric
                 if (!is_numeric($aFirstLetters) && !is_numeric($bFirstLetters)) {
-                    // Skip the sort for this iteration by returning 0
+
                     return 0;
                 }
 
-                // Check if both first letters are non-numeric
                 if (!is_numeric($aFirstLetters) || !is_numeric($bFirstLetters)) {
-                    // Skip the sort for this iteration by returning 0
+
                     return 0;
                 }
 
-                // Compare the first letters (numeric values only)
                 $alphaComparison = (int)$aFirstLetters - (int)$bFirstLetters;
 
-
-                // If both are non-numeric or equal numeric values, sort alphabetically
                 if ($alphaComparison === 0) {
                     return strcmp($aName, $bName);
                 }
@@ -80,9 +71,11 @@ class HelpCenterArticleController extends Controller
     }
 
     /**
-     * @Route("/manage-help-center/articles/add", name="help_center_article_add", methods="GET|POST")
-     * @Route("/manage-help-center/articles/{slug}/edit", name="help_center_article_edit", methods="GET|POST")
+     *
+     *
      */
+#[Route("/manage-help-center/articles/add", name: "help_center_article_add", methods: ["GET","POST"])]
+#[Route("/manage-help-center/articles/{slug}/edit", name: "help_center_article_edit", methods: ["GET","POST"])]
     public function addedit(Request $request, AppServices $services, $slug = null)
     {
         $em = $this->getDoctrine()->getManager();
@@ -121,9 +114,11 @@ class HelpCenterArticleController extends Controller
     }
 
     /**
-     * @Route("/manage-help-center/articles/{slug}/featured", name="help_center_article_featured", methods="GET")
-     * @Route("/manage-help-center/articles/{slug}/notfeatured", name="help_center_article_notfeatured", methods="GET")
+     *
+     *
      */
+#[Route("/manage-help-center/articles/{slug}/featured", name: "help_center_article_featured", methods: ["POST"])]
+#[Route("/manage-help-center/articles/{slug}/notfeatured", name: "help_center_article_notfeatured", methods: ["POST"])]
     public function featured(AppServices $services, $slug)
     {
 
@@ -146,9 +141,11 @@ class HelpCenterArticleController extends Controller
     }
 
     /**
-     * @Route("/manage-help-center/articles/{slug}/disable", name="help_center_article_disable", methods="GET")
-     * @Route("/manage-help-center/articles/{slug}/delete", name="help_center_article_delete", methods="GET")
+     *
+     *
      */
+#[Route("/manage-help-center/articles/{slug}/disable", name: "help_center_article_disable", methods: ["POST"])]
+#[Route("/manage-help-center/articles/{slug}/delete", name: "help_center_article_delete", methods: ["POST"])]
     public function delete(AppServices $services, $slug)
     {
 
@@ -172,8 +169,9 @@ class HelpCenterArticleController extends Controller
     }
 
     /**
-     * @Route("/manage-help-center/articles/{slug}/restore", name="help_center_article_restore", methods="GET")
+     *
      */
+#[Route("/manage-help-center/articles/{slug}/restore", name: "help_center_article_restore", methods: ["POST"])]
     public function restore($slug, AppServices $services)
     {
 
@@ -192,9 +190,11 @@ class HelpCenterArticleController extends Controller
     }
 
     /**
-     * @Route("/manage-help-center/articles/{slug}/show", name="help_center_article_show", methods="GET")
-     * @Route("/manage-help-center/articles/{slug}/hide", name="help_center_article_hide", methods="GET")
+     *
+     *
      */
+#[Route("/manage-help-center/articles/{slug}/show", name: "help_center_article_show", methods: ["POST"])]
+#[Route("/manage-help-center/articles/{slug}/hide", name: "help_center_article_hide", methods: ["POST"])]
     public function showhide(AppServices $services, $slug)
     {
 

@@ -1,0 +1,14 @@
+{
+  "source_url": "https://www.acg.edu/news-events/department-of-college-events-office-of-the-president/past-events/",
+  "retrieved_at": "2026-11-05",
+  "year_windows": [
+    {
+      "year": 2026,
+      "status": "failed",
+      "error": "Calendar API returned no events for a year with verified archive events; extraction is incomplete."
+    }
+  ],
+  "events": 191,
+  "boundary": "three consecutive empty preceding years",
+  "complete": false
+}

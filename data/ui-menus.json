@@ -1,0 +1,178 @@
+[
+  {
+    "slug": "header-menu",
+    "name": "Header",
+    "elements": [
+      {
+        "icon": "fas fa-calendar-alt",
+        "slug": "events",
+        "link": "/events",
+        "customLink": null,
+        "label": "Events",
+        "position": 0
+      },
+      {
+        "icon": "fas fa-ticket-alt",
+        "slug": "my-tickets",
+        "link": null,
+        "customLink": "/dashboard/attendee/my-tickets",
+        "label": "My Tickets",
+        "position": 2
+      },
+      {
+        "icon": "fas fa-address-book",
+        "slug": "creators",
+        "link": null,
+        "customLink": "/creators",
+        "label": "Creators",
+        "position": 1
+      },
+      {
+        "icon": "fas fa-calendar",
+        "slug": "add-event",
+        "link": null,
+        "customLink": "/dashboard/organizer/my-events/add",
+        "label": "Add Event",
+        "position": 3
+      }
+    ]
+  },
+  {
+    "slug": "first-footer-section-menu",
+    "name": "First",
+    "elements": [
+      {
+        "icon": null,
+        "slug": "about-us",
+        "link": "/page/about-us",
+        "customLink": null,
+        "label": "About us",
+        "position": 0
+      },
+      {
+        "icon": null,
+        "slug": "help-center",
+        "link": null,
+        "customLink": "/help-center",
+        "label": "Help center",
+        "position": 1
+      },
+      {
+        "icon": null,
+        "slug": "privacy-policy",
+        "link": null,
+        "customLink": "/page/privacy-policy",
+        "label": "Privacy policy",
+        "position": 2
+      },
+      {
+        "icon": null,
+        "slug": "cookie-policy",
+        "link": null,
+        "customLink": "/page/cookie-policy",
+        "label": "Cookie policy",
+        "position": 3
+      },
+      {
+        "icon": null,
+        "slug": "terms-of-service",
+        "link": null,
+        "customLink": "/page/terms-of-service",
+        "label": "Terms of service",
+        "position": 4
+      }
+    ]
+  },
+  {
+    "slug": "second-footer-section-menu",
+    "name": "Second",
+    "elements": [
+      {
+        "icon": null,
+        "slug": "register-as-attendee",
+        "link": null,
+        "customLink": "/signup/attendee",
+        "label": "Register as attendee",
+        "position": 0
+      },
+      {
+        "icon": null,
+        "slug": "register-as-creator",
+        "link": null,
+        "customLink": "/signup/organizer",
+        "label": "Register as creator",
+        "position": 1
+      },
+      {
+        "icon": null,
+        "slug": "my-tickets-1",
+        "link": null,
+        "customLink": "/dashboard/attendee/my-tickets",
+        "label": "My tickets",
+        "position": 2
+      },
+      {
+        "icon": null,
+        "slug": "update-password",
+        "link": null,
+        "customLink": "/dashboard/change-password",
+        "label": "Update password",
+        "position": 3
+      },
+      {
+        "icon": null,
+        "slug": "update-email",
+        "link": null,
+        "customLink": "/api/profile/change-email",
+        "label": "Update email",
+        "position": 4
+      }
+    ]
+  },
+  {
+    "slug": "third-footer-section-menu",
+    "name": "Third",
+    "elements": [
+      {
+        "icon": null,
+        "slug": "events-1",
+        "link": null,
+        "customLink": "/events",
+        "label": "Events",
+        "position": 0
+      },
+      {
+        "icon": null,
+        "slug": "leaderboards",
+        "link": null,
+        "customLink": "/leaderboards",
+        "label": "Leaderboards",
+        "position": 1
+      },
+      {
+        "icon": null,
+        "slug": "venues-1",
+        "link": null,
+        "customLink": "/venues",
+        "label": "Venues",
+        "position": 2
+      },
+      {
+        "icon": null,
+        "slug": "athletics",
+        "link": null,
+        "customLink": "/athletics",
+        "label": "Athletics",
+        "position": 3
+      },
+      {
+        "icon": null,
+        "slug": "listings",
+        "link": null,
+        "customLink": "/listings",
+        "label": "Listings",
+        "position": 4
+      }
+    ]
+  }
+]

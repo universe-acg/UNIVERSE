@@ -24,7 +24,7 @@ class AthleticBookingType extends AbstractType
         $this->facilityService = $facilityService;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('duration', ChoiceType::class, [
@@ -120,7 +120,7 @@ class AthleticBookingType extends AbstractType
         return $choices;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => AthleticBooking::class,

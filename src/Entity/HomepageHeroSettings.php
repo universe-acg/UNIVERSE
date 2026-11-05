@@ -18,86 +18,59 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\HomepageHeroSettingsRepository")
- * @ORM\Table(name="universe_homepage_hero_setting")
- * @Vich\Uploadable
- */
+#[ORM\Table(name: 'universe_homepage_hero_setting')]
+#[ORM\Entity(repositoryClass: \App\Repository\HomepageHeroSettingsRepository::class)]
+#[Vich\Uploadable]
 class HomepageHeroSettings
 {
     /**
      * @EnglishOnly
      * @Profanity
-     * @ORM\Column(length=255, unique=true)
      */
+    #[ORM\Column(length: 255, unique: true)]
     protected $title;
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=false)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: false)]
     private $content;
-    /**
-     * @ORM\OneToMany(targetEntity="Event", mappedBy="isonhomepageslider", cascade={"persist"})
-     */
+    #[ORM\OneToMany(targetEntity: \App\Entity\Event::class, mappedBy: 'isonhomepageslider', cascade: ['persist'])]
     private $events;
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
-     */
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
     private $paragraph;
-    /**
-     * @ORM\OneToMany(targetEntity="User", mappedBy="isorganizeronhomepageslider")
-     */
+    #[ORM\OneToMany(targetEntity: \App\Entity\User::class, mappedBy: 'isorganizeronhomepageslider')]
     private $organizers;
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      *
-     * @Vich\UploadableField(mapping="homepage_hero_custom_background", fileNameProperty="customBackgroundName", size="customBackgroundSize", mimeType="customBackgroundMimeType", originalName="customBackgroundOriginalName", dimensions="customBackgroundDimensions")
-     * @Assert\File(
-     *     maxSize = "5M",
-     *     mimeTypes = {"image/jpeg", "image/jpg", "image/gif", "image/png"},
-     *     mimeTypesMessage = "The file should be an image"
-     *     )
      * @var File
      */
+    #[Assert\File(maxSize: '5M', mimeTypes: ['image/jpeg', 'image/jpg', 'image/gif', 'image/png'], mimeTypesMessage: 'The file should be an image')]
+    #[Vich\UploadableField(mapping: 'homepage_hero_custom_background', fileNameProperty: 'customBackgroundName', size: 'customBackgroundSize', mimeType: 'customBackgroundMimeType', originalName: 'customBackgroundOriginalName', dimensions: 'customBackgroundDimensions')]
     private $customBackgroundFile;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $customBackgroundName;
     /**
-     * @ORM\Column(type="integer", nullable=true)
      *
      * @var integer
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $customBackgroundSize;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $customBackgroundMimeType;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $customBackgroundOriginalName;
-    /**
-     * @ORM\Column(type="simple_array", nullable=true)
-     */
+    #[ORM\Column(type: 'simple_array', nullable: true)]
     private $customBackgroundDimensions;
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $show_search_box;
     /**
      * @var DateTime $updatedAt
-     *
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[Gedmo\Timestampable(on: 'update')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updatedAt;
 
     public function __construct()

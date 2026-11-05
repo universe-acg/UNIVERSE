@@ -11,68 +11,50 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\AthleticBookingRepository")
- * @ORM\Table(name="universe_athletic_booking")
- * @Assert\Callback({"App\Validation\Validator", "validate"})
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
- * @Vich\Uploadable
- */
+#[ORM\Table(name: 'universe_athletic_booking')]
+#[ORM\Entity(repositoryClass: \App\Repository\AthleticBookingRepository::class)]
+#[Assert\Callback(['App\Validation\Validator', 'validate'])]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
+#[Vich\Uploadable]
 class AthleticBooking
 {
 
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $status;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     private $amount;
-    /**
-     * @ORM\ManyToOne(targetEntity="FacilityEntity")
-     * @ORM\JoinColumn(name="facility_id", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'facility_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \App\Entity\FacilityEntity::class)]
     private $facility;
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     private $duration;
-    /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="orders")
-     */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\User::class, inversedBy: 'athleticbookings')]
     private $user;
 
     private $ispast;
-    /**
-     * @ORM\Column(type="datetime", nullable=false)
-     */
+    #[ORM\Column(type: 'datetime', nullable: false)]
     private $bookingDate;
 
     private $bookingTime;
 
     /**
      * @var DateTime $createdAt
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
      */
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(type: 'datetime')]
     private $createdAt;
     /**
      * @var DateTime $updatedAt
-     *
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[Gedmo\Timestampable(on: 'update')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updatedAt;
 
     /**

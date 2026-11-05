@@ -10,16 +10,17 @@ use App\Form\LiveType;
 use App\Service\AppServices;
 use App\Service\LiveService;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class LiveController extends Controller
 {
     /**
-     * @Route("/dashboard/organizer/manage-lives", name="dashboard_organizer_live", methods="GET")
+     *
      */
+#[Route("/organizer/manage-lives", name: "dashboard_organizer_live", methods: ["GET"])]
     public function index(Request $request, PaginatorInterface $paginator, LiveService $liveService)
     {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
@@ -32,10 +33,12 @@ class LiveController extends Controller
     }
 
     /**
-     * @Route("/dashboard/organizer/manage-lives/add", name="dashboard_organizer_live_add", methods="GET|POST")
-     * @Route("/dashboard/organizer/manage-lives/{slug}/edit", name="dashboard_organizer_live_edit", methods="GET|POST")
+     *
+     *
      */
-    public function addedit(Request $request, AppServices $appServices, LiveService $liveService, $slug = null, AuthorizationCheckerInterface $authChecker)
+#[Route("/organizer/manage-lives/add", name: "dashboard_organizer_live_add", methods: ["GET","POST"])]
+#[Route("/organizer/manage-lives/{slug}/edit", name: "dashboard_organizer_live_edit", methods: ["GET","POST"])]
+    public function addedit(Request $request, AppServices $appServices, LiveService $liveService, AuthorizationCheckerInterface $authChecker, $slug = null)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -80,6 +83,7 @@ class LiveController extends Controller
      *
      * @param Live $live
      */
+
     private function handleImageUpload(Live $live)
     {
         if ($live->getMainImageFile()) {
@@ -89,9 +93,11 @@ class LiveController extends Controller
     }
 
     /**
-     * @Route("/dashboard/organizer/manage-lives/{slug}/disable", name="dashboard_organizer_live_disable", methods="GET")
-     * @Route("/dashboard/organizer/manage-lives/{slug}/delete", name="dashboard_organizer_live_delete", methods="GET")
+     *
+     *
      */
+#[Route("/organizer/manage-lives/{slug}/disable", name: "dashboard_organizer_live_disable", methods: ["POST"])]
+#[Route("/organizer/manage-lives/{slug}/delete", name: "dashboard_organizer_live_delete", methods: ["POST"])]
     public function delete(AppServices $appServices, LiveService $liveService, $slug, AuthorizationCheckerInterface $authChecker)
     {
         $em = $this->getDoctrine()->getManager();
@@ -114,8 +120,9 @@ class LiveController extends Controller
     }
 
     /**
-     * @Route("/dashboard/organizer/manage-lives/{slug}/restore", name="dashboard_organizer_live_restore", methods="GET")
+     *
      */
+#[Route("/organizer/manage-lives/{slug}/restore", name: "dashboard_organizer_live_restore", methods: ["POST"])]
     public function restore($slug, Request $request, AppServices $appServices, LiveService $liveService)
     {
         $live = $liveService->getLives(array('organizer' => "all", 'hidden' => 'all', 'slug' => $slug, "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();
@@ -133,9 +140,11 @@ class LiveController extends Controller
     }
 
     /**
-     * @Route("/dashboard/organizer/manage-lives/{slug}/show", name="dashboard_organizer_live_show", methods="GET")
-     * @Route("/dashboard/organizer/manage-lives/{slug}/hide", name="dashboard_organizer_live_hide", methods="GET")
+     *
+     *
      */
+#[Route("/organizer/manage-lives/{slug}/show", name: "dashboard_organizer_live_show", methods: ["POST"])]
+#[Route("/organizer/manage-lives/{slug}/hide", name: "dashboard_organizer_live_hide", methods: ["POST"])]
     public function showhide(AppServices $appServices, LiveService $liveService, $slug, AuthorizationCheckerInterface $authChecker)
     {
         $live = $liveService->getLives(array('hidden' => 'all', 'slug' => $slug))[0];

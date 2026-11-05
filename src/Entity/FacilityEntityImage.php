@@ -12,64 +12,44 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\FacilityEntityImageRepository")
- * @ORM\Table(name="universe_facility_images")
- * @Vich\Uploadable
- */
+#[ORM\Table(name: 'universe_facility_images')]
+#[ORM\Entity(repositoryClass: \App\Repository\FacilityEntityImageRepository::class)]
+#[Vich\Uploadable]
 class FacilityEntityImage
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="FacilityEntity", inversedBy="secondaryImages", cascade={"persist"})
-     */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\FacilityEntity::class, inversedBy: 'secondaryImages', cascade: ['persist'])]
     private $facility;
-    /**
-     * @ORM\Column(name="position", type="integer", nullable=true)
-     */
+    #[ORM\Column(name: 'position', type: 'integer', nullable: true)]
     private $position;
     /**
-     * @Vich\UploadableField(mapping="facility_image", fileNameProperty="imageName", size="imageSize", mimeType="imageMimeType", originalName="imageOriginalName")
-     * @Assert\File(
-     *     maxSize = "8M",
-     *     mimeTypes = {"image/jpeg", "image/jpg", "image/gif", "image/png"},
-     *     mimeTypesMessage = "The file should be an image"
-     * )
      * @var File
      */
+    #[Assert\File(maxSize: '8M', mimeTypes: ['image/jpeg', 'image/jpg', 'image/gif', 'image/png'], mimeTypesMessage: 'The file should be an image')]
+    #[Vich\UploadableField(mapping: 'facility_image', fileNameProperty: 'imageName', size: 'imageSize', mimeType: 'imageMimeType', originalName: 'imageOriginalName')]
     private $imageFile;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $imageName;
     /**
-     * @ORM\Column(type="integer", nullable=true)
      *
      * @var integer
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $imageSize;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $imageMimeType;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $imageOriginalName;
-    /**
-     * @ORM\Column(type="simple_array", nullable=true)
-     */
+    #[ORM\Column(type: 'simple_array', nullable: true)]
     private $imageDimensions;
     /**
      * @var DateTime $updatedAt
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updatedAt;
 
     /**

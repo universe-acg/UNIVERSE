@@ -2,11 +2,11 @@
     /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-    
+
     namespace App\Form;
-    
+
     use App\Validator\Constraints\AcgEmailDomain;
-    use FOS\UserBundle\Form\Type\RegistrationFormType;
+    use App\Form\IdentityRegistrationType as RegistrationFormType;
     use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\Extension\Core\Type\EmailType;
     use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -17,21 +17,21 @@
     use Symfony\Component\Validator\Constraints\Length;
     use Symfony\Component\Validator\Constraints\NotBlank;
     use Symfony\Component\Validator\Constraints\Regex;
-    
+
     class AdminRegistrationTypeAttendee extends AbstractType
     {
         private $requestStack;
-        
+
         public function __construct(RequestStack $requestStack)
         {
             $this->requestStack = $requestStack;
         }
-        
-        public function buildForm(FormBuilderInterface $builder, array $options)
-        {
+
+        public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
             $request = $this->requestStack->getCurrentRequest();
             $currentRoute = $request->attributes->get('_route');
-            
+
             $builder
                 ->add('firstname', TextType::class, [
                     'purify_html' => true,
@@ -51,7 +51,7 @@
                     ],
                     'attr' => ['placeholder' => 'Enter their last name'],
                 ]);
-            
+
             if ($currentRoute === 'registration_register_attendee_admin') {
                 $builder->
                 add('studentid', TextType::class, [
@@ -66,7 +66,7 @@
                     ],
                 ]);
             }
-            
+
             $builder->add('username', TextType::class, [
                 'purify_html' => true,
                 'required' => true,
@@ -109,14 +109,14 @@
                     'invalid_message' => 'fos_user.password.mismatch',
                 ]);
         }
-        
-        public function getParent()
-        {
+
+        public function getParent(): ?string
+    {
             return RegistrationFormType::class;
         }
-        
-        public function getBlockPrefix()
-        {
+
+        public function getBlockPrefix(): string
+    {
             return 'app_user_registration';
         }
     }

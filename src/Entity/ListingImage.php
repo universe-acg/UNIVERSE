@@ -13,76 +13,55 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\ListingImageRepository")
- * @ORM\Table(name="universe_listing_image")
- * @Vich\Uploadable
- */
+#[ORM\Table(name: 'universe_listing_image')]
+#[ORM\Entity(repositoryClass: \App\Repository\ListingImageRepository::class)]
+#[Vich\Uploadable]
 class ListingImage
 {
 
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Listing", inversedBy="images")
-     */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\Listing::class, inversedBy: 'images')]
     private $listing;
 
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      *
-     * @Vich\UploadableField(mapping="listing_image", fileNameProperty="imageName", size="imageSize", mimeType="imageMimeType", originalName="imageOriginalName", dimensions="imageDimensions")
-     * @Assert\File(
-     *     maxSize = "5M",
-     *     mimeTypes = {"image/jpeg", "image/jpg", "image/gif", "image/png"},
-     *     mimeTypesMessage = "The file should be an image",
-     *      groups={"create"}
-     *     )
      * @var File
      */
+    #[Assert\File(maxSize: '5M', mimeTypes: ['image/jpeg', 'image/jpg', 'image/gif', 'image/png'], mimeTypesMessage: 'The file should be an image', groups: ['create'])]
+    #[Vich\UploadableField(mapping: 'listing_image', fileNameProperty: 'imageName', size: 'imageSize', mimeType: 'imageMimeType', originalName: 'imageOriginalName', dimensions: 'imageDimensions')]
     private $imageFile;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $imageName;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
      *
      * @var integer
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $imageSize;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $imageMimeType;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $imageOriginalName;
 
-    /**
-     * @ORM\Column(type="simple_array", nullable=true)
-     */
+    #[ORM\Column(type: 'simple_array', nullable: true)]
     private $imageDimensions;
 
-    /**
-     * @ORM\Column(name="position", type="integer", nullable=true)
-     */
+    #[ORM\Column(name: 'position', type: 'integer', nullable: true)]
     private $position;
 
     /**
      * @var DateTime $updatedAt
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updatedAt;
 
     public function getId()

@@ -13,17 +13,18 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @Command("scrape:events")
  */
+#[\Symfony\Component\Console\Attribute\AsCommand(name: 'scrape:events')]
 class ScrapeEventsCommand extends Command
 {
     protected static $defaultName = 'scrape:events';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Scrape events and store them in the database.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // Your scraping logic here
         $client = new Client();

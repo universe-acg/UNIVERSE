@@ -9,7 +9,7 @@ use App\Entity\Event;
 use App\Service\AppServices;
 use App\Service\UserService;
 use App\Validator\Constraints\TagLimitConstraint;
-use FOS\RestBundle\Controller\Annotations\Options;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;

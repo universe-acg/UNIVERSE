@@ -17,7 +17,7 @@
                         <div class="card-body">
                             <div class="col-12 col-md-6 mx-auto">
 
-                                {{ form_start(form, { 'action': path('fos_user_resetting_reset', {'token': token})}, {'attr': {'novalidate': 'novalidate'}}) }}
+                                {{ form_start(form, {'action': path('fos_user_resetting_reset', {'token': token}), 'attr': {'novalidate': 'novalidate'}}) }}
                                 {{ form_widget(form) }}
 
                                 <div class="form-group">

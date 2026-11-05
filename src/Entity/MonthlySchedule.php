@@ -8,35 +8,23 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="monthly_schedule")
- */
+#[ORM\Table(name: 'monthly_schedule')]
+#[ORM\Entity]
 class MonthlySchedule
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="date", nullable=false)
-     */
+    #[ORM\Column(type: 'date', nullable: false)]
     private $startDate;
 
-    /**
-     * @ORM\Column(type="date", nullable=false)
-     */
+    #[ORM\Column(type: 'date', nullable: false)]
     private $endDate;
-    /**
-     * @ORM\ManyToOne(targetEntity="FacilityEntity", inversedBy="monthlySchedule", cascade={"persist", "remove"})
-     */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\FacilityEntity::class, inversedBy: 'monthlySchedule', cascade: ['persist'])]
     private $facility;
-    /**
-     * @ORM\OneToMany(targetEntity="OperatingHours", mappedBy="monthlySchedule", cascade={"persist", "remove"})
-     */
+    #[ORM\OneToMany(targetEntity: \App\Entity\OperatingHours::class, mappedBy: 'monthlySchedule', cascade: ['persist', 'remove'])]
     private $operatingHours;
 
     public function __construct()

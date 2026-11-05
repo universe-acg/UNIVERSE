@@ -6,10 +6,10 @@
 namespace App\Controller\Dashboard\Shared;
 
 use App\Service\NotificationService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Controller\BaseController as AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class NotificationController extends AbstractController
 {
@@ -21,11 +21,12 @@ class NotificationController extends AbstractController
     }
 
     /**
-     * @Route("/notifications", name="notification_list")
+     *
      */
+#[Route("/notifications", name: "notification_list")]
     public function listNotifications()
     {
-        // Get the currently logged-in user (you may need to adjust this to your authentication system)
+
         $user = $this->getUser();
 
         if ($user) {
@@ -40,11 +41,12 @@ class NotificationController extends AbstractController
     }
 
     /**
-     * @Route("/notifications/{id}", name="notification_show")
+     *
      */
+#[Route("/notifications/{id}", name: "notification_show")]
     public function showNotification($id)
     {
-        // Get the currently logged-in user (you may need to adjust this to your authentication system)
+
         $user = $this->getUser();
 
         if ($user) {
@@ -63,15 +65,16 @@ class NotificationController extends AbstractController
     }
 
     /**
-     * @Route("/notifications/mark/all_as_read", name="mark_all_notifications_as_read")
+     *
      */
+#[Route("/notifications/mark/all_as_read", name: "mark_all_notifications_as_read", methods: ["POST"])]
     public function markAllNotificationsAsRead(NotificationService $notificationService): Response
     {
-        // Get the currently logged-in user (you may need to adjust this to your authentication system)
+
         $user = $this->getUser();
 
         if ($user) {
-            // Mark all notifications as read for the current user
+
             $notificationService->markAllNotificationsAsRead($user);
 
             $this->addFlash('success', 'All notifications have been marked as read.');
@@ -83,11 +86,12 @@ class NotificationController extends AbstractController
     }
 
     /**
-     * @Route("/notifications/mark-as-read/{id}", name="notification_mark_as_read_xhr", options={"expose"=true})
+     *
      */
+#[Route("/notifications/mark-as-read/{id}", name: "notification_mark_as_read_xhr", options: ["expose"=>true], methods: ["POST"])]
     public function markNotificationAsReadXhr($id)
     {
-        // Get the currently logged-in user (you may need to adjust this to your authentication system)
+
         $user = $this->getUser();
 
         if ($user) {
@@ -96,21 +100,20 @@ class NotificationController extends AbstractController
             if ($notification && $notification->getUserId() === $user->getId()) {
                 $this->notificationService->markNotificationAsRead($user->getId(), $notification->getId());
 
-                // Return a JSON response with a success message
                 return new JsonResponse(['message' => 'Notification marked as read']);
             }
         }
 
-        // Return a JSON response with an error message
         return new JsonResponse(['message' => 'Error marking notification as read'], JsonResponse::HTTP_BAD_REQUEST);
     }
 
     /**
-     * @Route("/notifications/mark-as-read/{id}", name="notification_mark_as_read")
+     *
      */
+#[Route("/notifications/mark-as-read/{id}", name: "notification_mark_as_read", methods: ["POST"])]
     public function markNotificationAsRead($id)
     {
-        // Get the currently logged-in user (you may need to adjust this to your authentication system)
+
         $user = $this->getUser();
 
         if ($user) {

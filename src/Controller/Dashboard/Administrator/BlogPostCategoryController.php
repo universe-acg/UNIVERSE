@@ -9,16 +9,17 @@ use App\Entity\BlogPostCategory;
 use App\Form\BlogPostCategoryType;
 use App\Service\AppServices;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class BlogPostCategoryController extends Controller
 {
 
     /**
-     * @Route("/manage-blog-post-categories", name="blog_post_category", methods="GET")
+     *
      */
+#[Route("/manage-blog-post-categories", name: "blog_post_category", methods: ["GET"])]
     public function index(Request $request, PaginatorInterface $paginator, AppServices $services)
     {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
@@ -31,9 +32,11 @@ class BlogPostCategoryController extends Controller
     }
 
     /**
-     * @Route("/manage-blog-post-categories/add", name="blog_post_category_add", methods="GET|POST")
-     * @Route("/manage-blog-post-categories/{slug}/edit", name="blog_post_category_edit", methods="GET|POST")
+     *
+     *
      */
+#[Route("/manage-blog-post-categories/add", name: "blog_post_category_add", methods: ["GET","POST"])]
+#[Route("/manage-blog-post-categories/{slug}/edit", name: "blog_post_category_edit", methods: ["GET","POST"])]
     public function addedit(Request $request, AppServices $services, $slug = null)
     {
         $em = $this->getDoctrine()->getManager();
@@ -72,9 +75,11 @@ class BlogPostCategoryController extends Controller
     }
 
     /**
-     * @Route("/manage-blog-post-categories/{slug}/disable", name="blog_post_category_disable", methods="GET")
-     * @Route("/manage-blog-post-categories/{slug}/delete", name="blog_post_category_delete", methods="GET")
+     *
+     *
      */
+#[Route("/manage-blog-post-categories/{slug}/disable", name: "blog_post_category_disable", methods: ["POST"])]
+#[Route("/manage-blog-post-categories/{slug}/delete", name: "blog_post_category_delete", methods: ["POST"])]
     public function delete(AppServices $services, $slug)
     {
 
@@ -102,8 +107,9 @@ class BlogPostCategoryController extends Controller
     }
 
     /**
-     * @Route("/manage-blog-post-categories/{slug}/restore", name="blog_post_category_restore", methods="GET")
+     *
      */
+#[Route("/manage-blog-post-categories/{slug}/restore", name: "blog_post_category_restore", methods: ["POST"])]
     public function restore($slug, AppServices $services)
     {
 
@@ -122,9 +128,11 @@ class BlogPostCategoryController extends Controller
     }
 
     /**
-     * @Route("/manage-blog-post-categories/{slug}/show", name="blog_post_category_show", methods="GET")
-     * @Route("/manage-blog-post-categories/{slug}/hide", name="blog_post_category_hide", methods="GET")
+     *
+     *
      */
+#[Route("/manage-blog-post-categories/{slug}/show", name: "blog_post_category_show", methods: ["POST"])]
+#[Route("/manage-blog-post-categories/{slug}/hide", name: "blog_post_category_hide", methods: ["POST"])]
     public function showhide(AppServices $services, $slug)
     {
 

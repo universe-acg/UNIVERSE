@@ -2,9 +2,9 @@
     /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-    
+
     namespace App\Form;
-    
+
     use App\Entity\File;
     use App\Service\AppServices;
     use Symfony\Component\Form\AbstractType;
@@ -12,23 +12,23 @@
     use Symfony\Component\Form\Extension\Core\Type\TextType;
     use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\OptionsResolver\OptionsResolver;
-    use Symfony\Component\Security\Core\Security;
+    use Symfony\Bundle\SecurityBundle\Security;
     use Symfony\Component\Validator\Constraints\NotBlank;
     use Vich\UploaderBundle\Form\Type\VichImageType;
-    
+
     class FileType extends AbstractType
     {
         private $services;
         private $security;
-        
+
         public function __construct(AppServices $services, Security $security)
         {
             $this->services = $services;
             $this->security = $security;
         }
-        
-        public function buildForm(FormBuilderInterface $builder, array $options)
-        {
+
+        public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
             $builder
                 ->add('title', TextType::class, [
                     'purify_html' => true,
@@ -50,9 +50,9 @@
                     'attr' => ['class' => 'btn btn-primary'],
                 ]);
         }
-        
-        public function configureOptions(OptionsResolver $resolver)
-        {
+
+        public function configureOptions(OptionsResolver $resolver): void
+    {
             $resolver->setDefaults([
                 'data_class' => File::class,
             ]);

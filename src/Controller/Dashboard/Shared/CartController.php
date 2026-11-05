@@ -15,18 +15,18 @@ use App\Repository\OrderRepository;
 use App\Service\AppServices;
 use App\Service\NotificationService;
 use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
+use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use Exception;
 use RuntimeException;
-use Swift_Attachment;
-use Swift_Mailer;
-use Swift_Message;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Mime\Part\DataPart as Swift_Attachment;
+use App\Service\DemoMailer as Swift_Mailer;
+use App\Service\MailMessage as Swift_Message;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use Twig_Environment;
+use Symfony\Component\Routing\Attribute\Route;
+use \Twig\Environment;
 
 class CartController extends Controller
 {
@@ -39,9 +39,10 @@ class CartController extends Controller
     }
 
     /**
-     * @Route("/attendee/bookevent/{id}/{eventicketid}", name="dashboard_attendee_bookevent")
+     *
      */
-    public function bookevent(Request $request, AppServices $services, Swift_Mailer $mailer, Twig_Environment $templating, EventTicketRepository $eventTicketRepository, OrderElementRepository $orderElementRepository, OrderRepository $orderRepository)
+#[Route("/attendee/bookevent/{id}/{eventicketid}", name: "dashboard_attendee_bookevent", methods: ["POST"])]
+    public function bookevent(Request $request, AppServices $services, Swift_Mailer $mailer, \Twig\Environment $templating, EventTicketRepository $eventTicketRepository, OrderElementRepository $orderElementRepository, OrderRepository $orderRepository)
     {
         $em = $this->getDoctrine()->getManager();
         $id = $request->get('id');
@@ -53,15 +54,13 @@ class CartController extends Controller
         $orders = $orderRepository->getOrdersByUser($user);
         $eventDates = [];
 
-// Iterate through the user's orders and order elements
         foreach ($orders as $order) {
             $orderElements = $order->getOrderelements();
 
             foreach ($orderElements as $orderElement) {
-                // Get the event date associated with the order element
+
                 $eventDate = $orderElement->getEventticket()->getEventdate();
 
-                // Add the event date to the array if it's not already included
                 if (!in_array($eventDate, $eventDates, true)) {
                     $eventDates[] = $eventDate;
                 }
@@ -83,7 +82,6 @@ class CartController extends Controller
 
         $eventticket = $eventTicketRepository->findById($eventicketid);
 
-//            find how many have booked this ticket
         $countOrdersForTicket = $eventTicketRepository->countOrdersForTicket($eventticket);
 
         if (!$event) {
@@ -91,10 +89,8 @@ class CartController extends Controller
             return $this->redirectToRoute("dashboard_index"); // Redirect to the dashboard or appropriate route
         }
 
-        // Assuming you have access to the user, payment gateway, and order elements
         $user = $this->getUser();
 
-        // Create a new Order entity
         $order = new Order();
         $order->setUser($user);
 
@@ -110,7 +106,7 @@ class CartController extends Controller
         if (($countOrdersForTicket + 1) > $eventticket->getQuantity()) {
             $order->setOverbook(true);
         }
-        // Persist the order to the database
+
         $entityManager = $this->getDoctrine()->getManager();
 
         $entityManager->persist($order);
@@ -131,9 +127,8 @@ class CartController extends Controller
         $qrCodeData = $order->getId() . "/" . $order->getReference();
         $qrCode = new QrCode($qrCodeData);
         $qrCode->setEncoding(new Encoding('UTF-8'));
-        $qrCode->setErrorCorrectionLevel(new ErrorCorrectionLevelLow());
+        $qrCode->setErrorCorrectionLevel(ErrorCorrectionLevel::Low);
 
-        // Render the QR code as a PNG image
         $renderer = new PngWriter();
         $qrCodeImage = $renderer->write($qrCode);
 
@@ -149,7 +144,6 @@ class CartController extends Controller
 
         $this->notificationService->createNotification($this->getUser()->getId(), $message, $services->getSetting('website_name') . ' - ' . $event->getName() . ' event booked' . ' #' . $eventticket->getReference());
 
-        // send email to organizer and user
         $email = (new Swift_Message($services->getSetting('website_name') . ' - ' . $event->getName() . ' event booked' . ' #' . $eventticket->getReference()))
             ->setFrom($services->getSetting('no_reply_email'))
             ->setTo($this->getUser()->getEmail())
@@ -158,8 +152,7 @@ class CartController extends Controller
 
         $this->notificationService->createNotification($this->getUser()->getId(), $message, $email->getSubject());
 
-        // Load the PNG image file
-        // Save as a temporary PNG file
+
         $tempDirectory = $this->getParameter('kernel.project_dir') . '/var';
         if (!file_exists($tempDirectory) && !mkdir($tempDirectory, 0777, true) && !is_dir($tempDirectory)) {
             throw new RuntimeException(sprintf('Directory "%s" was not created', $tempDirectory));
@@ -181,7 +174,7 @@ class CartController extends Controller
         if (!$eventticket->getInformedcreator() && $attendeedpeopleinthisevnet >= 0.75 * $eventticket->getQuantity()) {
 
             $eventticket->setInformedcreator(true);
-            // if the tickets booked or more than 0.75 of quantity... inform teh creator
+
             $emaildata = [
                 $title = $event->getName(),
                 $startdate = $eventticket->getEventdate()->getStartdate()->format('Y-m-d H:i:s'),
@@ -190,8 +183,6 @@ class CartController extends Controller
 
             $message = "The event you created: " . $title . ", on the event date of: " . $eventticket->getEventdate()->getStartdate()->format('Y-m-d H:i:s') . " is filling up. More than 75% of capacity is booked.";
 
-
-            // send email to organizer and user
             $email = (new Swift_Message($services->getSetting('website_name') . ' - ' . $event->getName() . ' event booked' . ' #' . $eventticket->getReference()))
                 ->setFrom($services->getSetting('no_reply_email'))
                 ->setTo($event->getOrganizer()->getEmail())
@@ -215,6 +206,7 @@ class CartController extends Controller
     /**
      * @throws Exception|Exception
      */
+
     public function generateReference($length): string
     {
         $reference = implode('', [
@@ -229,8 +221,9 @@ class CartController extends Controller
     }
 
     /**
-     * @Route("/attendee/cart/{id}/remove", name="dashboard_attendee_cart_remove")
+     *
      */
+#[Route("/attendee/cart/{id}/remove", name: "dashboard_attendee_cart_remove")]
     public function remove($id, AppServices $services)
     {
         $em = $this->getDoctrine()->getManager();

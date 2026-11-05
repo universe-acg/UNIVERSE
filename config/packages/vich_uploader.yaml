@@ -1,6 +1,5 @@
 vich_uploader:
   db_driver: orm
-
   mappings:
     video_mapping:
       uri_prefix: /uploads/videos
@@ -9,17 +8,17 @@ vich_uploader:
     category_image:
       uri_prefix: /uploads/categories
       upload_destination: '%kernel.project_dir%/public/uploads/categories'
-      namer: vich_uploader.namer_uniqid
+      namer: Vich\UploaderBundle\Naming\UniqidNamer
     event_image:
       uri_prefix: /uploads/events
       upload_destination: '%kernel.project_dir%/public/uploads/events'
-      namer: vich_uploader.namer_uniqid
+      namer: Vich\UploaderBundle\Naming\UniqidNamer
       delete_on_remove: false
       delete_on_update: false
     audience_image:
       uri_prefix: /uploads/audiences
       upload_destination: '%kernel.project_dir%/public/uploads/audiences'
-      namer: vich_uploader.namer_uniqid
+      namer: Vich\UploaderBundle\Naming\UniqidNamer
     venue_main_image:
       uri_prefix: /uploads/venues
       upload_destination: '%kernel.project_dir%/public/uploads/venues'
@@ -38,64 +37,64 @@ vich_uploader:
     venue_image:
       uri_prefix: /uploads/venues
       upload_destination: '%kernel.project_dir%/public/uploads/venues'
-      namer: vich_uploader.namer_uniqid
+      namer: Vich\UploaderBundle\Naming\UniqidNamer
     listing_image:
       uri_prefix: /uploads/venues
       upload_destination: '%kernel.project_dir%/public/uploads/listings'
-      namer: vich_uploader.namer_uniqid
+      namer: Vich\UploaderBundle\Naming\UniqidNamer
     facility_image:
       uri_prefix: /uploads/facilities
       upload_destination: '%kernel.project_dir%/public/uploads/facilities'
-      namer: vich_uploader.namer_uniqid
+      namer: Vich\UploaderBundle\Naming\UniqidNamer
     file_file:
       uri_prefix: /uploads/files
-      upload_destination: '%kernel.project_dir%/public/uploads/files'
-      namer: vich_uploader.namer_uniqid
+      upload_destination: '%kernel.project_dir%/var/private/files'
+      namer: Vich\UploaderBundle\Naming\UniqidNamer
     listingsubmission_file:
       uri_prefix: /uploads/files
-      upload_destination: '%kernel.project_dir%/public/uploads/files'
-      namer: vich_uploader.namer_uniqid
+      upload_destination: '%kernel.project_dir%/var/private/applications'
+      namer: Vich\UploaderBundle\Naming\UniqidNamer
     event_file:
       uri_prefix: /uploads/files
       upload_destination: '%kernel.project_dir%/public/uploads/files'
-      namer: vich_uploader.namer_uniqid
+      namer: Vich\UploaderBundle\Naming\UniqidNamer
     doc_file1:
       uri_prefix: /uploads/doc_file1
-      upload_destination: '%kernel.project_dir%/public/uploads/doc_file1'
-      namer: vich_uploader.namer_uniqid
+      upload_destination: '%kernel.project_dir%/var/private/doc_file1'
+      namer: Vich\UploaderBundle\Naming\UniqidNamer
     doc_file2:
       uri_prefix: /uploads/doc_file2
-      upload_destination: '%kernel.project_dir%/public/uploads/doc_file2'
-      namer: vich_uploader.namer_uniqid
+      upload_destination: '%kernel.project_dir%/var/private/doc_file2'
+      namer: Vich\UploaderBundle\Naming\UniqidNamer
     cv_file:
       uri_prefix: /uploads/cvfiles
-      upload_destination: '%kernel.project_dir%/public/uploads/cvfiles'
-      namer: vich_uploader.namer_uniqid
+      upload_destination: '%kernel.project_dir%/var/private/cvfiles'
+      namer: Vich\UploaderBundle\Naming\UniqidNamer
     listing_file:
       uri_prefix: /uploads/listings
       upload_destination: '%kernel.project_dir%/public/uploads/listings'
-      namer: vich_uploader.namer_uniqid
+      namer: Vich\UploaderBundle\Naming\UniqidNamer
     organizer_logo:
       uri_prefix: /uploads/organizers
       upload_destination: '%kernel.project_dir%/public/uploads/organizers'
-      namer: vich_uploader.namer_uniqid
+      namer: Vich\UploaderBundle\Naming\UniqidNamer
     organizer_cover:
       uri_prefix: /uploads/organizers/covers
       upload_destination: '%kernel.project_dir%/public/uploads/organizers/covers'
-      namer: vich_uploader.namer_uniqid
+      namer: Vich\UploaderBundle\Naming\UniqidNamer
     blog_post_image:
       uri_prefix: /uploads/blog
       upload_destination: '%kernel.project_dir%/public/uploads/blog'
-      namer: vich_uploader.namer_uniqid
+      namer: Vich\UploaderBundle\Naming\UniqidNamer
     homepage_hero_custom_background:
       uri_prefix: /uploads/homepage/hero
       upload_destination: '%kernel.project_dir%/public/uploads/homepage/hero'
-      namer: vich_uploader.namer_uniqid
+      namer: Vich\UploaderBundle\Naming\UniqidNamer
     user_avatar:
       uri_prefix: /uploads/users/avatars
       upload_destination: '%kernel.project_dir%/public/uploads/users/avatars'
-      namer: vich_uploader.namer_uniqid
+      namer: Vich\UploaderBundle\Naming\UniqidNamer
     app_layout:
       uri_prefix: /uploads/layout
       upload_destination: '%kernel.project_dir%/public/uploads/layout'
-      namer: vich_uploader.namer_uniqid
+      namer: Vich\UploaderBundle\Naming\UniqidNamer

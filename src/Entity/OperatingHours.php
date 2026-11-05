@@ -7,36 +7,24 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="operating_hours")
- */
+#[ORM\Table(name: 'operating_hours')]
+#[ORM\Entity]
 class OperatingHours
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string', length: 180)]
     private $dayOfWeek;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="MonthlySchedule", inversedBy="operatingHours")
-     */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\MonthlySchedule::class, inversedBy: 'operatingHours')]
     private $monthlySchedule;
 
-    /**
-     * @ORM\Column(type="time")
-     */
+    #[ORM\Column(type: 'time')]
     private $startTime;
-    /**
-     * @ORM\Column(type="time")
-     */
+    #[ORM\Column(type: 'time')]
     private $endTime;
 
     /**

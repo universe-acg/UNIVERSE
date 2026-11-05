@@ -11,60 +11,48 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\MenuElementRepository")
- * @ORM\Table(name="universe_menu_element")
- * @Assert\Callback({"App\Validation\Validator", "validate"})
- */
+#[ORM\Table(name: 'universe_menu_element')]
+#[ORM\Entity(repositoryClass: \App\Repository\MenuElementRepository::class)]
+#[Assert\Callback(['App\Validation\Validator', 'validate'])]
 class MenuElement
 {
 
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Length(max = 50)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 50)]
     protected $icon;
 
-    /**
-     * @Gedmo\Slug(fields={"label"}, updatable=true)
-     * @ORM\Column(length=255, unique=true)
-     */
+    #[Gedmo\Slug(fields: ['label'], updatable: false)]
+    #[ORM\Column(length: 255, unique: true)]
     protected $slug;
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
      * @EnglishOnly
      * @Profanity
-     * @Assert\Length(max = 255)
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
     protected $link;
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
      * @EnglishOnly
      * @Profanity
-     * @Assert\Length(max = 255)
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
     protected $customLink;
     /**
-     * @Assert\NotBlank
-     * @ORM\Column(type="string")
      * @EnglishOnly
      * @Profanity
      */
+    #[Assert\NotBlank]
+    #[ORM\Column(type: 'string', length: 180)]
     private $label;
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
-    /**
-     * @ORM\ManyToOne(targetEntity="Menu", inversedBy="menuElements")
-     */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\Menu::class, inversedBy: 'menuElements')]
     private $menu;
-    /**
-     * @ORM\Column(name="position", type="integer")
-     */
+    #[ORM\Column(name: 'position', type: 'integer')]
     private $position;
 
     /**

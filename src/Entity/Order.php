@@ -12,67 +12,53 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\OrderRepository")
- * @ORM\Table(name="universe_order")
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
- */
+#[ORM\Table(name: 'universe_order')]
+#[ORM\Entity(repositoryClass: \App\Repository\OrderRepository::class)]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
 class Order
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $overbook;
-    /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="orders")
-     */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\User::class, inversedBy: 'orders')]
     private $user;
-    /**
-     * @ORM\OneToMany(targetEntity="OrderElement", cascade={"persist", "remove"}, mappedBy="order", fetch="EAGER")
-     */
+    #[ORM\OneToMany(targetEntity: \App\Entity\OrderElement::class, cascade: ['persist', 'remove'], mappedBy: 'order', fetch: 'LAZY')]
     private $orderelements;
     /**
      * @var string
-     * @ORM\Column(type="string", length=255)
      */
+    #[ORM\Column(type: 'string', length: 255)]
     private $reference;
     /**
      * @var string
-     * @ORM\Column(type="string", length=255, nullable=true)
      * @EnglishOnly
      * @Profanity
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $note;
     /**
      * -2: failed / -1: cancel / 0: waiting for payment / 1: paid
      * @var integer
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     private $status;
     /**
      * @var DateTime $createdAt
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
      */
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(type: 'datetime')]
     private $createdAt;
     /**
      * @var DateTime $updatedAt
-     *
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[Gedmo\Timestampable(on: 'update')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updatedAt;
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $deletedAt;
 
 

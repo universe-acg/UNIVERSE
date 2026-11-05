@@ -11,16 +11,27 @@ use App\Form\ListingCategoryType;
 use App\Service\AppServices;
 use App\Service\ListingCategoryService;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class ListingCategoryController extends Controller
 {
+    public function featured(\Symfony\Component\HttpFoundation\Request $request, string $slug, \Doctrine\ORM\EntityManagerInterface $em): \Symfony\Component\HttpFoundation\Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMINISTRATOR');
+        if (!$request->isMethod('POST') || !$this->isCsrfTokenValid('action', $request->request->get('_token') ?? $request->headers->get('X-CSRF-Token'))) throw $this->createAccessDeniedException('Invalid action token.');
+        $category=$em->getRepository(\App\Entity\ListingCategory::class)->findOneBy(['slug'=>$slug]);
+        if (!$category) throw $this->createNotFoundException();
+        $category->setFeatured(!str_ends_with((string)$request->attributes->get('_route'), '_notfeatured'));
+        $em->flush();
+        return $this->redirectToRoute('dashboard_administrator_listing_category');
+    }
 
     /**
-     * @Route("/manage-listing-categories", name="listing_category", methods="GET")
+     *
      */
+#[Route("/manage-listing-categories", name: "listing_category", methods: ["GET"])]
     public function index(Request $request, PaginatorInterface $paginator, AppServices $services, ListingCategoryService $listingCategoryService)
     {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
@@ -34,10 +45,12 @@ class ListingCategoryController extends Controller
     }
 
     /**
-     * @Route("/manage-listing-categories/add", name="listing_category_add", methods="GET|POST")
-     * @Route("/manage-listing-categories/{slug}/edit", name="listing_category_edit", methods="GET|POST")
+     *
+     *
      */
-    public function addedit(Request $request, AppServices $services, $slug = null, ListingCategoryService $listingCategoryService)
+#[Route("/manage-listing-categories/add", name: "listing_category_add", methods: ["GET","POST"])]
+#[Route("/manage-listing-categories/{slug}/edit", name: "listing_category_edit", methods: ["GET","POST"])]
+    public function addedit(Request $request, AppServices $services, ListingCategoryService $listingCategoryService, $slug = null)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -76,9 +89,11 @@ class ListingCategoryController extends Controller
     }
 
     /**
-     * @Route("/manage-listing-categories/{slug}/disable", name="listing_category_disable", methods="GET")
-     * @Route("/manage-listing-categories/{slug}/delete", name="listing_category_delete", methods="GET")
+     *
+     *
      */
+#[Route("/manage-listing-categories/{slug}/disable", name: "listing_category_disable", methods: ["POST"])]
+#[Route("/manage-listing-categories/{slug}/delete", name: "listing_category_delete", methods: ["POST"])]
     public function delete(AppServices $services, ListingCategoryService $listingCategoryService, $slug)
     {
         $category = $listingCategoryService->getAllCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
@@ -106,8 +121,9 @@ class ListingCategoryController extends Controller
     }
 
     /**
-     * @Route("/manage-listing-categories/{slug}/restore", name="listing_category_restore", methods="GET")
+     *
      */
+#[Route("/manage-listing-categories/{slug}/restore", name: "listing_category_restore", methods: ["POST"])]
     public function restore($slug, AppServices $services, ListingCategoryService $listingCategoryService)
     {
         $category = $listingCategoryService->getAllCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();
@@ -125,9 +141,11 @@ class ListingCategoryController extends Controller
     }
 
     /**
-     * @Route("/manage-listing-categories/{slug}/show", name="listing_category_show", methods="GET")
-     * @Route("/manage-listing-categories/{slug}/hide", name="listing_category_hide", methods="GET")
+     *
+     *
      */
+#[Route("/manage-listing-categories/{slug}/show", name: "listing_category_show", methods: ["POST"])]
+#[Route("/manage-listing-categories/{slug}/hide", name: "listing_category_hide", methods: ["POST"])]
     public function showhide(AppServices $services, $slug, ListingCategoryService $listingCategoryService)
     {
         $category = $listingCategoryService->getAllCategories(array('hidden' => 'all', 'slug' => $slug))->getQuery()->getOneOrNullResult();

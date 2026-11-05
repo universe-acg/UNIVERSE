@@ -1,0 +1,49 @@
+{
+  "retrieved_at": "2026-11-05T02:36:59.507489+00:00",
+  "sources": [
+    {
+      "url": "https://www.acg.edu/current-students/student-services/student-life/getting-involved/student-clubs/",
+      "kind": "club",
+      "retrieved_at": "2026-11-05T02:36:59.507489+00:00",
+      "sha256": "7c7fcd07f9069356e3f8824105e18dd36bf9e93221aa8095c818cb6c7bf89f6f"
+    },
+    {
+      "url": "https://www.acg.edu/current-students/student-services/student-life/getting-involved/academic-societies/",
+      "kind": "society",
+      "retrieved_at": "2026-11-05T02:36:59.507489+00:00",
+      "sha256": "75fb161d7fddfd18c7b3577ad7b711f7f42e9dced3b207e193daa684e0fecefa"
+    },
+    {
+      "url": "https://www.acg.edu/current-students/student-services/student-life/getting-involved/student-organizations/",
+      "kind": "organization",
+      "retrieved_at": "2026-11-05T02:36:59.507489+00:00",
+      "sha256": "12c3f1b4b922bc4afd8d37ae6d9de29770813782f3f0652fdb322f752b702a9c"
+    },
+    {
+      "url": "https://www.acg.edu/news-events/department-of-college-events-office-of-the-president/venues/",
+      "kind": "venue",
+      "retrieved_at": "2026-11-05T02:36:59.507489+00:00",
+      "sha256": "ba2ca5e8dd30e3c9686e8618f52bd24295ccf726c4640b05358c7c6879b92c02"
+    },
+    {
+      "url": "https://www.acg.edu/current-students/athletics/athletic-facilities/",
+      "kind": "facility",
+      "retrieved_at": "2026-11-05T02:36:59.507489+00:00",
+      "sha256": "73d1835c506a4def35f54a2e0bc9d07c0144be0c5d9a95e9436cec3f293d2c85"
+    },
+    {
+      "url": "https://www.acg.edu/news-events/department-of-college-events-office-of-the-president/past-events/",
+      "kind": "archive",
+      "retrieved_at": "2026-11-05T02:36:59.507489+00:00",
+      "sha256": "32b8d2624d28b241d34117b1db8ffafd72d158ede691bc596719f1272de3d3eb"
+    }
+  ],
+  "failures": [],
+  "directory_records": 96,
+  "event_detail_records": 195,
+  "archive_event_records": 191,
+  "complete": false,
+  "limitations": [
+    "Initial official directory/archive extraction; pagination, historical guidebooks, renames and event reconciliation require review."
+  ]
+}

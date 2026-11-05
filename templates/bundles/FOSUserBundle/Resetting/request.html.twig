@@ -16,6 +16,7 @@
                             <div class="col-12 col-md-6 mx-auto">
                                 <h1 class="text-center">{{ pagetitle }}</h1>
                                 <form action="{{ path('fos_user_resetting_send_email') }}" method="POST">
+                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('password_reset') }}">
                                     <div class="form-group input-group mt-4 mb-4">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text border-0"> <i

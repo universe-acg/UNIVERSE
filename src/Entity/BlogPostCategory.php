@@ -2,75 +2,57 @@
     /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-    
+
     namespace App\Entity;
-    
+
     use DateTime;
     use Doctrine\Common\Collections\ArrayCollection;
     use Doctrine\Common\Collections\Collection;
     use Doctrine\ORM\Mapping as ORM;
     use Gedmo\Mapping\Annotation as Gedmo;
-    
-    /**
-     * @ORM\Entity(repositoryClass="App\Repository\BlogPostCategoryRepository")
-     * @ORM\Table(name="universe_blog_post_category")
-     * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
-     */
+
+    #[ORM\Table(name: 'universe_blog_post_category')]
+    #[ORM\Entity(repositoryClass: \App\Repository\BlogPostCategoryRepository::class)]
+    #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
     class BlogPostCategory
     {
-        
-        /**
-         * @Gedmo\Slug(fields={"name"}, updatable=true)
-         * @ORM\Column(type="string")
-         */
+
+        #[Gedmo\Slug(fields: ['name'], updatable: true)]
+        #[ORM\Column(type: 'string', length: 180)]
         protected $slug;
-        
-        /**
-         * @ORM\Column(type="string", length=255)
-         */
+
+        #[ORM\Column(type: 'string', length: 255)]
         private $name;
-        /**
-         * @ORM\Column(type="string", length=255)
-         */
+        #[ORM\Column(type: 'string', length: 255)]
         private $content;
-        /**
-         * @ORM\Id()
-         * @ORM\GeneratedValue()
-         * @ORM\Column(type="integer")
-         */
+        #[ORM\Id]
+        #[ORM\GeneratedValue]
+        #[ORM\Column(type: 'integer')]
         private $id;
-        /**
-         * @ORM\OneToMany(targetEntity="BlogPost", mappedBy="category")
-         */
+        #[ORM\OneToMany(targetEntity: \App\Entity\BlogPost::class, mappedBy: 'category')]
         private $blogposts;
-        /**
-         * @ORM\Column(type="boolean")
-         */
+        #[ORM\Column(type: 'boolean')]
         private $hidden = false;
         /**
          * @var DateTime $createdAt
-         *
-         * @Gedmo\Timestampable(on="create")
-         * @ORM\Column(type="datetime")
          */
+        #[Gedmo\Timestampable(on: 'create')]
+        #[ORM\Column(type: 'datetime')]
         private $createdAt;
         /**
          * @var DateTime $updatedAt
-         *
-         * @Gedmo\Timestampable(on="update")
-         * @ORM\Column(type="datetime", nullable=true)
          */
+        #[Gedmo\Timestampable(on: 'update')]
+        #[ORM\Column(type: 'datetime', nullable: true)]
         private $updatedAt;
-        /**
-         * @ORM\Column(type="datetime", nullable=true)
-         */
+        #[ORM\Column(type: 'datetime', nullable: true)]
         private $deletedAt;
-        
+
         public function __construct()
         {
             $this->blogposts = new ArrayCollection();
         }
-        
+
         /**
          * @return mixed
          */
@@ -78,7 +60,7 @@
         {
             return $this->slug;
         }
-        
+
         /**
          * @param mixed $slug
          */
@@ -86,7 +68,7 @@
         {
             $this->slug = $slug;
         }
-        
+
         /**
          * @return mixed
          */
@@ -94,7 +76,7 @@
         {
             return $this->name;
         }
-        
+
         /**
          * @param mixed $name
          */
@@ -102,7 +84,7 @@
         {
             $this->name = $name;
         }
-        
+
         /**
          * @return mixed
          */
@@ -110,7 +92,7 @@
         {
             return $this->content;
         }
-        
+
         /**
          * @param mixed $content
          */
@@ -118,61 +100,61 @@
         {
             $this->content = $content;
         }
-        
+
         public function getId()
         {
             return $this->id;
         }
-        
-        
+
+
         public function getUpdatedAt()
         {
             return $this->updatedAt == $this->createdAt ? null : $this->updatedAt;
         }
-        
+
         public function setUpdatedAt($updatedAt)
         {
             $this->updatedAt = $updatedAt;
-            
+
             return $this;
         }
-        
+
         public function getHidden()
         {
             return $this->hidden;
         }
-        
+
         public function setHidden($hidden)
         {
             $this->hidden = $hidden;
-            
+
             return $this;
         }
-        
+
         public function getCreatedAt()
         {
             return $this->createdAt;
         }
-        
+
         public function setCreatedAt($createdAt)
         {
             $this->createdAt = $createdAt;
-            
+
             return $this;
         }
-        
+
         public function getDeletedAt()
         {
             return $this->deletedAt;
         }
-        
+
         public function setDeletedAt($deletedAt)
         {
             $this->deletedAt = $deletedAt;
-            
+
             return $this;
         }
-        
+
         /**
          * @return Collection|BlogPost[]
          */
@@ -180,17 +162,17 @@
         {
             return $this->blogposts;
         }
-        
+
         public function addBlogpost(BlogPost $blogpost)
         {
             if (!$this->blogposts->contains($blogpost)) {
                 $this->blogposts[] = $blogpost;
                 $blogpost->setCategory($this);
             }
-            
+
             return $this;
         }
-        
+
         public function removeBlogpost(BlogPost $blogpost)
         {
             if ($this->blogposts->contains($blogpost)) {
@@ -200,8 +182,8 @@
                     $blogpost->setCategory(null);
                 }
             }
-            
+
             return $this;
         }
-        
+
     }

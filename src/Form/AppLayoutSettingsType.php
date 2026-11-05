@@ -2,9 +2,9 @@
     /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-    
+
     namespace App\Form;
-    
+
     use App\Entity\AppLayoutSettings;
     use App\Service\AppServices;
     use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -19,27 +19,27 @@
     use Symfony\Component\Validator\Constraints\NotBlank;
     use Symfony\Component\Validator\Constraints\NotNull;
     use Vich\UploaderBundle\Form\Type\VichImageType;
-    
+
     class AppLayoutSettingsType extends AbstractType
     {
-        
+
         private $services;
         private $params;
-        
+
         public function __construct(AppServices $services, ParameterBagInterface $params)
         {
             $this->services = $services;
             $this->params = $params;
         }
-        
-        public function buildForm(FormBuilderInterface $builder, array $options)
-        {
-            
+
+        public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+
             $pages = [];
             foreach ($this->services->getPages(array())->getQuery()->getResult() as $page) {
                 $pages[$page->getTitle()] = $page->getSlug();
             }
-            
+
             $builder
                 ->add('app_environment', ChoiceType::class, [
                     'mapped' => false,
@@ -448,13 +448,13 @@
                     'attr' => ['class' => 'btn btn-primary'],
                 ]);
         }
-        
-        public function configureOptions(OptionsResolver $resolver)
-        {
+
+        public function configureOptions(OptionsResolver $resolver): void
+    {
             $resolver->setDefaults([
                 'data_class' => AppLayoutSettings::class,
                 'validation_groups' => ['create', 'update']
             ]);
         }
-        
+
     }

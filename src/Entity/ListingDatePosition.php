@@ -11,66 +11,54 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\ListingDatePositionRepository")
- * @ORM\Table(name="universe_listing_date_positions")
- * @Vich\Uploadable
- */
+#[ORM\Table(name: 'universe_listing_date_positions')]
+#[ORM\Entity(repositoryClass: \App\Repository\ListingDatePositionRepository::class)]
+#[Vich\Uploadable]
 class ListingDatePosition
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
     /**
      * @var DateTime $createdAt
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime", name="created_at")
      */
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(type: 'datetime', name: 'created_at')]
     private $createdAt;
 
     /**
      * @var DateTime $updatedAt
-     *
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[Gedmo\Timestampable(on: 'update')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updatedAt;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Listing", inversedBy="files")
-     */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\Listing::class, inversedBy: 'datePositions')]
     private $listing;
 
     /**
      * @var DateTime
-     * @ORM\Column(type="datetime", nullable=false)
      */
+    #[ORM\Column(type: 'datetime', nullable: false)]
     private $startdate;
 
     /**
      * @var DateTime
-     * @ORM\Column(type="datetime", nullable=false)
      */
+    #[ORM\Column(type: 'datetime', nullable: false)]
     private $enddate;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $allowoverapply;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $shortdescription;
     /**
-     * @ORM\Column(type="integer", nullable=true)
      *
      * @var integer
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $candidatesamount;
 
     public function __construct()

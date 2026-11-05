@@ -12,107 +12,73 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\LiveRepository")
- * @ORM\Table(name="universe_lives")
- * @Assert\Callback({"App\Validation\Validator", "validate"})
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
- * @Vich\Uploadable
- */
+#[ORM\Table(name: 'universe_lives')]
+#[ORM\Entity(repositoryClass: \App\Repository\LiveRepository::class)]
+#[Assert\Callback(['App\Validation\Validator', 'validate'])]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
+#[Vich\Uploadable]
 class Live
 {
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      *
-     * @Vich\UploadableField(mapping="live_main_image", fileNameProperty="mainImage", size="imageSize", mimeType="imageMimeType", originalName="imageOriginalName", dimensions="imageDimensions")
-     * @Assert\File(
-     *     maxSize = "32M",
-     *     mimeTypes = {"image/jpeg", "image/jpg", "image/gif", "image/png"},
-     *     mimeTypesMessage = "The file should be an image"
-     *     )
      * @var File
      */
+    #[Assert\File(maxSize: '32M', mimeTypes: ['image/jpeg', 'image/jpg', 'image/gif', 'image/png'], mimeTypesMessage: 'The file should be an image')]
+    #[Vich\UploadableField(mapping: 'live_main_image', fileNameProperty: 'mainImage', size: 'imageSize', mimeType: 'imageMimeType', originalName: 'imageOriginalName', dimensions: 'imageDimensions')]
     private $mainImageFile;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $mainImage;
 
     // Getters and setters...
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
-    /**
-     * @ORM\Column(length=255, unique=true)
-     * @Gedmo\Slug(fields={"title"}, updatable=true)
-     */
+    #[ORM\Column(length: 255, unique: true)]
+    #[Gedmo\Slug(fields: ['title'], updatable: true)]
     private $slug;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $hidden;
-    /**
-     * @ORM\Column(type="string", length=50, nullable=true)
-     * @Assert\NotBlank
-     */
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[Assert\NotBlank]
     private $title;
 
-    /**
-     * @ORM\Column(type="string", length=50, nullable=true)
-     * @Assert\NotBlank
-     */
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[Assert\NotBlank]
     private $link;
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     * @Assert\NotBlank
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
+    #[Assert\NotBlank]
     private $description;
-    /**
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
-     */
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(type: 'datetime')]
     private $createdAt;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $imageName;
     /**
-     * @ORM\Column(type="integer", nullable=true)
      *
      * @var integer
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $imageSize;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
      *
      * @var integer
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $status;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $imageMimeType;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $imageOriginalName;
-    /**
-     * @ORM\Column(type="simple_array", nullable=true)
-     */
+    #[ORM\Column(type: 'simple_array', nullable: true)]
     private $imageDimensions;
-    /**
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
-     */
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(type: 'datetime')]
     private $updatedAt;
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $deletedAt;
 
     public function __construct()

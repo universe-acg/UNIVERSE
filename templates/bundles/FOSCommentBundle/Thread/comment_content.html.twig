@@ -20,7 +20,7 @@ with this source code in the file LICENSE.
             {% block fos_comment_comment_metas %}
                 {% block fos_comment_comment_metas_authorline %}
                     <h6 class="fos_comment_comment_authorname mt-0 display-inline">
-                        {% if comment is fos_comment_in_state(constant('FOS\\CommentBundle\\Model\\CommentInterface::STATE_DELETED')) %}
+                        {% if comment is fos_comment_in_state(1) %}
                             {% trans from 'FOSCommentBundle' %}fos_comment_comment_deleted{% endtrans %}
                         {% else %}
                             {% include "Global/user-avatar.html.twig" with { user: comment.author, showusernametooltip: true } %}
@@ -77,11 +77,11 @@ with this source code in the file LICENSE.
 
         <div id="fos_comment_comment_body_{{ comment.id }}" class="fos_comment_comment_body comment-body">
             {% block fos_comment_comment_body %}
-                {% if comment is fos_comment_in_state(constant('FOS\\CommentBundle\\Model\\CommentInterface::STATE_DELETED')) %}
+                {% if comment is fos_comment_in_state(1) %}
                     <span class="badge badge-danger">{% trans from 'FOSCommentBundle' %}fos_comment_comment_deleted{% endtrans %}</span>
                 {% else %}
                     <p class="mt-1 text-sm">
-                        {% if comment is fos_comment_raw %}
+                        {% if false %}
                             {{ comment.rawBody | raw }}
                         {% else %}
                             {{ comment.body | nl2br }}
@@ -118,26 +118,4 @@ with this source code in the file LICENSE.
         {% endblock fos_comment_comment_children %}
 
     </div>
-    <script>
-        $(document).ready(function () {
-            $('.delete-comment-btn').on('click', function (event) {
-                event.preventDefault();
-                // Get the comment ID from the data attribute
-                var commentId = $(this).data('comment-id');
-                var commentBlock = $('#fos_comment_' + commentId);
-                console.log(commentBlock);
-                // Make an AJAX request to delete the comment
-                $.ajax({
-                    type: 'POST', // You can use 'DELETE' if your API supports it
-                    url: 'https://universe.alexandroskourtis.me/delete-comment/' + commentId, // Replace with your actual API endpoint
-                    success: function (data) {
-                        commentBlock.remove();
-                    },
-                    error: function (error) {
-                        // Handle errors here
-                    }
-                });
-            });
-        });
-    </script>
 {% endblock fos_comment_comment %}

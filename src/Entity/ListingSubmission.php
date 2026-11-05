@@ -2,10 +2,10 @@
     /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-    
+
     namespace App\Entity;
-    
-    
+
+
     use DateTime;
     use Doctrine\ORM\Mapping as ORM;
     use Exception;
@@ -13,102 +13,77 @@
     use Symfony\Component\HttpFoundation\File\File;
     use Symfony\Component\Validator\Constraints as Assert;
     use Vich\UploaderBundle\Mapping\Annotation as Vich;
-    
-    /**
-     * @ORM\Entity(repositoryClass="App\Repository\ListingSubmisionRepository")
-     * @ORM\Table(name="universe_listing_submission")
-     * @Vich\Uploadable
-     */
+
+    #[ORM\Table(name: 'universe_listing_submission')]
+    #[ORM\Entity(repositoryClass: \App\Repository\ListingSubmisionRepository::class)]
+    #[Vich\Uploadable]
     class ListingSubmission
     {
-        
-        
-        /**
-         * @ORM\Id()
-         * @ORM\GeneratedValue()
-         * @ORM\Column(type="integer")
-         */
+
+
+        #[ORM\Id]
+        #[ORM\GeneratedValue]
+        #[ORM\Column(type: 'integer')]
         private $id;
-        /**
-         * @ORM\Column(type="text")
-         */
+        #[ORM\Column(type: 'text')]
         private $content;
-        /**
-         * @ORM\ManyToOne(targetEntity="Listing", fetch = "EAGER")
-         * @ORM\JoinColumn(name="listing_id", referencedColumnName="id")
-         */
+        #[ORM\JoinColumn(name: 'listing_id', referencedColumnName: 'id')]
+        #[ORM\ManyToOne(targetEntity: \App\Entity\Listing::class, fetch: 'LAZY')]
         private $listing;
-        
-        /**
-         * @ORM\ManyToOne(targetEntity="ListingDatePosition")
-         * @ORM\JoinColumn(name="position_id", referencedColumnName="id")
-         */
+
+        #[ORM\JoinColumn(name: 'position_id', referencedColumnName: 'id')]
+        #[ORM\ManyToOne(targetEntity: \App\Entity\ListingDatePosition::class)]
         private $position;
-        /**
-         * @ORM\ManyToOne(targetEntity="User")
-         * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-         */
+        #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+        #[ORM\ManyToOne(targetEntity: \App\Entity\User::class)]
         private $user;
-        
+
         /**
          * NOTE: This is not a mapped field of entity metadata, just a simple property.
          *
-         * @Vich\UploadableField(mapping="listingsubmission_file", fileNameProperty="fileName", size="fileSize", mimeType="fileMimeType", originalName="fileOriginalName", dimensions="fileDimensions")
-         * @Assert\File(
-         *     maxSize = "32M",
-         *     mimeTypesMessage = "The file should be an file"
-         *     )
          * @var File
          */
+        #[Assert\File(maxSize: '32M', mimeTypesMessage: 'The file should be an file')]
+        #[Vich\UploadableField(mapping: 'listingsubmission_file', fileNameProperty: 'fileName', size: 'fileSize', mimeType: 'fileMimeType', originalName: 'fileOriginalName', dimensions: 'fileDimensions')]
         private $fileFile;
-        /**
-         * @ORM\Column(type="string", length=255, nullable=true)
-         */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
         private $fileName;
         /**
-         * @ORM\Column(type="integer", nullable=true)
          *
          * @var integer
          */
+        #[ORM\Column(type: 'integer', nullable: true)]
         private $fileSize;
-        /**
-         * @ORM\Column(type="string", length=255, nullable=true)
-         */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
         private $fileMimeType;
-        /**
-         * @ORM\Column(type="string", length=255, nullable=true)
-         */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
         private $fileOriginalName;
-        /**
-         * @ORM\Column(type="simple_array", nullable=true)
-         */
+        #[ORM\Column(type: 'simple_array', nullable: true)]
         private $fileDimensions;
         /**
          * @var DateTime $createdAt
-         *
-         * @Gedmo\Timestampable(on="create")
-         * @ORM\Column(type="datetime")
          */
+        #[Gedmo\Timestampable(on: 'create')]
+        #[ORM\Column(type: 'datetime')]
         private $createdAt;
-        
+
         /**
          * @var DateTime $deletedAt
-         * @ORM\Column(type="datetime")
          */
+        #[ORM\Column(type: 'datetime')]
         private $deletedAt;
         /**
          * @var DateTime $updatedAt
-         *
-         * @Gedmo\Timestampable(on="update")
-         * @ORM\Column(type="datetime", nullable=true)
          */
+        #[Gedmo\Timestampable(on: 'update')]
+        #[ORM\Column(type: 'datetime', nullable: true)]
         private $updatedAt;
-        
+
         public function __construct()
         {
-        
+
         }
-        
+
         /**
          * @return DateTime
          */
@@ -116,7 +91,7 @@
         {
             return $this->deletedAt;
         }
-        
+
         /**
          * @param DateTime $deletedAt
          */
@@ -124,7 +99,7 @@
         {
             $this->deletedAt = $deletedAt;
         }
-        
+
         /**
          * @return File
          */
@@ -132,7 +107,7 @@
         {
             return $this->fileFile;
         }
-        
+
         /**
          * @param File $fileFile
          */
@@ -140,7 +115,7 @@
         {
             $this->fileFile = $fileFile;
         }
-        
+
         /**
          * @return mixed
          */
@@ -148,7 +123,7 @@
         {
             return $this->fileName;
         }
-        
+
         /**
          * @param mixed $fileName
          */
@@ -156,7 +131,7 @@
         {
             $this->fileName = $fileName;
         }
-        
+
         /**
          * @return int
          */
@@ -164,7 +139,7 @@
         {
             return $this->fileSize;
         }
-        
+
         /**
          * @param int $fileSize
          */
@@ -172,7 +147,7 @@
         {
             $this->fileSize = $fileSize;
         }
-        
+
         /**
          * @return DateTime
          */
@@ -180,7 +155,7 @@
         {
             return $this->createdAt;
         }
-        
+
         /**
          * @param DateTime $createdAt
          */
@@ -188,7 +163,7 @@
         {
             $this->createdAt = $createdAt;
         }
-        
+
         /**
          * @return DateTime
          */
@@ -196,7 +171,7 @@
         {
             return $this->updatedAt;
         }
-        
+
         /**
          * @param DateTime $updatedAt
          */
@@ -204,7 +179,7 @@
         {
             $this->updatedAt = $updatedAt;
         }
-        
+
         /**
          * @return mixed
          */
@@ -212,7 +187,7 @@
         {
             return $this->fileMimeType;
         }
-        
+
         /**
          * @param mixed $fileMimeType
          */
@@ -220,7 +195,7 @@
         {
             $this->fileMimeType = $fileMimeType;
         }
-        
+
         /**
          * @return mixed
          */
@@ -228,7 +203,7 @@
         {
             return $this->fileOriginalName;
         }
-        
+
         /**
          * @param mixed $fileOriginalName
          */
@@ -236,7 +211,7 @@
         {
             $this->fileOriginalName = $fileOriginalName;
         }
-        
+
         /**
          * @return mixed
          */
@@ -244,7 +219,7 @@
         {
             return $this->fileDimensions;
         }
-        
+
         /**
          * @param mixed $fileDimensions
          */
@@ -252,7 +227,7 @@
         {
             $this->fileDimensions = $fileDimensions;
         }
-        
+
         /**
          * @return mixed
          */
@@ -260,7 +235,7 @@
         {
             return $this->position;
         }
-        
+
         /**
          * @param mixed $position
          */
@@ -268,7 +243,7 @@
         {
             $this->position = $position;
         }
-        
+
         /**
          * @return mixed
          */
@@ -276,7 +251,7 @@
         {
             return $this->id;
         }
-        
+
         /**
          * @param mixed $id
          */
@@ -284,7 +259,7 @@
         {
             $this->id = $id;
         }
-        
+
         /**
          * @throws Exception
          */
@@ -299,7 +274,7 @@
             ]);
             return strlen($reference) > $length ? substr($reference, 0, $length) : $reference;
         }
-        
+
         /**
          * @return mixed
          */
@@ -307,7 +282,7 @@
         {
             return $this->content;
         }
-        
+
         /**
          * @param mixed $content
          */
@@ -315,7 +290,7 @@
         {
             $this->content = $content;
         }
-        
+
         /**
          * @return mixed
          */
@@ -323,7 +298,7 @@
         {
             return $this->listing;
         }
-        
+
         /**
          * @param mixed $listing
          */
@@ -331,7 +306,7 @@
         {
             $this->listing = $listing;
         }
-        
+
         /**
          * @return mixed
          */
@@ -339,7 +314,7 @@
         {
             return $this->user;
         }
-        
+
         /**
          * @param mixed $user
          */

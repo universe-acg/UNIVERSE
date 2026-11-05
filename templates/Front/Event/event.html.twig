@@ -291,7 +291,7 @@
                                                             <table class="table table-hover table-condensed">
                                                                 <tbody>
                                                                 {% for ticket in eventDate.tickets %}
-                                                                    {% if ticket.active and app.user.hasRole('ROLE_ATTENDEE') %}
+                                                                    {% if ticket.active and is_granted('ROLE_ATTENDEE') %}
                                                                         <tr class="bg-gray">
                                                                             <td class="border-top-white book-ticket btn btn-primary book-ticket"
                                                                                 data-event-id="{{ event.id }}"

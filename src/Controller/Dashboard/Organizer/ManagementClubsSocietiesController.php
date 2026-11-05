@@ -11,18 +11,19 @@ use App\Service\ManagementClubsSocietiesService;
 use App\Service\OrganizerService;
 use App\Service\UserService;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class ManagementClubsSocietiesController extends Controller
 {
 
     /**
-     * @Route("/management", name="dashboard_organizer_management", methods="GET")
+     *
      */
+#[Route("/management", name: "management", methods: ["GET"])]
     public function index(ManagementClubsSocietiesService $managementClubsSocietiesService, Request $request, PaginatorInterface $paginator, Security $security)
     {
         $associations = $managementClubsSocietiesService->findAllAssociationRequestsForClub($this->getUser()->getOrganizer()->getId());
@@ -45,8 +46,9 @@ class ManagementClubsSocietiesController extends Controller
     }
 
     /**
-     * @Route("/dashboard/organizer/management/add/{organizerid}/{attendeeid}", name="app_dashboard_organizer_join_add", condition="request.isXmlHttpRequest()")
+     *
      */
+#[Route("/management/add/{organizerid}/{attendeeid}", name: "app_dashboard_organizer_join_add", condition: "request.isXmlHttpRequest()")]
     public function add(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $organizerid, $attendeeid)
     {
         $user = $userService->getUserById($attendeeid);
@@ -70,7 +72,6 @@ class ManagementClubsSocietiesController extends Controller
             $em->persist($managementrow);
             $em->flush();
 
-            // Define the response data based on the outcome of the operation
             $responseData = [];
             $responseData['success'] = 'Congratulations, this user is now a pending member';
             return new JsonResponse($responseData);
@@ -85,7 +86,6 @@ class ManagementClubsSocietiesController extends Controller
             $em->persist($row);
             $em->flush();
 
-            // Define the response data based on the outcome of the operation
             $responseData = [];
             $responseData['success'] = 'Congratulations, this user is now a pending member';
             return new JsonResponse($responseData);
@@ -96,21 +96,22 @@ class ManagementClubsSocietiesController extends Controller
     }
 
     /**
-     * @Route("/dashboard/organizer/management/accept/{organizerid}/{attendeeid}", name="app_dashboard_organizer_join_accept")
+     *
      */
+#[Route("/management/accept/{organizerid}/{attendeeid}", name: "app_dashboard_organizer_join_accept")]
     public function accept(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $organizerid, $attendeeid)
     {
         $user = $userService->getUserById($attendeeid);
         $organizer = $organizerService->getOrganizerById($organizerid);
         if (!$user || !$organizer) {
-//                $this->addFlash('error', "Something went wrong. Contact admin");
+
             return $this->redirectToRoute("dashboard_organizer_management");
         }
 
         $row = $managementClubsSocietiesService->findRowByUserIdAndOrgId($attendeeid, $organizerid);
 
         if (!$row) {
-//                $this->addFlash('error', "Something went wrong. Contact admin");
+
             return $this->redirectToRoute("dashboard_organizer_management");
         }
         if ($row->getStatus() == 0 || $row->getStatus() == -1) {
@@ -120,7 +121,6 @@ class ManagementClubsSocietiesController extends Controller
             $em->persist($row);
             $em->flush();
 
-            // Define the response data based on the outcome of the operation
             $this->addFlash('success', "Congratulations, this user is now a member");
             return $this->redirectToRoute("dashboard_organizer_management");
         }
@@ -130,21 +130,22 @@ class ManagementClubsSocietiesController extends Controller
     }
 
     /**
-     * @Route("/dashboard/organizer/management/acceptxml/{organizerid}/{attendeeid}", name="app_dashboard_organizer_join_accept_xml")
+     *
      */
+#[Route("/management/acceptxml/{organizerid}/{attendeeid}", name: "app_dashboard_organizer_join_accept_xml")]
     public function acceptxml(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $organizerid, $attendeeid)
     {
         $user = $userService->getUserById($attendeeid);
         $organizer = $organizerService->getOrganizerById($organizerid);
         if (!$user || !$organizer) {
-//                $this->addFlash('error', "Something went wrong. Contact admin");
+
             return $this->redirectToRoute("dashboard_organizer_management");
         }
 
         $row = $managementClubsSocietiesService->findRowByUserIdAndOrgId($attendeeid, $organizerid);
 
         if (!$row) {
-//                $this->addFlash('error', "Something went wrong. Contact admin");
+
             return new JsonResponse(['error' => 'Error']);
         }
 
@@ -155,7 +156,6 @@ class ManagementClubsSocietiesController extends Controller
             $em->persist($row);
             $em->flush();
 
-            // Define the response data based on the outcome of the operation
             $responseData['success'] = 'Congratulations, this user is now a member';
             return new JsonResponse($responseData);
         }
@@ -165,8 +165,9 @@ class ManagementClubsSocietiesController extends Controller
     }
 
     /**
-     * @Route("/dashboard/organizer/management/reject/{organizerid}/{attendeeid}", name="app_dashboard_organizer_join_reject")
+     *
      */
+#[Route("/management/reject/{organizerid}/{attendeeid}", name: "app_dashboard_organizer_join_reject")]
     public function reject(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $organizerid, $attendeeid)
     {
         $user = $userService->getUserById($attendeeid);
@@ -194,8 +195,9 @@ class ManagementClubsSocietiesController extends Controller
     }
 
     /**
-     * @Route("/dashboard/organizer/management/cancel/{organizerid}/{attendeeid}", name="app_dashboard_organizer_join_cancel", condition="request.isXmlHttpRequest()")
+     *
      */
+#[Route("/management/cancel/{organizerid}/{attendeeid}", name: "app_dashboard_organizer_join_cancel", condition: "request.isXmlHttpRequest()")]
     public function cancelxml(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $organizerid, $attendeeid)
     {
         $user = $userService->getUserById($attendeeid);
@@ -222,22 +224,23 @@ class ManagementClubsSocietiesController extends Controller
     }
 
     /**
-     * @Route("/dashboard/attendee/management/kick/{organizerid}/{attendeeid}", name="app_dashboard_organizer_join_kick")
+     *
      */
+#[Route("/dashboard/attendee/management/kick/{organizerid}/{attendeeid}", name: "app_dashboard_organizer_join_kick")]
     public function kick(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $attendeeid, $organizerid)
     {
         $user = $userService->getUserById($attendeeid);
         $organizer = $organizerService->getOrganizerById($organizerid);
 
         if (!$user || !$organizer) {
-//                $this->addFlash('error', "Error");
+
             return $this->redirectToRoute("dashboard_organizer_management");
         }
 
         $isnew = !$managementClubsSocietiesService->doesRowExist($attendeeid, $organizerid);
 
         if ($isnew) {
-//                $this->addFlash('error', "You cannot kick them since they are not a member");
+
             return $this->redirectToRoute("dashboard_organizer_management");
         }
 
@@ -251,8 +254,9 @@ class ManagementClubsSocietiesController extends Controller
     }
 
     /**
-     * @Route("/dashboard/attendee/management/kickxml/{organizerid}/{attendeeid}", name="app_dashboard_organizer_join_kick_xml", condition="request.isXmlHttpRequest()")
+     *
      */
+#[Route("/dashboard/attendee/management/kickxml/{organizerid}/{attendeeid}", name: "app_dashboard_organizer_join_kick_xml", condition: "request.isXmlHttpRequest()")]
     public function kickxml(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $attendeeid, $organizerid)
     {
         $user = $userService->getUserById($attendeeid);
@@ -281,15 +285,16 @@ class ManagementClubsSocietiesController extends Controller
     }
 
     /**
-     * @Route("/dashboard/organizer/management/cancelnotxml/{organizerid}/{attendeeid}", name="app_dashboard_organizer_join_cancelnotxml")
+     *
      */
+#[Route("/management/cancelnotxml/{organizerid}/{attendeeid}", name: "app_dashboard_organizer_join_cancelnotxml")]
     public function cancelnotxml(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $organizerid, $attendeeid)
     {
         $user = $userService->getUserById($attendeeid);
         $organizer = $organizerService->getOrganizerById($organizerid);
 
         if (!$user || !$organizer) {
-//                $this->addFlash('error', "Error");
+
             return $this->redirectToRoute("dashboard_organizer_management");
         }
 

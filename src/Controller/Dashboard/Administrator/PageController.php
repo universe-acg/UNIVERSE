@@ -9,18 +9,19 @@ use App\Entity\Page;
 use App\Form\PageType;
 use App\Service\AppServices;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class PageController extends Controller
 {
 
     /**
-     * @Route("/manage-pages", name="page", methods="GET")
+     *
      */
+#[Route("/manage-pages", name: "page", methods: ["GET"])]
     public function index(Request $request, PaginatorInterface $paginator, AppServices $services): Response
     {
 
@@ -32,9 +33,11 @@ class PageController extends Controller
     }
 
     /**
-     * @Route("/manage-pages/add", name="page_add", methods="GET|POST")
-     * @Route("/manage-pages/{slug}/edit", name="page_edit", methods="GET|POST")
+     *
+     *
      */
+#[Route("/manage-pages/add", name: "page_add", methods: ["GET","POST"])]
+#[Route("/manage-pages/{slug}/edit", name: "page_edit", methods: ["GET","POST"])]
     public function addedit(Request $request, AppServices $services, $slug = null): Response
     {
         $em = $this->getDoctrine()->getManager();
@@ -73,8 +76,9 @@ class PageController extends Controller
     }
 
     /**
-     * @Route("/manage-pages/{slug}/delete", name="page_delete", methods="GET")
+     *
      */
+#[Route("/manage-pages/{slug}/delete", name: "page_delete", methods: ["POST"])]
     public function delete(AppServices $services, $slug): RedirectResponse
     {
 

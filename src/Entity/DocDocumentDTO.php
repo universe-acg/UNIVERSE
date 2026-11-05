@@ -11,91 +11,55 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\DocDocumentRepository")
- * @ORM\Table(name="universe_user_doc")
- * @Assert\Callback({"App\Validation\Validator", "validate"})
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
- * @Vich\Uploadable
- */
+#[ORM\Table(name: 'universe_user_doc')]
+#[ORM\Entity(repositoryClass: \App\Repository\DocDocumentRepository::class)]
+#[Assert\Callback(['App\Validation\Validator', 'validate'])]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
+#[Vich\Uploadable]
 class DocDocumentDTO
 {
     private $deletedocfile2;
     private $deletedocfile1;
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
     private $id;
-    /**
-     * @ORM\OneToOne(targetEntity="User", inversedBy="doc")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\OneToOne(targetEntity: \App\Entity\User::class, inversedBy: 'doc')]
     private $user;
-    /**
-     * @Vich\UploadableField(mapping="doc_file1", fileNameProperty="fileName", size="fileSize", mimeType="fileMimeType", originalName="fileOriginalName")
-     * @Assert\File(
-     *     maxSize = "5M",
-     *     mimeTypes = {"application/pdf", "application/msword"},
-     *     mimeTypesMessage = "The file should be a PDF or MS WORD document",
-     * )
-     */
+    #[Assert\File(maxSize: '5M', mimeTypes: ['application/pdf', 'application/msword'], mimeTypesMessage: 'The file should be a PDF or MS WORD document')]
+    #[Vich\UploadableField(mapping: 'doc_file1', fileNameProperty: 'fileName', size: 'fileSize', mimeType: 'fileMimeType', originalName: 'fileOriginalName')]
     private $docfile1;
-    /**
-     * @Vich\UploadableField(mapping="doc_file2", fileNameProperty="fileName1", size="fileSize1", mimeType="fileMimeType1", originalName="fileOriginalName1")
-     * @Assert\File(
-     *     maxSize = "5M",
-     *     mimeTypes = {"application/pdf", "application/msword"},
-     *     mimeTypesMessage = "The file should be a PDF or MS WORD document",
-     * )
-     */
+    #[Assert\File(maxSize: '5M', mimeTypes: ['application/pdf', 'application/msword'], mimeTypesMessage: 'The file should be a PDF or MS WORD document')]
+    #[Vich\UploadableField(mapping: 'doc_file2', fileNameProperty: 'fileName1', size: 'fileSize1', mimeType: 'fileMimeType1', originalName: 'fileOriginalName1')]
     private $docfile2;
     /**
      * @var DateTime $createdAt
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
      */
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(type: 'datetime')]
     private $createdAt;
     /**
      * @var DateTime $updatedAt
-     *
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[Gedmo\Timestampable(on: 'update')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updatedAt;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $fileName = null;
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $fileSize;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $fileMimeType;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $fileOriginalName;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $fileName1 = null;
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $fileSize1;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $fileMimeType1;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $fileOriginalName1;
 
     public function __construct()

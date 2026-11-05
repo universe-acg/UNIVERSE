@@ -7,24 +7,18 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\UniverseChatUserRepository")
- * @ORM\Table(name="universe_chat_user")
- */
+#[ORM\Table(name: 'universe_chat_user')]
+#[ORM\Entity(repositoryClass: \App\Repository\UniverseChatUserRepository::class)]
 class UniverseChatUser
 {
-    /**
-     * @ORM\Id()
-     * @ORM\ManyToOne(targetEntity="UniverseChatEntity")
-     * @ORM\JoinColumn(name="chat_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'chat_id', referencedColumnName: 'id')]
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: \App\Entity\UniverseChatEntity::class)]
     private $universeChat;
 
-    /**
-     * @ORM\Id()
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: \App\Entity\User::class)]
     private $user;
 
     /**

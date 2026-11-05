@@ -12,22 +12,23 @@ use App\Form\HomepageHeroSettingsType;
 use App\Form\MenuType;
 use App\Service\AppServices;
 use Exception;
-use Swift_Mailer;
-use Swift_Message;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Service\DemoMailer as Swift_Mailer;
+use App\Service\MailMessage as Swift_Message;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use Twig_Environment;
+use Symfony\Component\Routing\Attribute\Route;
+use \Twig\Environment;
 
 class SettingsController extends Controller
 {
 
     /**
-     * @Route("/settings/homepage-hero", name="settings_homepage", methods="GET|POST")
+     *
      */
+#[Route("/settings/homepage-hero", name: "settings_homepage", methods: ["GET","POST"])]
     public function homepagehero(Request $request, AppServices $services)
     {
 
@@ -96,8 +97,9 @@ class SettingsController extends Controller
     }
 
     /**
-     * @Route("/settings/layout", name="settings_layout", methods="GET|POST")
+     *
      */
+#[Route("/settings/layout", name: "settings_layout", methods: ["GET","POST"])]
     public function layout(Request $request, AppServices $services)
     {
 
@@ -139,7 +141,7 @@ class SettingsController extends Controller
                 $services->setSetting("youtube_url", $settings['youtube_url']);
                 $services->setSetting("twitter_url", $settings['twitter_url']);
                 $services->setSetting("app_layout", $settings['app_layout']);
-//                    $services->setSetting("app_theme", $settings['app_theme']);
+
                 $services->setSetting("primary_color", $settings['primary_color']);
                 $services->setSetting("custom_css", $settings['custom_css']);
                 $services->setSetting("google_analytics_code", $settings['google_analytics_code']);
@@ -213,8 +215,9 @@ class SettingsController extends Controller
     }
 
     /**
-     * @Route("/settings/events-list-page", name="settings_events_list_page", methods="GET|POST")
+     *
      */
+#[Route("/settings/events-list-page", name: "settings_events_list_page", methods: ["GET","POST"])]
     public function eventsListPage(Request $request, AppServices $services)
     {
 
@@ -224,17 +227,17 @@ class SettingsController extends Controller
                 'label' => 'Number of events per page',
                 'attr' => ['class' => 'touchspin-integer']
             ])
-//            ->add('show_map_button', ChoiceType::class, [
-//                'required' => false,
-//                'multiple' => false,
-//                'expanded' => true,
-//                'label' => 'Show map button',
-//                'choices' => ['Yes' => 'yes', 'No' => 'no'],
-//                'label_attr' => ['class' => 'radio-custom radio-inline'],
-////                    'constraints' => array(
-////                        new NotNull()
-////                    ),
-//            ])
+
+
+
+
+
+
+
+
+
+
+
             ->add('show_calendar_button', ChoiceType::class, [
                 'required' => false,
                 'multiple' => false,
@@ -243,9 +246,9 @@ class SettingsController extends Controller
                 'placeholder' => false,
                 'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'label_attr' => ['class' => 'radio-custom radio-inline'],
-//                    'constraints' => array(
-//                        new NotNull()
-//                    ),
+
+
+
             ])
             ->add('show_category_filter', ChoiceType::class, [
                 'required' => false,
@@ -255,21 +258,21 @@ class SettingsController extends Controller
                 'label' => 'Show category filter',
                 'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'label_attr' => ['class' => 'radio-custom radio-inline'],
-//                    'constraints' => array(
-//                        new NotNull()
-//                    ),
+
+
+
             ])
-//                ->add('show_location_filter', ChoiceType::class, [
-//                    'required' => false,
-//                    'multiple' => false,
-//                    'expanded' => true,
-//                    'label' => 'Show location filter',
-//                    'choices' => ['Yes' => 'yes', 'No' => 'no'],
-//                    'label_attr' => ['class' => 'radio-custom radio-inline'],
-////                    'constraints' => array(
-////                        new NotNull()
-////                    ),
-//                ])
+
+
+
+
+
+
+
+
+
+
+
             ->add('show_date_filter', ChoiceType::class, [
                 'required' => false,
                 'multiple' => false,
@@ -278,9 +281,9 @@ class SettingsController extends Controller
                 'label' => 'Show date filter',
                 'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'label_attr' => ['class' => 'radio-custom radio-inline'],
-//                    'constraints' => array(
-//                        new NotNull()
-//                    ),
+
+
+
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Save',
@@ -294,14 +297,12 @@ class SettingsController extends Controller
             if ($form->isValid()) {
                 $settings = $form->getData();
 
-// Check if the key exists before trying to access it
                 if (isset($settings['events_per_page'])) {
                     $services->setSetting("events_per_page", $settings['events_per_page']);
                 }
 
-//                if (isset($settings['show_map_button'])) {
-//                $services->setSetting("show_map_button", false);
-//                }
+
+
 
                 if (isset($settings['show_calendar_button'])) {
                     $services->setSetting("show_calendar_button", $settings['show_calendar_button']);
@@ -324,10 +325,10 @@ class SettingsController extends Controller
             }
         } else {
             $form->get('events_per_page')->setData($services->getSetting("events_per_page"));
-//            $form->get('show_map_button')->setData($services->getSetting("show_map_button"));
+
             $form->get('show_calendar_button')->setData($services->getSetting("show_calendar_button"));
             $form->get('show_category_filter')->setData($services->getSetting("show_category_filter"));
-//                $form->get('show_location_filter')->setData($services->getSetting("show_location_filter"));
+
             $form->get('show_date_filter')->setData($services->getSetting("show_date_filter"));
         }
 
@@ -338,8 +339,9 @@ class SettingsController extends Controller
 
 
     /**
-     * @Route("/settings/blog", name="settings_blog", methods="GET|POST")
+     *
      */
+#[Route("/settings/blog", name: "settings_blog", methods: ["GET","POST"])]
     public function blog(Request $request, AppServices $services)
     {
 
@@ -355,23 +357,23 @@ class SettingsController extends Controller
                 'expanded' => true,
                 'placeholder' => false, // explicitly set placeholder to false
                 'label' => 'Enable comments',
-                //'choices' => ['No' => 'no', 'Native comments' => 'native', 'Facebook comments' => 'facebook', 'Disqus comments' => 'disqus'],
+
                 'choices' => ['No' => 'no', 'Facebook comments' => 'facebook', 'Disqus comments' => 'disqus'],
                 'label_attr' => ['class' => 'radio-custom radio-inline'],
-//                    'constraints' => array(
-//                        new NotNull()
-//                    ),
+
+
+
             ])
-//                ->add('facebook_app_id', TextType::class, [
-//                    'required' => false,
-//                    'label' => 'Facebook app id',
-//                    'help' => 'Go to the documentation to get help about getting an app ID'
-//                ])
-//                ->add('disqus_subdomain', TextType::class, [
-//                    'required' => false,
-//                    'label' => 'Disqus subdomain',
-//                    'help' => 'Go to the documentation to get help about setting up Disqus'
-//                ])
+
+
+
+
+
+
+
+
+
+
             ->add('save', SubmitType::class, [
                 'label' => 'Save',
                 'attr' => ['class' => 'btn btn-primary'],
@@ -385,8 +387,8 @@ class SettingsController extends Controller
                 $settings = $form->getData();
                 $services->setSetting("blog_posts_per_page", $settings['blog_posts_per_page']);
                 $services->setSetting("blog_comments_enabled", $settings['blog_comments_enabled']);
-//                    $services->setSetting("facebook_app_id", $settings['facebook_app_id']);
-//                    $services->setSetting("disqus_subdomain", $settings['disqus_subdomain']);
+
+
                 $this->addFlash('success', 'The settings have been updated');
             } else {
                 $this->addFlash('error', 'The form contains invalid data');
@@ -394,8 +396,8 @@ class SettingsController extends Controller
         } else {
             $form->get('blog_posts_per_page')->setData($services->getSetting("blog_posts_per_page"));
             $form->get('blog_comments_enabled')->setData($services->getSetting("blog_comments_enabled"));
-//                $form->get('facebook_app_id')->setData($services->getSetting("facebook_app_id"));
-//                $form->get('disqus_subdomain')->setData($services->getSetting("disqus_subdomain"));
+
+
         }
 
         return $this->render('Dashboard/Administrator/Settings/blog.html.twig', [
@@ -404,8 +406,9 @@ class SettingsController extends Controller
     }
 
     /**
-     * @Route("/settings/mail-server", name="settings_mail_server", methods="GET|POST")
+     *
      */
+#[Route("/settings/mail-server", name: "settings_mail_server", methods: ["GET","POST"])]
     public function mailServer(Request $request, AppServices $services)
     {
 
@@ -422,9 +425,9 @@ class SettingsController extends Controller
                 'label' => 'Transport',
                 'choices' => ['SMTP' => 'smtp', 'Gmail' => 'gmail', 'Sendmail' => 'sendmail'],
                 'label_attr' => ['class' => 'radio-custom radio-inline'],
-//                    'constraints' => array(
-//                        new NotNull()
-//                    ),
+
+
+
             ])
             ->add('mail_server_host', TextType::class, [
                 'required' => false,
@@ -491,7 +494,7 @@ class SettingsController extends Controller
                 $services->setSetting("mail_server_host", rawurlencode($settings['mail_server_host']));
                 $services->setSetting("mail_server_port", $settings['mail_server_port']);
                 $services->setSetting("mail_server_encryption", $settings['mail_server_encryption']);
-                //$services->setSetting("mail_server_auth_mode", $settings['mail_server_auth_mode']);
+
                 $services->setSetting("mail_server_username", rawurlencode($settings['mail_server_username']));
                 $services->setSetting("mail_server_password", rawurlencode($settings['mail_server_password']));
                 $services->setSetting("contact_email", $settings['contact_email']);
@@ -499,7 +502,7 @@ class SettingsController extends Controller
 
                 $dsnUrl = $settings['mail_server_transport'] . "://";
                 if ($settings['mail_server_username'] != '') {
-//                        $dsnUrl .= rawurlencode($settings['mail_server_username']);
+
                     $dsnUrl .= $settings['mail_server_username'];
                 }
                 if ($settings['mail_server_password'] != '') {
@@ -532,7 +535,7 @@ class SettingsController extends Controller
             $form->get('mail_server_host')->setData(rawurldecode($services->getSetting("mail_server_host")));
             $form->get('mail_server_port')->setData($services->getSetting("mail_server_port"));
             $form->get('mail_server_encryption')->setData($services->getSetting("mail_server_encryption"));
-            //$form->get('mail_server_auth_mode')->setData($services->getSetting("mail_server_auth_mode"));
+
             $form->get('mail_server_username')->setData(rawurldecode($services->getSetting("mail_server_username")));
             $form->get('mail_server_password')->setData(rawurldecode($services->getSetting("mail_server_password")));
             $form->get('contact_email')->setData($services->getSetting("contact_email"));
@@ -545,9 +548,10 @@ class SettingsController extends Controller
     }
 
     /**
-     * @Route("/settings/mail-server/test", name="settings_mail_server_test", methods="GET|POST")
+     *
      */
-    public function mailServerTest(Request $request, AppServices $services, Swift_Mailer $mailer, Twig_Environment $templating)
+#[Route("/settings/mail-server/test", name: "settings_mail_server_test", methods: ["GET","POST"])]
+    public function mailServerTest(Request $request, AppServices $services, Swift_Mailer $mailer, \Twig\Environment $templating)
     {
 
         $email = new Swift_Message("Mail server test email");
@@ -569,8 +573,9 @@ class SettingsController extends Controller
     }
 
     /**
-     * @Route("/settings/google-recaptcha", name="settings_google_recaptcha", methods="GET|POST")
+     *
      */
+#[Route("/settings/google-recaptcha", name: "settings_google_recaptcha", methods: ["GET","POST"])]
     public function googleRecaptcha(Request $request, AppServices $services)
     {
 
@@ -583,9 +588,9 @@ class SettingsController extends Controller
                 'label' => 'Enable Google Recaptcha',
                 'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'label_attr' => ['class' => 'radio-custom radio-inline'],
-//                    'constraints' => array(
-//                        new NotNull()
-//                    ),
+
+
+
             ])
             ->add('google_recaptcha_site_key', TextType::class, [
                 'required' => false,
@@ -629,8 +634,9 @@ class SettingsController extends Controller
     }
 
     /**
-     * @Route("/settings/google-maps", name="settings_google_maps", methods="GET|POST")
+     *
      */
+#[Route("/settings/google-maps", name: "settings_google_maps", methods: ["GET","POST"])]
     public function googleMaps(Request $request, AppServices $services)
     {
 
@@ -667,8 +673,9 @@ class SettingsController extends Controller
     }
 
     /**
-     * @Route("/settings/social-login", name="settings_social_login", methods="GET|POST")
+     *
      */
+#[Route("/settings/social-login", name: "settings_social_login", methods: ["GET","POST"])]
     public function socialLogin(Request $request, AppServices $services)
     {
 
@@ -680,9 +687,9 @@ class SettingsController extends Controller
                 'label' => 'Enable Facebook Social Login',
                 'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'label_attr' => ['class' => 'radio-custom radio-inline'],
-//                    'constraints' => array(
-//                        new NotNull()
-//                    ),
+
+
+
             ])
             ->add('social_login_facebook_id', TextType::class, [
                 'required' => false,
@@ -699,9 +706,9 @@ class SettingsController extends Controller
                 'label' => 'Enable Google Social Login',
                 'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'label_attr' => ['class' => 'radio-custom radio-inline'],
-//                    'constraints' => array(
-//                        new NotNull()
-//                    ),
+
+
+
             ])
             ->add('social_login_google_id', TextType::class, [
                 'required' => false,
@@ -753,8 +760,9 @@ class SettingsController extends Controller
     }
 
     /**
-     * @Route("/settings/menus", name="settings_menus", methods="GET")
+     *
      */
+#[Route("/settings/menus", name: "settings_menus", methods: ["GET"])]
     public function menus(AppServices $services)
     {
 
@@ -766,8 +774,9 @@ class SettingsController extends Controller
     }
 
     /**
-     * @Route("/settings/menus/{slug}/edit", name="settings_menus_edit", methods="GET|POST")
+     *
      */
+#[Route("/settings/menus/{slug}/edit", name: "settings_menus_edit", methods: ["GET","POST"])]
     public function menuEdit(Request $request, AppServices $services, $slug)
     {
 

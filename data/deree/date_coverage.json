@@ -1,0 +1,42 @@
+{
+  "reviewed": 1372,
+  "target_pages": 1372,
+  "verified_unique_pages": 1364,
+  "verified_event_rows": 1364,
+  "remaining_undated": 7,
+  "failures": [
+    {
+      "source_url": "https://www.acg.edu/events/b-in-eu-3rd-interdisciplinary-conference/",
+      "error": "No event microdata date found"
+    },
+    {
+      "source_url": "https://www.acg.edu/events/exam-anxiety-support-group-acg/",
+      "error": "No event microdata date found"
+    },
+    {
+      "source_url": "https://www.acg.edu/events/first-day-of-classes-for-summer-term-2016/",
+      "error": "ValueError"
+    },
+    {
+      "source_url": "https://www.acg.edu/events/music-concert/",
+      "error": "ValueError"
+    },
+    {
+      "source_url": "https://www.acg.edu/events/some-explicit-polaroids/",
+      "error": "ValueError"
+    },
+    {
+      "source_url": "https://www.acg.edu/events/students-meet-dr-kalyvas-venizelos-chair-holder/",
+      "error": "ValueError"
+    },
+    {
+      "source_url": "https://www.acg.edu/events/teaching-and-learning-through-arts/",
+      "error": "ValueError"
+    },
+    {
+      "source_url": "https://www.acg.edu/events/the-rescue-at-smyrna-a-narrative-of-faith-and-courage/",
+      "error": "ValueError"
+    }
+  ],
+  "timezone": "Official page microdata uses local wall time; stored as Europe/Athens without shifting UTC."
+}

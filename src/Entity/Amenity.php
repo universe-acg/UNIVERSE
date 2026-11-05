@@ -11,54 +11,37 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToMany;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="universe_amenity")
- * @ORM\Entity(repositoryClass="App\Repository\AmenityRepository")
- */
+#[ORM\Table(name: 'universe_amenity')]
+#[ORM\Entity(repositoryClass: \App\Repository\AmenityRepository::class)]
 class Amenity
 {
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
-    /**
-     * @ManyToMany(targetEntity="Venue", mappedBy="amenities")
-     */
+    #[ManyToMany(targetEntity: \App\Entity\Venue::class, mappedBy: 'amenities')]
     private $venues;
-    /**
-     * @ORM\Column(type="string", length=50)
-     */
+    #[ORM\Column(type: 'string', length: 50)]
     private $icon;
-    /**
-     * @ORM\Column(type="string", length=50)
-     */
+    #[ORM\Column(type: 'string', length: 50)]
     private $name;
-    /**
-     * @ORM\Column(type="string", length=80)
-     * @Gedmo\Slug(fields={"name"}, updatable=true)
-     */
+    #[ORM\Column(type: 'string', length: 80)]
+    #[Gedmo\Slug(fields: ['name'], updatable: true)]
     private $slug;
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $hidden;
     /**
      * @var DateTime $createdAt
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
      */
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(type: 'datetime')]
     private $createdAt;
     /**
      * @var DateTime $updatedAt
-     *
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[Gedmo\Timestampable(on: 'update')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updatedAt;
 
     public function __construct()

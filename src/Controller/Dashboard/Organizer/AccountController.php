@@ -8,20 +8,21 @@ namespace App\Controller\Dashboard\Organizer;
 use App\Entity\Organizer;
 use App\Form\OrganizerProfileType;
 use App\Repository\UserRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class AccountController extends Controller
 {
 
     /**
-     * @Route("/profile/{id}", name="dashboard_organizer_profile_admin", methods={"GET", "POST"})
+     *
      */
+#[Route("/profile/{id}", name: "profile_admin", methods: ["GET", "POST"])]
     public function editOrganizerAsAdmin(Request $request, $id, UserRepository $userRepository)
     {
-        // TODO get by slug
-        // Retrieve the user
+
+
         $user = $userRepository->find($id);
 
         if (!$user || !$user->getOrganizer() instanceof Organizer) {
@@ -52,11 +53,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @Route("/profile", name="profile", methods={"GET", "POST"})
+     *
      */
+#[Route("/profile", name: "profile", methods: ["GET", "POST"])]
     public function edit(Request $request)
     {
-        // Retrieve the user
+
         $user = $this->getUser();
 
         if (!$user || !$user->getOrganizer() instanceof Organizer) {

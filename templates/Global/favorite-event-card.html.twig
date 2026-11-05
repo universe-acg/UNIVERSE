@@ -1,6 +1,6 @@
 {% set runtimeConfig = {"thumbnail": {"size": [500, 250] }} %}
-{% set displayedEventDate = event.eventdates[0] %}
-{% set endedEventDate = event.eventdates[(event.eventdates | length )-1].enddate %}
+{% set displayedEventDate = event.eventdates|first %}
+{% set endedEventDate = (event.eventdates|last).enddate|default(null) %}
 {% if customLink is defined %}
     {% set link = customLink %}
 {% else %}
@@ -45,7 +45,7 @@
 
             <div style="display: flex; justify-content: space-between; align-content: center">
                 <p class="text-muted" s>Date of
-                    event: {{ displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') }}</p>
+                    event: {{ displayedEventDate and displayedEventDate.startdate ? displayedEventDate.startdate|date('F j, Y H:i', 'Europe/Athens') : "Date not recorded"|trans }}</p>
                 <span><a
                             href="{{ path('organizer', {slug: (event.getOrganizer().getUser().getUsername())}) }}"
                             class="link-style text-dark">{{ (event.getOrganizer().getName()) }}</a></span>

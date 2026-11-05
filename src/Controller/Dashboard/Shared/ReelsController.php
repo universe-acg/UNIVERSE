@@ -11,17 +11,19 @@ use App\Form\ReelVideoType;
 use App\Service\AppServices;
 use App\Service\ReelService;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class ReelsController extends Controller
 {
     /**
-     * @Route("/dashboard/organizer/manage-reels", name="dashboard_attendee_reel", methods="GET")
-     * @Route("/dashboard/attendee/manage-reels", name="dashboard_organizer_reel", methods="GET")
+     *
+     *
      */
+#[Route("/organizer/manage-reels", name: "dashboard_attendee_reel", methods: ["GET"])]
+#[Route("/attendee/manage-reels", name: "dashboard_organizer_reel", methods: ["GET"])]
     public function index(Request $request, PaginatorInterface $paginator, ReelService $reelService, AuthorizationCheckerInterface $authChecker)
     {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
@@ -34,10 +36,12 @@ class ReelsController extends Controller
     }
 
     /**
-     * @Route("/dashboard/attendee/manage-reels-image/add", name="dashboard_attendee_reel_add_image", methods="GET|POST")
-     * @Route("/dashboard/attendee/manage-reels-image/{slug}/edit", name="dashboard_attendee_reel_edit_image", methods="GET|POST")
+     *
+     *
      */
-    public function addeditimage(Request $request, AppServices $appServices, ReelService $reelService, $slug = null, AuthorizationCheckerInterface $authChecker)
+#[Route("/attendee/manage-reels-image/add", name: "dashboard_attendee_reel_add_image", methods: ["GET","POST"])]
+#[Route("/attendee/manage-reels-image/{slug}/edit", name: "dashboard_attendee_reel_edit_image", methods: ["GET","POST"])]
+    public function addeditimage(Request $request, AppServices $appServices, ReelService $reelService, AuthorizationCheckerInterface $authChecker, $slug = null)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -85,6 +89,7 @@ class ReelsController extends Controller
      * Handle image upload and update the entity.
      * @param Reel $reel
      */
+
     private function handleImageUpload(Reel $reel)
     {
         if ($reel->getMainImageFile()) {
@@ -94,10 +99,12 @@ class ReelsController extends Controller
     }
 
     /**
-     * @Route("/dashboard/organizer/manage-reels-image/add", name="dashboard_organizer_reel_add_image", methods="GET|POST")
-     * @Route("/dashboard/organizer/manage-reels-image/{slug}/edit", name="dashboard_organizer_reel_edit_image", methods="GET|POST")
+     *
+     *
      */
-    public function addeditimageorg(Request $request, AppServices $appServices, ReelService $reelService, $slug = null, AuthorizationCheckerInterface $authChecker)
+#[Route("/organizer/manage-reels-image/add", name: "dashboard_organizer_reel_add_image", methods: ["GET","POST"])]
+#[Route("/organizer/manage-reels-image/{slug}/edit", name: "dashboard_organizer_reel_edit_image", methods: ["GET","POST"])]
+    public function addeditimageorg(Request $request, AppServices $appServices, ReelService $reelService, AuthorizationCheckerInterface $authChecker, $slug = null)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -141,10 +148,12 @@ class ReelsController extends Controller
     }
 
     /**
-     * @Route("/dashboard/attendee/manage-reels-video/add", name="dashboard_attendee_reel_add_video", methods="GET|POST")
-     * @Route("/dashboard/attendee/manage-reels-video/{slug}/edit", name="dashboard_attendee_reel_edit_video", methods="GET|POST")
+     *
+     *
      */
-    public function addeditvideo(Request $request, AppServices $appServices, ReelService $reelService, $slug = null, AuthorizationCheckerInterface $authChecker)
+#[Route("/attendee/manage-reels-video/add", name: "dashboard_attendee_reel_add_video", methods: ["GET","POST"])]
+#[Route("/attendee/manage-reels-video/{slug}/edit", name: "dashboard_attendee_reel_edit_video", methods: ["GET","POST"])]
+    public function addeditvideo(Request $request, AppServices $appServices, ReelService $reelService, AuthorizationCheckerInterface $authChecker, $slug = null)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -197,10 +206,12 @@ class ReelsController extends Controller
     }
 
     /**
-     * @Route("/dashboard/organizer/manage-reels-video/add", name="dashboard_organizer_reel_add_video", methods="GET|POST")
-     * @Route("/dashboard/organizer/manage-reels-video/{slug}/edit", name="dashboard_organizer_reel_edit_video", methods="GET|POST")
+     *
+     *
      */
-    public function addeditvideoorg(Request $request, AppServices $appServices, ReelService $reelService, $slug = null, AuthorizationCheckerInterface $authChecker)
+#[Route("/organizer/manage-reels-video/add", name: "dashboard_organizer_reel_add_video", methods: ["GET","POST"])]
+#[Route("/organizer/manage-reels-video/{slug}/edit", name: "dashboard_organizer_reel_edit_video", methods: ["GET","POST"])]
+    public function addeditvideoorg(Request $request, AppServices $appServices, ReelService $reelService, AuthorizationCheckerInterface $authChecker, $slug = null)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -246,11 +257,15 @@ class ReelsController extends Controller
     }
 
     /**
-     * @Route("/dashboard/organizer/manage-reels/{slug}/disable", name="dashboard_attendee_reel_disable", methods="GET")
-     * @Route("/dashboard/organizer/manage-reels/{slug}/delete", name="dashboard_attendee_reel_delete", methods="GET")
-     * @Route("/dashboard/attendee/manage-reels/{slug}/disable", name="dashboard_organizer_reel_disable", methods="GET")
-     * @Route("/dashboard/attendee/manage-reels/{slug}/delete", name="dashboard_organizer_reel_delete", methods="GET")
+     *
+     *
+     *
+     *
      */
+#[Route("/organizer/manage-reels/{slug}/disable", name: "dashboard_attendee_reel_disable", methods: ["POST"])]
+#[Route("/organizer/manage-reels/{slug}/delete", name: "dashboard_attendee_reel_delete", methods: ["POST"])]
+#[Route("/attendee/manage-reels/{slug}/disable", name: "dashboard_organizer_reel_disable", methods: ["POST"])]
+#[Route("/attendee/manage-reels/{slug}/delete", name: "dashboard_organizer_reel_delete", methods: ["POST"])]
     public function delete(AppServices $appServices, ReelService $reelService, $slug, AuthorizationCheckerInterface $authChecker)
     {
         $em = $this->getDoctrine()->getManager();
@@ -273,9 +288,11 @@ class ReelsController extends Controller
     }
 
     /**
-     * @Route("/dashboard/organizer/manage-reels/{slug}/restore", name="dashboard_attendee_reel_restore", methods="GET")
-     * @Route("/dashboard/attendee/manage-reels/{slug}/restore", name="dashboard_organizer_reel_restore", methods="GET")
+     *
+     *
      */
+#[Route("/organizer/manage-reels/{slug}/restore", name: "dashboard_attendee_reel_restore", methods: ["POST"])]
+#[Route("/attendee/manage-reels/{slug}/restore", name: "dashboard_organizer_reel_restore", methods: ["POST"])]
     public function restore($slug, Request $request, AppServices $appServices, ReelService $reelService)
     {
         $reel = $reelService->getReels(array('organizer' => "all", 'hidden' => 'all', 'slug' => $slug, "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();
@@ -293,9 +310,11 @@ class ReelsController extends Controller
     }
 
     /**
-     * @Route("/dashboard/organizer/manage-reels/{slug}/hide", name="dashboard_organizer_reel_showhide", methods="GET")
-     * @Route("/dashboard/attendee/manage-reels/{slug}/show", name="dashboard_attendee_reel_showhide", methods="GET")
+     *
+     *
      */
+#[Route("/organizer/manage-reels/{slug}/hide", name: "dashboard_organizer_reel_showhide", methods: ["POST"])]
+#[Route("/attendee/manage-reels/{slug}/show", name: "dashboard_attendee_reel_showhide", methods: ["POST"])]
     public function showhide(AppServices $appServices, ReelService $reelService, $slug, AuthorizationCheckerInterface $authChecker)
     {
         $reel = $reelService->getReels(array('hidden' => 'all', 'slug' => $slug))[0];

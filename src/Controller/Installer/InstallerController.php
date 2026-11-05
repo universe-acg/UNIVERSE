@@ -2,9 +2,9 @@
     /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-    
+
     namespace App\Controller\Installer;
-    
+
     use App\Service\AppServices;
     use mysqli;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,21 +12,21 @@
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\HttpKernel\KernelInterface;
-    use Symfony\Component\Routing\Annotation\Route;
-    
+    use Symfony\Component\Routing\Attribute\Route;
+
     class InstallerController extends AbstractController
     {
-        
+
         /**
          * @Route("/install.php", name="install")
          */
         public function index(AppServices $services, KernelInterface $kernel): Response
         {
-            
+
             if ($services->getEnv("IS_WEBSITE_CONFIGURED") == "1") {
                 return $this->redirectToRoute("homepage");
             }
-            
+
             $phpVersion = PHP_VERSION;
             $phpOk = version_compare($phpVersion, '7.4.0') >= 0;
             $ctypeOk = extension_loaded('ctype');
@@ -50,7 +50,7 @@
             $zipOk = extension_loaded('zip');
             $zlibOk = extension_loaded('zlib');
             $requirementsOk = $phpOk && $ctypeOk && $iconvOk && $jsonOk && $pcreOk && $sessionOk && $SimpleXMLOk && $tokenizerOk && $intlOk && $opensslOk && $domOk && $mbstringOk && $curlOk && $fileinfoOk && $gdOk && $libxmlOk && $xmlOk && $xmlreaderOk && $xmlwriterOk && $zipOk && $zlibOk;
-            
+
             $cacheFolderWritable = is_writable($kernel->getProjectDir() . '/var/cache/');
             $logFolderWritable = is_writable($kernel->getProjectDir() . '/var/log/');
             $mediaFolderWritable = is_writable($kernel->getProjectDir() . '/public/media/');
@@ -58,7 +58,7 @@
             $sessionsFolderWritable = is_writable($kernel->getProjectDir() . '/sessions/');
             $envWritable = is_writable($kernel->getProjectDir() . '/.env');
             $folderPermissions = $cacheFolderWritable && $logFolderWritable && $mediaFolderWritable && $uploadsFolderWritable && $sessionsFolderWritable && $envWritable;
-            
+
             return $this->render('Installer/install.html.twig', [
                 "requirementsOk" => $requirementsOk,
                 "phpVersion" => $phpVersion,
@@ -92,18 +92,18 @@
                 "envWritable" => $envWritable,
             ]);
         }
-        
+
         /**
          * @Route("/install.php/save-conviguration", name="save_conviguration")
          */
         public function saveConviguration(Request $request, AppServices $services, KernelInterface $kernel): RedirectResponse
         {
-            
+
             $host = $request->query->get('host');
             $username = $request->query->get('username');
             $password = $request->query->get('password');
             $name = $request->query->get('name');
-            
+
             $databaseConfigLine = 'mysql://username:password@host/name?charset=utf8mb4';
             $databaseConfigLine = str_replace(array("host", "username"), array(rawurlencode($host), rawurlencode($username)), $databaseConfigLine);
             if ($password != '') {
@@ -112,17 +112,17 @@
                 $databaseConfigLine = str_replace(":password", "", $databaseConfigLine);
             }
             $databaseConfigLine = str_replace("name", rawurlencode($name), $databaseConfigLine);
-            
+
             $this->importDatabase($host, $username, $password, $name, $kernel->getProjectDir() . '/assets/sql/initial-database.sql');
             $this->importDatabase($host, $username, $password, $name, $kernel->getProjectDir() . '/updates/update-v1.2.sql');
             $this->importDatabase($host, $username, $password, $name, $kernel->getProjectDir() . '/updates/update-v1.3.sql');
-            
+
             $services->updateEnv('DATABASE_URL', $databaseConfigLine);
             $services->updateEnv('IS_WEBSITE_CONFIGURED', '1');
             $this->addFlash('success', 'Universe was successfully configured');
             return $this->redirectToRoute("homepage");
         }
-        
+
         public function importDatabase($host, $username, $password, $name, $sqlFilePath): void
         {
             $sql = file_get_contents($sqlFilePath);
@@ -132,24 +132,24 @@
 //                ;
 //            }
         }
-        
+
         /**
          * @Route("/install.php/test-database-connection", name="test_database_connection")
          */
         public function testDatabaseConnection(Request $request): Response
         {
-            
+
             $host = $request->query->get('host');
             $username = $request->query->get('username');
             $password = $request->query->get('password');
             $name = $request->query->get('name');
-            
+
             $connect = mysqli_connect($host, $username, $password);
-            
+
             if (!(mysqli_select_db($connect, $name))) {
                 return new Response('Could not open the database ' . $name);
             }
             return new Response('1');
         }
-        
+
     }

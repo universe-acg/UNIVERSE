@@ -11,7 +11,7 @@ use App\Service\AppServices;
 use App\Service\ListingCategoryService;
 use App\Service\ListingService;
 use App\Service\UserService;
-use FOS\RestBundle\Controller\Annotations\Options;
+
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;

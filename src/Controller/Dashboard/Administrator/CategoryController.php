@@ -9,16 +9,17 @@ use App\Entity\Category;
 use App\Form\CategoryType;
 use App\Service\AppServices;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class CategoryController extends Controller
 {
 
     /**
-     * @Route("/manage-categories", name="category", methods="GET")
+     *
      */
+#[Route("/manage-categories", name: "category", methods: ["GET"])]
     public function index(Request $request, PaginatorInterface $paginator, AppServices $services)
     {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
@@ -32,9 +33,11 @@ class CategoryController extends Controller
     }
 
     /**
-     * @Route("/manage-categories/add", name="category_add", methods="GET|POST")
-     * @Route("/manage-categories/{slug}/edit", name="category_edit", methods="GET|POST")
+     *
+     *
      */
+#[Route("/manage-categories/add", name: "category_add", methods: ["GET","POST"])]
+#[Route("/manage-categories/{slug}/edit", name: "category_edit", methods: ["GET","POST"])]
     public function addedit(Request $request, AppServices $services, $slug = null)
     {
         $em = $this->getDoctrine()->getManager();
@@ -74,9 +77,11 @@ class CategoryController extends Controller
     }
 
     /**
-     * @Route("/manage-categories/{slug}/disable", name="category_disable", methods="GET")
-     * @Route("/manage-categories/{slug}/delete", name="category_delete", methods="GET")
+     *
+     *
      */
+#[Route("/manage-categories/{slug}/disable", name: "category_disable", methods: ["POST"])]
+#[Route("/manage-categories/{slug}/delete", name: "category_delete", methods: ["POST"])]
     public function delete(AppServices $services, $slug)
     {
 
@@ -105,8 +110,9 @@ class CategoryController extends Controller
     }
 
     /**
-     * @Route("/manage-categories/{slug}/restore", name="category_restore", methods="GET")
+     *
      */
+#[Route("/manage-categories/{slug}/restore", name: "category_restore", methods: ["POST"])]
     public function restore($slug, AppServices $services)
     {
 
@@ -125,9 +131,11 @@ class CategoryController extends Controller
     }
 
     /**
-     * @Route("/manage-categories/{slug}/show", name="category_show", methods="GET")
-     * @Route("/manage-categories/{slug}/hide", name="category_hide", methods="GET")
+     *
+     *
      */
+#[Route("/manage-categories/{slug}/show", name: "category_show", methods: ["POST"])]
+#[Route("/manage-categories/{slug}/hide", name: "category_hide", methods: ["POST"])]
     public function showhide(AppServices $services, $slug)
     {
 
@@ -151,9 +159,11 @@ class CategoryController extends Controller
     }
 
     /**
-     * @Route("/manage-categories/{slug}/featured", name="category_featured", methods="GET")
-     * @Route("/manage-categories/{slug}/notfeatured", name="category_notfeatured", methods="GET")
+     *
+     *
      */
+#[Route("/manage-categories/{slug}/featured", name: "category_featured", methods: ["POST"])]
+#[Route("/manage-categories/{slug}/notfeatured", name: "category_notfeatured", methods: ["POST"])]
     public function featured(AppServices $services, $slug)
     {
 

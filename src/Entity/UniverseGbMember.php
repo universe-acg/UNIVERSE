@@ -9,50 +9,36 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\UniverseGbMemberRepository")
- * @ORM\Table(name="universe_gbmembers")
- */
+#[ORM\Table(name: 'universe_gbmembers')]
+#[ORM\Entity(repositoryClass: \App\Repository\UniverseGbMemberRepository::class)]
 class UniverseGbMember
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="attendeeid", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'attendeeid', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \App\Entity\User::class)]
     private $attendee;
-    /**
-     * @ORM\ManyToOne(targetEntity="Organizer")
-     * @ORM\JoinColumn(name="orgid", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'orgid', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \App\Entity\Organizer::class)]
     private $org;
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
     private $title;
     /**
      * @var DateTime $createdAt
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
      */
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(type: 'datetime')]
     private $createdAt;
     /**
      * @var DateTime $updatedAt
-     *
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[Gedmo\Timestampable(on: 'update')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updatedAt;
-    /**
-     * @ORM\Column(type="text", name="description")
-     */
+    #[ORM\Column(type: 'text', name: 'description')]
     private $desc;
 
     /**

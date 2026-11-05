@@ -14,17 +14,18 @@ use App\Service\AppServices;
 use App\Service\ManagementClubsSocietiesService;
 use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Controller\BaseController as AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class OrganizerController extends AbstractController
 {
 
     /**
-     * @Route("/organizer/{slug}", name="organizer")
+     *
      */
+#[Route("/organizer/{slug}", name: "organizer")]
     public function organizer(ManagementClubsSocietiesService $managementClubsSocietiesService, $slug, AppServices $services, UserRepository $userRepository): Response
     {
         $user = $userRepository->getByUsername($slug);
@@ -42,7 +43,6 @@ class OrganizerController extends AbstractController
         $pastevents = $services->getEvents(array('organizer' => $org->getSlug()));
         $currentDateTime = new DateTime(); // Get the current date and time
 
-// Filter the $pastevents array to keep only events with enddate smaller than the current time
         $pastevents = array_filter($pastevents, static function ($event) use ($currentDateTime) {
             foreach ($event->getEventdates() as $eventDate) {
                 if ($eventDate->getEnddate() < $currentDateTime) {
@@ -63,7 +63,7 @@ class OrganizerController extends AbstractController
             return false; // Exclude the event if none of its event dates meet the condition
         });
 
-        $row = $managementClubsSocietiesService->findRowByUserIdAndOrgId($this->getUser()->getId(), $org->getId());
+        $row = $this->getUser() ? $managementClubsSocietiesService->findRowByUserIdAndOrgId($this->getUser()->getId(), $org->getId()) : null;
         if ($row) {
             $manage = $managementClubsSocietiesService->isinitiatedbyme($row->getId(), $this->getUser()->getId());
         } else {
@@ -88,8 +88,9 @@ class OrganizerController extends AbstractController
     }
 
     /**
-     * @Route("/creators", name="creators", methods={"GET", "POST"})
+     *
      */
+#[Route("/creators", name: "creators", methods: ["GET", "POST"])]
     public function creators(
         ManagementClubsSocietiesService $managementClubsSocietiesService,
         OrganizerRepository             $organizerRepository,
@@ -122,11 +123,9 @@ class OrganizerController extends AbstractController
             $organizer->getUser()->setFollowerscount(count($organizer->getUser()->getFollowedby()));
         }
 
-        // remove all those offices and orgs if level is set
         if ($level !== 'all') {
             $categoriesToExclude = ["Office", "Organization"];
 
-// Filter the organizers array to remove those with excluded categories
             $organizers = array_filter($organizers, static function ($organizer) use ($categoriesToExclude) {
                 return !in_array($organizer->getCategory(), $categoriesToExclude, true);
             });
@@ -168,6 +167,7 @@ class OrganizerController extends AbstractController
      *
      * @return string
      */
+
     private function normalizeCategory(string $category): string
     {
         $categoryMappings = [
@@ -177,7 +177,6 @@ class OrganizerController extends AbstractController
             'Organizations' => 'Organization',
         ];
 
-        // Use the mapping or return the original value if no mapping exists
         return $categoryMappings[$category] ?? $category;
     }
 
@@ -186,7 +185,6 @@ class OrganizerController extends AbstractController
         $clubsAndSocieties = [];
         $otherOrganizers = [];
 
-        // Separate clubs and societies from other organizers
         foreach ($organizers as $organizer) {
             if ($organizer->getCategory() === 'Club' || $organizer->getCategory() === 'Society') {
                 $clubsAndSocieties[] = $organizer;
@@ -195,12 +193,10 @@ class OrganizerController extends AbstractController
             }
         }
 
-        // Custom sorting function to sort clubs and societies by points in descending order
         usort($clubsAndSocieties, static function ($a, $b) {
             $pointsA = $a->getUser()->getPoints(); // Replace with the actual method to get points
             $pointsB = $b->getUser()->getPoints(); // Replace with the actual method to get points
 
-            // Sort in descending order (higher points first)
             if ($pointsA > $pointsB) {
                 return -1;
             }
@@ -212,9 +208,8 @@ class OrganizerController extends AbstractController
             return 0;
         });
 
-        // Shuffle other organizers for random order
         shuffle($otherOrganizers);
-        // Combine clubs and societies with other organizers
+
         return array_merge($clubsAndSocieties, $otherOrganizers);
     }
 
@@ -224,6 +219,7 @@ class OrganizerController extends AbstractController
      * @param Organizer[] $organizers
      * @return Organizer[]
      */
+
     private function sortByMostEvents(array $organizers): array
     {
         usort($organizers, static function ($a, $b) {
@@ -239,6 +235,7 @@ class OrganizerController extends AbstractController
      * @param Organizer[] $organizers
      * @return Organizer[]
      */
+
     private function sortByMostNews(array $organizers): array
     {
         usort($organizers, static function ($a, $b) {
@@ -254,6 +251,7 @@ class OrganizerController extends AbstractController
      * @param Organizer[] $organizers
      * @return Organizer[]
      */
+
     private function sortByMostFollowers(array $organizers): array
     {
         usort($organizers, static function ($a, $b) {
@@ -269,6 +267,7 @@ class OrganizerController extends AbstractController
      * @param Organizer[] $organizers
      * @return Organizer[]
      */
+
     private function sortByMostMembers(array $organizers): array
     {
         usort($organizers, static function ($a, $b) {
@@ -284,6 +283,7 @@ class OrganizerController extends AbstractController
      * @param Organizer $organizer
      * @return int
      */
+
     private function getNewsCountForOrganizer(Organizer $organizer): int
     {
         return count($this->getDoctrine()->getRepository(Organizer::class)->findNewsByUser($organizer->getUser()));
@@ -296,6 +296,7 @@ class OrganizerController extends AbstractController
      *
      * @return array
      */
+
     private function shuffleOrganizers(array $organizers): array
     {
         shuffle($organizers);

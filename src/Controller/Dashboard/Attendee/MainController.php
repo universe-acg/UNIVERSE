@@ -2,18 +2,19 @@
     /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-    
+
     namespace App\Controller\Dashboard\Attendee;
-    
-    use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-    use Symfony\Component\Routing\Annotation\Route;
-    
+
+    use App\Controller\BaseController as Controller;
+    use Symfony\Component\Routing\Attribute\Route;
+
     class MainController extends Controller
     {
-        
+
         /**
-         * @Route(name="index")
+         *
          */
+#[Route(name: "index")]
         public function index()
         {
             return $this->redirectToRoute("dashboard_attendee_orders");

@@ -2,9 +2,9 @@
     /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-    
+
     namespace App\Entity;
-    
+
     use App\Validator\Constraints\EnglishOnly;
     use App\Validator\Constraints\Profanity;
     use DateTime;
@@ -19,60 +19,40 @@
     use Symfony\Component\HttpFoundation\File\File;
     use Symfony\Component\Validator\Constraints as Assert;
     use Vich\UploaderBundle\Mapping\Annotation as Vich;
-    
-    /**
-     * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
-     * @ORM\Table(name="universe_event")
-     * @Assert\Callback({"App\Validation\Validator", "validateEvent"})
-     * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
-     * @Vich\Uploadable
-     */
+
+    #[ORM\Table(name: 'universe_event')]
+    #[ORM\Entity(repositoryClass: \App\Repository\EventRepository::class)]
+    #[Assert\Callback(['App\Validation\Validator', 'validateEvent'])]
+    #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
+    #[Vich\Uploadable]
     class Event
     {
-        
-        /**
-         * @ORM\Column(type="string", length=255, nullable=false)
-         */
+
+        #[ORM\Column(type: 'string', length: 255, nullable: false)]
         protected $name;
-        /**
-         * @ORM\Column(type="text", nullable=true)
-         */
+        #[ORM\Column(type: 'text', nullable: true)]
         protected $description;
-        /**
-         * @Gedmo\Slug(fields={"name"}, updatable=false)
-         * @ORM\Column(length=255, unique=true)
-         */
+        #[Gedmo\Slug(fields: ['name'], updatable: false)]
+        #[ORM\Column(length: 255, unique: true)]
         protected $slug;
 
 //    * //         * @ORM\JoinTable(name="universe_volunteer_event")
-        /**
-         * @ORM\ManyToMany(targetEntity="User")
-         */
+        #[ORM\ManyToMany(targetEntity: \App\Entity\User::class, inversedBy: 'volunteerEvents')]
         private $volunteers;
-        
-        /**
-         * @ORM\ManyToMany(targetEntity="User")
-         * @ORM\JoinTable(name="universe_volunteer_event_select_attendees")
-         */
+
+        #[ORM\JoinTable(name: 'universe_volunteer_event_select_attendees')]
+        #[ORM\ManyToMany(targetEntity: \App\Entity\User::class)]
         private $selectattendees;
-        /**
-         * @ORM\ManyToOne(targetEntity="Venue", inversedBy="events", fetch="LAZY")
-         * @JoinColumn(name="venue_id", referencedColumnName="id")
-         */
+        #[JoinColumn(name: 'venue_id', referencedColumnName: 'id')]
+        #[ORM\ManyToOne(targetEntity: \App\Entity\Venue::class, inversedBy: 'events', fetch: 'LAZY')]
         private $venue;
-        
-        /**
-         * @ORM\Column(type="boolean")
-         */
+
+        #[ORM\Column(type: 'boolean')]
         private $redirectable;
-        
-        /**
-         * @ORM\Column(type="boolean")
-         */
+
+        #[ORM\Column(type: 'boolean')]
         private $allowoverbook;
-        /**
-         * @ORM\Column(type="boolean")
-         */
+        #[ORM\Column(type: 'boolean')]
         private $viewablebyselect;
         private $visibletoallmembers;
         private $addmembersasviewable;
@@ -81,183 +61,133 @@
         private $repeatweeks;
         private $repeatstartdate;
         private $repeatenddate;
-        /**
-         * @ORM\Id()
-         * @ORM\GeneratedValue()
-         * @ORM\Column(type="integer")
-         */
+        #[ORM\Id]
+        #[ORM\GeneratedValue]
+        #[ORM\Column(type: 'integer')]
         private $id;
-        /**
-         * @ORM\ManyToOne(targetEntity="Category", inversedBy="events", fetch = "EAGER")
-         */
+        #[ORM\ManyToOne(targetEntity: \App\Entity\Category::class, inversedBy: 'events', fetch: 'LAZY')]
         private $category;
         private $isPassed = false;
         private $isAttnded = false;
-        /**
-         * @ORM\ManyToOne(targetEntity="Organizer", inversedBy="events", fetch = "EAGER")
-         */
+        #[ORM\ManyToOne(targetEntity: \App\Entity\Organizer::class, inversedBy: 'events', fetch: 'LAZY')]
         private $organizer;
-        /**
-         * @ORM\OneToMany(targetEntity="EventImage", mappedBy="event", cascade={"persist", "remove"}, orphanRemoval=true, fetch = "EAGER")
-         */
+        #[ORM\OneToMany(targetEntity: \App\Entity\EventImage::class, mappedBy: 'event', cascade: ['persist', 'remove'], orphanRemoval: true, fetch: 'LAZY')]
         private $images;
-        /**
-         * @ORM\Column(type="boolean")
-         */
+        #[ORM\Column(type: 'boolean')]
         private $outofcampus;
-        /**
-         * @ORM\OneToMany(targetEntity="EventFile", mappedBy="event", cascade={"persist", "remove"}, orphanRemoval=true, fetch = "EAGER")
-         */
+        #[ORM\OneToMany(targetEntity: \App\Entity\EventFile::class, mappedBy: 'event', cascade: ['persist', 'remove'], orphanRemoval: true, fetch: 'LAZY')]
         private $files;
-        /**
-         * @ORM\OneToMany(targetEntity="EventDate", mappedBy="event", cascade={"persist", "remove"}, fetch = "EAGER", orphanRemoval=true)
-         * @ORM\OrderBy({"startdate" = "ASC"})
-         * @Assert\Valid(groups={"create", "update"})
-         */
+        #[ORM\OneToMany(targetEntity: \App\Entity\EventDate::class, mappedBy: 'event', cascade: ['persist', 'remove'], fetch: 'LAZY', orphanRemoval: true)]
+        #[ORM\OrderBy(['startdate' => 'ASC'])]
+        #[Assert\Valid(groups: ['create', 'update'])]
         private $eventdates;
         private $eventDatesMulti;
-        
+
         // Getters and setters...
-        /**
-         * @ORM\ManyToMany(targetEntity="User", inversedBy="favorites", cascade={"persist", "merge"})
-         * @ORM\JoinTable(name="universe_favorites",
-         *   joinColumns={@ORM\JoinColumn(name="Event_id", referencedColumnName="id")},
-         *   inverseJoinColumns={@ORM\JoinColumn(name="User_Id", referencedColumnName="id")}
-         * )
-         */
+        #[ORM\JoinTable(name: 'universe_favorites')]
+        #[ORM\JoinColumn(name: 'Event_id', referencedColumnName: 'id')]
+        #[ORM\InverseJoinColumn(name: 'User_Id', referencedColumnName: 'id')]
+        #[ORM\ManyToMany(targetEntity: \App\Entity\User::class, inversedBy: 'favorites', cascade: ['persist'])]
         private $addedtofavoritesby;
-        /**
-         * @ORM\ManyToOne(targetEntity="HomepageHeroSettings", inversedBy="events", cascade={"persist"})
-         */
+        #[ORM\ManyToOne(targetEntity: \App\Entity\HomepageHeroSettings::class, inversedBy: 'events', cascade: ['persist'])]
         private $isonhomepageslider;
         /**
          * @var string
-         *
-         * @ORM\Column(type="string", length=255)
          */
+        #[ORM\Column(type: 'string', length: 255)]
         private $reference;
         /**
          * @var integer
-         * @ORM\Column(type="integer")
          */
+        #[ORM\Column(type: 'integer')]
         private $views;
         /**
          * @var string
          *
-         * @ORM\Column(type="string", length=255, nullable=true)
          * @EnglishOnly
          * @Profanity
          */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
         private $externallink;
         /**
          * @var string
          *
-         * @ORM\Column(type="string", length=255, nullable=true)
          * @EnglishOnly
          * @Profanity
          */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
         private $phonenumber;
         /**
          * @var string
          *
-         * @ORM\Column(type="string", length=255, nullable=true)
          * @EnglishOnly
          * @Profanity
          */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
         private $email;
         /**
          * @var string
          *
-         * @ORM\Column(type="string", length=255, nullable=true)
          * @EnglishOnly
          * @Profanity
          */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
         private $tags;
         /**
          * NOTE: This is not a mapped field of entity metadata, just a simple property.
          *
-         * @Vich\UploadableField(mapping="event_image", fileNameProperty="imageName", size="imageSize", mimeType="imageMimeType", originalName="imageOriginalName", dimensions="imageDimensions")
-         * @Assert\File(
-         *     maxSize = "32M",
-         *     mimeTypes = {"image/jpeg", "image/jpg", "image/gif", "image/png"},
-         *     mimeTypesMessage = "The file should be an image"
-         *     )
          * @var File
          */
+        #[Assert\File(maxSize: '32M', mimeTypes: ['image/jpeg', 'image/jpg', 'image/gif', 'image/png'], mimeTypesMessage: 'The file should be an image')]
+        #[Vich\UploadableField(mapping: 'event_image', fileNameProperty: 'imageName', size: 'imageSize', mimeType: 'imageMimeType', originalName: 'imageOriginalName', dimensions: 'imageDimensions')]
         private $imageFile;
-        /**
-         * @ORM\Column(type="string", length=255, nullable=true)
-         */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
         private $imageName;
         /**
-         * @ORM\Column(type="integer", nullable=true)
          *
          * @var integer
          */
+        #[ORM\Column(type: 'integer', nullable: true)]
         private $imageSize;
-        /**
-         * @ORM\Column(type="string", length=255, nullable=true)
-         */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
         private $imageMimeType;
-        /**
-         * @ORM\Column(type="string", length=255, nullable=true)
-         */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
         private $commonvalue;
-        /**
-         * @ORM\Column(type="string", length=255, nullable=true)
-         */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
         private $imageOriginalName;
-        /**
-         * @ORM\Column(type="simple_array", nullable=true)
-         */
+        #[ORM\Column(type: 'simple_array', nullable: true)]
         private $imageDimensions;
         /**
          * @var DateTime $createdAt
-         *
-         * @Gedmo\Timestampable(on="create")
-         * @ORM\Column(type="datetime")
          */
+        #[Gedmo\Timestampable(on: 'create')]
+        #[ORM\Column(type: 'datetime')]
         private $createdAt;
         /**
          * @var DateTime $updatedAt
-         *
-         * @Gedmo\Timestampable(on="update")
-         * @ORM\Column(type="datetime", nullable=true)
          */
+        #[Gedmo\Timestampable(on: 'update')]
+        #[ORM\Column(type: 'datetime', nullable: true)]
         private $updatedAt;
-        /**
-         * @ORM\Column(type="datetime", nullable=true)
-         */
+        #[ORM\Column(type: 'datetime', nullable: true)]
         private $deletedAt;
-        /**
-         * @ORM\Column(type="boolean")
-         */
+        #[ORM\Column(type: 'boolean')]
         private $published = false;
-        /**
-         * @ORM\Column(type="boolean")
-         */
+        #[ORM\Column(type: 'boolean')]
         private $open;
         private $repeatDays;
-        /**
-         * @ORM\Column(type="boolean")
-         */
+        #[ORM\Column(type: 'boolean')]
         private $isrepeat = false;
-        /**
-         * @ORM\Column(type="boolean")
-         * @Assert\NotNull(groups={"create", "update"})
-         */
+        #[ORM\Column(type: 'boolean')]
+        #[Assert\NotNull(groups: ['create', 'update'])]
         private $showattendees = true;
         private $isattended = false;
-        /**
-         * @ORM\Column(type="boolean")
-         * @Assert\NotNull(groups={"create", "update"})
-         */
+        #[ORM\Column(type: 'boolean')]
+        #[Assert\NotNull(groups: ['create', 'update'])]
         private $volsneeded = false;
-        /**
-         * @ORM\Column(type="datetime", nullable=true, name="publish_date")
-         */
+        #[ORM\Column(type: 'datetime', nullable: true, name: 'publish_date')]
         private $publishDate;
-        
+
         public function __construct()
         {
             $this->eventDatesMulti = new ArrayCollection();
@@ -269,7 +199,7 @@
             $this->reference = $this->generateReference(10);
             $this->addedtofavoritesby = new ArrayCollection();
         }
-        
+
         /**
          * @throws Exception
          */
@@ -282,10 +212,10 @@
                 bin2hex(chr((ord(random_bytes(1)) & 0x3F) | 0x80)) . bin2hex(random_bytes(1)),
                 bin2hex(random_bytes(2))
             ]);
-            
+
             return strlen($reference) > $length ? substr($reference, 0, $length) : $reference;
         }
-        
+
         /**
          * @return mixed
          */
@@ -293,7 +223,7 @@
         {
             return $this->allowoverbook;
         }
-        
+
         /**
          * @param mixed $allowoverbook
          */
@@ -301,7 +231,7 @@
         {
             $this->allowoverbook = $allowoverbook;
         }
-        
+
         /**
          * @return mixed
          */
@@ -309,7 +239,7 @@
         {
             return $this->redirectable;
         }
-        
+
         /**
          * @param mixed $redirectable
          */
@@ -317,7 +247,7 @@
         {
             $this->redirectable = $redirectable;
         }
-        
+
         /**
          * @return mixed
          */
@@ -325,7 +255,7 @@
         {
             return $this->selectattendees;
         }
-        
+
         /**
          * @param mixed $selectattendees
          */
@@ -333,7 +263,7 @@
         {
             $this->selectattendees = $selectattendees;
         }
-        
+
         /**
          * @return mixed
          */
@@ -341,7 +271,7 @@
         {
             return $this->visibletoallmembers;
         }
-        
+
         /**
          * @param mixed $visibletoallmembers
          */
@@ -349,7 +279,7 @@
         {
             $this->visibletoallmembers = $visibletoallmembers;
         }
-        
+
         /**
          * @return mixed
          */
@@ -357,7 +287,7 @@
         {
             return $this->addmembersasviewable;
         }
-        
+
         /**
          * @param mixed $addmembersasviewable
          */
@@ -365,7 +295,7 @@
         {
             $this->addmembersasviewable = $addmembersasviewable;
         }
-        
+
         /**
          * @return mixed
          */
@@ -373,7 +303,7 @@
         {
             return $this->viewablebyselect;
         }
-        
+
         /**
          * @param mixed $viewablebyselect
          */
@@ -381,12 +311,12 @@
         {
             $this->viewablebyselect = $viewablebyselect;
         }
-        
+
         public function hasvolunters()
         {
             return $this->volunteers && count($this->volunteers) > 0;
         }
-        
+
         /**
          * Add a volunteer to the event.
          *
@@ -401,7 +331,7 @@
                 $volunteer->addVolunteerEvent($this);
             }
         }
-        
+
         /**
          * Remove a volunteer from the event.
          *
@@ -415,7 +345,7 @@
                 $volunteer->removeVolunteerEvent($this);
             }
         }
-        
+
         /**
          * @return bool
          */
@@ -423,7 +353,7 @@
         {
             return $this->isattended;
         }
-        
+
         /**
          * @param bool $isattended
          */
@@ -431,7 +361,7 @@
         {
             $this->isattended = $isattended;
         }
-        
+
         /**
          * @return mixed
          */
@@ -439,7 +369,7 @@
         {
             return $this->volunteers;
         }
-        
+
         /**
          * @param mixed $volunteers
          */
@@ -447,7 +377,7 @@
         {
             $this->volunteers = $volunteers;
         }
-        
+
         /**
          * @return ArrayCollection|EventFile[]
          */
@@ -455,7 +385,7 @@
         {
             return $this->files;
         }
-        
+
         /**
          * @param mixed $files
          */
@@ -463,7 +393,7 @@
         {
             $this->files = $files;
         }
-        
+
         public function addFile(EventFile $file)
         {
             if (!$this->files->contains($file)) {
@@ -471,7 +401,7 @@
                 $file->setEvent($this);
             }
         }
-        
+
         public function removeFile(EventFile $file)
         {
             if ($this->files->contains($file)) {
@@ -480,7 +410,7 @@
                 $file->setEvent(null);
             }
         }
-        
+
         /**
          * @return mixed
          */
@@ -488,7 +418,7 @@
         {
             return $this->outofcampus;
         }
-        
+
         /**
          * @param mixed $outofcampus
          */
@@ -496,43 +426,43 @@
         {
             $this->outofcampus = $outofcampus;
         }
-        
+
         // ... Other getter and setter methods
-        
+
         public function getVenue()
         {
             return $this->venue;
         }
-        
+
         public function setVenue($venue)
         {
             $this->venue = $venue;
         }
-        
+
         public function getPublishDate(): ?DateTimeInterface
         {
             return $this->publishDate;
         }
-        
+
         public function setPublishDate(?DateTimeInterface $publishDate): self
         {
             $this->publishDate = $publishDate;
-            
+
             return $this;
         }
-        
+
         public function isPublishOnSpecificDate(): bool
         {
             return $this->publishOnSpecificDate;
         }
-        
+
         public function setPublishOnSpecificDate(bool $publishOnSpecificDate): self
         {
             $this->publishOnSpecificDate = $publishOnSpecificDate;
-            
+
             return $this;
         }
-        
+
         /**
          * @return mixed
          */
@@ -540,7 +470,7 @@
         {
             return $this->repeatweeks;
         }
-        
+
         /**
          * @param mixed $repeatweeks
          */
@@ -548,7 +478,7 @@
         {
             $this->repeatweeks = $repeatweeks;
         }
-        
+
         /**
          * @return mixed
          */
@@ -556,7 +486,7 @@
         {
             return $this->repeatstartdate;
         }
-        
+
         /**
          * @param mixed $repeatstartdate
          */
@@ -564,7 +494,7 @@
         {
             $this->repeatstartdate = $repeatstartdate;
         }
-        
+
         /**
          * @return mixed
          */
@@ -572,7 +502,7 @@
         {
             return $this->repeatenddate;
         }
-        
+
         /**
          * @param mixed $repeatenddate
          */
@@ -580,7 +510,7 @@
         {
             $this->repeatenddate = $repeatenddate;
         }
-        
+
         /**
          * @return mixed
          */
@@ -588,7 +518,7 @@
         {
             return $this->repeatsweekly;
         }
-        
+
         /**
          * @param mixed $repeatsweekly
          */
@@ -596,7 +526,7 @@
         {
             $this->repeatsweekly = $repeatsweekly;
         }
-        
+
         public function mapFromEvent(Event $oldEvent)
         {
             // Copy properties from the old event to the current instance
@@ -626,7 +556,7 @@
             $this->setImageMimeType($oldEvent->getImageMimeType());
             $this->setImageOriginalName($oldEvent->getImageOriginalName());
             $this->setImageDimensions($oldEvent->getImageDimensions());
-            
+
             // Copy images from the old event (assuming $images is a collection)
             foreach ($oldEvent->getImages() as $image) {
                 $newImage = new EventImage();
@@ -641,7 +571,7 @@
                 $newImage->setEvent($this);
                 $this->addImage($newImage);
             }
-            
+
             // Copy event dates (assuming $eventdates is a collection)
             foreach ($oldEvent->getEventDates() as $eventDate) {
                 $newEventDate = new EventDate();
@@ -669,60 +599,60 @@
                 $newEventDate->setEnddate($eventDate->getEnddate());
                 $this->addEventDate($newEventDate);
             }
-            
+
             // Ensure that the new event has its own unique properties set
             $this->setId(null); // Reset the ID to create a new entity
             $this->setReference($this->generateReference(10)); // Generate a new reference
             $this->setViews(0); // Reset views count
         }
-        
+
         public function getName()
         {
             return $this->name;
         }
-        
+
         public function setName(string $name)
         {
             $this->name = $name;
-            
+
             return $this;
         }
-        
+
         public function getDescription()
         {
             return $this->description;
         }
-        
+
         public function setDescription($description)
         {
             $this->description = $description;
-            
+
             return $this;
         }
-        
+
         private function generateUniqueSlug()
         {
             $baseSlug = $this->getName();// Generate the base slug here, for example, from the title or some unique identifier.
             $salt = uniqid('', true); // Generate a unique salt, you can use other methods if needed.
-            
+
             // Combine the base slug and salt to create a unique slug.
             // You can further sanitize or modify the uniqueSlug if needed.
-            
+
             return $baseSlug . '-' . $salt;
         }
-        
+
         public function getCategory()
         {
             return $this->category;
         }
-        
+
         public function setCategory(Category $category)
         {
             $this->category = $category;
-            
+
             return $this;
         }
-        
+
         /**
          * @return bool
          */
@@ -730,14 +660,14 @@
         {
             // Check if all event dates are in the past
             foreach ($this->eventdates as $eventDate) {
-                if ($eventDate->getEnddate() > new DateTime()) {
+                if (($eventDate->getEnddate() ?? $eventDate->getStartdate()) > new DateTime()) {
                     return false; // At least one event date is in the future
                 }
             }
-            
+
             return true; // All event dates are in the past
         }
-        
+
         /**
          * @param mixed $isPassed
          */
@@ -745,7 +675,7 @@
         {
             $this->isPassed = $isPassed;
         }
-        
+
         /**
          * @return bool
          */
@@ -753,7 +683,7 @@
         {
             return $this->isAttnded;
         }
-        
+
         /**
          * @param bool $isAttnded
          */
@@ -761,91 +691,91 @@
         {
             $this->isAttnded = $isAttnded;
         }
-        
+
         public function getOrganizer()
         {
             return $this->organizer;
         }
-        
+
         public function setOrganizer(Organizer $organizer)
         {
             $this->organizer = $organizer;
-            
+
             return $this;
         }
-        
+
         public function getReference()
         {
             return $this->reference;
         }
-        
+
         public function setReference($reference)
         {
             $this->reference = $reference;
-            
+
             return $this;
         }
-        
+
         public function getViews()
         {
             return $this->views;
         }
-        
+
         public function setViews($views)
         {
             $this->views = $views;
-            
+
             return $this;
         }
-        
+
         public function getExternallink()
         {
             return $this->externallink;
         }
-        
+
         public function setExternallink($externallink)
         {
             $this->externallink = $externallink;
-            
+
             return $this;
         }
-        
+
         public function getPhonenumber()
         {
             return $this->phonenumber;
         }
-        
+
         public function setPhonenumber($phonenumber)
         {
             $this->phonenumber = $phonenumber;
-            
+
             return $this;
         }
-        
+
         public function getEmail()
         {
             return $this->email;
         }
-        
+
         public function setEmail($email)
         {
             $this->email = $email;
-            
+
             return $this;
         }
-        
+
         public function getTags()
         {
             return $this->tags;
         }
-        
+
         public function setTags($tags)
         {
             $this->tags = $tags;
-            
+
             return $this;
         }
-        
+
         /**
          * @return mixed
          */
@@ -853,7 +783,7 @@
         {
             return $this->commonvalue;
         }
-        
+
         /**
          * @param mixed $commonvalue
          */
@@ -861,19 +791,19 @@
         {
             $this->commonvalue = $commonvalue;
         }
-        
+
         public function getPublished()
         {
             return $this->published;
         }
-        
+
         public function setPublished($published)
         {
             $this->published = $published;
-            
+
             return $this;
         }
-        
+
         /**
          * @return false
          */
@@ -881,7 +811,7 @@
         {
             return $this->open;
         }
-        
+
         /**
          * @param mixed $open
          */
@@ -889,19 +819,19 @@
         {
             $this->open = $open;
         }
-        
+
         public function getRepeatDays(): ?int
         {
             return $this->repeatDays;
         }
-        
+
         public function setRepeatDays(?int $repeatDays): self
         {
             $this->repeatDays = $repeatDays;
-            
+
             return $this;
         }
-        
+
         /**
          * @return bool
          */
@@ -909,7 +839,7 @@
         {
             return $this->isrepeat;
         }
-        
+
         /**
          * @param bool $isrepeat
          */
@@ -917,19 +847,19 @@
         {
             $this->isrepeat = $isrepeat;
         }
-        
+
         public function getShowattendees()
         {
             return $this->showattendees;
         }
-        
+
         public function setShowattendees($showattendees)
         {
             $this->showattendees = $showattendees;
-            
+
             return $this;
         }
-        
+
         /**
          * @return bool
          */
@@ -937,7 +867,7 @@
         {
             return (bool)$this->volsneeded;
         }
-        
+
         /**
          * @param bool $volsneeded
          */
@@ -945,12 +875,12 @@
         {
             $this->volsneeded = $volsneeded;
         }
-        
+
         public function getImageFile()
         {
             return $this->imageFile;
         }
-        
+
         /**
          * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
          * of 'UploadedFile' is injected into this setter to trigger the update. If this
@@ -963,74 +893,74 @@
         public function setImageFile(File $imageFile = null)
         {
             $this->imageFile = $imageFile;
-            
+
             if (null !== $imageFile) {
 // It is required that at least one field changes if you are using doctrine
 // otherwise the event listeners won't be called and the file is lost
                 $this->updatedAt = new DateTimeImmutable();
             }
         }
-        
+
         public function getImageName()
         {
             return $this->imageName;
         }
-        
+
         public function setImageName($imageName)
         {
             $this->imageName = $imageName;
-            
+
             return $this;
         }
-        
+
         public function getImageSize()
         {
             return $this->imageSize;
         }
-        
+
         public function setImageSize($imageSize)
         {
             $this->imageSize = $imageSize;
-            
+
             return $this;
         }
-        
+
         public function getImageMimeType()
         {
             return $this->imageMimeType;
         }
-        
+
         public function setImageMimeType($imageMimeType)
         {
             $this->imageMimeType = $imageMimeType;
-            
+
             return $this;
         }
-        
+
         public function getImageOriginalName()
         {
             return $this->imageOriginalName;
         }
-        
+
         public function setImageOriginalName($imageOriginalName)
         {
             $this->imageOriginalName = $imageOriginalName;
-            
+
             return $this;
         }
-        
+
         public function getImageDimensions()
         {
             return $this->imageDimensions;
         }
-        
+
         public function setImageDimensions($imageDimensions)
         {
             $this->imageDimensions = $imageDimensions;
-            
+
             return $this;
         }
-        
+
         /**
          * @return ArrayCollection
          */
@@ -1038,29 +968,29 @@
         {
             return $this->images;
         }
-        
+
         public function getUpdatedAt()
         {
             return $this->updatedAt == $this->createdAt ? null : $this->updatedAt;
         }
-        
+
         public function setUpdatedAt($updatedAt)
         {
             $this->updatedAt = $updatedAt;
-            
+
             return $this;
         }
-        
+
         public function addImage($image)
         {
             if (!$this->images->contains($image)) {
                 $this->images[] = $image;
                 $image->setEvent($this);
             }
-            
+
             return $this;
         }
-        
+
         /**
          * @return ArrayCollection
          */
@@ -1068,27 +998,27 @@
         {
             return $this->eventdates;
         }
-        
+
         public function setEventdates($neweventdates)
         {
             $this->eventdates = $neweventdates;
         }
-        
+
         public function addEventdate($eventdate)
         {
             if (!$this->eventdates->contains($eventdate)) {
                 $this->eventdates[] = $eventdate;
                 $eventdate->setEvent($this);
             }
-            
+
             return $this;
         }
-        
+
         public function getSlug()
         {
             return $this->slug ?: "";
         }
-        
+
         public function setSlug($slug = null)
         {
             if ($slug === null) {
@@ -1096,17 +1026,17 @@
             }
             $this->slug = $slug;
         }
-        
+
         public function getId()
         {
             return $this->id;
         }
-        
+
         public function setId($id)
         {
             $this->id = $id;
         }
-        
+
         /**
          * @return ArrayCollection
          */
@@ -1114,7 +1044,7 @@
         {
             return $this->eventDatesMulti;
         }
-        
+
         /**
          * @param mixed $eventDatesMulti
          */
@@ -1122,7 +1052,7 @@
         {
             $this->eventDatesMulti = $eventDatesMulti;
         }
-        
+
         public function getTotalOrderElementsQuantitySum($status = 1, $user = "all", $role = "all")
         {
             $sum = 0;
@@ -1131,7 +1061,7 @@
             }
             return $sum;
         }
-        
+
         public function getTotalSalesPercentage()
         {
             if (count($this->eventdates) == 0)
@@ -1142,78 +1072,78 @@
             }
             return round($eventDatesSalesPercentageSum / count($this->eventdates));
         }
-        
+
         public function isAddedToFavoritesBy($user)
         {
             return $this->addedtofavoritesby->contains($user);
         }
-        
+
         public function stringifyStatus()
         {
             if (!$this->organizer->getUser()->isEnabled()) {
                 return "Organizer is disabled";
             }
-            
+
             if (!$this->published) {
                 return "Event is not published";
             }
-            
+
             return "";
         }
-        
+
         public function stringifyStatusClass()
         {
             if (!$this->organizer->getUser()->isEnabled()) {
                 return "danger";
             }
-            
+
             if (!$this->published) {
                 return "warning";
             }
-            
+
             if (!$this->hasAnEventDateOnSale()) {
                 return "info";
             }
-            
+
             return "success";
         }
-        
+
         public function hasAnEventDateOnSale(): bool
         {
             return $this->getLatestEndDate() >= new DateTime();
         }
-        
+
         public function getLatestEndDate(): ?DateTime
         {
             $latestEndDate = null;
-            
+
             // Assuming you have a property like $eventDates that holds the collection of EventDates
             /** @var Collection|EventDate[] $eventDates */
             $eventDates = $this->getEventdates();
-            
+
             foreach ($eventDates as $eventDate) {
                 $endDate = $eventDate->getEnddate();
-                
+
                 if ($endDate !== null) {
                     if ($latestEndDate === null || $endDate > $latestEndDate) {
                         $latestEndDate = $endDate;
                     }
                 }
             }
-            
+
             return $latestEndDate;
         }
-        
+
         public function hasContactAndSocialMedia()
         {
             return ($this->externallink || $this->phonenumber || $this->email);
         }
-        
+
         public function viewed()
         {
             $this->views++;
         }
-        
+
         public function hasTwoOrMoreEventDatesOnSale()
         {
             $count = 0;
@@ -1224,7 +1154,7 @@
             }
             return $count >= 2;
         }
-        
+
         public function isOnSale()
         {
             return
@@ -1232,7 +1162,7 @@
                 $this->organizer->getUser()->isEnabled() &&
                 $this->published;
         }
-        
+
         public function getFirstOnSaleEventDate()
         {
             foreach ($this->eventdates as $eventdate) {
@@ -1242,12 +1172,12 @@
             }
             return null;
         }
-        
+
         public function getImagePath()
         {
             return 'uploads/events/' . $this->imageName;
         }
-        
+
         public function getImagePlaceholder($size = "default")
         {
 //        if ($size == "small") {
@@ -1256,43 +1186,43 @@
 //        return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABgAAAAYACAMAAACHMHNZAAABVlBMVEUAAADd3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d18zGJfAAAAcXRSTlMAAQIDBAUHCAkLDA0PEBESExQWFxocHiAjJCUmKywtLzA0NTY3ODk6Pj9AQUJHSU1OT1BYWV9jZGZoaWtsbW90dXd7fH5/goOFjpSXmJqeoKOlpqq1t7nBw8XKzs/T1dfZ3N7g4uTm6+3v8fP19/n7/XM0K4AAABCKSURBVHja7d1bbxR1HMfhBSe1EKkYUEAjkaioCWjwUmO4IF544ZXR97GvZN+FhlTlwqChRoyHiASCLaek0FLLSqEFSkuB3e62XTmESqHF0m6Znfk9zz1Rvo799N/OzBYKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAECrWxV9gKJrAFJTMkGqVpsAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQCg2RITLE/JBARWNIETAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAA9KTACkpZjyP7/kBACAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACACAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACACAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAEBzJSZIV9EEpKhkAicAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAAmikxQbpKJgCcAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABABAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQAQAAAEAAABAEAAABAAAPIiMUG6iiZYlpL9U90PJwAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAADmSExAZCUT4AQAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgBA8yQmILJi8L9/ySXgBACAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACACAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACACAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAEAzJSYgspIJcAIAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEA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";
             return 'https://universe.alexandroskourtis.me/uploads/imgs/default.jpg';
         }
-        
+
         public function getCreatedAt()
         {
             return $this->createdAt;
         }
-        
+
         public function setCreatedAt($createdAt)
         {
             $this->createdAt = $createdAt;
-            
+
             return $this;
         }
-        
+
         public function getDeletedAt()
         {
             return $this->deletedAt;
         }
-        
+
         public function setDeletedAt($deletedAt)
         {
             $this->deletedAt = $deletedAt;
-            
+
             return $this;
         }
-        
+
         public function getYoutubeurl()
         {
             return $this->youtubeurl;
         }
-        
+
         public function setYoutubeurl($youtubeurl)
         {
             $this->youtubeurl = $youtubeurl;
-            
+
             return $this;
         }
-        
+
         public function removeEventdate($eventdate)
         {
             if ($this->eventdates->contains($eventdate)) {
@@ -1302,10 +1232,10 @@
                     $eventdate->setEvent(null);
                 }
             }
-            
+
             return $this;
         }
-        
+
         public function removeImage($image)
         {
             if ($this->images->contains($image)) {
@@ -1315,34 +1245,34 @@
                     $image->setEvent(null);
                 }
             }
-            
+
             return $this;
         }
-        
+
         public function getArtists()
         {
             return $this->artists;
         }
-        
+
         public function setArtists($artists)
         {
             $this->artists = $artists;
-            
+
             return $this;
         }
-        
+
         public function getYear()
         {
             return $this->year;
         }
-        
+
         public function setYear($year)
         {
             $this->year = $year;
-            
+
             return $this;
         }
-        
+
         /**
          * @return ArrayCollection
          */
@@ -1350,34 +1280,34 @@
         {
             return $this->addedtofavoritesby;
         }
-        
+
         public function addAddedtofavoritesby($addedtofavoritesby)
         {
             if (!$this->addedtofavoritesby->contains($addedtofavoritesby)) {
                 $this->addedtofavoritesby[] = $addedtofavoritesby;
             }
-            
+
             return $this;
         }
-        
+
         public function removeAddedtofavoritesby($addedtofavoritesby)
         {
             if ($this->addedtofavoritesby->contains($addedtofavoritesby)) {
                 $this->addedtofavoritesby->removeElement($addedtofavoritesby);
             }
-            
+
             return $this;
         }
-        
+
         public function getIsonhomepageslider()
         {
             return $this->isonhomepageslider;
         }
-        
+
         public function setIsonhomepageslider($isonhomepageslider)
         {
             $this->isonhomepageslider = $isonhomepageslider;
-            
+
             return $this;
         }
     }

@@ -7,42 +7,28 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\UniverseMessageRepository")
- * @ORM\Table(name="universe_message")
- */
+#[ORM\Table(name: 'universe_message')]
+#[ORM\Entity(repositoryClass: \App\Repository\UniverseMessageRepository::class)]
 class UniverseMessage
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="UniverseChatEntity", inversedBy="messages")
-     */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\UniverseChatEntity::class)]
     private $universeChat;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="sentMessages")
-     */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\User::class)]
     private $sender;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="receivedMessages")
-     */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\User::class)]
     private $receiver;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    #[ORM\Column(type: 'text')]
     private $content;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: 'datetime')]
     private $sentAt;
 
     /**

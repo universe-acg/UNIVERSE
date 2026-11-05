@@ -2,13 +2,13 @@
     /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-    
+
     namespace App\Form;
-    
+
     use App\Validator\Constraints\AcgEmailDomain;
     use EWZ\Bundle\RecaptchaBundle\Form\Type\EWZRecaptchaType;
     use EWZ\Bundle\RecaptchaBundle\Validator\Constraints\IsTrue as RecaptchaTrue;
-    use FOS\UserBundle\Form\Type\RegistrationFormType;
+    use App\Form\IdentityRegistrationType as RegistrationFormType;
     use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\Extension\Core\Type\EmailType;
     use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -19,21 +19,21 @@
     use Symfony\Component\Validator\Constraints\Length;
     use Symfony\Component\Validator\Constraints\NotBlank;
     use Symfony\Component\Validator\Constraints\Regex;
-    
+
     class RegistrationType extends AbstractType
     {
         private $requestStack;
-        
+
         public function __construct(RequestStack $requestStack)
         {
             $this->requestStack = $requestStack;
         }
-        
-        public function buildForm(FormBuilderInterface $builder, array $options)
-        {
+
+        public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
             $request = $this->requestStack->getCurrentRequest();
             $currentRoute = $request->attributes->get('_route');
-            
+
             $builder
                 ->add('firstname', TextType::class, [
                     'required' => true,
@@ -57,7 +57,7 @@
                         'help' => 'Enter your last name.',
                     ],
                 ]);
-            
+
             if ($currentRoute === 'fos_user_registration_register_attendee') {
                 $builder->
                 add('studentid', TextType::class, [
@@ -72,7 +72,7 @@
                     ],
                 ]);
             }
-            
+
             $builder->add('username', TextType::class, [
                 'constraints' => [
                     new NotBlank(),
@@ -145,14 +145,14 @@
                     )
                 ));
         }
-        
-        public function getParent()
-        {
+
+        public function getParent(): ?string
+    {
             return RegistrationFormType::class;
         }
-        
-        public function getBlockPrefix()
-        {
+
+        public function getBlockPrefix(): string
+    {
             return 'app_user_registration';
         }
     }

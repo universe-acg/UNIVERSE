@@ -11,18 +11,19 @@ use App\Service\ManagementClubsSocietiesService;
 use App\Service\OrganizerService;
 use App\Service\UserService;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class ManagementClubsSocietiesController extends Controller
 {
 
     /**
-     * @Route("/management", name="dashboard_attendee_management", methods="GET")
+     *
      */
+#[Route("/management", name: "management", methods: ["GET"])]
     public function index(ManagementClubsSocietiesService $managementClubsSocietiesService, Request $request, PaginatorInterface $paginator, Security $security)
     {
         $associations = $managementClubsSocietiesService->findAllAssociationRequestsForUser($this->getUser()->getId());
@@ -41,8 +42,9 @@ class ManagementClubsSocietiesController extends Controller
     }
 
     /**
-     * @Route("/dashboard/attendee/management/add/{attendeeid}/{organizerid}", name="app_dashboard_attendee_join_add", condition="request.isXmlHttpRequest()")
+     *
      */
+#[Route("/management/add/{attendeeid}/{organizerid}", name: "app_dashboard_attendee_join_add", condition: "request.isXmlHttpRequest()")]
     public function add(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $attendeeid, $organizerid)
     {
         $user = $userService->getUserById($attendeeid);
@@ -66,7 +68,6 @@ class ManagementClubsSocietiesController extends Controller
             $em->persist($managementrow);
             $em->flush();
 
-            // Define the response data based on the outcome of the operation
             $responseData = [];
             $responseData['success'] = 'Congratulations, you are now a pending member';
             return new JsonResponse($responseData);
@@ -83,7 +84,6 @@ class ManagementClubsSocietiesController extends Controller
             $em->persist($row);
             $em->flush();
 
-            // Define the response data based on the outcome of the operation
             $responseData = [];
             $responseData['success'] = 'Congratulations, you are now a pending member';
             return new JsonResponse($responseData);
@@ -94,8 +94,9 @@ class ManagementClubsSocietiesController extends Controller
     }
 
     /**
-     * @Route("/dashboard/attendee/management/accept/{attendeeid}/{organizerid}", name="app_dashboard_attendee_join_accept")
+     *
      */
+#[Route("/management/accept/{attendeeid}/{organizerid}", name: "app_dashboard_attendee_join_accept")]
     public function accept(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $attendeeid, $organizerid)
     {
         $user = $userService->getUserById($attendeeid);
@@ -115,7 +116,6 @@ class ManagementClubsSocietiesController extends Controller
             $em->persist($row);
             $em->flush();
 
-            // Define the response data based on the outcome of the operation
             $this->addFlash('success', "Congratulations, you are now a member");
             return $this->redirectToRoute("dashboard_attendee_management");
         }
@@ -125,8 +125,9 @@ class ManagementClubsSocietiesController extends Controller
     }
 
     /**
-     * @Route("/dashboard/attendee/management/reject/{attendeeid}/{organizerid}", name="app_dashboard_attendee_join_reject")
+     *
      */
+#[Route("/management/reject/{attendeeid}/{organizerid}", name: "app_dashboard_attendee_join_reject")]
     public function reject(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $attendeeid, $organizerid)
     {
         $user = $userService->getUserById($attendeeid);
@@ -146,7 +147,6 @@ class ManagementClubsSocietiesController extends Controller
             $em->persist($row);
             $em->flush();
 
-            // Define the response data based on the outcome of the operation
             $responseData['success'] = 'Rejected the invitation to join';
             return new JsonResponse($responseData);
         }
@@ -156,8 +156,9 @@ class ManagementClubsSocietiesController extends Controller
     }
 
     /**
-     * @Route("/dashboard/attendee/management/leave/{attendeeid}/{organizerid}", name="app_dashboard_attendee_join_leave", condition="request.isXmlHttpRequest()")
+     *
      */
+#[Route("/management/leave/{attendeeid}/{organizerid}", name: "app_dashboard_attendee_join_leave", condition: "request.isXmlHttpRequest()")]
     public function leave(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $attendeeid, $organizerid)
     {
         $user = $userService->getUserById($attendeeid);
@@ -184,8 +185,9 @@ class ManagementClubsSocietiesController extends Controller
     }
 
     /**
-     * @Route("/dashboard/attendee/management/leavenonxml/{attendeeid}/{organizerid}", name="app_dashboard_attendee_join_leave_nonxml")
+     *
      */
+#[Route("/management/leavenonxml/{attendeeid}/{organizerid}", name: "app_dashboard_attendee_join_leave_nonxml")]
     public function leavenonxml(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $attendeeid, $organizerid)
     {
         $user = $userService->getUserById($attendeeid);
@@ -213,8 +215,9 @@ class ManagementClubsSocietiesController extends Controller
     }
 
     /**
-     * @Route("/dashboard/attendee/management/cancel/{attendeeid}/{organizerid}", name="app_dashboard_attendee_join_cancel", condition="request.isXmlHttpRequest()")
+     *
      */
+#[Route("/management/cancel/{attendeeid}/{organizerid}", name: "app_dashboard_attendee_join_cancel", condition: "request.isXmlHttpRequest()")]
     public function cancelxml(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $attendeeid, $organizerid)
     {
         $user = $userService->getUserById($attendeeid);
@@ -242,21 +245,22 @@ class ManagementClubsSocietiesController extends Controller
 
 
     /**
-     * @Route("/dashboard/attendee/management/acceptxml/{attendeeid}/{organizerid}", name="app_dashboard_attendee_join_accept_xml")
+     *
      */
+#[Route("/management/acceptxml/{attendeeid}/{organizerid}", name: "app_dashboard_attendee_join_accept_xml")]
     public function acceptxml(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $organizerid, $attendeeid)
     {
         $user = $userService->getUserById($attendeeid);
         $organizer = $organizerService->getOrganizerById($organizerid);
         if (!$user || !$organizer) {
-//                $this->addFlash('error', "Something went wrong. Contact admin");
+
             return $this->redirectToRoute("dashboard_organizer_management");
         }
 
         $row = $managementClubsSocietiesService->findRowByUserIdAndOrgId($attendeeid, $organizerid);
 
         if (!$row) {
-//                $this->addFlash('error', "Something went wrong. Contact admin");
+
             return new JsonResponse(['error' => 'Error']);
         }
 
@@ -267,7 +271,6 @@ class ManagementClubsSocietiesController extends Controller
             $em->persist($row);
             $em->flush();
 
-            // Define the response data based on the outcome of the operation
             $responseData['success'] = 'Congratulations, you are now a member';
             return new JsonResponse($responseData);
         }
@@ -277,8 +280,9 @@ class ManagementClubsSocietiesController extends Controller
     }
 
     /**
-     * @Route("/dashboard/attendee/management/cancelnotxml/{attendeeid}/{organizerid}", name="app_dashboard_attendee_join_cancelnotxml")
+     *
      */
+#[Route("/management/cancelnotxml/{attendeeid}/{organizerid}", name: "app_dashboard_attendee_join_cancelnotxml")]
     public function cancelnotxml(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $attendeeid, $organizerid)
     {
         $user = $userService->getUserById($attendeeid);
@@ -304,40 +308,40 @@ class ManagementClubsSocietiesController extends Controller
         $this->addFlash('success', "You have now canceled the request to join");
         return $this->redirectToRoute("dashboard_attendee_management");
     }
-//
-//        /**
-//         * @Route("/dashboard/attendee/following/add/{slug}", name="app_dashboard_attendee_following_add", condition="request.isXmlHttpRequest()")
-//         * @Route("/dashboard/attendee/following/remove/{slug}", name="app_dashboard_attendee_following_remove", condition="request.isXmlHttpRequest()")
-//         */
-//        public function addRemove($slug, AppServices $services)
-//        {
-//            $user = $services->getUsers(array("organizerslug" => $slug))->getQuery()->getOneOrNullResult();
-//
-//            if (!$user) {
-//                return new JsonResponse(['error' => 'The organizer cannot be found']);
-//            }
-//
-//            $em = $this->getDoctrine()->getManager();
-//
-//            if ($user->getOrganizer()->isFollowedBy($this->getUser())) {
-//                $user->getOrganizer()->removeFollowedby($this->getUser());
-//            } else {
-//                $user->getOrganizer()->addFollowedby($this->getUser());
-//            }
-//
-//            $em->persist($user->getOrganizer());
-//            $em->flush();
-//
-//            // Define the response data based on the outcome of the operation
-//            $responseData = [];
-//
-//            if ($user->getOrganizer()->isFollowedBy($this->getUser())) {
-//                $responseData['success'] = 'You are now following this organizer.';
-//            } else {
-//                $responseData['success'] = 'You have unfollowed this organizer.';
-//            }
-//
-//            // Return a JsonResponse with the $responseData
-//            return new JsonResponse($responseData);
-//        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

@@ -9,53 +9,40 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\TicketReservationRepository")
- * @ORM\Table(name="universe_ticket_reservation")
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
- */
+#[ORM\Table(name: 'universe_ticket_reservation')]
+#[ORM\Entity(repositoryClass: \App\Repository\TicketReservationRepository::class)]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
 class TicketReservation
 {
 
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="EventTicket", inversedBy="ticketreservations")
-     */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\EventTicket::class, inversedBy: 'ticketreservations')]
     private $eventticket;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="ticketreservations")
-     */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\User::class, inversedBy: 'ticketreservations')]
     private $user;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="OrderElement", inversedBy="ticketsReservations", cascade={"persist"})
-     */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\OrderElement::class, inversedBy: 'ticketsReservations', cascade: ['persist'])]
     private $orderelement;
 
     /**
      * @var int
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $quantity;
 
     /**
      * @var DateTime $createdAt
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
      */
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(type: 'datetime')]
     private $createdAt;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $deletedAt;
 
     public function getId()

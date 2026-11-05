@@ -1,35 +1,18 @@
 doctrine:
   dbal:
-    # configure these for your database server
-    driver: 'pdo_mysql'
-    server_version: '5.7'
-    charset: utf8
-    default_table_options:
-      charset: utf8
-      collate: utf8_unicode_ci
-
-    url: '%env(DATABASE_URL)%'
+    url: '%env(resolve:DATABASE_URL)%'
+    charset: utf8mb4
+    default_table_options: { charset: utf8mb4, collation: utf8mb4_unicode_ci }
   orm:
-    auto_generate_proxy_classes: true
-    naming_strategy: doctrine.orm.naming_strategy.underscore
+    auto_generate_proxy_classes: '%kernel.debug%'
+    naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
     auto_mapping: true
     mappings:
-      App:
-        is_bundle: false
-        type: annotation
-        dir: '%kernel.project_dir%/src/Entity'
-        prefix: 'App\Entity'
-        alias: App
+      App: { is_bundle: false, type: attribute, dir: '%kernel.project_dir%/src/Entity', prefix: 'App\Entity', alias: App }
+      Identity: { is_bundle: false, type: attribute, dir: '%kernel.project_dir%/src/Model', prefix: 'App\Model', alias: Identity }
     filters:
-      softdeleteable:
-        class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
-        enabled: false
+      softdeleteable: { class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter, enabled: false }
     dql:
-      numeric_functions:
-        rand: DoctrineExtensions\Query\Mysql\Rand
-      datetime_functions:
-        date: DoctrineExtensions\Query\Mysql\Date
-        now: DoctrineExtensions\Query\Mysql\Now
-      string_functions:
-        substring_index: DoctrineExtensions\Query\Mysql\SubstringIndex
-        group_concat: DoctrineExtensions\Query\Mysql\GroupConcat
+      numeric_functions: { rand: DoctrineExtensions\Query\Mysql\Rand }
+      datetime_functions: { date: DoctrineExtensions\Query\Mysql\Date, now: DoctrineExtensions\Query\Mysql\Now }
+      string_functions: { substring_index: DoctrineExtensions\Query\Mysql\SubstringIndex, group_concat: DoctrineExtensions\Query\Mysql\GroupConcat }

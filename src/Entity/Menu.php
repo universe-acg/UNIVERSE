@@ -10,39 +10,29 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\MenuRepository")
- * @ORM\Table(name="universe_menu")
- * @Assert\Callback({"App\Validation\Validator", "validate"})
- */
+#[ORM\Table(name: 'universe_menu')]
+#[ORM\Entity(repositoryClass: \App\Repository\MenuRepository::class)]
+#[Assert\Callback(['App\Validation\Validator', 'validate'])]
 class Menu
 {
 
 
-    /**
-     * @ORM\Column(length=255, unique=true)
-     */
+    #[ORM\Column(length: 255, unique: true)]
     protected $slug;
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
-     * @Assert\Length(min = 2)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 2)]
     private $name;
     /**
      */
     private $header;
-    /**
-     * @ORM\OneToMany(targetEntity="MenuElement", mappedBy="menu", cascade={"persist", "remove"}, orphanRemoval=true)
-     * @ORM\OrderBy({"position" = "ASC"})
-     * @Assert\Valid()
-     */
+    #[ORM\OneToMany(targetEntity: \App\Entity\MenuElement::class, mappedBy: 'menu', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['position' => 'ASC'])]
+    #[Assert\Valid]
     private $menuElements;
 
     public function __construct()

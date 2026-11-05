@@ -2,9 +2,9 @@
     /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-    
+
     namespace App\Entity;
-    
+
     use App\Validator\Constraints\EnglishOnly;
     use App\Validator\Constraints\Profanity;
     use DateTime;
@@ -14,160 +14,119 @@
     use Symfony\Component\HttpFoundation\File\File;
     use Symfony\Component\Validator\Constraints as Assert;
     use Vich\UploaderBundle\Mapping\Annotation as Vich;
-    
-    /**
-     * @ORM\Entity(repositoryClass="App\Repository\ReelRepository")
-     * @ORM\Table(name="universe_reels")
-     * @Assert\Callback({"App\Validation\Validator", "validate"})
-     * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
-     * @Vich\Uploadable
-     */
+
+    #[ORM\Table(name: 'universe_reels')]
+    #[ORM\Entity(repositoryClass: \App\Repository\ReelRepository::class)]
+    #[Assert\Callback(['App\Validation\Validator', 'validate'])]
+    #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
+    #[Vich\Uploadable]
     class Reel
     {
-        
-        /**
-         * @Gedmo\Slug(fields={"title"}, updatable=true)
-         * @ORM\Column(type="string")
-         */
+
+        #[Gedmo\Slug(fields: ['title'], updatable: true)]
+        #[ORM\Column(type: 'string', length: 180)]
         protected $slug;
-        
-        /**
-         * @ORM\Column(type="string", length=45, nullable=true)
-         */
+
+        #[ORM\Column(type: 'string', length: 45, nullable: true)]
         protected $type;
-        /**
-         * @ORM\Column(type="string")
-         */
+        #[ORM\Column(type: 'string', length: 180)]
         protected $linkvideo;
         /**
          * @EnglishOnly
          * @Profanity
-         * @ORM\Column(length=255, unique=true)
          */
+        #[ORM\Column(length: 255, unique: true)]
         protected $tags;
         /**
-         * @Vich\UploadableField(mapping="video_mapping", fileNameProperty="videoFileName")
-         * @Assert\NotBlank(message="Please choose a video file.")
-         * @Vich\UploadableField(mapping="your_video_mapping", fileNameProperty="videoFile")
          * @var File
          */
+        #[Assert\NotBlank(message: 'Please choose a video file.')]
+        #[Vich\UploadableField(mapping: 'video_mapping', fileNameProperty: 'videoFileName')]
         private $videoFile;
         /**
-         * @ORM\Column(type="string", length=255, nullable=true)
          *
          * @var string|null
          */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
         private $videoFileName;
-        
+
         // Getter and Setter for $videoFile and $videoFileName
         private $likes;
-        /**
-         * @ORM\OneToOne(targetEntity="User")
-         * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
-         */
+        #[ORM\JoinColumn(nullable: true, onDelete: 'CASCADE')]
+        #[ORM\ManyToOne(targetEntity: \App\Entity\User::class)]
         private $user;
-        /**
-         * @ORM\Column(type="string", length=255)
-         * @Assert\NotBlank(message="Please enter the title.")
-         * @Assert\Length(max=255, maxMessage="The title cannot be longer than {{ limit }} characters.")
-         */
+        #[ORM\Column(type: 'string', length: 255)]
+        #[Assert\NotBlank(message: 'Please enter the title.')]
+        #[Assert\Length(max: 255, maxMessage: 'The title cannot be longer than {{ limit }} characters.')]
         private $title;
         /**
-         * @ORM\Column(type="string")
          * @EnglishOnly
          * @Profanity
          *  * @Assert\NotBlank(message="Please provide a caption.")
-         * @Assert\Length(max=1000, maxMessage="The caption cannot be longer than {{ limit }} characters.")
          */
+        #[ORM\Column(type: 'string', length: 180)]
+        #[Assert\Length(max: 1000, maxMessage: 'The caption cannot be longer than {{ limit }} characters.')]
         private $content;
-        /**
-         * @ORM\Id()
-         * @ORM\GeneratedValue()
-         * @ORM\Column(type="integer")
-         */
+        #[ORM\Id]
+        #[ORM\GeneratedValue]
+        #[ORM\Column(type: 'integer')]
         private $id;
         /**
          * NOTE: This is not a mapped field of entity metadata, just a simple property.
          *
-         * @Vich\UploadableField(mapping="reel_main_image", fileNameProperty="mainImage", size="imageSize", mimeType="imageMimeType", originalName="imageOriginalName", dimensions="imageDimensions")
-         * @Assert\NotBlank(message="Please choose a thumbnail image.")
-         * @Vich\UploadableField(mapping="your_image_mapping", fileNameProperty="mainImageFile")
-         * @Assert\File(
-         *     maxSize = "32M",
-         *     mimeTypes = {"image/jpeg", "image/jpg", "image/gif", "image/png"},
-         *     mimeTypesMessage = "The file should be an image"
-         *     )
          * @var File
          */
+        #[Assert\NotBlank(message: 'Please choose a thumbnail image.')]
+        #[Assert\File(maxSize: '32M', mimeTypes: ['image/jpeg', 'image/jpg', 'image/gif', 'image/png'], mimeTypesMessage: 'The file should be an image')]
+        #[Vich\UploadableField(mapping: 'reel_main_image', fileNameProperty: 'mainImage', size: 'imageSize', mimeType: 'imageMimeType', originalName: 'imageOriginalName', dimensions: 'imageDimensions')]
         private $mainImageFile;
-        /**
-         * @ORM\Column(type="string", length=255, nullable=true)
-         */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
         private $mainImage;
         /**
          * NOTE: This is not a mapped field of entity metadata, just a simple property.
          *
-         * @Vich\UploadableField(mapping="reel_image", fileNameProperty="imageName", size="imageSize", mimeType="imageMimeType", originalName="imageOriginalName", dimensions="imageDimensions")
-         * @Assert\File(
-         *     maxSize = "2M",
-         *     mimeTypes = {"image/jpeg", "image/jpg", "image/gif", "image/png"},
-         *     mimeTypesMessage = "The file should be an image"
-         *     )
          * @var File
          */
+        #[Assert\File(maxSize: '2M', mimeTypes: ['image/jpeg', 'image/jpg', 'image/gif', 'image/png'], mimeTypesMessage: 'The file should be an image')]
+        #[Vich\UploadableField(mapping: 'reel_image', fileNameProperty: 'imageName', size: 'imageSize', mimeType: 'imageMimeType', originalName: 'imageOriginalName', dimensions: 'imageDimensions')]
         private $imageFile;
-        /**
-         * @ORM\Column(type="string", length=255, nullable=true)
-         */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
         private $imageName;
         /**
-         * @ORM\Column(type="integer", nullable=true)
          *
          * @var integer
          */
+        #[ORM\Column(type: 'integer', nullable: true)]
         private $imageSize;
-        /**
-         * @ORM\Column(type="string", length=255, nullable=true)
-         */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
         private $imageMimeType;
-        /**
-         * @ORM\Column(type="string", length=255, nullable=true)
-         */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
         private $imageOriginalName;
-        /**
-         * @ORM\Column(type="simple_array", nullable=true)
-         */
+        #[ORM\Column(type: 'simple_array', nullable: true)]
         private $imageDimensions;
         /**
          * @var integer
-         *
-         * @ORM\Column(type="integer", nullable=true)
          */
+        #[ORM\Column(type: 'integer', nullable: true)]
         private $views = 0;
-        /**
-         * @ORM\Column(type="boolean")
-         */
+        #[ORM\Column(type: 'boolean')]
         private $hidden = false;
         /**
          * @var DateTime $createdAt
-         *
-         * @Gedmo\Timestampable(on="create")
-         * @ORM\Column(type="datetime")
          */
+        #[Gedmo\Timestampable(on: 'create')]
+        #[ORM\Column(type: 'datetime')]
         private $createdAt;
         /**
          * @var DateTime $updatedAt
-         *
-         * @Gedmo\Timestampable(on="update")
-         * @ORM\Column(type="datetime", nullable=true)
          */
+        #[Gedmo\Timestampable(on: 'update')]
+        #[ORM\Column(type: 'datetime', nullable: true)]
         private $updatedAt;
-        /**
-         * @ORM\Column(type="datetime", nullable=true)
-         */
+        #[ORM\Column(type: 'datetime', nullable: true)]
         private $deletedAt;
         private $comments;
-        
+
         /**
          * @return mixed
          */
@@ -175,7 +134,7 @@
         {
             return $this->type;
         }
-        
+
         /**
          * @param mixed $type
          */
@@ -183,32 +142,32 @@
         {
             $this->type = $type;
         }
-        
+
         public function getVideoFile(): ?File
         {
             return $this->videoFile;
         }
-        
+
         public function setVideoFile(?File $videoFile): void
         {
             $this->videoFile = $videoFile;
-            
+
             if ($videoFile) {
                 // It's important to update changedAt field to trigger Doctrine events
                 $this->updatedAt = new DateTimeImmutable();
             }
         }
-        
+
         public function getVideoFileName(): ?string
         {
             return $this->videoFileName;
         }
-        
+
         public function setVideoFileName(?string $videoFileName): void
         {
             $this->videoFileName = $videoFileName;
         }
-        
+
         /**
          * @return File
          */
@@ -216,7 +175,7 @@
         {
             return $this->mainImageFile;
         }
-        
+
         /**
          * @param File $mainImageFile
          */
@@ -224,7 +183,7 @@
         {
             $this->mainImageFile = $mainImageFile;
         }
-        
+
         /**
          * @return mixed
          */
@@ -232,7 +191,7 @@
         {
             return $this->mainImage;
         }
-        
+
         /**
          * @param mixed $mainImage
          */
@@ -240,7 +199,7 @@
         {
             $this->mainImage = $mainImage;
         }
-        
+
         /**
          * @return mixed
          */
@@ -248,7 +207,7 @@
         {
             return $this->linkvideo;
         }
-        
+
         /**
          * @param mixed $linkvideo
          */
@@ -256,7 +215,7 @@
         {
             $this->linkvideo = $linkvideo;
         }
-        
+
         /**
          * @return mixed
          */
@@ -264,7 +223,7 @@
         {
             return $this->likes;
         }
-        
+
         /**
          * @param mixed $likes
          */
@@ -272,17 +231,17 @@
         {
             $this->likes = $likes;
         }
-        
+
         public function getComments(): array
         {
             return $this->comments;
         }
-        
+
         public function setComments(array $comments): void
         {
             $this->comments = $comments;
         }
-        
+
         /**
          * @return mixed
          */
@@ -290,9 +249,9 @@
         {
             return $this->user;
         }
-        
+
         // ... getters and setters ...
-        
+
         /**
          * @param mixed $user
          */
@@ -300,7 +259,7 @@
         {
             $this->user = $user;
         }
-        
+
         /**
          * @return mixed
          */
@@ -308,7 +267,7 @@
         {
             return $this->slug;
         }
-        
+
         /**
          * @param mixed $slug
          */
@@ -316,7 +275,7 @@
         {
             $this->slug = $slug;
         }
-        
+
         /**
          * @return mixed
          */
@@ -324,7 +283,7 @@
         {
             return $this->name;
         }
-        
+
         /**
          * @param mixed $name
          */
@@ -332,7 +291,7 @@
         {
             $this->name = $name;
         }
-        
+
         /**
          * @return ArrayCollection
          */
@@ -340,7 +299,7 @@
         {
             return $this->tags;
         }
-        
+
         /**
          * @param mixed $tags
          */
@@ -348,7 +307,7 @@
         {
             $this->tags = $tags;
         }
-        
+
         /**
          * @return mixed
          */
@@ -356,7 +315,7 @@
         {
             return $this->content;
         }
-        
+
         /**
          * @param mixed $content
          */
@@ -364,22 +323,22 @@
         {
             $this->content = $content;
         }
-        
+
         public function getId()
         {
             return $this->id;
         }
-        
+
         public function viewed()
         {
             $this->views++;
         }
-        
+
         public function getImageFile()
         {
             return $this->imageFile;
         }
-        
+
         /**
          * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
          * of 'UploadedFile' is injected into this setter to trigger the update. If this
@@ -392,24 +351,24 @@
         public function setImageFile(File $imageFile = null)
         {
             $this->imageFile = $imageFile;
-            
+
             if (null !== $imageFile) {
 // It is required that at least one field changes if you are using doctrine
 // otherwise the event listeners won't be called and the file is lost
                 $this->updatedAt = new DateTimeImmutable();
             }
         }
-        
+
         public function getImagePath()
         {
             return 'uploads/reels/' . $this->mainImage;
         }
-        
+
         public function getVideoPath()
         {
             return 'uploads/videos/' . $this->videoFileName;
         }
-        
+
         public function getImagePlaceholder($size = "default")
         {
 //        if ($size == "small") {
@@ -418,132 +377,132 @@
 //        return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABgAAAAYACAMAAACHMHNZAAABVlBMVEUAAADd3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d18zGJfAAAAcXRSTlMAAQIDBAUHCAkLDA0PEBESExQWFxocHiAjJCUmKywtLzA0NTY3ODk6Pj9AQUJHSU1OT1BYWV9jZGZoaWtsbW90dXd7fH5/goOFjpSXmJqeoKOlpqq1t7nBw8XKzs/T1dfZ3N7g4uTm6+3v8fP19/n7/XM0K4AAABCKSURBVHja7d1bbxR1HMfhBSe1EKkYUEAjkaioCWjwUmO4IF544ZXR97GvZN+FhlTlwqChRoyHiASCLaek0FLLSqEFSkuB3e62XTmESqHF0m6Znfk9zz1Rvo799N/OzBYKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAECrWxV9gKJrAFJTMkGqVpsAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQCg2RITLE/JBARWNIETAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAA9KTACkpZjyP7/kBACAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACACAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACACAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAEBzJSZIV9EEpKhkAicAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAAmikxQbpKJgCcAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABABAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQAQAAAEAAABAEAAABAAAPIiMUG6iiZYlpL9U90PJwAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEAQAAAEAAABAAAAQBAAAAQAADmSExAZCUT4AQAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgBA8yQmILJi8L9/ySXgBACAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACACAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACACAAAAgAAAIAAACAIAAACAAAAgAAAIAgAAAIAAACAAAAgCAAAAgAAAIAAACAEAzJSYgspIJcAIAQAAAEAAABAAAAQBAAAAQAAAEAAABAEAAABAAAAQAAAEA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";
             return 'https://universe.alexandroskourtis.me/uploads/imgs/default.jpg';
         }
-        
+
         public function getImageName()
         {
             return $this->imageName;
         }
-        
+
         public function setImageName($imageName)
         {
             $this->imageName = $imageName;
-            
+
             return $this;
         }
-        
+
         public function getImageSize()
         {
             return $this->imageSize;
         }
-        
+
         public function setImageSize($imageSize)
         {
             $this->imageSize = $imageSize;
-            
+
             return $this;
         }
-        
+
         public function getImageMimeType()
         {
             return $this->imageMimeType;
         }
-        
+
         public function setImageMimeType($imageMimeType)
         {
             $this->imageMimeType = $imageMimeType;
-            
+
             return $this;
         }
-        
+
         public function getImageOriginalName()
         {
             return $this->imageOriginalName;
         }
-        
+
         public function setImageOriginalName($imageOriginalName)
         {
             $this->imageOriginalName = $imageOriginalName;
-            
+
             return $this;
         }
-        
+
         public function getImageDimensions()
         {
             return $this->imageDimensions;
         }
-        
+
         public function setImageDimensions($imageDimensions)
         {
             $this->imageDimensions = $imageDimensions;
-            
+
             return $this;
         }
-        
+
         public function getHidden()
         {
             return $this->hidden;
         }
-        
+
         public function setHidden($hidden)
         {
             $this->hidden = $hidden;
-            
+
             return $this;
         }
-        
+
         public function getCreatedAt()
         {
             return $this->createdAt;
         }
-        
+
         public function setCreatedAt($createdAt)
         {
             $this->createdAt = $createdAt;
-            
+
             return $this;
         }
-        
+
         public function getUpdatedAt()
         {
             return $this->updatedAt;
         }
-        
+
         public function setUpdatedAt($updatedAt)
         {
             $this->updatedAt = $updatedAt;
-            
+
             return $this;
         }
-        
+
         public function getDeletedAt()
         {
             return $this->deletedAt;
         }
-        
+
         public function setDeletedAt($deletedAt)
         {
             $this->deletedAt = $deletedAt;
-            
+
             return $this;
         }
-        
+
         public function getViews()
         {
             return $this->views;
         }
-        
+
         public function setViews($views)
         {
             $this->views = $views;
-            
+
             return $this;
         }
-        
+
         public function generateUniqueSlug()
         {
             $baseSlug = $this->getTitle();// Generate the base slug here, for example, from the title or some unique identifier.
             $salt = uniqid('', true); // Generate a unique salt, you can use other methods if needed.
-            
+
             $length = 10;
             $reference = implode('', [
                 bin2hex(random_bytes(2)),
@@ -552,12 +511,12 @@
                 bin2hex(chr((ord(random_bytes(1)) & 0x3F) | 0x80)) . bin2hex(random_bytes(1)),
                 bin2hex(random_bytes(2))
             ]);
-            
+
             $ref = strlen($reference) > $length ? substr($reference, 0, $length) : $reference;
-            
+
             return $baseSlug . '-' . $salt . '-' . $ref;
         }
-        
+
         /**
          * @return mixed
          */
@@ -565,7 +524,7 @@
         {
             return $this->title;
         }
-        
+
         /**
          * @param mixed $title
          */

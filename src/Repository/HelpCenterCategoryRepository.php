@@ -2,21 +2,21 @@
     /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-    
+
     namespace App\Repository;
-    
+
     use App\Entity\HelpCenterCategory;
     use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
     use Doctrine\Persistence\ManagerRegistry;
-    
+
     class HelpCenterCategoryRepository extends ServiceEntityRepository
     {
-        
+
         public function __construct(ManagerRegistry $registry)
         {
             parent::__construct($registry, HelpCenterCategory::class);
         }
-        
+
         public function getHelpCenterCategories($parent, $hidden, $keyword, $slug, $limit, $order, $sort)
         {
             $qb = $this->createQueryBuilder("c");
@@ -44,16 +44,16 @@
             if ($limit !== "all") {
                 $qb->setMaxResults($limit);
             }
-            
+
             if ($order == "articlescount") {
-                $qb->leftJoin("c.articles", "articles");
-                $qb->addSelect("COUNT(articles.id) AS HIDDEN articlescount");
+
+                $qb->addSelect("SIZE(c.articles) AS HIDDEN articlescount");
                 $qb->orderBy("articlescount", "DESC");
-                $qb->groupBy("c.id");
+
             } else {
                 $qb->orderBy($order, $sort);
             }
-            
+
             return $qb;
         }
     }

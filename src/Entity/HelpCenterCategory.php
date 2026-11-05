@@ -12,73 +12,51 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\HelpCenterCategoryRepository")
- * @ORM\Table(name="universe_help_center_category")
- * @Assert\Callback({"App\Validation\Validator", "validate"})
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
- */
+#[ORM\Table(name: 'universe_help_center_category')]
+#[ORM\Entity(repositoryClass: \App\Repository\HelpCenterCategoryRepository::class)]
+#[Assert\Callback(['App\Validation\Validator', 'validate'])]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
 class HelpCenterCategory
 {
 
-    /**
-     * @Gedmo\Slug(fields={"name"}, updatable=true)
-     * @ORM\Column(length=255, unique=true)
-     */
+    #[Gedmo\Slug(fields: ['name'], updatable: true)]
+    #[ORM\Column(length: 255, unique: true)]
     protected $slug;
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
-     * @Assert\Length(min = 2)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 2)]
     private $name;
 
 
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
-    /**
-     * @ORM\OneToMany(targetEntity="HelpCenterCategory", mappedBy="parent", cascade={"remove"})
-     */
+    #[ORM\OneToMany(targetEntity: \App\Entity\HelpCenterCategory::class, mappedBy: 'parent', cascade: ['remove'])]
     private $subcategories;
-    /**
-     * @ORM\ManyToOne(targetEntity="HelpCenterCategory", inversedBy="subcategories")
-     * @ORM\JoinColumn(nullable=true)
-     */
+    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\ManyToOne(targetEntity: \App\Entity\HelpCenterCategory::class, inversedBy: 'subcategories')]
     private $parent;
-    /**
-     * @ORM\OneToMany(targetEntity="HelpCenterArticle", mappedBy="category")
-     */
+    #[ORM\OneToMany(targetEntity: \App\Entity\HelpCenterArticle::class, mappedBy: 'category')]
     private $articles;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $icon;
-    /**
-     * @ORM\Column(type="boolean")
-     * @Assert\NotNull
-     */
+    #[ORM\Column(type: 'boolean')]
+    #[Assert\NotNull]
     private $hidden = false;
     /**
      * @var DateTime $createdAt
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
      */
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(type: 'datetime')]
     private $createdAt;
     /**
      * @var DateTime $updatedAt
-     *
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[Gedmo\Timestampable(on: 'update')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updatedAt;
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $deletedAt;
 
     public function __construct()
@@ -268,7 +246,7 @@ class HelpCenterCategory
         return $this;
     }
 
-    public function getParent()
+    public function getParent(): ?string
     {
         return $this->parent;
     }

@@ -1,126 +1,41 @@
 <?php
-    /*
- * AUTHOR: ALEXANDROS KOURTIS
- */
-
-// src/Command/SendRemindersCommand.php
-    
-    namespace App\Command;
-    
-    // Include necessary Symfony components
-    use App\Repository\EventDateRepository;
-    use App\Repository\EventRepository;
-    use App\Repository\UserRepository;
-    use App\Service\AppServices;
-    use App\Service\NotificationService;
-    use DateTime;
-    use Doctrine\ORM\EntityManagerInterface;
-    use Swift_Mailer;
-    use Swift_Message;
-    use Symfony\Component\Console\Command\Command;
-    use Symfony\Component\Console\Input\InputInterface;
-    use Symfony\Component\Console\Output\OutputInterface;
-    use Twig_Environment;
-    
-    class SendRemindersCommand extends Command
-    {
-        
-        private $notificationService;
-        
-        private $templating;
-        
-        private $mailer;
-        private $entityManager;
-        
-        private $appServices;
-        
-        private $eventRepository;
-        private $eventDateRepository;
-        private $userRepository;
-        
-        public function __construct(NotificationService $notificationService, Swift_Mailer $mailer, AppServices $appServices, EntityManagerInterface $entityManager, Twig_Environment $templating, EventRepository $eventRepository, EventDateRepository $eventDateRepository, UserRepository $userRepository)
-        {
-            parent::__construct();
-            
-            $this->notificationService = $notificationService;
-            $this->userRepository = $userRepository;
-            $this->eventDateRepository = $eventDateRepository;
-            $this->eventRepository = $eventRepository;
-            $this->mailer = $mailer;
-            $this->entityManager = $entityManager;
-            $this->templating = $templating;
-            $this->appServices = $appServices;
-        }
-        
-        protected function configure()
-        {
-            $this
-                ->setName('app:send-reminders')
-                ->setDescription('Send reminders to attendees of events starting today.');
-        }
-        
-        protected function execute(InputInterface $input, OutputInterface $output)
-        {
-            // Get the repositories (you can use dependency injection or however it's available)
-
-// Get users with the desired role who have booked tickets
-            $role = "ATTENDEE"; // Replace with the actual role
-            $usersWithRole = $this->userRepository->getUsersByRole($role);
-
-// Get the current time as a DateTime object
-            $currentDateTime = new DateTime('now');
-
-// Define a threshold time for comparison (8 AM today)
-            $thresholdTime = new DateTime('today 0:00:00');
-
-// Initialize an array to store the events that meet the criteria
-            $eventsMatchingCriteria = [];
-
-// Loop through users
-            foreach ($usersWithRole as $user) {
-                // Call the function to get tickets booked by the user
-                $events = $this->eventRepository->getTicketsBookedByUser($user);
-                // Loop through the tickets booked by the user
-                foreach ($events as $event) {
-                    
-                    $eventDates = $this->eventDateRepository->getEventDates("all", "all", $event->getSlug(), 1, false)->getQuery()->getResult();
-                    
-                    foreach ($eventDates as $eventDate) {
-                        $now = new DateTime();
-
-// Calculate the start time (8 AM) and end time (midnight) for today
-                        $startTime = new DateTime($now->format('Y-m-d') . ' 08:00:00');
-                        $endTime = new DateTime($now->format('Y-m-d') . ' 23:59:59');
-                        
-                        $startDate = $eventDate->getStartdate();
-                        
-                        if ($startDate >= $startTime && $startDate <= $endTime) {
-                            // This event date falls within the time range (8 AM to midnight)
-                            // You can do something with this event date, like adding it to a list of events
-                            $message = "Kind reminder, you have booked event(s) for today.";
-                            
-                            $emaildata = [
-                                $title = $event->getName() . " | " . $eventDate->getTickets()[0]->getName(),
-                                $startdate = $eventDate->getStartdate()->format('D j M Y, g:i A'),
-                                $link = "https://universe.alexandroskourtis.me/event/" . $event->getSlug(),
-                            ];
-                            $email = (new Swift_Message($this->appServices->getSetting('website_name') . ' - Kind reminder, ' . $event->getName() . ' is taking place today'))
-                                ->setFrom($this->appServices->getSetting('no_reply_email'))
-                                ->setTo("akourtisdev@gmail.com")
-                                ->setBody(
-                                    $this->templating->render('Dashboard/Shared/Order/event-daily-reminder-email.html.twig', ['data' => $emaildata, 'message' => $message, 'services' => $this->appServices]), 'text/html', 'UTF-8');
-                            
-                            $this->notificationService->createNotification($this->getUser()->getId(), $message, $email->getSubject());
-                            
-                            $this->mailer->send($email);
-                        }
-                    }
+namespace App\Command;
+use App\Entity\{Notification,OrderElement};
+use App\Service\{DemoMailer,MailMessage};
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\{InputInterface,InputOption};
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+#[AsCommand(name: 'app:send-reminders', description: 'Capture one reminder per attendee and event session today.')]
+final class SendRemindersCommand extends Command
+{
+    public function __construct(private EntityManagerInterface $em, private DemoMailer $mailer, private UrlGeneratorInterface $router) { parent::__construct(); }
+    protected function configure(): void { $this->addOption('date', null, InputOption::VALUE_REQUIRED, 'Reference date, YYYY-MM-DD')->addOption('dry-run', null, InputOption::VALUE_NONE); }
+    protected function execute(InputInterface $input, OutputInterface $output): int {
+        $date=$input->getOption('date') ?: date('Y-m-d');
+        $start=\DateTimeImmutable::createFromFormat('!Y-m-d',$date,new \DateTimeZone('Europe/Athens'));
+        if(!$start || $start->format('Y-m-d')!==$date) { $output->writeln('<error>Invalid date.</error>'); return Command::INVALID; }
+        $lock=fopen(sys_get_temp_dir().'/universe-reminders-'.hash('sha256',__DIR__).'.lock','c');
+        if(!$lock || !flock($lock,LOCK_EX|LOCK_NB)) { $output->writeln('Reminder job already running.');return Command::SUCCESS; }
+        try {
+            $elements=$this->em->createQueryBuilder()->select('oe,o,u,t,d,e')->from(OrderElement::class,'oe')->join('oe.order','o')->join('o.user','u')->join('oe.eventticket','t')->join('t.eventdate','d')->join('d.event','e')->where('o.status = 1')->andWhere('d.startdate >= :start AND d.startdate < :end')->setParameter('start',$start)->setParameter('end',$start->modify('+1 day'))->getQuery()->getResult();
+            $seen=[];$count=0;
+            foreach($elements as $element) {
+                $user=$element->getOrder()->getUser();$session=$element->getEventticket()->getEventdate();$event=$session->getEvent();
+                $key=$user->getId().':'.$session->getId();if(isset($seen[$key]))continue;$seen[$key]=true;
+                $title='Event reminder';$description='Session '.$session->getId().' on '.$date.': '.mb_substr($event->getName(),0,180);
+                if($this->em->getRepository(Notification::class)->findOneBy(['userid'=>$user->getId(),'name'=>$title,'description'=>$description]))continue;
+                if(!$input->getOption('dry-run')) {
+                    $url=$this->router->generate('event',['slug'=>$event->getSlug()],UrlGeneratorInterface::ABSOLUTE_URL);
+                    $body='Kind reminder: '.$event->getName().' starts '.$session->getStartdate()->format('d M Y H:i').'. '.$url;
+                    $this->mailer->send((new MailMessage($title))->setFrom('noreply@universe.example.test')->setTo($user->getEmail())->setBody($body,'text/plain'));
+                    $notification=new Notification();$notification->setUserid($user->getId());$notification->setName($title);$notification->setDescription($description);$notification->setRead(false);$this->em->persist($notification);$this->em->flush();
                 }
+                $count++;
             }
-            
-            
-            $output->writeln('Reminders sent successfully.');
-            
-            return Command::SUCCESS;
-        }
+            $output->writeln(sprintf('%d reminders %s.',$count,$input->getOption('dry-run')?'eligible':'captured'));return Command::SUCCESS;
+        } finally { flock($lock,LOCK_UN);fclose($lock); }
     }
+}

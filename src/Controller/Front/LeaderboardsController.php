@@ -6,9 +6,9 @@
 namespace App\Controller\Front;
 
 use App\Service\LeaderboardsService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Controller\BaseController as AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class LeaderboardsController extends AbstractController
 {
@@ -20,15 +20,16 @@ class LeaderboardsController extends AbstractController
     }
 
     /**
-     * @Route("/leaderboards", name="index")
+     *
      */
+#[Route("/leaderboards", name: "index")]
     public function index(): Response
     {
         $attendees = $this->leaderboardsService->getAllAttendees();
         $creators = $this->leaderboardsService->getAllCreators();
 
         $sortFunction = static function ($a, $b) {
-            // Assuming both $a and $b have a 'points' property
+
             return $b->getPoints() - $a->getPoints();
         };
 

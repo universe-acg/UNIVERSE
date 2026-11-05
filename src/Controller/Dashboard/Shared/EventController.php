@@ -26,15 +26,15 @@ use Exception;
 use Knp\Component\Pager\PaginatorInterface;
 use MaxMind\Db\Reader\InvalidDatabaseException;
 use Psr\Cache\InvalidArgumentException;
-use Swift_Mailer;
-use Swift_Message;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Service\DemoMailer as Swift_Mailer;
+use App\Service\MailMessage as Swift_Message;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Twig_Environment;
+use \Twig\Environment;
 
 class EventController extends Controller
 {
@@ -53,13 +53,14 @@ class EventController extends Controller
     }
 
     /**
-     * @Route("/administrator/manage-events", name="dashboard_administrator_event", methods="GET")
+     *
      * @param Request $request
      * @param PaginatorInterface $paginator
      * @param AppServices $services
      * @return Response
      * @throws Exception
      */
+#[Route("/administrator/manage-events", name: "dashboard_administrator_event", methods: ["GET"])]
     public function indexadmin(Request $request, PaginatorInterface $paginator, AppServices $services): Response
     {
         $events = $services->getEvents(array("sort" => "e.createdAt", "order" => "DESC"));
@@ -71,13 +72,14 @@ class EventController extends Controller
     }
 
     /**
-     * @Route("/organizer/my-events", name="dashboard_organizer_event", methods="GET")
+     *
      * @param EventRepository $eventRepository
      * @param Request $request
      * @param PaginatorInterface $paginator
      * @return Response
      * @throws Exception
      */
+#[Route("/organizer/my-events", name: "dashboard_organizer_event", methods: ["GET"])]
     public function indexorganizer(EventRepository $eventRepository, Request $request, PaginatorInterface $paginator): Response
     {
         $slug = ($request->query->get('slug')) == "" ? "all" : $request->query->get('slug');
@@ -92,10 +94,8 @@ class EventController extends Controller
 
         $organizer = "all";
 
-        // Get the events and sort them by "updated_at" in descending order
         $sortedEvents = $eventRepository->getEventsCreatedByUserAndSortByUpdatedAt($this->getUser()->getOrganizer()->getId());
 
-        // Paginate the sorted events
         $events = $paginator->paginate(
             $sortedEvents,  // The array to paginate
             $request->query->getInt('page', 1),  // Current page number, default to 1
@@ -107,21 +107,12 @@ class EventController extends Controller
     }
 
     /**
-     * @Route("/organizer/my-events/add", name="dashboard_organizer_event_add", methods="GET|POST")
+     *
      * @throws InvalidDatabaseException
      * @throws Exception|InvalidArgumentException
      */
-    public function addEvent(
-        EventRepository               $eventRepository,
-        OrganizerRepository           $organizerRepository,
-        Request                       $request,
-        AppServices                   $services,
-                                      $slug = null,
-        AuthorizationCheckerInterface $authChecker,
-        Swift_Mailer                  $mailer,
-        Twig_Environment              $templating,
-        CategoryRepository            $categoryRepository
-    )
+#[Route("/organizer/my-events/add", name: "dashboard_organizer_event_add", methods: ["GET","POST"])]
+    public function addEvent(EventRepository               $eventRepository, OrganizerRepository           $organizerRepository, Request                       $request, AppServices                   $services, AuthorizationCheckerInterface $authChecker, Swift_Mailer                  $mailer, \Twig\Environment              $templating, CategoryRepository            $categoryRepository, $slug = null)
     {
         $organizer = $this->getUser()->getOrganizer();
         $organizerCategory = $organizer->getCategory();
@@ -157,12 +148,12 @@ class EventController extends Controller
         $formsimple->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Check if it's an out-of-campus event
+
             if ($event->getOutofcampus()) {
-                // If it's an out-of-campus event, set the venue to null
+
                 $event->setVenue(null);
             } else if (null === $event->getVenue()) {
-                // Set the "outofcampus" field to false
+
                 $event->setOutofcampus(false);
             }
             $commonValue = $this->generateCommonValue();
@@ -176,7 +167,6 @@ class EventController extends Controller
                 $this->processSubmittedEvent($event, $category, $commonValue, $em, $services, $authChecker);
             }
 
-            // Handle new event creation or update
             if (!$slug) {
                 $this->addFlash('success', 'The event has been successfully created');
             } else {
@@ -187,7 +177,7 @@ class EventController extends Controller
         }
 
         if ($formsimple->isSubmitted() && $formsimple->isValid()) {
-            // Set references for event dates and tickets
+
             foreach ($event->getEventdates() as $eventdate) {
                 $eventdate->setEvent($event);
                 if (!$slug || !$eventdate->getReference()) {
@@ -204,7 +194,6 @@ class EventController extends Controller
             }
             $this->processSubmittedEvent($event, $category, '', $em, $services, $authChecker);
 
-            // Handle new event creation or update
             if (!$slug) {
                 $this->addFlash('success', 'The event has been successfully created');
             } else {
@@ -219,7 +208,7 @@ class EventController extends Controller
 
     public function getEventBySlug($slug)
     {
-        // Use the repository to find the event by its slug
+
         $event = $this->eventRepository->findOneBySlug(['slug' => $slug]);
 
         if (!$event) {
@@ -230,9 +219,10 @@ class EventController extends Controller
     }
 
     /**
-     * @Route("/my-attendeed", name="attendeed_events")
+     *
      * @throws Exception
      */
+#[Route("/my-attendeed", name: "attendeed_events")]
     public function index(Request $request, PaginatorInterface $paginator, EventRepository $eventRepository, AppServices $services)
     {
         $user = $this->getUser();
@@ -243,19 +233,12 @@ class EventController extends Controller
     }
 
     /**
-     * @Route("/organizer/my-events/{slug}/edit", name="dashboard_organizer_event_edit", methods="GET|POST")
+     *
      * @throws InvalidDatabaseException
      * @throws Exception
      */
-    public function editEvent(
-        EventFileRepository           $eventFileRepository,
-        EventRepository               $eventRepository,
-        Request                       $request,
-        AppServices                   $services,
-                                      $slug = null,
-        AuthorizationCheckerInterface $authChecker,
-        CategoryRepository            $categoryRepository
-    )
+#[Route("/organizer/my-events/{slug}/edit", name: "dashboard_organizer_event_edit", methods: ["GET","POST"])]
+    public function editEvent(EventFileRepository           $eventFileRepository, EventRepository               $eventRepository, Request                       $request, AppServices                   $services, AuthorizationCheckerInterface $authChecker, CategoryRepository            $categoryRepository, $slug = null)
     {
         $organizer = $this->getUser()->getOrganizer();
         $organizerCategory = $organizer->getCategory();
@@ -275,9 +258,8 @@ class EventController extends Controller
             return $services->redirectToReferer('event');
         }
 
-        // In your controller action
         $entityManager = $this->getDoctrine()->getManager();
-        // Specify the dynamic placeholder text based on your logic
+
         $form = $this->createForm(EventTypeMultiEdit::class, $event, [
             'validation_groups' => ['create', 'Default'],
             'user_choices' => $eventChoices,
@@ -294,23 +276,20 @@ class EventController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // Check if it's an out-of-campus event
             if ($event->getOutofcampus()) {
-                // If it's an out-of-campus event, set the venue to null
+
                 $event->setVenue(null);
             } else if (null === $event->getVenue()) {
-                // Set the "outofcampus" field to false
+
                 $event->setOutofcampus(false);
             }
 
-            // Iterate through event files and associate them with the event
             foreach ($event->getFiles() as $file) {
                 $ffile = $file->getEventFile();
 
                 if ($ffile) {
                     $newFileName = $ffile->getClientOriginalName();
 
-                    // Check if a file with the same name already exists in the event
                     $existingFile = null;
                     foreach ($event->getFiles() as $existing) {
                         if ($existing->getFileName() === $newFileName) {
@@ -320,12 +299,11 @@ class EventController extends Controller
                     }
 
                     if ($existingFile) {
-                        // Handle the case where a file with the same name already exists
-                        // You can choose to skip adding the new file, like this:
-//                        continue;
+
+
+
                     }
 
-//                    // If no existing file with the same name was found, add the new file
                     $newFile = new EventFile();
                     $newFile->setFileName($newFileName);
                     $newFile->setFileMimeType($ffile->getClientMimeType());
@@ -335,20 +313,20 @@ class EventController extends Controller
                     $newFile->setEventfile($file->getEventfile());
                     $event->addFile($newFile);
                 } else {
-                    // Handle the case where ffile is null (no new file uploaded)
-                    // Find and remove the existing file with the same name, if it exists
+
+
                     $existingFileName = $file->getFileName();
                     $existingFile = $eventFileRepository->findByFileName($existingFileName); // Implement getFileByName in your Event entity
 
                     if ($existingFile) {
-                        // Remove the existing file from the event and the database
+
                         $event->removeFile($existingFile);
                         $eventFileRepository->deleteById($existingFile->getId());
                         $em->remove($existingFile);
                     }
                 }
             }
-            // if common value is not empty update all others too
+
             $event->setOrganizer($this->getUser()->getOrganizer());
 
             $this->processFormSubmission($event, $em, $services, $category, $slug);
@@ -361,7 +339,7 @@ class EventController extends Controller
         }
 
         if ($formsimple->isSubmitted() && $formsimple->isValid()) {
-            // Set references for event dates and tickets
+
             foreach ($event->getEventdates() as $eventdate) {
                 $eventdate->setEvent($event);
                 if (!$slug || !$eventdate->getReference()) {
@@ -378,7 +356,6 @@ class EventController extends Controller
             }
             $this->processSubmittedEvent($event, $category, '', $em, $services, $authChecker);
 
-            // Handle new event creation or update
             if (!$slug) {
                 $this->addFlash('success', 'The event has been successfully created');
             } else {
@@ -392,18 +369,12 @@ class EventController extends Controller
     }
 
     /**
-     * @Route("/organizer/my-events/{slug}/prefill", name="dashboard_organizer_event_prefill", methods="GET|POST")
+     *
      * @throws InvalidDatabaseException
      * @throws Exception
      */
-    public function prefillEvent(
-        EventRepository               $eventRepository,
-        Request                       $request,
-        AppServices                   $services,
-                                      $slug = null,
-        AuthorizationCheckerInterface $authChecker,
-        CategoryRepository            $categoryRepository
-    )
+#[Route("/organizer/my-events/{slug}/prefill", name: "dashboard_organizer_event_prefill", methods: ["GET","POST"])]
+    public function prefillEvent(EventRepository               $eventRepository, Request                       $request, AppServices                   $services, AuthorizationCheckerInterface $authChecker, CategoryRepository            $categoryRepository, $slug = null)
     {
         $organizer = $this->getUser()->getOrganizer();
         $organizerCategory = $organizer->getCategory();
@@ -443,7 +414,6 @@ class EventController extends Controller
                 $this->processRepeatingEvent($newEvent, $category, $commonValue, $em, $services);
             }
 
-            // Handle new event creation or update
             if (!$slug) {
                 $this->addFlash('success', 'The event has been successfully created');
             } else {
@@ -457,24 +427,23 @@ class EventController extends Controller
     }
 
     /**
-     * @Route("/administrator/my-events/{slug}/delete-permanently-repeating", name="dashboard_organizer_event_delete_permanently_repeating_admin", methods="GET")
+     *
      * @throws InvalidDatabaseException
      */
+#[Route("/administrator/my-events/{slug}/delete-permanently-repeating", name: "dashboard_organizer_event_delete_permanently_repeating_admin", methods: ["GET"])]
     public function deleteRepeatingeventadministrator(EventRepository $eventRepository, AppServices $services, $slug)
     {
         $em = $this->getDoctrine()->getManager();
         $event = $eventRepository->findBySlug($slug);
-//            if (!$event) {
-        // Handle event not found
-//            }
 
-        // Get the common value of the current event
+
+
+
         $commonValue = $event->getCommonvalue();
 
-        // Retrieve all events with the same common value
         $eventsWithSameCommonValue = $eventRepository->findEventsByCommonValue($commonValue);
-        // Now, $eventsWithSameCommonValue contains all events with the same common value as $event
-        // Delete all events with the same common value
+
+
         foreach ($eventsWithSameCommonValue as $eventToDelete) {
             if ($event->getOrderElementsQuantitySum() > 0) {
                 $this->addFlash('error', 'One or more events can not be deleted because they have one or more tickets');
@@ -490,34 +459,32 @@ class EventController extends Controller
         return $services->redirectToReferer('event');
     }
 
-    // Helper method to map category name
 
     /**
-     * @Route("/organizer/my-events/{slug}/delete-permanently-repeating", name="dashboard_organizer_event_delete_permanently_repeating_organizer", methods="GET")
+     *
      * @throws InvalidDatabaseException
      */
+#[Route("/organizer/my-events/{slug}/delete-permanently-repeating", name: "dashboard_organizer_event_delete_permanently_repeating_organizer", methods: ["GET"])]
     public function deleteRepeatingeventorganizer(EventRepository $eventRepository, AppServices $services, $slug)
     {
         $em = $this->getDoctrine()->getManager();
         $event = $eventRepository->findBySlug($slug);
-//            if (!$event) {
-        // Handle event not found
-//            }
 
-        // Get the common value of the current event
+
+
+
         $commonValue = $event->getCommonvalue();
 
-        // Retrieve all events with the same common value
         $eventsWithSameCommonValue = $eventRepository->findEventsByCommonValue($commonValue);
-        // Now, $eventsWithSameCommonValue contains all events with the same common value as $event
-        // Delete all events with the same common value
+
+
 
 
         foreach ($eventsWithSameCommonValue as $eventToDelete) {
-//                if ($event->getOrderElementsQuantitySum() > 0) {
-//                    $this->addFlash('error', 'One or more events can not be deleted because they have one or more tickets');
-//                    return $services->redirectToReferer('event');
-//                }
+
+
+
+
 
             $em->remove($eventToDelete);
         }
@@ -528,28 +495,24 @@ class EventController extends Controller
         return $services->redirectToReferer('event');
     }
 
-    // Helper method to generate a unique slug
 
     /**
-     * @Route("/organizer/my-events/{slug}/delete-permanently-repeating", name="dashboard_organizer_event_delete_permanently_repeating", methods="GET")
+     *
      * @throws InvalidDatabaseException
      */
+#[Route("/organizer/my-events/{slug}/delete-permanently-repeating", name: "dashboard_organizer_event_delete_permanently_repeating", methods: ["GET"])]
     public function deleteRepeatingevent(EventRepository $eventRepository, AppServices $services)
     {
         $event = $eventRepository->find($eventId);
 
-//            if (!$event) {
-        // Handle event not found
-//            }
 
-        // Get the common value of the current event
+
+
         $commonValue = $event->getCommonvalue();
 
-        // Retrieve all events with the same common value
         $eventsWithSameCommonValue = $eventRepository->findEventsByCommonValue($commonValue);
-        // Now, $eventsWithSameCommonValue contains all events with the same common value as $event
 
-        // Delete all events with the same common value
+
         foreach ($eventsWithSameCommonValue as $eventToDelete) {
             if ($event->getOrderElementsQuantitySum() > 0) {
                 $this->addFlash('error', 'One or more events can not be deleted because they have one or more tickets');
@@ -563,10 +526,11 @@ class EventController extends Controller
     }
 
     /**
-     * @Route("/administrator/my-events/{slug}/delete-permanently-admin", name="dashboard_organizer_event_delete_permanently_admin", methods="GET")
+     *
      * @throws InvalidDatabaseException|Exception
      * @throws Exception
      */
+#[Route("/administrator/my-events/{slug}/delete-permanently-admin", name: "dashboard_organizer_event_delete_permanently_admin", methods: ["GET"])]
     public function deleteforadmin(AppServices $services, $slug, AuthorizationCheckerInterface $authChecker)
     {
         $organizer = "all";
@@ -591,15 +555,18 @@ class EventController extends Controller
         return $services->redirectToReferer('event');
     }
 
-    // Helper method to get category by name
 
     /**
-     * @Route("/administrator/manage-events/{slug}/delete-permanently", name="dashboard_administrator_event_delete_permanently", methods="GET")
-     * @Route("/administrator/manage-events/{slug}/delete", name="dashboard_administrator_event_delete", methods="GET")
-     * @Route("/organizer/my-events/{slug}/delete-permanently", name="dashboard_organizer_event_delete_permanently", methods="GET")
-     * @Route("/organizer/my-events/{slug}/delete", name="dashboard_organizer_event_delete", methods="GET")
+     *
+     *
+     *
+     *
      * @throws InvalidDatabaseException|Exception
      */
+#[Route("/administrator/manage-events/{slug}/delete-permanently", name: "dashboard_administrator_event_delete_permanently", methods: ["POST"])]
+#[Route("/administrator/manage-events/{slug}/delete", name: "dashboard_administrator_event_delete", methods: ["POST"])]
+#[Route("/organizer/my-events/{slug}/delete-permanently", name: "dashboard_organizer_event_delete_permanently", methods: ["POST"])]
+#[Route("/organizer/my-events/{slug}/delete", name: "dashboard_organizer_event_delete", methods: ["POST"])]
     public function delete(AppServices $services, OrderRepository $orderRepository, $slug, AuthorizationCheckerInterface $authChecker)
     {
         $organizer = "all";
@@ -627,14 +594,15 @@ class EventController extends Controller
         }
         $em->remove($event);
         $em->flush();
-//            $this->informAttendeesEventhasbeencancelled($event, $services);
+
         return $services->redirectToReferer('event');
     }
 
     /**
-     * @Route("/administrator/manage-events/{slug}/restore", name="dashboard_administrator_event_restore", methods="GET")
+     *
      * @throws InvalidDatabaseException|NonUniqueResultException
      */
+#[Route("/administrator/manage-events/{slug}/restore", name: "dashboard_administrator_event_restore", methods: ["POST"])]
     public function restore($slug, AppServices $services)
     {
 
@@ -653,12 +621,14 @@ class EventController extends Controller
     }
 
     /**
-     * @Route("/organizer/my-events/{slug}/publish", name="dashboard_organizer_event_publish", methods="GET")
-     * @Route("/organizer/my-events/{slug}/draft", name="dashboard_organizer_event_draft", methods="GET")
+     *
+     *
      * @throws InvalidDatabaseException|NonUniqueResultException|Exception|InvalidArgumentException
      */
+#[Route("/organizer/my-events/{slug}/publish", name: "dashboard_organizer_event_publish", methods: ["POST"])]
+#[Route("/organizer/my-events/{slug}/draft", name: "dashboard_organizer_event_draft", methods: ["POST"])]
     public function showhide(AppServices  $services, $slug, AuthorizationCheckerInterface $authChecker,
-                             Swift_Mailer $mailer, Twig_Environment $templating)
+                             Swift_Mailer $mailer, \Twig\Environment $templating)
     {
 
         $organizer = "all";
@@ -675,7 +645,7 @@ class EventController extends Controller
             $this->addFlash('success', 'The event has been unpublished and will not be included in the search results');
         } else {
             $event->setPublished(true);
-            // send to followers
+
             $followerslist = $this->getUser()->getOrganizer()->getFollowedBy();
             $filteredFollowers = [];
 
@@ -716,13 +686,14 @@ class EventController extends Controller
         return $services->redirectToReferer('event');
     }
 
-    // Helper method to get event choices
 
     /**
-     * @Route("/administrator/manage-events/{slug}/details", name="dashboard_administrator_event_details", methods="GET", condition="request.isXmlHttpRequest()")
-     * @Route("/organizer/my-events/{slug}/details", name="dashboard_organizer_event_details", methods="GET", condition="request.isXmlHttpRequest()")
+     *
+     *
      * @throws InvalidDatabaseException|NonUniqueResultException
      */
+#[Route("/administrator/manage-events/{slug}/details", name: "dashboard_administrator_event_details", methods: ["GET"], condition: "request.isXmlHttpRequest()")]
+#[Route("/organizer/my-events/{slug}/details", name: "dashboard_organizer_event_details", methods: ["GET"], condition: "request.isXmlHttpRequest()")]
     public function details(AppServices $services, $slug, AuthorizationCheckerInterface $authChecker)
     {
 
@@ -740,11 +711,10 @@ class EventController extends Controller
         ]);
     }
 
-    // Helper method to initialize the event
 
     private function mapCategoryName($category)
     {
-        // Implement your mapping logic here
+
         return ($category === 'Club') ? 'Clubs' : (($category === 'Society') ? 'Societies' : ($category === 'Organization' ? 'Organizations' : 'Offices'));
     }
 
@@ -753,23 +723,20 @@ class EventController extends Controller
         return $categoryRepository->findByName($categoryName);
     }
 
-    // Helper method to process form submission
 
     private function getEventChoices($eventRepository, $organizer, $authChecker)
     {
         $eventChoices = [];
 
-        // Implement logic to fetch event choices, e.g., based on user roles
         if ($authChecker->isGranted('ROLE_ORGANIZER')) {
-            // Fetch events for the current organizer
+
             $events = $eventRepository->getEventsByOrganizerId($organizer->getId())->getQuery()->getResult();
 
         } else {
-            // Fetch all events
+
             $events = $eventRepository->findAll();
         }
 
-        // Create an array of event choices
         foreach ($events as $event) {
             $eventKey = $event->getName() . '_' . $event->getId();
             $eventChoices[$eventKey] = $event->getId();
@@ -781,7 +748,7 @@ class EventController extends Controller
     private function initializeEvent($slug)
     {
         if (!$slug) {
-            // If no slug is provided, create a new event
+
             $event = new Event();
         } else {
             $event = $this->getEventBySlug($slug);
@@ -795,19 +762,16 @@ class EventController extends Controller
         return $event;
     }
 
-    // Helper method to initialize the event
 
     private function generateCommonValue()
     {
-        // Define characters that can be used in the common value
+
         $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-        // Length of the common value
         $length = 40; // You can adjust the length as needed
 
         $commonValue = '';
 
-        // Generate a random common value of the specified length
         for ($i = 0; $i < $length; $i++) {
             $randomIndex = random_int(0, strlen($characters) - 1);
             $commonValue .= $characters[$randomIndex];
@@ -816,7 +780,6 @@ class EventController extends Controller
         return $commonValue;
     }
 
-    // Helper method to determine the redirection route after form submission
 
     private function processSubmittedEvent($event, $category, $commonValue, $em, $services, $authChecker)
     {
@@ -830,20 +793,18 @@ class EventController extends Controller
 
         if ($event->isPublishOnSpecificDate()) {
             $event->setPublished(false);
-            // Get the selected publication date from the form
+
             $publishDate = $event->getPublishDate();
 
-            // Check if the publication date is in the future
             $now = new DateTime(); // Get the current date and time
             if ($publishDate > $now) {
-                // Schedule the publication using Symfony's Messenger component
+
                 $message = new PublishEventMessage($event->getId());
                 $message->setScheduledAt($publishDate);
 
-                // Dispatch the message to the Messenger component
                 $this->messageBus->dispatch($message);
             } else {
-                // If the publication date is in the past or now, set the event as published
+
                 $event->setPublished(true);
             }
         } else {
@@ -855,24 +816,19 @@ class EventController extends Controller
         $this->processFormSubmission($event, $em, $services, $category, $newSlug);
     }
 
-    // Helper method to render the event form
 
     private function generateUniqueSlug($title)
     {
-        // Generate a slug based on the title
+
         $baseSlug = strtolower(trim(preg_replace('/[^a-zA-Z0-9]+/', '-', $title), '-'));
 
-        // Generate a random string (e.g., 6 characters) to append to the slug
         $randomString = bin2hex(random_bytes(10)); // Adjust the number of bytes for desired length
 
-        // Combine the base slug and random string
         $uniqueSlug = $baseSlug . '-' . $randomString;
 
-        // Check if the generated slug already exists in the database
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository(Event::class);
 
-        // Keep incrementing the random string until you find a unique slug
         $counter = 1;
         while ($repository->findOneBy(['slug' => $uniqueSlug])) {
             $counter++;
@@ -885,14 +841,12 @@ class EventController extends Controller
     private function processFormSubmission($event, $em, $services, $category, $slug)
     {
 
-        // Save event images
         foreach ($event->getImages() as $image) {
             $event->addImage($image);
             $em->persist($image);
             $em->flush();
         }
 
-        // Set references for event dates and tickets
         foreach ($event->getEventdates() as $eventdate) {
             $eventdate->setEvent($event);
             if (!$slug || !$eventdate->getReference()) {
@@ -907,20 +861,18 @@ class EventController extends Controller
                 }
             }
         }
-//
-//        // Handle new event creation or update
-//        if (!$slug) {
-//            $event->setOrganizer($this->getUser()->getOrganizer());
-//            $event->setReference($services->generateReference(10));
-//            $this->addFlash('success', 'The event has been successfully created');
-//        } else {
-//            $this->addFlash('success', 'The event has been successfully updated');
-//        }
 
-        // Set the event category
+
+
+
+
+
+
+
+
+
         $event->setCategory($category);
 
-        // Persist and flush changes to the database
         return $event;
     }
 
@@ -932,13 +884,10 @@ class EventController extends Controller
 
         $event->setCommonvalue($commonValue);
 
-        // Calculate the time interval between start and end dates
         $interval = $repeatStartDate->diff($repeatEndDate);
 
-// Calculate the total number of weeks within the interval
         $totalWeeks = $interval->days / 7;
 
-// Calculate the number of times the event repeats
         $numberOfRepeats = round($totalWeeks / $copiesOfEvent);
 
         $copiesOfEvent = (int)$numberOfRepeats;
@@ -993,21 +942,19 @@ class EventController extends Controller
         $em->flush();
 
         if ($event->isPublishOnSpecificDate()) {
-            // Get the selected publication date from the form
+
             $publishDate = $event->getPublishDate();
 
-            // Check if the publication date is in the future
             $now = new DateTime(); // Get the current date and time
             if ($publishDate > $now) {
-                // Schedule the publication using Symfony's Messenger component
+
                 $event->setPublished(false);
                 $message = new PublishEventMessage($event->getId());
                 $message->setScheduledAt($publishDate);
 
-                // Dispatch the message to the Messenger component
                 $this->messageBus->dispatch($message);
             } else {
-                // If the publication date is in the past or now, set the event as published
+
                 $event->setPublished(true);
             }
         } else {
@@ -1019,7 +966,7 @@ class EventController extends Controller
 
     private function redirectToRouteAfterSubmission($authChecker)
     {
-        // Implement logic to determine the route based on user roles
+
         if ($authChecker->isGranted('ROLE_ORGANIZER')) {
             return $this->redirectToRoute("dashboard_organizer_event");
         }
@@ -1028,7 +975,6 @@ class EventController extends Controller
             return $this->redirectToRoute("dashboard_administrator_event");
         }
 
-        // Default route if no role matches
         return $this->redirectToRoute("dashboard_organizer_event");
     }
 
@@ -1043,7 +989,7 @@ class EventController extends Controller
 
     private function informAttendeesEventhasbeenupdated($event, $appservices)
     {
-        // get attendeees
+
         $attendees = $appservices->findBookedAttendeesOfEvent($event);
         foreach ($attendees as $attendee) {
             $appservices->sendmaileventhasbeenupdate($event, $attendee->getEmail());
@@ -1076,7 +1022,7 @@ class EventController extends Controller
 
     private function informAttendeesEventhasbeencancelled($event, $appservices)
     {
-        // get attendeees
+
         $attendees = $appservices->findBookedAttendeesOfEvent($event);
         foreach ($attendees as $attendee) {
             $appservices->sendmaileventhasbeencancelled($event, $attendee->getEmail());

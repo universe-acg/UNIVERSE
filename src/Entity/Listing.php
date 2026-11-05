@@ -17,174 +17,125 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\ListingRepository")
- * @ORM\Table(name="universe_listing")
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
- * @Vich\Uploadable
- */
+#[ORM\Table(name: 'universe_listing')]
+#[ORM\Entity(repositoryClass: \App\Repository\ListingRepository::class)]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
+#[Vich\Uploadable]
 class Listing
 {
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=false)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: false)]
     protected $name;
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     protected $description;
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     protected $shortdescription;
-    /**
-     * @Gedmo\Slug(fields={"name"}, updatable=false)
-     * @ORM\Column(length=255, unique=true)
-     */
+    #[Gedmo\Slug(fields: ['name'], updatable: false)]
+    #[ORM\Column(length: 255, unique: true)]
     protected $slug;
-    /**
-     * @ORM\OneToMany(targetEntity="ListingDatePosition", mappedBy="listing", cascade={"persist", "remove"}, orphanRemoval=true, fetch="EAGER")
-     */
+    #[ORM\OneToMany(targetEntity: \App\Entity\ListingDatePosition::class, mappedBy: 'listing', cascade: ['persist', 'remove'], orphanRemoval: true, fetch: 'LAZY')]
     private $datePositions;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Event")
-     * @ORM\JoinColumn(name="event_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'event_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \App\Entity\Event::class)]
     private $event;
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
-    /**
-     * @ORM\ManyToOne(targetEntity="ListingCategory", inversedBy="listings", fetch = "EAGER")
-     */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\ListingCategory::class, inversedBy: 'listings', fetch: 'LAZY')]
     private $category;
-    /**
-     * @ORM\ManyToOne(targetEntity="Organizer", inversedBy="listings", fetch = "EAGER")
-     */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\Organizer::class, inversedBy: 'listings', fetch: 'LAZY')]
     private $organizer;
-    /**
-     * @ORM\OneToMany(targetEntity="ListingImage", mappedBy="listing", cascade={"persist", "remove"}, orphanRemoval=true, fetch = "EAGER")
-     */
+    #[ORM\OneToMany(targetEntity: \App\Entity\ListingImage::class, mappedBy: 'listing', cascade: ['persist', 'remove'], orphanRemoval: true, fetch: 'LAZY')]
     private $images;
-    /**
-     * @ORM\OneToMany(targetEntity="ListingFile", mappedBy="listing", cascade={"persist", "remove"}, orphanRemoval=true, fetch = "EAGER")
-     */
+    #[ORM\OneToMany(targetEntity: \App\Entity\ListingFile::class, mappedBy: 'listing', cascade: ['persist', 'remove'], orphanRemoval: true, fetch: 'LAZY')]
     private $files;
     /**
      * @var string
-     *
-     * @ORM\Column(type="string", length=255)
      */
+    #[ORM\Column(type: 'string', length: 255)]
     private $reference;
     /**
      * @var integer
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     private $views;
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=255, nullable=true)
      * @EnglishOnly
      * @Profanity
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $externallink;
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=255, nullable=true)
      * @EnglishOnly
      * @Profanity
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $phonenumber;
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=255, nullable=true)
      * @EnglishOnly
      * @Profanity
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $email;
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=255, nullable=true)
      * @EnglishOnly
      * @Profanity
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $tags;
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      *
-     * @Vich\UploadableField(mapping="listing_image", fileNameProperty="imageName", size="imageSize", mimeType="imageMimeType", originalName="imageOriginalName", dimensions="imageDimensions")
-     * @Assert\File(
-     *     maxSize = "32M",
-     *     mimeTypes = {"image/jpeg", "image/jpg", "image/gif", "image/png"},
-     *     mimeTypesMessage = "The file should be an image"
-     *     )
      * @var File
      */
+    #[Assert\File(maxSize: '32M', mimeTypes: ['image/jpeg', 'image/jpg', 'image/gif', 'image/png'], mimeTypesMessage: 'The file should be an image')]
+    #[Vich\UploadableField(mapping: 'listing_image', fileNameProperty: 'imageName', size: 'imageSize', mimeType: 'imageMimeType', originalName: 'imageOriginalName', dimensions: 'imageDimensions')]
     private $imageFile;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $imageName;
     /**
-     * @ORM\Column(type="integer", nullable=true)
      *
      * @var integer
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $imageSize;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $imageMimeType;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $typeoflisting;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $imageOriginalName;
-    /**
-     * @ORM\Column(type="simple_array", nullable=true)
-     */
+    #[ORM\Column(type: 'simple_array', nullable: true)]
     private $imageDimensions;
     /**
      * @var DateTime $createdAt
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
      */
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(type: 'datetime')]
     private $createdAt;
     /**
      * @var DateTime $updatedAt
-     *
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[Gedmo\Timestampable(on: 'update')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updatedAt;
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $deletedAt;
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $alreadyapplied;
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $published = false;
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $isexternal;
 
     public function __construct()

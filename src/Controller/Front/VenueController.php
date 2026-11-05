@@ -11,10 +11,10 @@ use App\Service\AppServices;
 use App\Service\VenueService;
 use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Controller\BaseController as AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class VenueController extends AbstractController
 {
@@ -26,8 +26,9 @@ class VenueController extends AbstractController
     }
 
     /**
-     * @Route("/venues", name="venues")
+     *
      */
+#[Route("/venues", name: "venues")]
     public function venues(Request $request, PaginatorInterface $paginator, AppServices $services): Response
     {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
@@ -38,15 +39,15 @@ class VenueController extends AbstractController
     }
 
     /**
-     * @Route("/venue/{slug}", name="venue")
+     *
      */
+#[Route("/venue/{slug}", name: "venue")]
     public function venueBySlug($slug, AppServices $services, EventRepository $eventRepository, PaginatorInterface $paginator, Request $request): Response
     {
-        // Retrieve the venue by slug from the service or repository
+
         $venue = $this->venueService->getVenueBySlug($slug);
         $events = $this->getevents($services, $eventRepository, $paginator, $request, $venue);
 
-        // Check if the venue exists
         if (!$venue) {
             throw $this->createNotFoundException('Venue not found');
         }
@@ -79,7 +80,6 @@ class VenueController extends AbstractController
             }
         }
 
-//        $events = $this->sortByMostAttendees($events, $services);
 
         $eventsall = $services->getEventsHomepageIndex([
             "elapsed" => "all",
@@ -88,11 +88,10 @@ class VenueController extends AbstractController
 
 
         $totaltags = [];
-        // Loop through the events and split the 'tags' string into an array
+
         foreach ($eventsall as $event) {
             $tags = explode(',', $event->getTags()); // Assuming 'getTags()' method exists in your entity
 
-            // Add the non-empty tags from this event to the $totaltags array
             foreach ($tags as $tag) {
                 $tag = trim($tag); // Remove leading/trailing spaces
                 if (!empty($tag)) {
@@ -104,13 +103,10 @@ class VenueController extends AbstractController
         $eventsToRemove = [];
         $eventsByCommonValue = [];
 
-        // Step 1: Iterate through each event
         foreach ($events as $event) {
             if ($event->isIsrepeat()) {
                 $commonValue = $event->getCommonvalue();
 
-
-                // Step 2: Create an array of events with the same common value
                 if (!isset($eventsByCommonValue[$commonValue])) {
                     $eventsByCommonValue[$commonValue] = [];
                 }
@@ -118,13 +114,11 @@ class VenueController extends AbstractController
             }
         }
 
-        // Step 3: Filter and sort events for each common value
         foreach ($eventsByCommonValue as $commonValue => $commonEvents) {
             $filteredEvents = array_filter($commonEvents, static function ($event) {
                 return $event->getLatestEndDate() >= new DateTime();
             });
 
-            // Sort the events based on the latest event date
             usort($filteredEvents, static function ($eventA, $eventB) {
                 $latestEventDateA = $eventA->getLatestEndDate();
                 $latestEventDateB = $eventB->getLatestEndDate();
@@ -144,20 +138,17 @@ class VenueController extends AbstractController
                 return $latestEventDateA <=> $latestEventDateB;
             });
 
-            // Step 4: Add the first event to the removal list
             if (count($filteredEvents) > 1) {
                 $eventsToRemove = array_merge($eventsToRemove, array_slice($filteredEvents, 1));
             }
         }
 
-        // Step 5: Remove events with the same common value
         $events = array_filter($events, static function ($event) use ($eventsToRemove) {
             return !in_array($event, $eventsToRemove, true);
         });
 
         $currentDateTime = new DateTime();
 
-// Separate future and past events
         $futureEvents = [];
         $pastEvents = [];
 
@@ -169,19 +160,17 @@ class VenueController extends AbstractController
             }
         }
 
-// Sort each group separately based on your sorting criteria
         usort($futureEvents, function ($a, $b) {
-            // Sorting logic for future events (e.g., most recent first)
+
             return $this->getLatestEventDateEndDate($a) <=> $this->getLatestEventDateEndDate($b);
         });
 
         usort($pastEvents, function ($a, $b) {
-            // Sorting logic for past events (e.g., most recent first)
+
             return $this->getLatestEventDateEndDate($b) <=> $this->getLatestEventDateEndDate($a);
         });
         $sortedEvents = array_merge($futureEvents, $pastEvents);
 
-// Combine the two sorted arrays, placing future events before past events
 
         $eventsMergedPaginated = $paginator->paginate(
             $sortedEvents ?? $events,
@@ -198,7 +187,7 @@ class VenueController extends AbstractController
         $latestEndDate = null;
 
         foreach ($event->getEventdates() as $eventDate) {
-            // Assuming there's a `getEndDate` method on your EventDate entity
+
             $endDate = $eventDate->getEnddate();
 
             if ($latestEndDate === null || $endDate > $latestEndDate) {
@@ -215,6 +204,7 @@ class VenueController extends AbstractController
      * @param Event[] $events
      * @return Event[]
      */
+
     private function sortByMostAttendees(array $events, $services): array
     {
         usort($events, function ($a, $b) use ($services) {

@@ -36,7 +36,7 @@
                     </td>
                     <td class="text-sm">
                         {% if user.lastLogin %}
-                            {{ user.lastLogin|ago }}</small>
+                            {{ user.lastLogin ? user.lastLogin|ago : "Never"|trans }}</small>
                         {% else %}
                             {{ "N/A" }}
                         {% endif %}

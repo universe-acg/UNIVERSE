@@ -15,26 +15,29 @@ use App\Service\AppServices;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
+use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class OrderController extends Controller
 {
 
     /**
-     * @Route("/attendee/my-tickets", name="dashboard_attendee_orders")
-     * @Route("/organizer/manage-orders", name="dashboard_organizer_orders")
-     * @Route("/administrator/manage-orders", name="dashboard_administrator_orders")
+     *
+     *
+     *
      */
+#[Route("/attendee/my-tickets", name: "dashboard_attendee_orders")]
+#[Route("/organizer/manage-orders", name: "dashboard_organizer_orders")]
+#[Route("/administrator/manage-orders", name: "dashboard_administrator_orders")]
     public function orders(Request $request, AppServices $services, PaginatorInterface $paginator, AuthorizationCheckerInterface $authChecker)
     {
-//$upcomingtickets = ($request->query->get('upcomingtickets')) == "" ? 1 : intval($request->query->get('upcomingtickets'));
+
         $reference = ($request->query->get('reference')) == "" ? "all" : $request->query->get('reference');
         $event = ($request->query->get('event')) == "" ? "all" : $request->query->get('event');
         $eventdate = ($request->query->get('eventdate')) == "" ? "all" : $request->query->get('eventdate');
@@ -49,7 +52,6 @@ class OrderController extends Controller
 
         $ordersQuery = $services->getOrders(array("reference" => $reference, "event" => $event, "eventdate" => $eventdate, "eventticket" => $eventticket, "user" => $user, "organizer" => $organizer, "datefrom" => $datefrom, "dateto" => $dateto, "status" => $status))->getQuery();
 
-// Export current orders query results into Excel / Csv
         if (($authChecker->isGranted("ROLE_ADMINISTRATOR") || $authChecker->isGranted("ROLE_ORGANIZER")) && (($request->query->get('excel') == "1" || $request->query->get('csv') == "1" || $request->query->get('pdf') == "1"))) {
             $orders = $ordersQuery->getResult();
             if (!count($orders)) {
@@ -75,7 +77,7 @@ class OrderController extends Controller
                     return $services->redirectToReferer("orders");
                 }
                 $pdfOptions = new Options();
-//$pdfOptions->set('defaultFont', 'Arial');
+
                 $dompdf = new Dompdf($pdfOptions);
                 $html = $this->renderView('Dashboard/Shared/Order/attendees-pdf.html.twig', [
                     'event' => $event,
@@ -98,11 +100,12 @@ class OrderController extends Controller
     }
 
     /**
-     * @Route("/organizer/manage-attendees", name="dashboard_organizer_attendees")
+     *
      */
+#[Route("/organizer/manage-attendees", name: "dashboard_organizer_attendees")]
     public function attendees(OrderRepository $orderRepository, Request $request, AppServices $services, PaginatorInterface $paginator, AuthorizationCheckerInterface $authChecker, EventRepository $eventRepository)
     {
-//$upcomingtickets = ($request->query->get('upcomingtickets')) == "" ? 1 : intval($request->query->get('upcomingtickets'));
+
         $reference = ($request->query->get('reference')) == "" ? "all" : $request->query->get('reference');
         $event = ($request->query->get('event')) == "" ? "all" : $request->query->get('event');
         $eventdate = ($request->query->get('eventdate')) == "" ? "all" : $request->query->get('eventdate');
@@ -131,11 +134,12 @@ class OrderController extends Controller
     }
 
     /**
-     * @Route("/administrator/manage-attendees", name="dashboard_administrator_attendees")
+     *
      */
+#[Route("/administrator/manage-attendees", name: "dashboard_administrator_attendees")]
     public function attendeesAdmin(Request $request, AppServices $services, PaginatorInterface $paginator, AuthorizationCheckerInterface $authChecker, EventRepository $eventRepository)
     {
-//$upcomingtickets = ($request->query->get('upcomingtickets')) == "" ? 1 : intval($request->query->get('upcomingtickets'));
+
         $reference = ($request->query->get('reference')) == "" ? "all" : $request->query->get('reference');
         $event = ($request->query->get('event')) == "" ? "all" : $request->query->get('event');
         $eventdate = ($request->query->get('eventdate')) == "" ? "all" : $request->query->get('eventdate');
@@ -150,7 +154,7 @@ class OrderController extends Controller
         $authChecker->isGranted("ROLE_ATTENDEE") ? $status = "all" : $upcomingtickets = "all";
 
         $ordersQuery = $services->getOrders(array("reference" => $reference, "event" => $event, "eventdate" => $eventdate, "eventticket" => $eventticket, "user" => $user, "organizer" => $organizer, "datefrom" => $datefrom, "dateto" => $dateto, "status" => $status, "paymentgateway" => $paymentgateway))->getQuery();
-// Export current orders query results into Excel / Csv
+
 
         $ordersPagination = $paginator->paginate($ordersQuery, $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
 
@@ -163,8 +167,9 @@ class OrderController extends Controller
     }
 
     /**
-     * @Route("/administrator/manage-attendees-details/{eventslug}", name="dashboard_administrator_attendees_details")
+     *
      */
+#[Route("/administrator/manage-attendees-details/{eventslug}", name: "dashboard_administrator_attendees_details")]
     public function attendeesAdminDetails(AppServices $appServices, $eventslug, OrderRepository $orderRepository, UserRepository $userRepository, EventRepository $eventRepository)
     {
         $users = $appServices->findUsersAttendeedByEventSlug($eventslug);
@@ -180,7 +185,6 @@ class OrderController extends Controller
 
             $allEventDates = array_merge($unattendedDates, $event->getEventdates()->toArray());
 
-            // Define a custom callback function to filter duplicates by id
             $seenIds = [];
             $filteredEventDates = array_filter($allEventDates, static function ($eventDate) use (&$seenIds) {
                 if (isset($seenIds[$eventDate->getId()])) {
@@ -202,8 +206,9 @@ class OrderController extends Controller
 
 
     /**
-     * @Route("/organizer/manage-attendees-details/{eventslug}", name="dashboard_organizer_attendees_details")
+     *
      */
+#[Route("/organizer/manage-attendees-details/{eventslug}", name: "dashboard_organizer_attendees_details")]
     public function attendeesAdminDetailsasOrganizer(AppServices $appServices, $eventslug, OrderRepository $orderRepository, UserRepository $userRepository, EventRepository $eventRepository)
     {
         $users = $appServices->findUsersAttendeedByEventSlug($eventslug);
@@ -220,7 +225,6 @@ class OrderController extends Controller
 
             $allEventDates = array_merge($unattendedDates, $event->getEventdates()->toArray());
 
-            // Define a custom callback function to filter duplicates by id
             $seenIds = [];
             $filteredEventDates = array_filter($allEventDates, static function ($eventDate) use (&$seenIds) {
                 if (isset($seenIds[$eventDate->getId()])) {
@@ -242,8 +246,9 @@ class OrderController extends Controller
 
 
     /**
-     * @Route("/organizer/manage-attendees-details-event-dates/{userid}/{eventid}", name="attendace_details_see_attendeed_event_dates")
+     *
      */
+#[Route("/organizer/manage-attendees-details-event-dates/{userid}/{eventid}", name: "attendace_details_see_attendeed_event_dates")]
     public function attendeesAdminDetailsasOrganizerEventdates($userid, $eventid, AppServices $appServices, OrderRepository $orderRepository, UserRepository $userRepository, EventRepository $eventRepository)
     {
         $event = $eventRepository->find($eventid);
@@ -258,7 +263,6 @@ class OrderController extends Controller
 
         $allEventDates = array_merge($unattendedDates, $event->getEventdates()->toArray());
 
-        // Define a custom callback function to filter duplicates by id
         $seenIds = [];
         $filteredEventDates = array_filter($allEventDates, static function ($eventDate) use (&$seenIds) {
             if (isset($seenIds[$eventDate->getId()])) {
@@ -276,8 +280,9 @@ class OrderController extends Controller
     }
 
     /**
-     * @Route("/administrator/manage-attendees-details-event-dates/{userid}/{eventid}", name="admin_attendace_details_see_attendeed_event_dates")
+     *
      */
+#[Route("/administrator/manage-attendees-details-event-dates/{userid}/{eventid}", name: "admin_attendace_details_see_attendeed_event_dates")]
     public function attendeesAdminDetailsasEventdates($userid, $eventid, AppServices $appServices, OrderRepository $orderRepository, UserRepository $userRepository, EventRepository $eventRepository)
     {
         $event = $eventRepository->find($eventid);
@@ -292,7 +297,6 @@ class OrderController extends Controller
 
         $allEventDates = array_merge($unattendedDates, $event->getEventdates()->toArray());
 
-        // Define a custom callback function to filter duplicates by id
         $seenIds = [];
         $filteredEventDates = array_filter($allEventDates, static function ($eventDate) use (&$seenIds) {
             if (isset($seenIds[$eventDate->getId()])) {
@@ -310,10 +314,13 @@ class OrderController extends Controller
 
 
     /**
-     * @Route("/attendee/my-tickets/{reference}", name="dashboard_attendee_order_details")
-     * @Route("/organizer/recent-orders/{reference}", name="dashboard_organizer_order_details")
-     * @Route("/administrator/manage-orders/{reference}", name="dashboard_administrator_order_details")
+     *
+     *
+     *
      */
+#[Route("/attendee/my-tickets/{reference}", name: "dashboard_attendee_order_details")]
+#[Route("/organizer/recent-orders/{reference}", name: "dashboard_organizer_order_details")]
+#[Route("/administrator/manage-orders/{reference}", name: "dashboard_administrator_order_details")]
     public function details($reference, AppServices $services)
     {
 
@@ -332,8 +339,9 @@ class OrderController extends Controller
     }
 
     /**
-     * @Route("/attendee/manage-orders/{reference}/cancel", name="dashboard_attendee_order_cancel")
+     *
      */
+#[Route("/attendee/manage-orders/{reference}/cancel", name: "dashboard_attendee_order_cancel", methods: ["POST"])]
     public function cancel($reference, Request $request, AppServices $services)
     {
         $order = $services->getOrders(array("reference" => $reference, "status" => "all"))->getQuery()->getOneOrNullResult();
@@ -361,8 +369,9 @@ class OrderController extends Controller
     }
 
     /**
-     * @Route("/administrator/manage-orders/{reference}/cancel", name="dashboard_administrator_order_cancel")
+     *
      */
+#[Route("/administrator/manage-orders/{reference}/cancel", name: "dashboard_administrator_order_cancel", methods: ["POST"])]
     public function cancel_administrator($reference, Request $request, AppServices $services)
     {
 
@@ -391,8 +400,9 @@ class OrderController extends Controller
     }
 
     /**
-     * @Route("/attendee/manage-orders/{reference}/delete", name="dashboard_attendee_order_delete")
+     *
      */
+#[Route("/attendee/manage-orders/{reference}/delete", name: "dashboard_attendee_order_delete", methods: ["POST"])]
     public function delete($reference, Request $request, AppServices $services, OrderElementRepository $orderElementRepository, OrderRepository $orderRepository, EventTicketRepository $eventTicketRepository)
     {
         $order = $services->getOrders(array("reference" => $reference, "status" => "all"))->getQuery()->getOneOrNullResult();
@@ -430,8 +440,9 @@ class OrderController extends Controller
     }
 
     /**
-     * @Route("/administrator/manage-orders/{reference}/delete", name="dashboard_administrator_order_delete")
+     *
      */
+#[Route("/administrator/manage-orders/{reference}/delete", name: "dashboard_administrator_order_delete", methods: ["POST"])]
     public function delete_administrator($reference, Request $request, AppServices $services)
     {
 
@@ -467,8 +478,9 @@ class OrderController extends Controller
 
 
     /**
-     * @Route("/administrator/manage-orders/{reference}/restore", name="dashboard_administrator_order_restore")
+     *
      */
+#[Route("/administrator/manage-orders/{reference}/restore", name: "dashboard_administrator_order_restore", methods: ["POST"])]
     public function restore($reference, AppServices $services)
     {
 
@@ -498,8 +510,9 @@ class OrderController extends Controller
     }
 
     /**
-     * @Route("/print-tickets/{reference}", name="dashboard_tickets_print")
+     *
      */
+#[Route("/print-tickets/{reference}", name: "dashboard_tickets_print")]
     public function printTickets($reference, Request $request, AppServices $services, EventDateRepository $eventDateRepository)
     {
         $order = $services->getOrders(array("reference" => $reference))->getQuery()->getOneOrNullResult();
@@ -517,14 +530,12 @@ class OrderController extends Controller
         $pdfOptions->set('defaultFont', 'Arial');
         $dompdf = new Dompdf($pdfOptions);
 
-        // Generate QR code
-        // route with order id/refernece
+
         $qrCodeData = $order->getId() . "/" . $order->getReference();
         $qrCode = new QrCode($qrCodeData);
         $qrCode->setEncoding(new Encoding('UTF-8'));
-        $qrCode->setErrorCorrectionLevel(new ErrorCorrectionLevelLow());
+        $qrCode->setErrorCorrectionLevel(ErrorCorrectionLevel::Low);
 
-        // Render the QR code as a PNG image
         $renderer = new PngWriter();
         $qrCodeImage = $renderer->write($qrCode);
         $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($qrCodeImage->getString());
@@ -554,9 +565,11 @@ class OrderController extends Controller
     }
 
     /**
-     * @Route("/organizer/recent-orders/{reference}/resend-confirmation-email", name="dashboard_organizer_order_resend_confirmation_email")
-     * @Route("/administrator/manage-orders/{reference}/resend-confirmation-email", name="dashboard_administrator_order_resend_confirmation_email")
+     *
+     *
      */
+#[Route("/organizer/recent-orders/{reference}/resend-confirmation-email", name: "dashboard_organizer_order_resend_confirmation_email")]
+#[Route("/administrator/manage-orders/{reference}/resend-confirmation-email", name: "dashboard_administrator_order_resend_confirmation_email", methods: ["POST"])]
     public function resendConfirmationEmail($reference, Request $request, AppServices $services)
     {
         $order = $services->getOrders(array("reference" => $reference, "status" => "all"))->getQuery()->getOneOrNullResult();
@@ -570,9 +583,11 @@ class OrderController extends Controller
     }
 
     /**
-     * @Route("/administrator/manage-orders/{reference}/validate", name="dashboard_administrator_order_validate")
-     * @Route("/organizer/recent-orders/{reference}/validate", name="dashboard_organizer_order_validate")
+     *
+     *
      */
+#[Route("/administrator/manage-orders/{reference}/validate", name: "dashboard_administrator_order_validate", methods: ["POST"])]
+#[Route("/organizer/recent-orders/{reference}/validate", name: "dashboard_organizer_order_validate", methods: ["POST"])]
     public function validate($reference, AppServices $services)
     {
 

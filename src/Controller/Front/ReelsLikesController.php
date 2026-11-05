@@ -6,7 +6,7 @@
 namespace App\Controller\Front;
 
 use App\Service\ReelLikeService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Controller\BaseController as AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ReelsLikesController extends AbstractController

@@ -7,15 +7,16 @@ namespace App\Controller\Dashboard\Shared;
 
 use App\Form\AccountSettingsType;
 use App\Form\OrganizerAccountSettingsType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class AccountController extends Controller
 {
     /**
-     * @Route("/attendee/account/settings", name="dashboard_attendee_account_settings")
+     *
      */
+#[Route("/attendee/account/settings", name: "dashboard_attendee_account_settings")]
     public function settings(Request $request)
     {
 
@@ -43,8 +44,9 @@ class AccountController extends Controller
     }
 
     /**
-     * @Route("/organizer/account/settings", name="dashboard_organizer_account_settings")
+     *
      */
+#[Route("/organizer/account/settings", name: "dashboard_organizer_account_settings")]
     public function settingsorganizer(Request $request)
     {
 

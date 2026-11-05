@@ -27,7 +27,7 @@
                                     <h3><b>Log in</b></h3>
                                     <br>
                                     {% if error %}
-                                        {% include "Global/message.html.twig" with { message: (error.messageKey(error.messageData, 'security')), type: "danger", icon: "fas fa-exclamation-circle" } %}
+                                        {% include "Global/message.html.twig" with { message: (error.messageKey|trans(error.messageData, 'security')), type: "danger", icon: "fas fa-exclamation-circle" } %}
                                     {% endif %}
                                     <form action="{{ path("fos_user_security_check") }}" method="post">
                                         {% if csrf_token %}

@@ -12,10 +12,10 @@ use App\Service\AthleticBookingService;
 use App\Service\AthleticService;
 use App\Service\FacilityService;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Controller\BaseController as AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class AthleticBookingController extends AbstractController
 {
@@ -27,36 +27,37 @@ class AthleticBookingController extends AbstractController
     }
 
     /**
-     * @Route("/book/{facilityId}/{scheduleId}/{bookingDate}/{duration}", name="book_reservation")
+     *
      */
+#[Route("/book/{facilityId}/{scheduleId}/{bookingDate}/{duration}", name: "book_reservation", methods: ["POST"])]
     public function bookReservation($facilityId, $scheduleId, $bookingDate, $duration): Response
     {
-        // You can add code here to handle the reservation creation
+
         $user = $this->getUser(); // Get the currently logged-in user
 
         $athleticBooking = $this->bookingService->createAthleticBooking($facilityId, $user->getId(), $scheduleId, $bookingDate, $duration);
 
-        // You can add code to handle success or failure (e.g., render a view, return a JSON response)
-        // For example, return a confirmation message or error message
-        return $this->render('booking/book.html.twig', ['athleticBooking' => $athleticBooking]);
+
+        return $this->redirectToRoute('athletic_details', ['slug'=>$athleticBooking->getFacility()->getSlug()]);
     }
 
     /**
-     * @Route("/cancel/{athleticBookingId}", name="cancel_reservation")
+     *
      */
+#[Route("/cancel/{athleticBookingId}", name: "cancel_reservation", methods: ["POST"])]
     public function cancelReservation($athleticBookingId): Response
     {
-        // You can add code here to handle reservation cancellation
+
         $this->bookingService->cancelAthleticBooking($athleticBookingId);
 
-        // You can add code to handle success or failure (e.g., render a view, return a JSON response)
-        // For example, return a confirmation message or error message
-        return $this->redirectToRoute('my_bookings');
+
+        return $this->redirectToRoute('athletics');
     }
 
     /**
-     * @Route("/athletics/manage-facilities", name="athletics_manage_facilities", methods="GET")
+     *
      */
+#[Route("/athletics/manage-facilities", name: "athletics_manage_facilities", methods: ["GET"])]
     public function manage(Request $request, PaginatorInterface $paginator, AppServices $appServices, AthleticService $athleticService)
     {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
@@ -69,9 +70,11 @@ class AthleticBookingController extends AbstractController
     }
 
     /**
-     * @Route("/athletics/manage-facilities/add", name="athletics_manage_facilities_add", methods="GET|POST")
-     * @Route("/athletics/manage-facilities/{slug}/edit", name="athletics_manage_facilities_edit", methods="GET|POST")
+     *
+     *
      */
+#[Route("/athletics/manage-facilities/add", name: "athletics_manage_facilities_add", methods: ["GET","POST"])]
+#[Route("/athletics/manage-facilities/{slug}/edit", name: "athletics_manage_facilities_edit", methods: ["GET","POST"])]
     public function addedit(Request $request, AppServices $appServices, AthleticService $athleticService, FacilityService $facilityService, $slug = null)
     {
         $em = $this->getDoctrine()->getManager();
@@ -123,6 +126,7 @@ class AthleticBookingController extends AbstractController
      *
      * @param FacilityEntity $athleticfacility
      */
+
     private function handleImageUpload(FacilityEntity $athleticfacility)
     {
         if ($athleticfacility->getMainImageFile()) {
@@ -132,9 +136,11 @@ class AthleticBookingController extends AbstractController
     }
 
     /**
-     * @Route("/athletics/manage-facilities/{slug}/disable", name="athletics_manage_facilities_disable", methods="GET")
-     * @Route("/athletics/manage-facilities/{slug}/delete", name="athletics_manage_facilities_delete", methods="GET")
+     *
+     *
      */
+#[Route("/athletics/manage-facilities/{slug}/disable", name: "athletics_manage_facilities_disable", methods: ["POST"])]
+#[Route("/athletics/manage-facilities/{slug}/delete", name: "athletics_manage_facilities_delete", methods: ["POST"])]
     public function delete(AppServices $appServices, AthleticService $athleticService, $slug)
     {
         $em = $this->getDoctrine()->getManager();
@@ -145,10 +151,9 @@ class AthleticBookingController extends AbstractController
             return $appServices->redirectToReferer('athleticfacility');
         }
 
-//        if ($athleticfacility->getEventDatesCount() > 0) {
-//            $this->addFlash('error', 'The athletic facility can not be deleted because it is linked with one or more events');
-//            return $appServices->redirectToReferer('athletic facility');
-//        }
+
+
+
 
         if ($athleticfacility->getDeletedAt() !== null) {
             $this->addFlash('success', 'The Athletic Facility has been deleted');
@@ -161,8 +166,9 @@ class AthleticBookingController extends AbstractController
     }
 
     /**
-     * @Route("/athletics/manage-facilities/{slug}/restore", name="athletics_manage_facilities_restore", methods="GET")
+     *
      */
+#[Route("/athletics/manage-facilities/{slug}/restore", name: "athletics_manage_facilities_restore", methods: ["POST"])]
     public function restore($slug, Request $request, AppServices $appServices, AthleticService $athleticService)
     {
         $athleticfacility = $athleticService->getAthletics(array('organizer' => "all", 'hidden' => 'all', 'slug' => $slug, "organizerEnabled" => "all"))[0];
@@ -180,9 +186,11 @@ class AthleticBookingController extends AbstractController
     }
 
     /**
-     * @Route("/athletics/manage-facilities/{slug}/show", name="athletics_manage_facilities_show", methods="GET")
-     * @Route("/athletics/manage-facilities/{slug}/hide", name="athletics_manage_facilities_hide", methods="GET")
+     *
+     *
      */
+#[Route("/athletics/manage-facilities/{slug}/show", name: "athletics_manage_facilities_show", methods: ["POST"])]
+#[Route("/athletics/manage-facilities/{slug}/hide", name: "athletics_manage_facilities_hide", methods: ["POST"])]
     public function showhide(AppServices $appServices, AthleticService $athleticService, $slug)
     {
         $athleticfacility = $athleticService->getAthletics(array('hidden' => 'all', 'slug' => $slug))[0];
@@ -205,15 +213,15 @@ class AthleticBookingController extends AbstractController
     }
 
     /**
-     * @Route("/delete/{athleticBookingId}", name="delete_reservation")
+     *
      */
+#[Route("/delete/{athleticBookingId}", name: "delete_reservation", methods: ["POST"])]
     public function deleteReservation($athleticBookingId): Response
     {
-        // You can add code here to handle reservation deletion
+
         $this->bookingService->deleteAthleticBooking($athleticBookingId);
 
-        // You can add code to handle success or failure (e.g., render a view, return a JSON response)
-        // For example, return a confirmation message or error message
-        return $this->redirectToRoute('my_bookings');
+
+        return $this->redirectToRoute('athletics');
     }
 }

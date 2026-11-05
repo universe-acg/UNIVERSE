@@ -11,370 +11,271 @@ use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use FOS\UserBundle\Model\User as BaseUser;
+use App\Model\UserIdentity as BaseUser;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @ORM\Table(name="universe_user")
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
- * @Vich\Uploadable
- */
+#[ORM\Table(name: 'universe_user')]
+#[ORM\Entity(repositoryClass: \App\Repository\UserRepository::class)]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
+#[Vich\Uploadable]
 class User extends BaseUser
 {
 
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
     protected $id;
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: 'float')]
     protected $points;
-    /**
-     * @Gedmo\Slug(fields={"username"}, updatable=true)
-     * @ORM\Column(length=255, unique=true)
-     */
+    #[Gedmo\Slug(fields: ['username'], updatable: true)]
+    #[ORM\Column(length: 255, unique: true)]
     protected $slug;
-    /**
-     * @ORM\Column(length=255)
-     */
+    #[ORM\Column(length: 255)]
     protected $studentid;
-    /**
-     * @ORM\OneToOne(targetEntity="CV", mappedBy="user", cascade={"persist", "remove"})
-     */
+    #[ORM\OneToOne(targetEntity: \App\Entity\CV::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
     private $cv;
 
-    /**
-     * @ORM\OneToOne(targetEntity="DocDocumentDTO", mappedBy="user", cascade={"persist", "remove"})
-     */
+    #[ORM\OneToOne(targetEntity: \App\Entity\DocDocumentDTO::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
     private $doc;
-    /**
-     * @ORM\ManyToMany(targetEntity="Event", mappedBy="volunteers")
-     */
+    #[ORM\ManyToMany(targetEntity: \App\Entity\Event::class, mappedBy: 'volunteers')]
     private $volunteerEvents;
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\AthleticBooking", mappedBy="users")
-     */
+    #[ORM\OneToMany(targetEntity: \App\Entity\AthleticBooking::class, mappedBy: 'user')]
     private $athleticbookings;
     private $getcreatorreminder;
     private $getdailyreminders;
-    /**
-     * @ORM\Column(type="string", length=1000, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 1000, nullable: true)]
     private $bio;
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
      * @EnglishOnly
      * @Profanity
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $website;
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
      * @EnglishOnly
      * @Profanity
-     * @Assert\Length(min = 1)
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(min: 1)]
     private $phone;
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
      * @EnglishOnly
      * @Profanity
-     * @Assert\Length(max = 100)
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 100)]
     private $facebook;
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
      * @EnglishOnly
      * @Profanity
-     * @Assert\Length(max = 100)
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 100)]
     private $tiktok;
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
      * @EnglishOnly
      * @Profanity
-     * @Assert\Length(max = 100)
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 100)]
     private $twitter;
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
      * @EnglishOnly
      * @Profanity
-     * @Assert\Length(max = 100)
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 100)]
     private $instagram;
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
      * @EnglishOnly
      * @Profanity
-     * @Assert\Length(max = 100)
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 100)]
     private $linkedin;
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=255, nullable=true)
      * @EnglishOnly
      * @Profanity
-     * @Assert\Length(max = 255)
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
     private $youtubeurl;
     private $attendedevents;
     private $attendedeventscount;
-    /**
-     * @ORM\Column(type="boolean")
-     * @Assert\NotNull
-     */
+    #[ORM\Column(type: 'boolean')]
+    #[Assert\NotNull]
     private $isbusinessweek;
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $nolevel;
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $sendsms;
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $specialuser;
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
+    private $nolevel = false;
+    #[ORM\Column(type: 'boolean')]
+    private $sendsms = false;
+    #[ORM\Column(type: 'boolean')]
+    private $specialuser = false;
+    #[ORM\Column(type: 'boolean')]
     private $showfavs;
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $showattendeed;
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $showcomments;
-    /**
-     * @ORM\OneToOne(targetEntity="Organizer", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     * @Assert\Valid()
-     */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\OneToOne(targetEntity: \App\Entity\Organizer::class, cascade: ['persist', 'remove'])]
+    #[Assert\Valid]
     private $organizer;
-    /**
-     * @ORM\OneToMany(targetEntity="Order", mappedBy="user", cascade={"remove"})
-     */
+    #[ORM\OneToMany(targetEntity: \App\Entity\Order::class, mappedBy: 'user', cascade: ['remove'])]
     private $orders;
-    /**
-     * @ORM\ManyToMany(targetEntity="Event", mappedBy="addedtofavoritesby", fetch="LAZY", cascade={"remove"})
-     */
+    #[ORM\ManyToMany(targetEntity: \App\Entity\Event::class, mappedBy: 'addedtofavoritesby', fetch: 'LAZY', cascade: ['remove'])]
     private $favorites;
-    /**
-     * @ORM\ManyToMany(targetEntity="Organizer", mappedBy="followedby", fetch="LAZY", cascade={"remove"})
-     */
+    #[ORM\ManyToMany(targetEntity: \App\Entity\Organizer::class, fetch: 'LAZY', cascade: ['remove'])]
     private $following;
-    /**
-     * @ORM\ManyToOne(targetEntity="HomepageHeroSettings", inversedBy="organizers")
-     */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\HomepageHeroSettings::class, inversedBy: 'organizers')]
     private $isorganizeronhomepageslider;
-    /**
-     * @ORM\OneToMany(targetEntity="TicketReservation", mappedBy="user", cascade={"remove"})
-     */
+    #[ORM\OneToMany(targetEntity: \App\Entity\TicketReservation::class, mappedBy: 'user', cascade: ['remove'])]
     private $ticketreservations;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $gender;
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
      * @EnglishOnly
      * @Profanity
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $firstname;
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
      * @EnglishOnly
      * @Profanity
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $lastname;
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
      * @EnglishOnly
      * @Profanity
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $street;
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
      * @EnglishOnly
      * @Profanity
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $street2;
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
      * @EnglishOnly
      * @Profanity
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $city;
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
      * @EnglishOnly
      * @Profanity
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $state;
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
      * @EnglishOnly
      * @Profanity
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $postalcode;
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
+    #[ORM\Column(type: 'date', nullable: true)]
     private $birthdate;
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      *
-     * @Vich\UploadableField(mapping="user_avatar", fileNameProperty="avatarName", size="avatarSize", mimeType="avatarMimeType", originalName="avatarOriginalName", dimensions="avatarDimensions")
-     * @Assert\File(
-     *     maxSize = "2M",
-     *     mimeTypes = {"image/jpeg", "image/jpg", "image/gif", "image/png"},
-     *     mimeTypesMessage = "The file should be an image"
-     *     )
      * @var File
      */
+    #[Assert\File(maxSize: '2M', mimeTypes: ['image/jpeg', 'image/jpg', 'image/gif', 'image/png'], mimeTypesMessage: 'The file should be an image')]
+    #[Vich\UploadableField(mapping: 'user_avatar', fileNameProperty: 'avatarName', size: 'avatarSize', mimeType: 'avatarMimeType', originalName: 'avatarOriginalName', dimensions: 'avatarDimensions')]
     private $avatarFile;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $avatarName;
     /**
-     * @ORM\Column(type="integer", nullable=true)
      *
      * @var integer
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $avatarSize;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $avatarMimeType;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $avatarOriginalName;
-    /**
-     * @ORM\Column(type="simple_array", nullable=true)
-     */
+    #[ORM\Column(type: 'simple_array', nullable: true)]
     private $avatarDimensions;
     /**
      * @var DateTime $createdAt
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
      */
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(type: 'datetime')]
     private $createdAt;
     /**
      * @var DateTime $updatedAt
-     *
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(type="datetime", nullable=true)
      */
+    #[Gedmo\Timestampable(on: 'update')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $updatedAt;
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $deletedAt;
-    /**
-     * @ORM\Column(type="string", unique=true, nullable=true)
-     */
+    #[ORM\Column(type: 'string', unique: true, nullable: true, length: 180)]
     private $apiKey;
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      *
-     * @Vich\UploadableField(mapping="organizer_logo", fileNameProperty="logoName", size="logoSize", mimeType="logoMimeType", originalName="logoOriginalName", dimensions="logoDimensions")
-     * @Assert\File(
-     *     maxSize = "2M",
-     *     mimeTypes = {"image/jpeg", "image/jpg", "image/gif", "image/png"},
-     *     mimeTypesMessage = "The file should be an image"
-     *     )
      * @var File
      */
+    #[Assert\File(maxSize: '2M', mimeTypes: ['image/jpeg', 'image/jpg', 'image/gif', 'image/png'], mimeTypesMessage: 'The file should be an image')]
+    #[Vich\UploadableField(mapping: 'organizer_logo', fileNameProperty: 'logoName', size: 'logoSize', mimeType: 'logoMimeType', originalName: 'logoOriginalName', dimensions: 'logoDimensions')]
     private $logoFile;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $logoName;
     /**
-     * @ORM\Column(type="integer", nullable=true)
      *
      * @var integer
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $logoSize;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $logoMimeType;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $logoOriginalName;
-    /**
-     * @ORM\Column(type="simple_array", nullable=true)
-     */
+    #[ORM\Column(type: 'simple_array', nullable: true)]
     private $logoDimensions;
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      *
-     * @Vich\UploadableField(mapping="organizer_cover", fileNameProperty="coverName", size="coverSize", mimeType="coverMimeType", originalName="coverOriginalName", dimensions="coverDimensions")
-     * @Assert\File(
-     *     maxSize = "2M",
-     *     mimeTypes = {"image/jpeg", "image/jpg", "image/gif", "image/png"},
-     *     mimeTypesMessage = "The file should be an image"
-     *     )
      * @var File
      */
+    #[Assert\File(maxSize: '2M', mimeTypes: ['image/jpeg', 'image/jpg', 'image/gif', 'image/png'], mimeTypesMessage: 'The file should be an image')]
+    #[Vich\UploadableField(mapping: 'organizer_cover', fileNameProperty: 'coverName', size: 'coverSize', mimeType: 'coverMimeType', originalName: 'coverOriginalName', dimensions: 'coverDimensions')]
     private $coverFile;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $coverName;
     /**
-     * @ORM\Column(type="integer", nullable=true)
      *
      * @var integer
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $coverSize;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $coverMimeType;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $coverOriginalName;
-    /**
-     * @ORM\Column(type="simple_array", nullable=true)
-     */
+    #[ORM\Column(type: 'simple_array', nullable: true)]
     private $coverDimensions;
     private $hideattending;
     private $hideleaderboards;
-    /**
-     * @ORM\Column(type="string", length=255, unique=true, nullable=true, name="selectedimage")
-     */
+    #[ORM\Column(type: 'string', length: 255, unique: true, nullable: true, name: 'selectedimage')]
     private $selectedImage;
-    /**
-     * @ORM\ManyToMany(targetEntity="User", inversedBy="following",  fetch = "EAGER", cascade={"persist", "merge"})
-     * @ORM\JoinTable(name="universe_following",
-     *   joinColumns={@ORM\JoinColumn(name="Follow_To", referencedColumnName="id")},
-     *   inverseJoinColumns={@ORM\JoinColumn(name="Follow_From", referencedColumnName="id")}
-     * )
-     */
+    #[ORM\JoinTable(name: 'universe_following')]
+    #[ORM\JoinColumn(name: 'Follow_To', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'Follow_From', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: \App\Entity\User::class, fetch: 'LAZY', cascade: ['persist'])]
     private $followedby;
     private $followerscount;
-    /**
-     * @ORM\Column(type="boolean")
-     * @Assert\NotNull
-     */
+    #[ORM\Column(type: 'boolean')]
+    #[Assert\NotNull]
     private $showfollowers = true;
 
     public function __construct()
@@ -907,18 +808,12 @@ class User extends BaseUser
     /**
      * @return mixed
      */
-    public function getEmail()
-    {
-        return $this->email;
-    }
+
 
     /**
      * @param mixed $email
      */
-    public function setEmail($email): void
-    {
-        $this->email = $email;
-    }
+
 
     /**
      * @return mixed
@@ -1204,7 +1099,7 @@ class User extends BaseUser
         return false;
     }
 
-    public function hasRole($role)
+    public function hasRole($role): bool
     {
         return in_array($role, $this->getRoles(), true);
     }

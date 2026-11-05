@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>{{ event.name }}: {{ "Attendees list" . ({}, "messages", locale) }}</title>
+        <title>{{ event.name }}: {{ "Attendees list"|trans({}, "messages", locale) }}</title>
         <style>
             table, th, td {
                 padding: 10px;
@@ -28,16 +28,16 @@
                 <thead>
                     <tr>
                         <th style="width:5%;"></th>
-                        <th>{{ "Last name" . ({}, "messages", locale) }}</th>
-                        <th>{{ "First name" . ({}, "messages", locale) }}</th>
-                        <th>{{ "Quantity" . ({}, "messages", locale) }}</th>
-                        <th>{{ "Ticket" . ({}, "messages", locale) }}</th>
-                        <th>{{ "Payment" . ({}, "messages", locale) }}</th>
+                        <th>{{ "Last name"|trans({}, "messages", locale) }}</th>
+                        <th>{{ "First name"|trans({}, "messages", locale) }}</th>
+                        <th>{{ "Quantity"|trans({}, "messages", locale) }}</th>
+                        <th>{{ "Ticket"|trans({}, "messages", locale) }}</th>
+                        <th>{{ "Payment"|trans({}, "messages", locale) }}</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for order in orders if order.orderelements %}
-                        {% for orderElement in order.orderelements if (orderElement.eventticket.eventdate == eventDate) %}
+                    {% for order in orders|filter(order => order.orderelements) %}
+                        {% for orderElement in order.orderelements|filter(orderElement => (orderElement.eventticket.eventdate == eventDate)) %}
                             <tr>
                                 <td><input type="radio"/></td>
                                 <td>{{ orderElement.order.user.lastname }}</td>

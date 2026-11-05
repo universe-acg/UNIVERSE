@@ -1,6 +1,6 @@
 {% extends "Global/layout.html.twig" %}
 
-{% set pagetitle = 'Account settifdasafdafngs' %}
+{% set pagetitle = 'Account settings' %}
 
 {% block title %}{{ pagetitle }}{% endblock %}
 
@@ -65,7 +65,7 @@
                                             class="fas fa-user-check fa-fw"></i> {{ "Enabled" }}</span>
                                 <span class="ml-3">{{ "Last login" }}</span> <span
                                         class="badge badge-info ml-3"><i
-                                            class="fas fa-sign-in-alt fa-fw"></i> {{ app.user.lastLogin|ago }}</span>
+                                            class="fas fa-sign-in-alt fa-fw"></i> {{ app.user.lastLogin ? app.user.lastLogin|ago : "Never"|trans }}</span>
                                 <span class="ml-3">{{ "Member since" }}</span> <span
                                         class="badge badge-info ml-3"><i
                                             class="fas fa-user-plus fa-fw"></i> {{ app.user.createdAt|localizeddate('none', 'none', app.request.locale, date_timezone, date_format) }}</span>

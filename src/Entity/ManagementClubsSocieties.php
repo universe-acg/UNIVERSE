@@ -9,44 +9,31 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\ManagementClubsSocietiesRepository")
- * @ORM\Table(name="universe_managementclubssocieties")
- */
+#[ORM\Table(name: 'universe_managementclubssocieties')]
+#[ORM\Entity(repositoryClass: \App\Repository\ManagementClubsSocietiesRepository::class)]
 class ManagementClubsSocieties
 {
     private $isinitiatedbyme;
     /**
      * @var DateTime $createdAt
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
      */
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(type: 'datetime')]
     private $createdAt;
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
-    /**
-     * @ORM\ManyToOne(targetEntity="User", fetch = "EAGER")
-     * @ORM\JoinColumn(name="userid", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'userid', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \App\Entity\User::class, fetch: 'LAZY')]
     private $user;
-    /**
-     * @ORM\ManyToOne(targetEntity="Organizer", fetch = "EAGER")
-     * @ORM\JoinColumn(name="orgid", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'orgid', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \App\Entity\Organizer::class, fetch: 'LAZY')]
     private $org;
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
     private $status;
-    /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="initiatedby", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'initiatedby', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \App\Entity\User::class)]
     private $initiatedBy;
 
     public function __construct()

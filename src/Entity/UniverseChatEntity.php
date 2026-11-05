@@ -7,29 +7,23 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\UniverseChatRepository")
- * @ORM\Table(name="universe_chat")
- */
+#[ORM\Table(name: 'universe_chat')]
+#[ORM\Entity(repositoryClass: \App\Repository\UniverseChatRepository::class)]
 class UniverseChatEntity
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
     private $title;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User", inversedBy="chats")
-     * @ORM\JoinTable(name="chat_user")
-     */
+    #[ORM\JoinTable(name: 'chat_user')]
+    #[ORM\ManyToMany(targetEntity: \App\Entity\User::class)]
     private $participants;
+
+    public function __construct() { $this->participants = new \Doctrine\Common\Collections\ArrayCollection(); }
 
     /**
      * @return mixed

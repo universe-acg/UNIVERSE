@@ -15,7 +15,7 @@ use Vich\UploaderBundle\Form\Type\VichFileType;
 
 class DocDocumentsType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('docfile1', VichFileType::class, [
@@ -55,7 +55,7 @@ class DocDocumentsType extends AbstractType
             ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => DocDocumentDTO::class,

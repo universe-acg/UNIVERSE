@@ -1,0 +1,6 @@
+auth_controllers:
+  resource: '../../src/Controller/AuthController.php'
+  type: attribute
+identity_controllers:
+  resource: '../../src/Controller/IdentityController.php'
+  type: attribute

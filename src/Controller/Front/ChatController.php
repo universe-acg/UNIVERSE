@@ -1,259 +1,51 @@
 <?php
-/*
- * AUTHOR: ALEXANDROS KOURTIS
- */
-
 namespace App\Controller\Front;
-
-use DateTime;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-
-class ChatController extends AbstractController
+use App\Controller\BaseController;
+use App\Entity\{UniverseChatEntity,UniverseChatUser,User};
+use App\Service\ChatService;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\{Request,Response,JsonResponse};
+use Symfony\Component\Routing\Attribute\Route;
+final class ChatController extends BaseController
 {
-    /**
-     * @Route("/chat", name="chat_index")
-     */
-    public function index(): Response
-    {
-        // Display a list of chat rooms
-        $chatRooms = []; // Retrieve chat rooms from your database/repository
-        $contacts = [
-            [
-                'name' => 'John Doe',
-                'datecreated' => new DateTime('2023-11-08'),
-                'unread' => true,
-                'profile_image' => 'https://random.imagecdn.app/500/500',
-                'last_message' => 'This is the last message sent to John Doe, which is a longer message that needs to be trimmed on the front end.',
-                'isorganizer' => true,
-            ],
-            [
-                'name' => 'Alice Smith',
-                'datecreated' => new DateTime('2023-11-07'),
-                'unread' => false,
-                'profile_image' => 'https://random.imagecdn.app/500/500',
-                'last_message' => 'Last message to Alice Smith.',
-                'isorganizer' => false,
-            ],
-            [
-                'name' => 'Bob Johnson',
-                'datecreated' => new DateTime('2023-11-06'),
-                'unread' => true,
-                'profile_image' => 'https://random.imagecdn.app/500/500',
-                'last_message' => 'Last message to Bob Johnson.',
-                'isorganizer' => true,
-            ],
-            [
-                'name' => 'Bob Johnson',
-                'datecreated' => new DateTime('2023-11-06'),
-                'unread' => true,
-                'profile_image' => 'https://random.imagecdn.app/500/500',
-                'last_message' => 'Last message to Bob Johnson.',
-                'isorganizer' => false,
-            ],
-            [
-                'name' => 'Bob Johnson',
-                'datecreated' => new DateTime('2023-11-06'),
-                'unread' => true,
-                'profile_image' => 'https://random.imagecdn.app/500/500',
-                'last_message' => 'Last message to Bob Johnson.',
-                'isorganizer' => true,
-            ],
-            [
-                'name' => 'Bob Johnson',
-                'datecreated' => new DateTime('2023-11-06'),
-                'unread' => true,
-                'profile_image' => 'https://random.imagecdn.app/500/500',
-                'last_message' => 'Last message to Bob Johnson.',
-                'isorganizer' => false,
-            ],
-            [
-                'name' => 'Bob Johnson',
-                'datecreated' => new DateTime('2023-11-06'),
-                'unread' => true,
-                'profile_image' => 'https://random.imagecdn.app/500/500',
-                'last_message' => 'Last message to Bob Johnson.',
-                'isorganizer' => true,
-            ],
-            [
-                'name' => 'Bob Johnson',
-                'datecreated' => new DateTime('2023-11-06'),
-                'unread' => true,
-                'profile_image' => 'https://random.imagecdn.app/500/500',
-                'last_message' => 'Last message to Bob Johnson.',
-                'isorganizer' => false,
-            ],
-            [
-                'name' => 'Bob Johnson',
-                'datecreated' => new DateTime('2023-11-06'),
-                'unread' => true,
-                'profile_image' => 'https://random.imagecdn.app/500/500',
-                'last_message' => 'Last message to Bob Johnson.',
-                'isorganizer' => true,
-            ],
-            [
-                'name' => 'Bob Johnson',
-                'datecreated' => new DateTime('2023-11-06'),
-                'unread' => true,
-                'profile_image' => 'https://random.imagecdn.app/500/500',
-                'last_message' => 'Last message to Bob Johnson.',
-                'isorganizer' => false,
-            ],
-            [
-                'name' => 'Bob Johnson',
-                'datecreated' => new DateTime('2023-11-06'),
-                'unread' => true,
-                'profile_image' => 'https://random.imagecdn.app/500/500',
-                'last_message' => 'Last message to Bob Johnson.',
-                'isorganizer' => false,
-            ],
-            [
-                'name' => 'Bob Johnson',
-                'datecreated' => new DateTime('2023-11-06'),
-                'unread' => true,
-                'profile_image' => 'https://random.imagecdn.app/500/500',
-                'last_message' => 'Last message to Bob Johnson.',
-                'isorganizer' => true,
-            ],
-            [
-                'name' => 'Bob Johnson',
-                'datecreated' => new DateTime('2023-11-06'),
-                'unread' => true,
-                'profile_image' => 'https://random.imagecdn.app/500/500',
-                'last_message' => 'Last message to Bob Johnson.',
-                'isorganizer' => false,
-            ],
-            [
-                'name' => 'Bob Johnson',
-                'datecreated' => new DateTime('2023-11-06'),
-                'unread' => true,
-                'profile_image' => 'https://random.imagecdn.app/500/500',
-                'last_message' => 'Last message to Bob Johnson.',
-                'isorganizer' => false,
-            ],
-        ];
-
-        $msgs = [
-            [
-                'issender' => true,
-                'msg' => [
-                    'contact' => [
-                        'name' => 'John Doe',
-                        'datetimeSent' => new DateTime('2023-11-08 10:15:00'),
-                    ],
-                    'txt' => 'This is a message sent by John Doe.',
-                ],
-            ],
-            [
-                'issender' => false,
-                'msg' => [
-                    'contact' => [
-                        'name' => 'Alice Smith',
-                        'datetimeSent' => new DateTime('2023-11-08 10:30:00'),
-                    ],
-                    'txt' => 'This is a reply from Administrator.',
-                ],
-            ],
-            [
-                'issender' => true,
-                'msg' => [
-                    'contact' => [
-                        'name' => 'John Doe',
-                        'datetimeSent' => new DateTime('2023-11-08 11:15:00'),
-                    ],
-                    'txt' => 'Another message from John Doe.',
-                ],
-            ],
-            [
-                'issender' => false,
-                'msg' => [
-                    'contact' => [
-                        'name' => 'Alice Smith',
-                        'datetimeSent' => new DateTime('2023-11-08 10:30:00'),
-                    ],
-                    'txt' => 'This is a reply from Administrator.',
-                ],
-            ],
-            // Add more messages as needed
-        ];
-
-        return $this->render('Dashboard/Shared/Chat/index.html.twig', [
-            'chatRooms' => $chatRooms,
-            'contacts' => $contacts,
-            'msgs' => $msgs
-        ]);
+    public function __construct(private ChatService $chat,private EntityManagerInterface $em) {}
+    #[Route('/chat',name:'chat_index',methods:['GET'])]
+    public function index(): Response { return $this->display(null); }
+    #[Route('/chat/create',name:'chat_create',methods:['GET','POST'],priority:10)]
+    public function createChat(Request $request): Response {
+        if(!$request->isMethod('POST'))return $this->redirectToRoute('chat_index');$this->checkToken($request);
+        $recipient=$this->em->find(User::class,$request->request->getInt('userId'));
+        if(!$recipient||!$recipient->isEnabled()||$recipient===$this->getUser())throw $this->createNotFoundException();
+        $room=new UniverseChatEntity();$room->setTitle(mb_substr((string)$request->request->get('title','Conversation'),0,255));$room->setParticipants(new \Doctrine\Common\Collections\ArrayCollection());$this->em->persist($room);$this->em->flush();
+        $this->chat->add($room,$this->getUser());$this->chat->add($room,$recipient);
+        return $this->redirectToRoute('chat_show',['chatId'=>$room->getId()]);
     }
-
-    /**
-     * @Route("/chat/{chatId}/remove-user/{userId}", name="chat_remove_user")
-     */
-    public function removeUserFromChat(int $chatId, int $userId): Response
-    {
-        // Remove a user from an existing chat room
-        // Implement user removal from chat logic
-        // Perform user removal and database update
-
-        return $this->redirectToRoute('chat_show', ['chatId' => $chatId]);
-    }
-
-    /**
-     * @Route("/chat/{chatId}/mute-chat", name="chat_mute")
-     */
-    public function muteChat(int $chatId): Response
-    {
-        // Mute a chat room
-        // Implement chat muting logic
-        // Perform chat muting and database update
-
-        return $this->redirectToRoute('chat_show', ['chatId' => $chatId]);
-    }
-
-    /**
-     * @Route("/chat/create", name="chat_create")
-     */
-    public function createChat(Request $request): Response
-    {
-        // Create a new chat room
-        // Implement chat creation logic, including form handling
-        if ($request->isMethod('POST')) {
-            // Handle form submission and database storage
+    #[Route('/chat/{chatId}',name:'chat_show',requirements:['chatId'=>'\d+'],methods:['GET'])]
+    public function showChat(int $chatId): Response { return $this->display($chatId); }
+    private function display(?int $id): Response {
+        $user=$this->getUser();$rooms=$this->chat->rooms($user);$room=$id?$this->chat->room($id,$user):($rooms[0]??null);$contacts=[];
+        foreach($rooms as $item){$other=null;foreach($item->getParticipants() as $member)if($member!==$user){$other=$member;break;}$last=$this->em->getRepository(\App\Entity\UniverseMessage::class)->findOneBy(['universeChat'=>$item],['id'=>'DESC']);
+            $contacts[]=['id'=>$item->getId(),'name'=>$other?->getCrossRoleName() ?: $item->getTitle(),'datecreated'=>$last?->getSentAt(),'unread'=>false,'profile_image'=>$other?->getLogoPlaceholder()??'','last_message'=>$last?->getContent()??'','isorganizer'=>$other?->hasRole('ROLE_ORGANIZER')??false];
         }
-
-        return $this->render('Dashboard/Shared/Chat/create.html.twig');
+        $messages=$room?$this->chat->messages($room):[];
+        return $this->render('Dashboard/Shared/Chat/index.html.twig',['chatRooms'=>$rooms,'contacts'=>$contacts,'msgs'=>array_map(fn($message)=>$this->chat->serialize($message,$user),$messages),'chatRoom'=>$room,'lastMessageId'=>$messages?end($messages)->getId():0,'chatToken'=>$room?$this->chat->token($user,$room->getId()):null]);
     }
-
-    /**
-     * @Route("/chat/{chatId}", name="chat_show")
-     */
-    public function showChat(int $chatId): Response
-    {
-        // Display a specific chat room
-        $chatRoom = []; // Retrieve chat room details from your database/repository
-        $messages = []; // Retrieve messages for the chat room
-
-        return $this->render('Dashboard/Shared/Chat/show.html.twig', [
-            'chatRoom' => $chatRoom,
-            'messages' => $messages,
-        ]);
+    #[Route('/chat/{chatId}/messages',name:'chat_messages',methods:['GET','POST'])]
+    public function messages(int $chatId,Request $request): JsonResponse {
+        $user=$this->getUser();$room=$this->chat->room($chatId,$user);
+        if($request->isMethod('POST')){$this->checkToken($request);try{$message=$this->chat->send($room,$user,(string)$request->request->get('message'));}catch(\InvalidArgumentException $error){return $this->json(['error'=>$error->getMessage()],422);}return $this->json($this->chat->serialize($message,$user),201);}
+        return $this->json(array_map(fn($message)=>$this->chat->serialize($message,$user),$this->chat->messages($room,max(0,$request->query->getInt('after')))));
     }
-
-    /**
-     * @Route("/chat/{chatId}/add-user", name="chat_add_user")
-     */
-    public function addUserToChat(int $chatId, Request $request): Response
-    {
-        // Add a user to an existing chat room
-        // Implement user addition to chat logic, including form handling
-        if ($request->isMethod('POST')) {
-            // Handle form submission and database update
-        }
-
-        return $this->render('Dashboard/Shared/Chat/add_user.html.twig', [
-            'chatId' => $chatId,
-        ]);
+    #[Route('/chat/{chatId}/add-user',name:'chat_add_user',methods:['POST'])]
+    public function addUserToChat(int $chatId,Request $request): Response {
+        $room=$this->chat->room($chatId,$this->getUser());$this->denyAccessUnlessGranted('ROLE_ADMINISTRATOR');$user=$this->em->find(User::class,$request->request->getInt('userId'));if(!$user)throw $this->createNotFoundException();$this->chat->add($room,$user);return $this->redirectToRoute('chat_show',['chatId'=>$chatId]);
     }
-
-    // Add more chat-related actions as needed
+    #[Route('/chat/{chatId}/remove-user/{userId}',name:'chat_remove_user',methods:['POST'])]
+    public function removeUserFromChat(int $chatId,int $userId): Response {
+        $room=$this->chat->room($chatId,$this->getUser());if($userId!==$this->getUser()->getId())$this->denyAccessUnlessGranted('ROLE_ADMINISTRATOR');$user=$this->em->find(User::class,$userId);
+        if($user){$room->getParticipants()->removeElement($user);$member=$this->em->find(UniverseChatUser::class,['universeChat'=>$room,'user'=>$user]);if($member)$this->em->remove($member);$this->em->flush();}return $this->redirectToRoute('chat_index');
+    }
+    #[Route('/chat/{chatId}/mute-chat',name:'chat_mute',methods:['POST'])]
+    public function muteChat(int $chatId,Request $request): Response {$this->chat->room($chatId,$this->getUser());$request->getSession()->set('chat_muted_'.$chatId,true);return $this->redirectToRoute('chat_show',['chatId'=>$chatId]);}
+    private function checkToken(Request $request): void {if(!$this->isCsrfTokenValid('action',$request->request->get('_action_token')??$request->headers->get('X-CSRF-Token')))throw $this->createAccessDeniedException();}
 }

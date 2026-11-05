@@ -1,34 +1,16 @@
 <?php
-/*
- * AUTHOR: ALEXANDROS KOURTIS
- */
-
 namespace App\Controller\Api;
-
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-
-class TwillioController extends AbstractController
+use App\Controller\BaseController;
+use Symfony\Component\HttpFoundation\{Request,JsonResponse};
+use Symfony\Component\Routing\Attribute\Route;
+final class TwillioController extends BaseController
 {
-
-//    private $twilioService;
-//
-//    public function __construct(TwilioService $twilioService)
-//    {
-//        $this->twilioService = $twilioService;
-//    }
-
-    /**
-     * @Route("/twillio", name="twillio_route", methods="GET")
-     */
-    public function sendSMS()
-    {
-        $to = '+306989442438';// Replace with the recipient's phone number
-        $message = 'Hello, this is your SMS message!';
-
-//        $this->twilioService->sendSMS($to, $message);
-
-        return new Response('SMS sent successfully');
+    #[Route('/twillio', name:'twillio_route', methods:['POST'])]
+    public function captureSMS(Request $request, \App\Service\TwilioService $sms): JsonResponse {
+        $this->denyAccessUnlessGranted('ROLE_ADMINISTRATOR');
+        if(!$this->isCsrfTokenValid('action',$request->request->get('_action_token')))throw $this->createAccessDeniedException();
+        $to=trim((string)$request->request->get('to'));$message=trim((string)$request->request->get('message'));
+        if(!preg_match('/^\\+[1-9][0-9]{7,14}$/',$to)||$message===''||mb_strlen($message)>1600)return $this->json(['error'=>'Enter a valid recipient and message.'],422);
+        return $this->json($sms->sendSMS($to,$message));
     }
 }

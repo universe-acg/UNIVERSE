@@ -12,92 +12,74 @@ use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\EventTicketRepository")
- * @ORM\Table(name="universe_event_date_ticket")
- */
+#[ORM\Table(name: 'universe_event_date_ticket')]
+#[ORM\Entity(repositoryClass: \App\Repository\EventTicketRepository::class)]
 class EventTicket
 {
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $alreadybooked = false;
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
-    /**
-     * @ORM\ManyToOne(targetEntity="EventDate", inversedBy="tickets")
-     */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\EventDate::class, inversedBy: 'tickets')]
     private $eventdate;
-    /**
-     * @ORM\OneToMany(targetEntity="OrderElement", mappedBy="eventticket", cascade={"remove", "persist"})
-     */
+    #[ORM\OneToMany(targetEntity: \App\Entity\OrderElement::class, mappedBy: 'eventticket', cascade: ['remove', 'persist'])]
     private $orderelements;
-    /**
-     * @ORM\OneToMany(targetEntity="TicketReservation", mappedBy="eventticket", cascade={"remove"})
-     */
+    #[ORM\OneToMany(targetEntity: \App\Entity\TicketReservation::class, mappedBy: 'eventticket', cascade: ['remove'])]
     private $ticketreservations;
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $active = 1;
     /**
      * @var string
-     * @ORM\Column(type="string", length=255)
      */
+    #[ORM\Column(type: 'string', length: 255)]
     private $reference;
     /**
      * @var string
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(groups={"create", "update"})
-     * @Assert\Length(min = 2, groups={"create", "update"})
      */
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank(groups: ['create', 'update'])]
+    #[Assert\Length(min: 2, groups: ['create', 'update'])]
     private $name;
 
 //         * @Assert\NotNull(groups={"create", "update"})
     /**
      * @var string
-     * @ORM\Column(type="string", length=255, nullable=true)
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $description;
     /**
      * @var int
-     * @ORM\Column(type="integer", nullable=true)
-     * @Assert\NotBlank(groups={"create", "update"})
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
+    #[Assert\NotBlank(groups: ['create', 'update'])]
     private $quantity;
 
     /**
      * @var int
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $ticketsperattendee = 1;
     /**
      * @var DateTime
-     * @ORM\Column(type="datetime", nullable=false)
      */
+    #[ORM\Column(type: 'datetime', nullable: false)]
     private $salesstartdate;
 
 
 //    * @Assert\GreaterThan(propertyPath="salesstartdate", groups={"create", "update"})
     /**
      * @var DateTime
-     * @ORM\Column(type="datetime", nullable=false)
      */
+    #[ORM\Column(type: 'datetime', nullable: false)]
     private $salesenddate;
 
 //    * @Assert\LessThan(propertyPath="quantity", groups={"create", "update"})
-    /**
-     * @ORM\Column(name="position", type="integer")
-     */
+    #[ORM\Column(name: 'position', type: 'integer')]
     private $position;
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $informedcreator;
 
     /**

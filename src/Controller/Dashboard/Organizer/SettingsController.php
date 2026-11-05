@@ -5,7 +5,7 @@
 
 namespace App\Controller\Dashboard\Organizer;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController as Controller;
 
 class SettingsController extends Controller
 {

@@ -2,9 +2,9 @@
     /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-    
+
     namespace App\Repository;
-    
+
     use App\Entity\Event;
     use App\Entity\Organizer;
     use App\Entity\User;
@@ -12,14 +12,14 @@
     use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
     use Doctrine\ORM\QueryBuilder;
     use Doctrine\Persistence\ManagerRegistry;
-    
+
     class EventRepository extends ServiceEntityRepository
     {
         public function __construct(ManagerRegistry $registry)
         {
             parent::__construct($registry, Event::class);
         }
-        
+
         public function findEventsStartingOn(DateTime $date)
         {
             return $this->createQueryBuilder('e')
@@ -31,7 +31,7 @@
                 ->getQuery()
                 ->getResult();
         }
-        
+
         public function getTicketsBookedByUser(User $user)
         {
             return $this->createQueryBuilder('e')
@@ -46,15 +46,16 @@
                 ->getQuery()
                 ->getResult();
         }
-        
-        public function findAttendedEventsByUser(User $user, $category, $startdate)
+
+        public function findAttendedEventsByUser(?User $user, $category, $startdate)
         {
+            if (!$user) return $this->createQueryBuilder('e')->where('1 = 0');
             $startDateFilter = $startdate ?? "all";
-            
+
             // Add date range filtering
             $startDateMin = null;
             $startDateMax = null;
-            
+
             if ($startDateFilter === "today") {
                 $startDateMin = new DateTime('today');
                 $startDateMax = new DateTime('today');
@@ -77,14 +78,14 @@
                 $startDateMin = new DateTime('first day of next month');
                 $startDateMax = new DateTime('last day of next month');
             }
-            
+
             $qb = $this->createQueryBuilder('e');
             $qb->join('e.eventdates', 'ed') // Assuming events are related to event dates
             ->join('ed.tickets', 'et') // Assuming event dates are related to event tickets
             ->join('et.orderelements', 'oe') // Assuming event tickets are related to order elements
             ->join('oe.order', 'o') // Assuming order elements are related to orders
             ->where('o.user = :user');
-            
+
             if ($startDateMin && $startDateMax) {
                 $qb
                     ->andWhere('ed.startdate >= :startDateMin')
@@ -92,16 +93,16 @@
                     ->setParameter('startDateMin', $startDateMin->format('Y-m-d H:i:s'))
                     ->setParameter('startDateMax', $startDateMax->format('Y-m-d H:i:s'));
             }
-            
+
             $qb->andWhere('o.status = :status')
                 ->leftJoin("e.category", "category")
                 ->andWhere("category.slug like :category")->setParameter("category", $category != 'all' ? $category : '%')
                 ->setParameter('user', $user)
                 ->setParameter('status', 2);
-            
+
             return $qb;
         }
-        
+
         public function findBySlug($slug)
         {
             return $this->createQueryBuilder('e')
@@ -110,7 +111,7 @@
                 ->getQuery()
                 ->getOneOrNullResult();
         }
-        
+
         public function findByName($name)
         {
             return $this->createQueryBuilder('e')
@@ -119,11 +120,11 @@
                 ->getQuery()
                 ->getOneOrNullResult();
         }
-        
+
         public function findUpcomingEvents(): array
         {
             $now = new DateTime();
-            
+
             return $this->createQueryBuilder('e')
                 ->leftJoin('e.eventdates', 'eventdates')
                 ->where('e.published = :published')
@@ -135,7 +136,7 @@
                 ->getQuery()
                 ->getResult();
         }
-        
+
         public function findById($id)
         {
             return $this->createQueryBuilder('e')
@@ -144,7 +145,7 @@
                 ->getQuery()
                 ->getOneOrNullResult();
         }
-        
+
         public function getEvents($category, $organizer, $keyword, $slug, $onlineonly, $startdate, $startdatemin, $startdatemax, $published, $elapsed, $organizerEnabled, $addedtofavoritesby, $isOnHomepageSlider, $otherthan, $limit, $count): QueryBuilder
         {
             $qb = $this->createQueryBuilder("e");
@@ -153,9 +154,9 @@
             } else {
                 $qb->select("DISTINCT e");
             }
-            
+
             $qb->leftJoin('e.eventdates', 'eventdates');
-            
+
             if ($category !== "all") {
                 $qb->leftJoin("e.category", "category");
                 $qb->andWhere("category.slug = :category")->setParameter("category", $category);
@@ -212,13 +213,13 @@
                 $qb->andWhere("user.enabled = :userEnabled")->setParameter("userEnabled", $organizerEnabled);
             }
             $qb->orderBy('eventdates.startdate', 'DESC');
-            
+
             if ($limit !== "all") {
                 $qb->setMaxResults($limit);
             }
             return $qb;
         }
-        
+
         public function getEventsCreatedByUserAndSortByUpdatedAt($organizerId)
         {
             $qb = $this->createQueryBuilder("e")
@@ -228,14 +229,14 @@
                 ->orderBy("e.updatedAt", "DESC");
             return $qb->getQuery()->getResult();
         }
-        
+
         public function getAllEvents(): QueryBuilder
         {
             $qb = $this->createQueryBuilder("e");
             $qb->select("DISTINCT e");
             return $qb;
         }
-        
+
         public function findEventsByCommonValue($commonValue)
         {
             return $this->createQueryBuilder('e')
@@ -244,7 +245,7 @@
                 ->getQuery()
                 ->getResult();
         }
-        
+
         public function getEventsByOrganizerId($organizerId): QueryBuilder
         {
             return $this->createQueryBuilder("e")
@@ -252,13 +253,13 @@
                 ->andWhere("organizer.id = :organizerId")
                 ->setParameter("organizerId", $organizerId);
         }
-        
+
         public function findOneBySlug($slug)
         {
             return $this->findOneBy(['slug' => $slug]);
         }
-        
-        
+
+
         public function findTotalEventsAttendedByUser(User $user)
         {
             $qb = $this->createQueryBuilder('e')
@@ -270,10 +271,10 @@
                 ->andWhere('o.status = :status')
                 ->setParameter('user', $user)
                 ->setParameter('status', 2);
-            
+
             return $qb->getQuery()->getResult();
         }
-        
+
         public function findEventsCreatedByOrganizer(Organizer $organizer)
         {
             return $this->createQueryBuilder('e')

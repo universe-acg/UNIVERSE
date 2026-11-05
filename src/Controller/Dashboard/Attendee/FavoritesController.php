@@ -11,54 +11,48 @@ use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use Knp\Component\Pager\PaginatorInterface;
 use MaxMind\Db\Reader\InvalidDatabaseException;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class FavoritesController extends Controller
 {
 
     /**
-     * @Route("/my-favorites", name="favorites")
+     *
      * @throws Exception
      */
+#[Route("/my-favorites", name: "favorites", methods: ["GET"])]
     public function index(Request $request, PaginatorInterface $paginator, EventRepository $eventRepository, AppServices $services)
     {
 
-        // Get the current user
         $user = $this->getUser();
 
-        // Get favorite events as QueryBuilder
         $favoriteEventsQueryBuilder = $services->getEventssql(array("addedtofavoritesby" => $this->getUser()));
 
-        // Get attended events as QueryBuilder
         $attendedEventsQueryBuilder = $eventRepository->findAttendedEventsByUser($user, "all", "all");
 
-        // Convert QueryBuilder results to arrays
         $favoriteEvents = $favoriteEventsQueryBuilder->getQuery()->getResult();
         $attendedEvents = $attendedEventsQueryBuilder->getQuery()->getResult();
 
-// Create an associative array to store favorite events by ID
         $favoriteEventsById = [];
 
-// Populate the array with favorite events indexed by ID
         foreach ($favoriteEvents as $event) {
             $favoriteEventsById[$event->getId()] = $event;
         }
 
-// Merge attended events with favorites, avoiding duplicates
         $mergedEvents = $favoriteEventsById; // Start with favorite events
 
         foreach ($attendedEvents as $event) {
             $eventId = $event->getId();
             if (isset($favoriteEventsById[$eventId])) {
-                // If the event exists in favorites, add it and mark as attended
+
                 $event->setIsAttnded(true);
                 $mergedEvents[$eventId] = $event;
             }
         }
-        // Paginate the merged events
+
         $pagination = $paginator->paginate(
             $mergedEvents, // Merged array of events
             $request->query->getInt('page', 1), // Current page number
@@ -70,13 +64,14 @@ class FavoritesController extends Controller
         ]);
     }
 
-    //, condition="request.isXmlHttpRequest()"
 
     /**
-     * @Route("/my-favorites/add/{slug}", name="favorites_add", condition="request.isXmlHttpRequest()")
-     * @Route("/my-favorites/remove/{slug}", name="favorites_remove", condition="request.isXmlHttpRequest()")
+     *
+     *
      * @throws InvalidDatabaseException|NonUniqueResultException|Exception
      */
+#[Route("/my-favorites/add/{slug}", name: "favorites_add", condition: "request.isXmlHttpRequest()", methods: ["POST"])]
+#[Route("/my-favorites/remove/{slug}", name: "favorites_remove", condition: "request.isXmlHttpRequest()", methods: ["POST"])]
     public function addRemove($slug, AppServices $services)
     {
 

@@ -10,17 +10,18 @@ use App\Form\VenueType;
 use App\Service\AppServices;
 use App\Service\VenueService;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class VenueController extends Controller
 {
 
     /**
-     * @Route("/administrator/manage-venues", name="dashboard_administrator_venue", methods="GET")
+     *
      */
+#[Route("/administrator/manage-venues", name: "dashboard_administrator_venue", methods: ["GET"])]
     public function index(Request $request, PaginatorInterface $paginator, AppServices $appServices, VenueService $venueService, AuthorizationCheckerInterface $authChecker)
     {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
@@ -33,10 +34,12 @@ class VenueController extends Controller
     }
 
     /**
-     * @Route("/administrator/manage-venues/add", name="dashboard_administrator_venue_add", methods="GET|POST")
-     * @Route("/administrator/manage-venues/{slug}/edit", name="dashboard_administrator_venue_edit", methods="GET|POST")
+     *
+     *
      */
-    public function addedit(Request $request, AppServices $appServices, VenueService $venueService, $slug = null, AuthorizationCheckerInterface $authChecker)
+#[Route("/administrator/manage-venues/add", name: "dashboard_administrator_venue_add", methods: ["GET","POST"])]
+#[Route("/administrator/manage-venues/{slug}/edit", name: "dashboard_administrator_venue_edit", methods: ["GET","POST"])]
+    public function addedit(Request $request, AppServices $appServices, VenueService $venueService, AuthorizationCheckerInterface $authChecker, $slug = null)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -62,7 +65,7 @@ class VenueController extends Controller
             if ($form->isValid()) {
 
                 $this->handleImageUpload($venue);
-                // Save event images
+
                 foreach ($venue->getSecondaryImages() as $image) {
                     $venue->addSecondaryImage($image);
                 }
@@ -95,6 +98,7 @@ class VenueController extends Controller
      *
      * @param Venue $venue
      */
+
     private function handleImageUpload(Venue $venue)
     {
         if ($venue->getMainImageFile()) {
@@ -104,9 +108,11 @@ class VenueController extends Controller
     }
 
     /**
-     * @Route("/administrator/manage-venues/{slug}/disable", name="dashboard_administrator_venue_disable", methods="GET")
-     * @Route("/administrator/manage-venues/{slug}/delete", name="dashboard_administrator_venue_delete", methods="GET")
+     *
+     *
      */
+#[Route("/administrator/manage-venues/{slug}/disable", name: "dashboard_administrator_venue_disable", methods: ["POST"])]
+#[Route("/administrator/manage-venues/{slug}/delete", name: "dashboard_administrator_venue_delete", methods: ["POST"])]
     public function delete(AppServices $appServices, VenueService $venueService, $slug, AuthorizationCheckerInterface $authChecker)
     {
         $em = $this->getDoctrine()->getManager();
@@ -116,10 +122,10 @@ class VenueController extends Controller
             $this->addFlash('error', 'The venue can not be found');
             return $appServices->redirectToReferer('venue');
         }
-//        if ($venue->getEventDatesCount() > 0) {
-//            $this->addFlash('error', 'The venue can not be deleted because it is linked with one or more events');
-//            return $appServices->redirectToReferer('venue');
-//        }
+
+
+
+
 
         if ($venue->getDeletedAt() !== null) {
             $this->addFlash('success', 'The venue has been deleted');
@@ -132,8 +138,9 @@ class VenueController extends Controller
     }
 
     /**
-     * @Route("/administrator/manage-venues/{slug}/restore", name="dashboard_administrator_venue_restore", methods="GET")
+     *
      */
+#[Route("/administrator/manage-venues/{slug}/restore", name: "dashboard_administrator_venue_restore", methods: ["POST"])]
     public function restore($slug, Request $request, AppServices $appServices, VenueService $venueService)
     {
         $venue = $venueService->getVenues(array('organizer' => "all", 'hidden' => 'all', 'slug' => $slug, "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();
@@ -151,9 +158,11 @@ class VenueController extends Controller
     }
 
     /**
-     * @Route("/administrator/manage-venues/{slug}/show", name="dashboard_administrator_venue_show", methods="GET")
-     * @Route("/administrator/manage-venues/{slug}/hide", name="dashboard_administrator_venue_hide", methods="GET")
+     *
+     *
      */
+#[Route("/administrator/manage-venues/{slug}/show", name: "dashboard_administrator_venue_show", methods: ["POST"])]
+#[Route("/administrator/manage-venues/{slug}/hide", name: "dashboard_administrator_venue_hide", methods: ["POST"])]
     public function showhide(AppServices $appServices, VenueService $venueService, $slug, AuthorizationCheckerInterface $authChecker)
     {
         $venue = $venueService->getVenues(array('hidden' => 'all', 'slug' => $slug))[0];

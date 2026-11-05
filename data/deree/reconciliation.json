@@ -1,0 +1,12 @@
+{
+  "official_event_pages": 1372,
+  "calendar_rows_matched_to_event_pages": 187,
+  "additional_calendar_sessions": 4,
+  "total_event_records": 1376,
+  "dated_records": 1369,
+  "undated_records": 7,
+  "limits": [
+    "Undated official records remain draft in the app.",
+    "Published event history is bounded by currently accessible official sources. Deleted pages and undocumented organizations cannot be asserted complete."
+  ]
+}

@@ -8,10 +8,10 @@ namespace App\Controller\Front;
 use App\Entity\VolunteerEvent;
 use App\Service\EventService;
 use App\Service\VolunteerService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Controller\BaseController as AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class VolunteerEventController extends AbstractController
 {
@@ -22,21 +22,21 @@ class VolunteerEventController extends AbstractController
         $this->volunteerService = $volunteerService;
     }
 
-    // see details of volunteer
-    // see all vol requests
-    // make request
+
+
 
     /**
-     * @Route("/volunteer-events/{id}/details", name="volunteer_event_see_details")
+     *
      */
+#[Route("/volunteer-events/{id}/details", name: "volunteer_event_see_details")]
     public function seeDetails(VolunteerEvent $volunteerEvent, int $id)
     {
-        // Get the currently logged-in user (you may need to adjust this to your authentication system)
+
         $user = $this->getUser();
 
         if ($user) {
             $vol = $this->volunteerService->findVolunteerEventById($id);
-//            && $vol->getUser() === $user
+
             if ($vol) {
                 return $this->render('Dashboard/Organizer/Volunteer/seedetails.html.twig', [
                     'volunteer' => $vol,
@@ -51,11 +51,12 @@ class VolunteerEventController extends AbstractController
     }
 
     /**
-     * @Route("/volunteer-events/user/{userid}/{eventid}", name="volunteer_event_see_all_for_user")
+     *
      */
+#[Route("/volunteer-events/user/{userid}/{eventid}", name: "volunteer_event_see_all_for_user")]
     public function seeAllForUser(int $userid, int $eventid)
     {
-        // Get the currently logged-in user (you may need to adjust this to your authentication system)
+
         $user = $this->getUser();
 
         if ($user) {
@@ -69,17 +70,19 @@ class VolunteerEventController extends AbstractController
     }
 
     /**
-     * @Route("/volunteer-events/all", name="volunteer_event_see_all")
+     *
      */
+#[Route("/volunteer-events/all", name: "volunteer_event_see_all")]
     public function seeAll()
     {
-        // Implement the logic to see all volunteer events
-        // You can render a view or return data as needed
+
+
     }
 
     /**
-     * @Route("/volunteer-events/{eventid}/request", name="volunteer_event_make_request", methods={"POST"})
+     *
      */
+#[Route("/volunteer-events/{eventid}/request", name: "volunteer_event_make_request", methods: ["POST"])]
     public function makeRequest(Request $request, int $eventid, EventService $eventService)
     {
         $event = $eventService->getEventById($eventid);
@@ -96,9 +99,8 @@ class VolunteerEventController extends AbstractController
             return $this->redirect($referer);
         }
 
-        // Handle the POST request here
         if ($request->isMethod('POST')) {
-            // Create and save the volunteer event with the message
+
             $content = $request->request->get('message'); // Get the message content
             $this->volunteerService->createVolunteerEvent(
                 $this->getUser(),
@@ -113,8 +115,9 @@ class VolunteerEventController extends AbstractController
     }
 
     /**
-     * @Route("/volunteer-events", name="volunteer_event_list")
+     *
      */
+#[Route("/volunteer-events", name: "volunteer_event_list")]
     public function list()
     {
         $volunteerEvents = $this->volunteerService->findAllVolunteerEvents();

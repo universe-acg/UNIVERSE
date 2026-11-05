@@ -29,8 +29,7 @@ class PublishEventMessageHandler implements MessageHandlerInterface
     {
 
         $eventId = $message->getEventId();
-        dump($eventId);
-        die();
+
         $event = $this->eventRepository->find($eventId);
 
         if ($event) {

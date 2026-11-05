@@ -2,15 +2,15 @@
     /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-    
+
     namespace App\Service;
-    
+
     use App\Entity\Listing;
     use App\Entity\ListingSubmission;
     use App\Repository\ListingSubmisionRepository;
     use App\Repository\UserRepository;
     use Doctrine\ORM\EntityManagerInterface;
-    use Swift_Mailer;
+    use App\Service\DemoMailer as Swift_Mailer;
     use Symfony\Component\Cache\Adapter\AdapterInterface;
     use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
     use Symfony\Component\HttpFoundation\RequestStack;
@@ -18,10 +18,10 @@
     use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
     use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
     use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-    use Symfony\Component\Security\Core\Security;
+    use Symfony\Bundle\SecurityBundle\Security;
     use Symfony\Component\Security\Core\User\UserInterface;
-    use Twig_Environment;
-    
+    use Twig\Environment;
+
     class ListingSubmissionService
     {
         private $em;
@@ -37,11 +37,11 @@
         private $urlMatcherInterface;
         private $userRepository;
         private $listingSubmisionRepository;
-        
+
         public function __construct(EntityManagerInterface $entityManager, AuthorizationCheckerInterface $authChecker,
                                     RequestStack           $requestStack, KernelInterface $kernel, AdapterInterface $cache,
                                     UrlGeneratorInterface  $router, Security $security, Swift_Mailer $mailer,
-                                    ParameterBagInterface  $params, Twig_Environment $templating, UrlMatcherInterface $urlMatcherInterface,
+                                    ParameterBagInterface  $params, \Twig\Environment $templating, UrlMatcherInterface $urlMatcherInterface,
                                     UserRepository         $userRepository, ListingSubmisionRepository $listingSubmisionRepository)
         {
             $this->userRepository = $userRepository;
@@ -58,7 +58,7 @@
             $this->urlMatcherInterface = $urlMatcherInterface;
             $this->listingSubmisionRepository = $listingSubmisionRepository;
         }
-        
+
         /**
          * Add a new ListingSubmission for the specified Listing and User.
          *
@@ -73,13 +73,13 @@
             $listingSubmission->setListing($listing);
             $listingSubmission->setUser($user);
             $listingSubmission->setContent($content);
-            
+
             $this->em->persist($listingSubmission);
             $this->em->flush();
-            
+
             return $listingSubmission;
         }
-        
+
         /**
          * Check if a ListingSubmission exists for the specified Listing and User.
          *
@@ -90,10 +90,10 @@
         public function checkIfExists(Listing $listing, UserInterface $user): bool
         {
             $listingSubmission = $this->listingSubmisionRepository->findOneBy(['listing' => $listing, 'user' => $user]);
-            
+
             return ($listingSubmission !== null);
         }
-        
+
         /**
          * Get all ListingSubmissions.
          *
@@ -103,7 +103,7 @@
         {
             return $this->listingSubmisionRepository->findAll();
         }
-        
+
         /**
          * Get ListingSubmissions by User ID.
          *
@@ -114,39 +114,39 @@
         {
             return $this->listingSubmisionRepository->findBy(['user' => $user]);
         }
-        
+
         public function findDeletedSubmissionsByUser($user, EntityManagerInterface $entityManager)
         {
             $qb = $entityManager->createQueryBuilder();
-            
+
             $query = $qb->select('ls')
                 ->from(ListingSubmission::class, 'ls') // Replace with the actual namespace and entity name
                 ->where('ls.user = :user')
                 ->andWhere('ls.deletedAt IS NULL')
                 ->setParameter('user', $user)
                 ->getQuery();
-            
+
             return $query->getResult();
         }
-        
+
         public function findActiveSubmissionsByUser($user, EntityManagerInterface $entityManager)
         {
             $qb = $entityManager->createQueryBuilder();
-            
+
             $query = $qb->select('ls')
                 ->from(ListingSubmission::class, 'ls') // Replace with the actual namespace and entity name
                 ->where('ls.user = :user')
                 ->andWhere('ls.deletedAt is NULL')
                 ->setParameter('user', $user)
                 ->getQuery();
-            
+
             return $query->getResult();
         }
-        
+
         public function findActiveSubmissionsByEventId($eventId, EntityManagerInterface $entityManager)
         {
             $qb = $entityManager->createQueryBuilder();
-            
+
             $query = $qb->select('ls')
                 ->from(ListingSubmission::class, 'ls') // Replace with the actual namespace and entity name
                 ->join('ls.listing', 'l')
@@ -154,24 +154,24 @@
                 ->andWhere('ls.deletedAt is NULL')
                 ->setParameter('eventId', $eventId)
                 ->getQuery();
-            
+
             return $query->getResult();
         }
-        
+
         public function findActiveSubmissionsByListingId($listingId, EntityManagerInterface $entityManager)
         {
             $qb = $entityManager->createQueryBuilder();
-            
+
             $query = $qb->select('ls')
                 ->from(ListingSubmission::class, 'ls') // Replace with the actual namespace and entity name
                 ->where('ls.listing = :listingId') // Assuming 'listing' is the property name in the ListingSubmission entity that refers to the listing
                 ->andWhere('ls.deletedAt is NULL')
                 ->setParameter('listingId', $listingId)
                 ->getQuery();
-            
+
             return $query->getResult();
         }
-        
+
         /**
          *
          */
@@ -179,7 +179,7 @@
         {
             return $this->listingSubmisionRepository->findBy(['slug' => $slug]);
         }
-        
+
         /**
          *
          */
@@ -187,7 +187,7 @@
         {
             return $this->listingSubmisionRepository->findBy(['id' => $id]);
         }
-        
+
         /**
          * Get ListingSubmissions by Listing.
          *
@@ -198,7 +198,7 @@
         {
             return $this->listingSubmisionRepository->findBy(['listing' => $listing]);
         }
-        
+
         /**
          * Delete a ListingSubmission by ID.
          *
@@ -207,13 +207,13 @@
         public function deleteSubmission(int $submissionId): void
         {
             $listingSubmission = $this->listingSubmisionRepository->find($submissionId);
-            
+
             if ($listingSubmission) {
                 $this->em->remove($listingSubmission);
                 $this->em->flush();
             }
         }
-        
+
         /**
          * Remove the ListingSubmission for the specified Listing and User.
          *
@@ -223,13 +223,13 @@
         public function remove(Listing $listing, UserInterface $user): void
         {
             $listingSubmission = $this->listingSubmisionRepository->findOneBy(['listing' => $listing, 'user' => $user]);
-            
+
             if ($listingSubmission) {
                 $this->em->remove($listingSubmission);
                 $this->em->flush();
             }
         }
-        
+
         /**
          * Get ListingSubmission by ID.
          *

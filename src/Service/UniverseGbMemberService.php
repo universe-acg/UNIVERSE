@@ -2,15 +2,15 @@
     /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-    
+
     namespace App\Service;
-    
+
     use App\Entity\UniverseGbMember;
     use App\Repository\ManagementClubsSocietiesRepository;
     use App\Repository\OrganizerRepository;
     use App\Repository\UniverseGbMemberRepository;
     use Doctrine\ORM\EntityManagerInterface;
-    use Swift_Mailer;
+    use App\Service\DemoMailer as Swift_Mailer;
     use Symfony\Component\Cache\Adapter\AdapterInterface;
     use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
     use Symfony\Component\HttpFoundation\RequestStack;
@@ -18,9 +18,9 @@
     use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
     use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
     use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-    use Symfony\Component\Security\Core\Security;
-    use Twig_Environment;
-    
+    use Symfony\Bundle\SecurityBundle\Security;
+    use Twig\Environment;
+
     class UniverseGbMemberService
     {
         private $em;
@@ -34,13 +34,13 @@
         private $params;
         private $templating;
         private $urlMatcherInterface;
-        
+
         private $organizerRepository;
         private $repository;
-        
+
         private $universeGbMemberRepository;
-        
-        public function __construct(UniverseGbMemberRepository $universeGbMemberRepository, ManagementClubsSocietiesRepository $repository, EntityManagerInterface $entityManager, AuthorizationCheckerInterface $authChecker, RequestStack $requestStack, KernelInterface $kernel, AdapterInterface $cache, UrlGeneratorInterface $router, Security $security, Swift_Mailer $mailer, ParameterBagInterface $params, Twig_Environment $templating, UrlMatcherInterface $urlMatcherInterface, OrganizerRepository $organizerRepository)
+
+        public function __construct(UniverseGbMemberRepository $universeGbMemberRepository, ManagementClubsSocietiesRepository $repository, EntityManagerInterface $entityManager, AuthorizationCheckerInterface $authChecker, RequestStack $requestStack, KernelInterface $kernel, AdapterInterface $cache, UrlGeneratorInterface $router, Security $security, Swift_Mailer $mailer, ParameterBagInterface $params, \Twig\Environment $templating, UrlMatcherInterface $urlMatcherInterface, OrganizerRepository $organizerRepository)
         {
             $this->universeGbMemberRepository = $universeGbMemberRepository;
             $this->repository = $repository;
@@ -57,34 +57,34 @@
             $this->urlMatcherInterface = $urlMatcherInterface;
             $this->organizerRepository = $organizerRepository;
         }
-        
+
         public function add(UniverseGbMember $newMember)
         {
             $this->em->persist($newMember);
             $this->em->flush();
         }
-        
-        
+
+
         public function getById($id)
         {
             return $this->universeGbMemberRepository->findBy(['id' => $id]);
         }
-        
+
         public function getByOrg($orgId)
         {
             return $this->universeGbMemberRepository->findBy(['org' => $orgId]);
         }
-        
+
         public function getByAttendee($attendeeId)
         {
             return $this->universeGbMemberRepository->findBy(['attendee' => $attendeeId]);
         }
-        
+
         public function getAll()
         {
             return $this->universeGbMemberRepository->findAll();
         }
-        
+
         public function updateByOrg($orgId, $data)
         {
             $members = $this->universeGbMemberRepository->findBy(['org' => $orgId]);
@@ -96,7 +96,7 @@
             }
             $this->em->flush();
         }
-        
+
         public function deleteById($id)
         {
             $member = $this->universeGbMemberRepository->find($id);
@@ -105,7 +105,7 @@
                 $this->em->flush();
             }
         }
-        
+
         public function updateById($id, $data)
         {
             $member = $this->universeGbMemberRepository->find($id);
@@ -117,5 +117,5 @@
                 $this->em->flush();
             }
         }
-        
+
     }

@@ -12,69 +12,57 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\EventDateRepository")
- * @ORM\Table(name="universe_event_date")
- */
+#[ORM\Table(name: 'universe_event_date')]
+#[ORM\Entity(repositoryClass: \App\Repository\EventDateRepository::class)]
 class EventDate
 {
 
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
     private $attendeedthiseventdate = false;
-    /**
-     * @ORM\ManyToOne(targetEntity="Event", inversedBy="eventdates", cascade={"persist"})
-     */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\Event::class, inversedBy: 'eventdates', cascade: ['persist'])]
     private $event;
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $online = false;
 
     // Add this method to mark an event date as attended by a user
-    /**
-     * @ORM\OneToMany(targetEntity="EventTicket", mappedBy="eventdate", cascade={"persist", "remove"}, fetch = "EAGER", orphanRemoval=true)
-     * @ORM\OrderBy({"position" = "ASC"})
-     * @Assert\Valid(groups={"create", "update"})
-     */
+    #[ORM\OneToMany(targetEntity: \App\Entity\EventTicket::class, mappedBy: 'eventdate', cascade: ['persist', 'remove'], fetch: 'LAZY', orphanRemoval: true)]
+    #[ORM\OrderBy(['position' => 'ASC'])]
+    #[Assert\Valid(groups: ['create', 'update'])]
     private $tickets;
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $active = true;
     /**
      * @var string
-     * @ORM\Column(type="string", length=255)
      */
+    #[ORM\Column(type: 'string', length: 255)]
     private $reference;
     /**
      * @var string
-     * @ORM\Column(type="string")
      * @EnglishOnly
      * @Profanity
      */
+    #[ORM\Column(type: 'string', length: 180)]
     private $description;
     /**
      * @var string
-     * @ORM\Column(type="string", length=255)
      */
+    #[ORM\Column(type: 'string', length: 255)]
     private $title;
     /**
      * @var DateTime
-     * @ORM\Column(type="datetime", nullable=true)
-     * @Assert\NotBlank(groups={"create", "update"})
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[Assert\NotBlank(groups: ['create', 'update'])]
     private $startdate;
     /**
      * @var DateTime
-     * @ORM\Column(type="datetime", nullable=true)
-     * @Assert\GreaterThan(propertyPath="startdate", groups={"create", "update"})
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[Assert\GreaterThan(propertyPath: 'startdate', groups: ['create', 'update'])]
     private $enddate;
 
     public function __construct()

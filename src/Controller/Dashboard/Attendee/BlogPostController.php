@@ -9,20 +9,21 @@ use App\Entity\BlogPost;
 use App\Form\BlogPostType;
 use App\Service\AppServices;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class BlogPostController extends Controller
 {
 
     /**
-     * @Route("/manage-blog-posts-attendee", name="blog_post_attendee", methods="GET")
+     *
      */
+#[Route("/manage-blog-posts-attendee", name: "blog_post_attendee", methods: ["GET"])]
     public function index(Request $request, PaginatorInterface $paginator, Security $security)
     {
-        // Get the current user (user object)
+
         $user = $security->getUser();
         if ($user) {
             $blogposts = $paginator->paginate(
@@ -42,8 +43,9 @@ class BlogPostController extends Controller
 
 
     /**
-     * @Route("/manage-blog-posts/{slug}/delete", name="dashboard_attendee_blog_post_delete", methods="GET")
+     *
      */
+#[Route("/manage-blog-posts/{slug}/delete", name: "blog_post_delete", methods: ["POST"])]
     public function delete(AppServices $services, $slug)
     {
 
@@ -67,9 +69,11 @@ class BlogPostController extends Controller
     }
 
     /**
-     * @Route("/manage-blog-posts/{slug}/show", name="dashboard_attendee_blog_post_show", methods="GET")
-     * @Route("/manage-blog-posts/{slug}/hide", name="dashboard_attendee_blog_post_hide", methods="GET")
+     *
+     *
      */
+#[Route("/manage-blog-posts/{slug}/show", name: "blog_post_show", methods: ["POST"])]
+#[Route("/manage-blog-posts/{slug}/hide", name: "blog_post_hide", methods: ["POST"])]
     public function showhide(AppServices $services, $slug)
     {
 
@@ -93,9 +97,11 @@ class BlogPostController extends Controller
 
 
     /**
-     * @Route("/manage-blog-posts/add", name="blog_post_add", methods="GET|POST")
-     * @Route("/manage-blog-posts/{slug}/edit", name="blog_post_edit", methods="GET|POST")
+     *
+     *
      */
+#[Route("/manage-blog-posts/add", name: "blog_post_add", methods: ["GET","POST"])]
+#[Route("/manage-blog-posts/{slug}/edit", name: "blog_post_edit", methods: ["GET","POST"])]
     public function addedit(Request $request, AppServices $services, $slug = null)
     {
         $em = $this->getDoctrine()->getManager();

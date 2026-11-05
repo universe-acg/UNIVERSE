@@ -12,10 +12,10 @@ use App\Service\AthleticBookingService;
 use App\Service\AthleticService;
 use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Controller\BaseController as AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class AthleticsController extends AbstractController
 {
@@ -28,8 +28,9 @@ class AthleticsController extends AbstractController
     }
 
     /**
-     * @Route("/athletics", name="athletics")
+     *
      */
+#[Route("/athletics", name: "athletics")]
     public function index(Request $request, PaginatorInterface $paginator, AppServices $services, AthleticService $athleticService): Response
     {
         $athleticfacilities = $paginator->paginate($athleticService->getAthletics([]), $request->query->getInt('page', 1), 25);
@@ -39,14 +40,16 @@ class AthleticsController extends AbstractController
     }
 
     /**
-     * @Route("/athleticfacility/{slug}", name="athletic_details")
+     *
      */
+#[Route("/athleticfacility/{slug}", name: "athletic_details")]
     public function athleticBySlug($slug, AppServices $services, AthleticService $athleticService, PaginatorInterface $paginator, Request $request, AthleticBookingService $athleticBookingService): Response
     {
 
         $em = $this->getDoctrine()->getManager();
         $facility = $this->athleticService->getAthleticBySlug($slug);
 
+        if (!$facility) throw $this->createNotFoundException('Athletic facility not found');
         $monthlySchedules = $facility->getMonthlySchedule();
 
         $data = [];
@@ -55,7 +58,6 @@ class AthleticsController extends AbstractController
             $startDate = $monthlySchedule->getStartDate();
             $endDate = $monthlySchedule->getEndDate();
 
-            // Calculate the list of days between startDate and endDate
             $currentDate = clone $startDate;
             while ($currentDate <= $endDate) {
                 $dayData = [
@@ -64,15 +66,13 @@ class AthleticsController extends AbstractController
                     'durations' => [],
                 ];
 
-                // For each day, calculate the list of durations and start times
                 foreach ($monthlySchedule->getOperatingHours() as $operatingHour) {
                     $startTime = $operatingHour->getStartTime();
                     $endTime = $operatingHour->getEndTime();
                     $duration = $facility->getDuration(); // You might want to adjust this based on your business logic
 
-                    // Check if the operating hour is for the current day
                     if ($currentDate->format('l') == $operatingHour->getDayOfWeek()) {
-                        // Calculate the list of start times in 5-minute intervals
+
                         $startTimes = [];
                         $currentTime = clone $startTime;
 
@@ -80,7 +80,6 @@ class AthleticsController extends AbstractController
                             $endDateTime = clone $currentTime;
                             $endDateTime->modify('+' . $duration . ' minutes');
 
-                            // Check if adding the duration doesn't go past the endTime
                             if ($endDateTime <= $endTime) {
                                 $startTimes[] = $currentTime->format('H:i');
                             }
@@ -88,7 +87,6 @@ class AthleticsController extends AbstractController
                             $currentTime->modify('+5 minutes');
                         }
 
-                        // Add the duration data only for the specific day
                         $dayData['durations'][] = [
                             'durationInLetters' => $duration . ' minutes',
                             'duration' => $duration,
@@ -97,7 +95,6 @@ class AthleticsController extends AbstractController
                     }
                 }
 
-                // Only add the dayData if there are durations
                 if (!empty($dayData['durations'])) {
                     $data[] = $dayData;
                 }
@@ -105,21 +102,19 @@ class AthleticsController extends AbstractController
                 $currentDate->modify('+1 day');
             }
         }
-        // Check if the venue exists
+
         if (!$facility) {
             throw $this->createNotFoundException('Athletic facility not found');
         }
-        $reservations = $athleticBookingService->getAthleticBookingById($facility->getId());
+        $reservations = $athleticBookingService->getAthleticBookingByFacility($facility);
 
         $currentDateTime = new DateTime();
 
         foreach ($reservations as $reservation) {
             $bookingDate = $reservation->getBookingDate();
 
-            // Compare booking date with current date and time
             $isPast = $bookingDate < $currentDateTime;
 
-            // Set the $isPast property in your Reservation entity
             $reservation->setIsPast($isPast);
         }
 
@@ -127,7 +122,6 @@ class AthleticsController extends AbstractController
             $dateA = $a->getBookingDate();
             $dateB = $b->getBookingDate();
 
-            // Compare dates for sorting
             if ($dateA > $dateB) {
                 return -1; // $a comes before $b
             } elseif ($dateA < $dateB) {
@@ -137,7 +131,6 @@ class AthleticsController extends AbstractController
             }
         });
 
-// Now $reservations is sorted by booking date
 
         $newathlteicbooking = new AthleticBooking();
         $form = $this->createForm(AthleticBookingType::class, $newathlteicbooking);
@@ -157,8 +150,8 @@ class AthleticsController extends AbstractController
 
                 $formattedDate = new DateTime($bookingDate->format('Y-m-d H:i:s'));
                 $newathlteicbooking->setBookingDate($formattedDate);
-                $em->persist($newathlteicbooking);
-                $em->flush();
+                try { $athleticBookingService->reserve($newathlteicbooking); }
+                catch (\InvalidArgumentException $error) { $this->addFlash('error',$error->getMessage()); return $this->redirectToRoute('athletic_details',['slug'=>$slug]); }
 
                 if (!$slug) {
                     $this->addFlash('success', 'The athletic facility has been successfully created');
@@ -172,16 +165,14 @@ class AthleticsController extends AbstractController
             $this->addFlash('error', 'The form contains invalid data');
         }
 
-        // Assuming getSecondaryImages and getImagePath return arrays of image paths
         $secondaryImages = $facility->getSecondaryImages()->toArray();
         $imagePath = [$facility->getImagePath()];
 
-        // Extract only the getImagePath from each element in $secondaryImages
         $secondaryImagePaths = [];
         foreach ($secondaryImages as $secondaryImage) {
             $secondaryImagePaths[] = $secondaryImage->getImagePath();
         }
-// Merge the two arrays into one
+
         $allImagePaths = array_merge($secondaryImagePaths, $imagePath);
 
         return $this->render('Front/Athletics/facility_details.html.twig', [

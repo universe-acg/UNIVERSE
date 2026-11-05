@@ -2,13 +2,13 @@
     /*
  * AUTHOR: ALEXANDROS KOURTIS
  */
-    
+
     namespace App\Service;
-    
+
     use App\Entity\Organizer;
     use App\Repository\OrganizerRepository;
     use Doctrine\ORM\EntityManagerInterface;
-    use Swift_Mailer;
+    use App\Service\DemoMailer as Swift_Mailer;
     use Symfony\Component\Cache\Adapter\AdapterInterface;
     use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
     use Symfony\Component\HttpFoundation\RequestStack;
@@ -16,9 +16,9 @@
     use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
     use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
     use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-    use Symfony\Component\Security\Core\Security;
-    use Twig_Environment;
-    
+    use Symfony\Bundle\SecurityBundle\Security;
+    use Twig\Environment;
+
     class OrganizerService
     {
         private $em;
@@ -32,12 +32,12 @@
         private $params;
         private $templating;
         private $urlMatcherInterface;
-        
+
         private $organizerRepository;
-        
+
         private $managementClubsSocietiesService;
-        
-        public function __construct(EntityManagerInterface $entityManager, AuthorizationCheckerInterface $authChecker, RequestStack $requestStack, KernelInterface $kernel, AdapterInterface $cache, UrlGeneratorInterface $router, Security $security, Swift_Mailer $mailer, ParameterBagInterface $params, Twig_Environment $templating, UrlMatcherInterface $urlMatcherInterface, OrganizerRepository $organizerRepository, ManagementClubsSocietiesService $managementClubsSocietiesService)
+
+        public function __construct(EntityManagerInterface $entityManager, AuthorizationCheckerInterface $authChecker, RequestStack $requestStack, KernelInterface $kernel, AdapterInterface $cache, UrlGeneratorInterface $router, Security $security, Swift_Mailer $mailer, ParameterBagInterface $params, \Twig\Environment $templating, UrlMatcherInterface $urlMatcherInterface, OrganizerRepository $organizerRepository, ManagementClubsSocietiesService $managementClubsSocietiesService)
         {
             $this->managementClubsSocietiesService = $managementClubsSocietiesService;
             $this->organizerRepository = $organizerRepository;
@@ -53,12 +53,12 @@
             $this->templating = $templating;
             $this->urlMatcherInterface = $urlMatcherInterface;
         }
-        
+
         public function hasMember($userid): bool
         {
             return $this->organizerRepository->getById($id);
         }
-        
+
         public function getOrganizerById($id): ?Organizer
         {
             return $this->organizerRepository->getById($id);

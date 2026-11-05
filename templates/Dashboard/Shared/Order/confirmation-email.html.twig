@@ -237,7 +237,7 @@
                                         <td class="content-block"
                                             style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;"
                                             valign="top">
-                                            &mdash; {{ 'Best regards, the %website_name% team'({'%website_name%': services.getSetting("website_name")}) }}
+                                            &mdash; {{ 'Best regards, the %website_name% team'|trans({'%website_name%': services.getSetting("website_name")}) }}
                                         </td>
                                     </tr>
                                 </table>

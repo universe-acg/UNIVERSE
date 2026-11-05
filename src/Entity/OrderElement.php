@@ -10,50 +10,36 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\OrderElementRepository")
- * @ORM\Table(name="universe_order_element")
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
- */
+#[ORM\Table(name: 'universe_order_element')]
+#[ORM\Entity(repositoryClass: \App\Repository\OrderElementRepository::class)]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
 class OrderElement
 {
 
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Order", inversedBy="orderelements")
-     */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\Order::class, inversedBy: 'orderelements')]
     private $order;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="EventTicket", inversedBy="orderelements", cascade={"persist"})
-     */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\EventTicket::class, inversedBy: 'orderelements', cascade: ['persist'])]
     private $eventticket;
 
-    /**
-     * @ORM\OneToMany(targetEntity="OrderTicket", mappedBy="orderelement", cascade={"persist", "remove"})
-     */
+    #[ORM\OneToMany(targetEntity: \App\Entity\OrderTicket::class, mappedBy: 'orderelement', cascade: ['persist', 'remove'])]
     private $tickets;
 
-    /**
-     * @ORM\OneToMany(targetEntity="TicketReservation", mappedBy="orderelement", cascade={"persist", "remove"}, fetch = "EAGER")
-     */
+    #[ORM\OneToMany(targetEntity: \App\Entity\TicketReservation::class, mappedBy: 'orderelement', cascade: ['persist', 'remove'], fetch: 'LAZY')]
     private $ticketsReservations;
 
     /**
      * @var int
-     * @ORM\Column(type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $quantity;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $deletedAt;
 
     public function __construct()

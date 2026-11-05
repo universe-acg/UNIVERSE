@@ -10,16 +10,17 @@ use App\Form\AmenityType;
 use App\Service\AmenityService;
 use App\Service\AppServices;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController as Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class AmenityController extends Controller
 {
 
     /**
-     * @Route("/manage-amenities", name="amenity", methods="GET")
+     *
      */
+#[Route("/manage-amenities", name: "amenity", methods: ["GET"])]
     public function index(Request $request, PaginatorInterface $paginator, AppServices $services, AmenityService $amenityService)
     {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
@@ -32,9 +33,11 @@ class AmenityController extends Controller
     }
 
     /**
-     * @Route("/manage-amenities/add", name="amenity_add", methods="GET|POST")
-     * @Route("/manage-amenities/{slug}/edit", name="amenity_edit", methods="GET|POST")
+     *
+     *
      */
+#[Route("/manage-amenities/add", name: "amenity_add", methods: ["GET","POST"])]
+#[Route("/manage-amenities/{slug}/edit", name: "amenity_edit", methods: ["GET","POST"])]
     public function addedit(Request $request, AppServices $services, AmenityService $amenityService, $slug = null)
     {
         $em = $this->getDoctrine()->getManager();
@@ -73,9 +76,11 @@ class AmenityController extends Controller
     }
 
     /**
-     * @Route("/manage-amenities/{slug}/disable", name="amenity_disable", methods="GET")
-     * @Route("/manage-amenities/{slug}/delete", name="amenity_delete", methods="GET")
+     *
+     *
      */
+#[Route("/manage-amenities/{slug}/disable", name: "amenity_disable", methods: ["POST"])]
+#[Route("/manage-amenities/{slug}/delete", name: "amenity_delete", methods: ["POST"])]
     public function delete(AppServices $services, AmenityService $amenityService, $slug)
     {
 
@@ -88,11 +93,11 @@ class AmenityController extends Controller
             $this->addFlash('error', 'The amenity can not be deleted because it is linked with one or more venues');
             return $services->redirectToReferer('amenity');
         }
-//        if ($amenity->getDeletedAt() !== null) {
-//            $this->addFlash('error', 'The amenity has been deleted');
-//        } else {
+
+
+
         $this->addFlash('notice', 'The amenity has been deleted');
-//        }
+
         $em = $this->getDoctrine()->getManager();
         $amenity->setHidden(true);
         $em->persist($amenity);
@@ -103,8 +108,9 @@ class AmenityController extends Controller
     }
 
     /**
-     * @Route("/manage-amenities/{slug}/restore", name="amenity_restore", methods="GET")
+     *
      */
+#[Route("/manage-amenities/{slug}/restore", name: "amenity_restore", methods: ["POST"])]
     public function restore($slug, Request $request, AppServices $services, AmenityService $amenityService)
     {
 
@@ -123,9 +129,11 @@ class AmenityController extends Controller
     }
 
     /**
-     * @Route("/manage-amenities/{slug}/show", name="amenity_show", methods="GET")
-     * @Route("/manage-amenities/{slug}/hide", name="amenity_hide", methods="GET")
+     *
+     *
      */
+#[Route("/manage-amenities/{slug}/show", name: "amenity_show", methods: ["POST"])]
+#[Route("/manage-amenities/{slug}/hide", name: "amenity_hide", methods: ["POST"])]
     public function showhide(AppServices $services, AmenityService $amenityService, $slug)
     {
 
