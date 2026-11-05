@@ -17,5 +17,76 @@
       "public_path": "/uploads/imgs/default.jpg"
     }
   ],
-  "note": "Legacy external image host is unavailable. Existing project artwork is served locally in the original layouts."
+  "note": "Legacy external image host is unavailable. Restored artwork is retained for existing uses; authentication stock-photo sources are documented separately.",
+  "authentication_stock_photos": [
+    {
+      "provider": "Pexels",
+      "asset_id": 1454360,
+      "asset_url": "https://www.pexels.com/photo/people-wearing-backpacks-1454360/",
+      "creator": "Stanley Morales",
+      "license_type": "Pexels License",
+      "license_url": "https://www.pexels.com/license/",
+      "asset_page_license": "Free",
+      "license_verified_at": "2026-11-05T21:47:29.573419+00:00",
+      "downloaded_at": "2026-11-05T21:47:29.573419+00:00",
+      "source_image_url": "https://images.pexels.com/photos/1454360/pexels-photo-1454360.jpeg",
+      "local_derivative_path": "public/images/auth/sign-in-campus-1454360.webp",
+      "usage": "sign-in",
+      "description": "Students with backpacks walking on a campus path.",
+      "dimensions": [
+        1200,
+        800
+      ],
+      "bytes": 150082,
+      "sha256": "b5acf8d8bf15be64ed0ad29bd774a9ad1a2f4057f2f5e69d414a9f0a49fd6f4b",
+      "decorative": true,
+      "note": "Illustrative stock imagery; people and locations are not represented as named Deree students or the actual campus."
+    },
+    {
+      "provider": "Pexels",
+      "asset_id": 7972481,
+      "asset_url": "https://www.pexels.com/photo/students-with-backpacks-walking-city-street-7972481/",
+      "creator": "George Pak",
+      "license_type": "Pexels License",
+      "license_url": "https://www.pexels.com/license/",
+      "asset_page_license": "Free",
+      "license_verified_at": "2026-11-05T21:47:29.573419+00:00",
+      "downloaded_at": "2026-11-05T21:47:29.573419+00:00",
+      "source_image_url": "https://images.pexels.com/photos/7972481/pexels-photo-7972481.jpeg",
+      "local_derivative_path": "public/images/auth/attendee-campus-7972481.webp",
+      "usage": "attendee-registration",
+      "description": "Two students walking together beneath flowering trees.",
+      "dimensions": [
+        1200,
+        1800
+      ],
+      "bytes": 319634,
+      "sha256": "8b2e2b56d4650a56f41b0a0b7035eaa3b190abf856ab898f9f5632937b9e6585",
+      "decorative": true,
+      "note": "Illustrative stock imagery; people and locations are not represented as named Deree students or the actual campus."
+    },
+    {
+      "provider": "Pexels",
+      "asset_id": 3727512,
+      "asset_url": "https://www.pexels.com/photo/woman-writing-on-whiteboard-3727512/",
+      "creator": "Anna Shvets",
+      "license_type": "Pexels License",
+      "license_url": "https://www.pexels.com/license/",
+      "asset_page_license": "Free",
+      "license_verified_at": "2026-11-05T21:50:35.327716+00:00",
+      "downloaded_at": "2026-11-05T21:50:35.327708+00:00",
+      "source_image_url": "https://images.pexels.com/photos/3727512/pexels-photo-3727512.jpeg",
+      "local_derivative_path": "public/images/auth/creator-whiteboard-3727512.webp",
+      "usage": "creator-registration",
+      "description": "A presenter sharing ideas on a whiteboard with a colleague.",
+      "dimensions": [
+        1200,
+        1800
+      ],
+      "bytes": 87984,
+      "sha256": "4df7fee596ebb8bbce649596da4f74f9471962e045ca6b0de88a8452f896f198",
+      "decorative": true,
+      "note": "Illustrative stock imagery; people and locations are not represented as named Deree students or the actual campus."
+    }
+  ]
 }
