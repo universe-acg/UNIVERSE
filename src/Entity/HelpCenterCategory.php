@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class HelpCenterCategory
 {
 
-    #[Gedmo\Slug(fields: ['name'], updatable: true)]
+    #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[ORM\Column(length: 255, unique: true)]
     protected $slug;
     #[ORM\Column(type: 'string', length: 255)]

@@ -55,7 +55,7 @@
                             </header>
                             <div class="filter-content collapse show" id="collapsePopular">
                                 <div class="card-body">
-                                    {% set populararticles = services.getHelpCenterArticles({"limit": 5, "order": "views", "otherthan": article.slug}).getQuery().getResult() %}
+                                    {% set populararticles = services.getHelpCenterArticles({"limit": 5, "order": "views", "category":article.category.slug, "otherthan": article.slug}).getQuery().getResult() %}
                                     {% for article in populararticles %}
                                         <article class="row align-items-center mb-3">
                                             <div class="col-12">
@@ -80,7 +80,7 @@
                                 <h1 class="title-section">{{ article.title }}</h1>
                             </header>
                             <article>
-                                {{ article.content|raw|nl2br }}
+                                {{ article.content|raw }}
                             </article>
                             {% if article.tags %}
                                 <hr>

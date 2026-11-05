@@ -1203,20 +1203,7 @@
             $order = array_key_exists('order', $criterias) ? $criterias['order'] : "name";
             $sort = array_key_exists('sort', $criterias) ? $criterias['sort'] : "ASC";
 
-            $order = "articlescount";
-
-            $cats = $this->em->getRepository(HelpCenterCategory::class)->getHelpCenterCategories($parent, $hidden, $keyword, $slug, $limit, $order, $sort)->getQuery()->getResult();
-
-            usort($cats, static function ($a, $b) {
-                $categoriesOrder = ['Attendee', 'Creator', 'Account'];
-
-                $indexA = array_search($a->getName(), $categoriesOrder, true);
-                $indexB = array_search($b->getName(), $categoriesOrder, true);
-
-                return $indexA - $indexB;
-            });
-
-            return $cats;
+            return $this->em->getRepository(HelpCenterCategory::class)->getHelpCenterCategories($parent, $hidden, $keyword, $slug, $limit, $order, $sort)->getQuery()->getResult();
         }
 
         public function getAttendeesBookedOfEvent($slug)

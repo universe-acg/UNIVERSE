@@ -41,6 +41,9 @@
                     $qb->andWhere("a.slug = :slug")->setParameter("slug", $slug);
                 }
                 $qb->leftJoin("a.category", "category");
+                if ($hidden !== "all") {
+                    $qb->andWhere("category.hidden = false");
+                }
                 if ($category !== "all") {
                     $qb->andWhere("category.slug = :category")->setParameter("category", $category);
                 }
@@ -50,8 +53,9 @@
                 if ($otherthan !== "all") {
                     $qb->andWhere("a.slug != :otherthan")->setParameter("otherthan", $otherthan);
                 }
-                $qb->orderBy("category.slug", 'ASC'); // Add this line to sort by category slug
-                $qb->addOrderBy("a.title", 'ASC');
+                $field = in_array($order, ['title','createdAt','updatedAt','views'], true) ? $order : 'title';
+                $direction = strtoupper($sort) === 'ASC' ? 'ASC' : 'DESC';
+                $qb->orderBy('a.'.$field, $direction)->addOrderBy('a.id', 'ASC');
             } else {
                 $qb->select("SUBSTRING_INDEX(GROUP_CONCAT(a.tags SEPARATOR ','), ',', 8)");
             }

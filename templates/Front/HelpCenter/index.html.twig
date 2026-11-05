@@ -15,10 +15,10 @@
                         <div class="input-icon">
                             <i class="fa fa-search mt-2"></i>
                             <input name="keyword" class="form-control" placeholder="{{ "Search for answers" }}"
-                                   type="text" value="{{ app.Request.get('keyword') }}">
+                                   type="search" aria-label="Search Help Center" value="{{ app.request.query.get('keyword') }}">
                         </div>
                     </form>
-                    <p>{{ "Organizers & attendees, this support center is intended to quickly reply to your questions, if still don't find answers, please contact us, we will be happy to receive your inquiry." }}</p>
+                    <p>{{ "Find answers about UNIVERSE accounts, campus events, clubs, athletics and student services at Deree." }}</p>
                 </article>
 
             </div>

@@ -51,7 +51,8 @@
                 $qb->orderBy("articlescount", "DESC");
 
             } else {
-                $qb->orderBy($order, $sort);
+                $field=in_array($order,['name','createdAt','updatedAt'],true) ? $order : 'name';
+                $qb->orderBy('c.'.$field,strtoupper($sort)==='DESC'?'DESC':'ASC');
             }
 
             return $qb;

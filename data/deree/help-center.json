@@ -1,0 +1,1183 @@
+{
+  "version": 1,
+  "verified_at": "2026-11-05",
+  "sources": {
+    "student-life": {
+      "title": "ACG Student Life",
+      "url": "https://www.acg.edu/about-acg/student-life/"
+    },
+    "getting-involved": {
+      "title": "ACG Getting Involved",
+      "url": "https://www.acg.edu/current-students/student-services/student-life/getting-involved/"
+    },
+    "organizations": {
+      "title": "ACG Student Organizations",
+      "url": "https://www.acg.edu/current-students/student-services/student-life/getting-involved/student-organizations/"
+    },
+    "student-success": {
+      "title": "ACG Student Success Center",
+      "url": "https://www.acg.edu/current-students/student-services/student-success-center/"
+    },
+    "student-services": {
+      "title": "ACG Student Services",
+      "url": "https://www.acg.edu/current-students/student-services/"
+    },
+    "career-services": {
+      "title": "ACG Career Services",
+      "url": "https://www.acg.edu/current-students/student-services/career-services/"
+    },
+    "career-contact": {
+      "title": "Contact ACG Career Services",
+      "url": "https://www.acg.edu/current-students/student-services/career-services/contact-career-services/"
+    },
+    "athletics": {
+      "title": "ACG Athletic Facilities",
+      "url": "https://www.acg.edu/current-students/athletics/athletic-facilities/"
+    },
+    "teams": {
+      "title": "ACG Intercollegiate Athletics",
+      "url": "https://www.acg.edu/current-students/athletics/intercollegiate-athletics/"
+    },
+    "it": {
+      "title": "ACG IT Services",
+      "url": "https://www.acg.edu/current-students/it-acg/it-services/at-a-glance/"
+    },
+    "wellness": {
+      "title": "Contact the ACG Health & Wellness Center",
+      "url": "https://www.acg.edu/current-students/student-services/acg-health-wellness/contact-the-hw-center/"
+    },
+    "orientation": {
+      "title": "ACG New Student Orientation",
+      "url": "https://www.acg.edu/admissions/undergraduate-admissions/orientation-day/new-student-orientation/"
+    }
+  },
+  "categories": [
+    {
+      "key": "help-category",
+      "slug": "using-the-demo",
+      "name": "Getting started",
+      "icon": "fas fa-compass"
+    },
+    {
+      "key": "help-category-account",
+      "slug": "account-and-privacy",
+      "name": "Accounts and privacy",
+      "icon": "fas fa-user-shield"
+    },
+    {
+      "key": "help-category-events",
+      "slug": "events-and-tickets",
+      "name": "Events and tickets",
+      "icon": "fas fa-ticket-alt"
+    },
+    {
+      "key": "help-category-clubs",
+      "slug": "clubs-societies-and-organizations",
+      "name": "Clubs, societies and organizations",
+      "icon": "fas fa-users"
+    },
+    {
+      "key": "help-category-organizers",
+      "slug": "organizer-tools",
+      "name": "Organizer tools",
+      "icon": "fas fa-calendar-plus"
+    },
+    {
+      "key": "help-category-athletics",
+      "slug": "athletics-and-venues",
+      "name": "Athletics and venues",
+      "icon": "fas fa-running"
+    },
+    {
+      "key": "help-category-careers",
+      "slug": "careers-and-volunteering",
+      "name": "Careers and volunteering",
+      "icon": "fas fa-briefcase"
+    },
+    {
+      "key": "help-category-campus",
+      "slug": "campus-services",
+      "name": "Campus services",
+      "icon": "fas fa-university"
+    },
+    {
+      "key": "help-category-technical",
+      "slug": "technical-help",
+      "name": "Technical help",
+      "icon": "fas fa-life-ring"
+    }
+  ],
+  "articles": [
+    {
+      "key": "help-0",
+      "slug": "demo-help-0",
+      "title": "What is UNIVERSE, and how does the Deree demo work?",
+      "category": "help-category",
+      "content": "<p>UNIVERSE brings together campus events, student groups, venues, athletics and opportunities in one demonstration. Browse <a href=\"/events\">Events</a> and <a href=\"/creators\">Creators</a> to explore the community. It is a separate application from MYACG, Blackboard and the College registration systems.</p><p>The directory includes information researched from official ACG pages. Student profiles, memberships, conversations and example bookings are fictional. Some events are historical records; others are clearly described demo activities. An action in this demo does not reserve a real campus place.</p><p>Start by browsing as a guest, then ask the demo administrator for a student or organizer test account to try the relevant dashboard.</p>",
+      "tags": [
+        "getting started",
+        "demo",
+        "Deree"
+      ],
+      "featured": true,
+      "sources": []
+    },
+    {
+      "key": "help-article-find-an-event",
+      "slug": "find-an-event",
+      "title": "How do I find an event that matches my interests?",
+      "category": "help-category",
+      "content": "<p>Open <a href=\"/events\">Events</a> or use Search for events in the header. Try a specific subject such as sustainability, music, technology or careers. Review the date filters and venue choices to narrow the list.</p><p>Open an event card to read the description, organizer, session dates and venue before choosing an activity. For example, compare a club workshop with a public lecture rather than relying only on the title.</p><p>If you are researching previous campus activities, include past dates in your search. A historical event can remain visible for reference even though its admission window is closed.</p>",
+      "tags": [
+        "search",
+        "events",
+        "interests"
+      ],
+      "featured": true,
+      "sources": []
+    },
+    {
+      "key": "help-article-browse-as-a-guest",
+      "slug": "browse-as-a-guest",
+      "title": "What can I browse without signing in?",
+      "category": "help-category",
+      "content": "<p>Guests can explore <a href=\"/events\">Events</a>, <a href=\"/creators\">Creators</a>, <a href=\"/venues\">Venues</a>, <a href=\"/athletics\">Athletics</a>, <a href=\"/listings\">Listings</a> and <a href=\"/blog\">News</a>. The Help Center and contact FAQ are public too.</p><p>Personal actions, such as opening your dashboard, reading private messages or viewing your tickets, require a signed-in account. A sign-in prompt after selecting a personal action is expected.</p><p>You can review a public event first and sign in when you are ready to continue. If you switch from a guest session to a test account, return to the event rather than assuming a booking was created automatically.</p>",
+      "tags": [
+        "guests",
+        "public pages",
+        "sign in"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-choose-an-account-type",
+      "slug": "choose-an-account-type",
+      "title": "Should I choose an attendee or an organizer account?",
+      "category": "help-category",
+      "content": "<p>An attendee account is intended for exploring activities and trying student-facing features. An organizer account represents a creator and provides tools for managing that creator’s events and opportunities. Administrator accounts manage the whole application.</p><p>Use <a href=\"/signup/attendee\">attendee registration</a> for a student-style test profile, or <a href=\"/signup/organizer\">organizer registration</a> to try creator onboarding. Use fictional information when testing.</p><p>Choosing Organizer in the demo does not appoint you to an actual Deree club or approve you to represent the College. For an existing official group, its real officers and Student Affairs remain the appropriate contacts.</p>",
+      "tags": [
+        "attendee",
+        "organizer",
+        "registration"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-find-sections-in-the-menu",
+      "slug": "find-sections-in-the-menu",
+      "title": "Where are the different campus sections in the menu?",
+      "category": "help-category",
+      "content": "<p>The main navigation includes Events, Creators, Venues, Athletics, Listings and News. Open More for Reels, Live sessions, Leaderboards, the Help Center and contact pages. The footer provides another route to frequently used sections.</p><p>Your account menu contains your dashboard and personal links. Attendees see My Tickets; organizers see Add Event and ticket-scanning access. Links depend on the role of the account currently signed in.</p><p>On a phone, open the navigation button for public sections. To reach the complete dashboard navigation, open your account menu and choose Dashboard menu.</p>",
+      "tags": [
+        "navigation",
+        "header",
+        "mobile",
+        "dashboard"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-explore-your-first-week",
+      "slug": "explore-your-first-week",
+      "title": "What is a useful way to explore the demo during my first week?",
+      "category": "help-category",
+      "content": "<p>Begin with <a href=\"/creators\">Creators</a> and choose two or three groups that match your interests. Compare their descriptions and activities, then open <a href=\"/events\">Events</a> to look for a welcome gathering or workshop.</p><p>Sign in with a student test account to explore the personal dashboard and tickets. Use an organizer account separately if you want to compare the management workflow. Keep notes about which role and page you used when you find a problem.</p><p>For your actual arrival at Deree, use the College’s orientation information. This demo is useful for exploring campus-community ideas, while official orientation arrangements come from ACG.</p><p><strong>Official ACG information:</strong> <a href=\"https://www.acg.edu/admissions/undergraduate-admissions/orientation-day/new-student-orientation/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG New Student Orientation</a>.</p>",
+      "tags": [
+        "orientation",
+        "new students",
+        "first week"
+      ],
+      "featured": false,
+      "sources": [
+        "orientation"
+      ]
+    },
+    {
+      "key": "help-article-platform-and-college-services",
+      "slug": "platform-and-college-services",
+      "title": "Can I use UNIVERSE for course registration or College administration?",
+      "category": "help-category",
+      "content": "<p>UNIVERSE focuses on community activities. Course enrollment, grades, transcripts, tuition matters and official College records are handled through the appropriate ACG services, rather than this demo dashboard.</p><p>If you need an official service, start with the <a href=\"https://www.acg.edu/current-students/student-services/\">ACG Student Services directory</a> and follow the relevant office’s instructions. The Student Success Center is a useful starting point when you are unsure which office to contact.</p><p>A demo event registration, organization membership or profile edit has no effect on your academic record. Keep College login credentials separate from credentials used to test this website.</p><p><strong>Official ACG information:</strong> <a href=\"https://www.acg.edu/current-students/student-services/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG Student Services</a>.</p>",
+      "tags": [
+        "MYACG",
+        "College services",
+        "academic records"
+      ],
+      "featured": false,
+      "sources": [
+        "student-services"
+      ]
+    },
+    {
+      "key": "help-article-understand-campus-dates",
+      "slug": "understand-campus-dates",
+      "title": "How should I read dates, times and past activities?",
+      "category": "help-category",
+      "content": "<p>Check the complete date and time on the event or session page, especially when an event has several sessions. The demo is configured for Europe/Athens. If you add a date to another calendar, verify the displayed time zone before saving it.</p><p>The catalogue contains both historical campus events and fictional demo activities. A past event may be shown as an archive entry and may no longer offer tickets. A future-looking demo activity is still a demonstration rather than an official announcement.</p><p>For a real activity, compare the information with the organizer’s current official notice before making plans.</p>",
+      "tags": [
+        "dates",
+        "time zone",
+        "archive",
+        "Athens"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-3",
+      "slug": "demo-help-3",
+      "title": "Which information is real, and which demo data is fictional?",
+      "category": "help-category-account",
+      "content": "<p>Organization and campus reference information is researched from public ACG sources. The demo also contains fictional students, officers, memberships, event interactions, documents, tickets and applications so that different workflows can be explored.</p><p>Historical event records describe earlier published activities. Future example events and seeded interactions are not evidence of a current official College announcement or a real person’s participation. Read each record’s description and source information where available.</p><p>Use made-up personal details and sample documents when testing. The <a href=\"/page/privacy-policy\">demo privacy information</a> explains the purpose of this environment. Ask the administrator if you need a separate test profile.</p>",
+      "tags": [
+        "privacy",
+        "fictional data",
+        "official information"
+      ],
+      "featured": true,
+      "sources": []
+    },
+    {
+      "key": "help-article-reset-your-password",
+      "slug": "reset-your-password",
+      "title": "How do I reset a forgotten password?",
+      "category": "help-category-account",
+      "content": "<p>Open <a href=\"/signin\">Sign in</a> and choose Forgot your password. Enter the account information requested by the reset form and follow the instructions shown. If you still have access to a signed-in session, the account area also provides a password-change page.</p><p>This demonstration captures outgoing messages instead of delivering real email. A successful reset request therefore does not mean a reset message will arrive in your inbox. Ask the demo administrator to help complete the test or provide a fresh account.</p><p>Do not send your password through the contact form or chat. For a real ACG account, use the College’s official account-support process.</p>",
+      "tags": [
+        "password",
+        "reset",
+        "login"
+      ],
+      "featured": true,
+      "sources": []
+    },
+    {
+      "key": "help-article-change-your-account-details",
+      "slug": "change-your-account-details",
+      "title": "Where can I change my profile and account details?",
+      "category": "help-category-account",
+      "content": "<p>Sign in and open the account menu. Attendees and organizers have account settings appropriate to their role. Password and email settings are also available from the dashboard account section.</p><p>Review a change before saving, then reload the relevant page to confirm the new value appears. An organizer’s public creator details and a user’s sign-in information serve different purposes, so check which form you are editing.</p><p>In the demo, use a fictional email address and profile description. Editing an account here does not update your College email, student ID or MYACG details.</p>",
+      "tags": [
+        "profile",
+        "email",
+        "account settings"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-why-links-differ-by-role",
+      "slug": "why-links-differ-by-role",
+      "title": "Why do different accounts see different links?",
+      "category": "help-category-account",
+      "content": "<p>The application separates attendee, organizer and administrator roles. Attendees receive personal participation tools, organizers receive creator-management tools, and administrators receive site-management tools.</p><p>My Tickets appears for attendees, while Add Event appears for organizers. A missing management link on a student account usually means that the feature belongs to another role. Signing in with an administrator account does not automatically make it a student participant or an organizer.</p><p>If you are testing several roles, use separate browser profiles or sign out fully between accounts. Tell the administrator which role you expected when reporting a missing link.</p>",
+      "tags": [
+        "roles",
+        "permissions",
+        "missing links"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-safe-demo-documents",
+      "slug": "safe-demo-documents",
+      "title": "What should I upload when testing documents or applications?",
+      "category": "help-category-account",
+      "content": "<p>Use a short sample PDF or another permitted test file containing fictional information. A mock CV can include an invented name, an example.test email address and clearly labelled example experience.</p><p>Keep actual identity documents, grades, health details, payment information and private correspondence out of demo uploads. File fields can have different format and size requirements, so follow the instructions shown next to the field.</p><p>After saving, check the document only from the account that uploaded it. If a file cannot be opened, record the page and file type for the administrator rather than uploading additional personal material.</p>",
+      "tags": [
+        "uploads",
+        "CV",
+        "documents",
+        "privacy"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-messages-and-notifications",
+      "slug": "messages-and-notifications",
+      "title": "Where can I read messages and notifications?",
+      "category": "help-category-account",
+      "content": "<p>Open the bell in the header to see recent notifications, or choose All notifications to open the full list. Use Chat from the account menu or dashboard to open the messaging area.</p><p>A notification can link to a related activity. Marking it as read updates its state; it does not register you for an event or accept an organization invitation. Chat conversations and application statuses are separate from notifications.</p><p>When testing, use fictional messages and avoid posting private College information. The demo’s outgoing email and SMS are captured, so use the website itself to inspect available updates.</p>",
+      "tags": [
+        "notifications",
+        "chat",
+        "messages"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-sign-out-on-a-shared-device",
+      "slug": "sign-out-on-a-shared-device",
+      "title": "How do I sign out safely on a shared device?",
+      "category": "help-category-account",
+      "content": "<p>Open your account menu and choose Sign out. Wait for the signed-out page, then confirm the header shows Sign in rather than your account name. Close the browser window if someone else will use the device.</p><p>If you selected Remember me during sign-in, closing a tab alone may leave the account available when the browser is reopened. Use Sign out before switching to another test role.</p><p>For role comparisons, separate browser profiles make it easier to keep attendee and organizer sessions apart. Avoid using a shared demo login for any real College account or service.</p>",
+      "tags": [
+        "sign out",
+        "remember me",
+        "shared devices"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-request-account-help",
+      "slug": "request-account-help",
+      "title": "How do I report an account or privacy problem?",
+      "category": "help-category-account",
+      "content": "<p>Use the <a href=\"/contact\">contact page</a> to describe the affected page, approximate time and account role. Explain what you expected to happen and what happened instead. A cropped screenshot can help if it excludes private information.</p><p>Do not include passwords, session cookies, reset links or full personal documents. For removal or correction of a test profile, identify the demo username and the record that needs attention.</p><p>The demo contact form does not operate as an official College help desk. Questions about actual ACG accounts or student records should go to the appropriate College office.</p>",
+      "tags": [
+        "account help",
+        "privacy",
+        "support"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-2",
+      "slug": "demo-help-2",
+      "title": "How do I register for an event and find my ticket?",
+      "category": "help-category-events",
+      "content": "<p>Open <a href=\"/events\">Events</a>, choose an activity and review its description, venue, session date and available admission options. Sign in with an attendee account when the page asks you to continue.</p><p>Follow the registration or ticket steps shown for that session. Check the final confirmation before leaving the page, then open <a href=\"/dashboard/attendee/my-tickets\">My Tickets</a> to see the result. Saving an event or following its creator is a separate action and does not create a ticket.</p><p>A registration in this environment is a demo transaction. For an actual ACG event, follow the current organizer’s official registration instructions.</p>",
+      "tags": [
+        "register",
+        "tickets",
+        "event booking"
+      ],
+      "featured": true,
+      "sources": []
+    },
+    {
+      "key": "help-article-ticket-or-email-missing",
+      "slug": "ticket-or-email-missing",
+      "title": "Why did I not receive a ticket email?",
+      "category": "help-category-events",
+      "content": "<p>Outgoing messages in this demonstration are captured instead of sent to real inboxes. Check <a href=\"/dashboard/attendee/my-tickets\">My Tickets</a> and the relevant order or registration in the attendee dashboard first.</p><p>Make sure you are signed in with the same account that completed the registration. A different test student will have a different ticket list. Also check whether you reached a confirmation screen; opening an event or starting a booking is not the same as completing it.</p><p>If the ticket is missing, report the event title, session date and demo username to the administrator. Avoid making repeated bookings simply to try to trigger email.</p>",
+      "tags": [
+        "missing ticket",
+        "email",
+        "confirmation"
+      ],
+      "featured": true,
+      "sources": []
+    },
+    {
+      "key": "help-article-closed-or-unavailable-tickets",
+      "slug": "closed-or-unavailable-tickets",
+      "title": "Why are tickets closed or unavailable?",
+      "category": "help-category-events",
+      "content": "<p>An event can remain visible after its session date or admission period has passed. A session may also have limited capacity or no active admission option. Review its dates and the message shown beside the booking area.</p><p>The catalogue includes historical ACG events as well as demo activities. An archive page is useful for learning about a past event and its organizer, but it is not an invitation to register now.</p><p>Try another upcoming demo activity to test the booking flow. If a newly created organizer event unexpectedly has no tickets, ask its creator to review session dates, active status and admission settings.</p>",
+      "tags": [
+        "availability",
+        "sold out",
+        "archive",
+        "admission"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-events-with-multiple-sessions",
+      "slug": "events-with-multiple-sessions",
+      "title": "How do I choose the right session for an event?",
+      "category": "help-category-events",
+      "content": "<p>Some events have more than one date or admission option. Read each session’s date, start time, venue and ticket details before continuing. The event title alone may not distinguish a workshop session from a separate lecture.</p><p>Compare the selected session with your other plans. If you return to the page later, check that the same session remains selected before confirming an action.</p><p>After registering, verify the date on the ticket or dashboard entry. If you chose the wrong session, contact the relevant organizer through the available site options rather than treating a ticket as transferable to every date.</p>",
+      "tags": [
+        "sessions",
+        "event dates",
+        "admission options"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-saved-events-and-following",
+      "slug": "saved-events-and-following",
+      "title": "Does saving an event or following a creator reserve a place?",
+      "category": "help-category-events",
+      "content": "<p>No. Saving an event helps you return to something interesting, and following a creator helps you keep track of that organization’s activity. Neither action completes a registration.</p><p>To participate in a demo activity, open its event page and follow the admission steps for the session you want. Check the confirmation and your ticket list afterwards.</p><p>For example, you might follow a technology society and save several workshops while deciding which one to attend. Only the specific activity you register for should appear as a completed booking or ticket in your account.</p>",
+      "tags": [
+        "favorites",
+        "following",
+        "reservations"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-ticket-changes-and-cancellations",
+      "slug": "ticket-changes-and-cancellations",
+      "title": "How do I handle a changed or cancelled activity?",
+      "category": "help-category-events",
+      "content": "<p>Reopen the event and review the latest description, session date and status. Compare those details with the entry in your dashboard. Organizers may update an activity after you first view it.</p><p>If the dashboard provides an action for the record, read its confirmation before using it. Otherwise contact the creator or demo administrator with the event and registration reference. Do not assume deleting a bookmark cancels a registration.</p><p>The demo does not establish the refund or cancellation policy for an actual College event. Use the real organizer’s published terms for a real booking.</p>",
+      "tags": [
+        "changes",
+        "cancellations",
+        "registrations"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-qr-codes-and-check-in",
+      "slug": "qr-codes-and-check-in",
+      "title": "How are ticket QR codes used at check-in?",
+      "category": "help-category-events",
+      "content": "<p>Where a ticket includes a QR code, keep the relevant ticket available for the organizer’s check-in process. Make sure it belongs to the correct activity and session.</p><p>The Scan tickets menu is intended for organizer testing. It is separate from the attendee’s My Tickets page, and access can depend on the signed-in role. If the browser asks for camera permission, allow it only when you intend to test scanning.</p><p>Use a seeded or newly created demo ticket for this workflow. A code generated in this environment is not a valid admission credential for a real campus event.</p>",
+      "tags": [
+        "QR code",
+        "check in",
+        "scanning"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-event-venues-and-accessibility",
+      "slug": "event-venues-and-accessibility",
+      "title": "Where can I check the venue or ask about accessibility?",
+      "category": "help-category-events",
+      "content": "<p>Read the venue and location details on the event page and compare them with the <a href=\"/venues\">Venues</a> directory. An event may have a campus room, an external venue or additional instructions in its description.</p><p>For an actual visit, ask the organizer about the specific access arrangements you need, such as step-free entry, seating, interpretation or arrival assistance. A venue name by itself does not confirm those arrangements.</p><p>The demo’s venue records help explain how location information is presented. Confirm directions and access details with the real organizer or College service before attending an actual event.</p>",
+      "tags": [
+        "venues",
+        "accessibility",
+        "directions"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-1",
+      "slug": "demo-help-1",
+      "title": "How do I find and join a Deree club or society?",
+      "category": "help-category-clubs",
+      "content": "<p>Browse <a href=\"/creators\">Creators</a> and open a group that matches your interests. Read its description, public links and activity list. Following a creator lets you explore its presence in the demo.</p><p>Where a membership action is available, sign in with an attendee test account and review the request before submitting it. Check the relevant dashboard state afterwards rather than assuming a request is already approved.</p><p>For real participation, ACG directs students to contact the group or follow its official channels, and Activities Fairs offer a way to meet representatives. A membership action here does not replace that process.</p><p><strong>Official ACG information:</strong> <a href=\"https://www.acg.edu/current-students/student-services/student-life/getting-involved/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG Getting Involved</a>.</p>",
+      "tags": [
+        "clubs",
+        "societies",
+        "joining",
+        "membership"
+      ],
+      "featured": true,
+      "sources": [
+        "getting-involved"
+      ]
+    },
+    {
+      "key": "help-article-clubs-societies-and-organizations-differences",
+      "slug": "clubs-societies-and-organizations-differences",
+      "title": "What do clubs, societies and student organizations mean in the directory?",
+      "category": "help-category-clubs",
+      "content": "<p>The Creators directory includes several kinds of campus groups. Use each profile’s category and description to understand the group rather than assuming every creator follows the same structure.</p><p>For example, an interest-based club, an academic society and a student organization may host different kinds of activities. The demo preserves researched group identities while using fictional members and example interactions.</p><p>The official ACG student-life directory is the place to verify a group’s current description and contact details. If you want to know whether a group fits your interests, introduce yourself through its published channels.</p><p><strong>Official ACG information:</strong> <a href=\"https://www.acg.edu/about-acg/student-life/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG Student Life</a>, <a href=\"https://www.acg.edu/current-students/student-services/student-life/getting-involved/student-organizations/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG Student Organizations</a>.</p>",
+      "tags": [
+        "club types",
+        "academic societies",
+        "organizations"
+      ],
+      "featured": false,
+      "sources": [
+        "student-life",
+        "organizations"
+      ]
+    },
+    {
+      "key": "help-article-join-more-than-one-group",
+      "slug": "join-more-than-one-group",
+      "title": "Can I explore or join more than one group?",
+      "category": "help-category-clubs",
+      "content": "<p>You can browse many creator profiles and compare their activities before deciding where to spend time. A useful approach is to look at meeting dates, the type of participation expected and upcoming projects.</p><p>In the demo, following several creators or trying separate membership requests lets you compare the experience. Keep track of the account used for each request and check the resulting status in the relevant dashboard.</p><p>For real membership commitments, ask each group about its current arrangements. Being interested in a group does not automatically make you an officer, voting member or representative of another organization.</p>",
+      "tags": [
+        "multiple groups",
+        "membership",
+        "interests"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-membership-request-status",
+      "slug": "membership-request-status",
+      "title": "Why is my membership request still pending?",
+      "category": "help-category-clubs",
+      "content": "<p>A request and an approved membership are different states. Reopen the relevant group or membership area and read the status shown for your account. Check that you are using the attendee account that submitted it.</p><p>If the workflow requires organizer review, an organizer test account must process the request before the state changes. Submitting the same request repeatedly is unlikely to help you understand the review step.</p><p>When testing, record the group name and the requester’s demo username. For an actual Deree group, contact its current representatives through official channels about membership questions.</p>",
+      "tags": [
+        "pending request",
+        "membership status",
+        "approval"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-contact-group-representatives",
+      "slug": "contact-group-representatives",
+      "title": "How do I contact a club or society?",
+      "category": "help-category-clubs",
+      "content": "<p>Open its creator profile and review the public contact or website information. Use the official link when you need the group’s current real-world contact details. A demo chat conversation is a separate test interaction.</p><p>For a first message, introduce yourself, explain what interests you about the group and ask about its next meeting or joining process. Avoid including private student documents in a general enquiry.</p><p>If you cannot identify the right group contact, Student Affairs can help direct student-life questions. Fictional officers listed in this demonstration should not be treated as the current officers of the actual organization.</p><p><strong>Official ACG information:</strong> <a href=\"https://www.acg.edu/about-acg/student-life/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG Student Life</a>.</p>",
+      "tags": [
+        "group contacts",
+        "Student Affairs",
+        "officers"
+      ],
+      "featured": false,
+      "sources": [
+        "student-life"
+      ]
+    },
+    {
+      "key": "help-article-start-a-new-club",
+      "slug": "start-a-new-club",
+      "title": "How do I propose a new club or student organization?",
+      "category": "help-category-clubs",
+      "content": "<p>A new creator profile in this demonstration lets you explore an onboarding workflow. It does not establish a recognized Deree club or create an official budget.</p><p>For a real proposal, use ACG’s Getting Involved guidance and the linked proposal process. Discuss your idea and intended activities with Student Affairs, then follow the current instructions for recognition and supporting documents.</p><p>Use the demo to draft an example description, activity plan and public profile using fictional information. Keep official proposal submissions and approvals within the College’s published process.</p><p><strong>Official ACG information:</strong> <a href=\"https://www.acg.edu/current-students/student-services/student-life/getting-involved/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG Getting Involved</a>.</p>",
+      "tags": [
+        "new club",
+        "proposal",
+        "recognition"
+      ],
+      "featured": false,
+      "sources": [
+        "getting-involved"
+      ]
+    },
+    {
+      "key": "help-article-group-officers-and-committees",
+      "slug": "group-officers-and-committees",
+      "title": "Who are the officers and committee members shown on a profile?",
+      "category": "help-category-clubs",
+      "content": "<p>Officer and governing-body entries in the seeded demo illustrate how a group’s team can be presented. The example presidents, treasurers and other members are fictional test records.</p><p>Use them to explore profile layout and role-related information. They are not evidence of a real person holding a College appointment or having authority to approve an activity.</p><p>For current real officers, check the organization’s official page or contact Student Affairs. When an organizer updates its team in the demo, review both the role title and the linked test account to keep the example understandable.</p>",
+      "tags": [
+        "officers",
+        "governing body",
+        "committee"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-organization-activity-and-leaderboards",
+      "slug": "organization-activity-and-leaderboards",
+      "title": "What do organization activity and leaderboard points represent?",
+      "category": "help-category-clubs",
+      "content": "<p>The <a href=\"/leaderboards\">Leaderboards</a> section and activity indicators provide another way to explore participation in the application. In this environment they are based on demonstration data.</p><p>A group’s demo points or position should not be interpreted as an official College ranking, accreditation or endorsement. Use the creator description and actual activities to decide what interests you.</p><p>If you are testing a profile update or interaction, note the account and action before comparing its display afterwards. A public leaderboard is not a substitute for the group’s membership or event-management records.</p>",
+      "tags": [
+        "leaderboards",
+        "points",
+        "activity"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-publish-an-event",
+      "slug": "publish-an-event",
+      "title": "How does an organizer create and publish an event?",
+      "category": "help-category-organizers",
+      "content": "<p>Sign in with an organizer test account and choose Add Event or open your event-management dashboard. Enter a clear title and description, choose the relevant category and venue, and review the available session and admission settings.</p><p>Save the record and check its publication state. An event can exist in the management area without being available to the public. Review the public event page after publishing so that you can confirm its dates, creator and admission options.</p><p>Use fictional event details for testing. Publishing in this demo is separate from obtaining permission for a real College activity.</p>",
+      "tags": [
+        "organizer",
+        "publish",
+        "event management"
+      ],
+      "featured": true,
+      "sources": []
+    },
+    {
+      "key": "help-article-organizer-event-checklist",
+      "slug": "organizer-event-checklist",
+      "title": "What should I check before publishing an activity?",
+      "category": "help-category-organizers",
+      "content": "<p>Make the description useful to someone who has never attended your group before. Explain what will happen, who the activity is for, where it takes place and which session date applies.</p><p>Review the venue, time, admission options and any instructions shown to participants. A descriptive title and a suitable image help people distinguish the activity from other events. Open the public preview or event page to check the result.</p><p>For a real activity, complete the College’s applicable venue and event arrangements separately. A saved or published demo record is only part of a website test.</p>",
+      "tags": [
+        "event checklist",
+        "description",
+        "preview"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-manage-event-sessions",
+      "slug": "manage-event-sessions",
+      "title": "Why does a saved event have no available admission?",
+      "category": "help-category-organizers",
+      "content": "<p>Review the event’s sessions and admission options in the organizer dashboard. An event description does not by itself create an active session or an available ticket. Check session dates, active state, capacity and the admission period where those fields are provided.</p><p>Test with a future demo session and a small fictional capacity. After saving, open the event as a guest or attendee to see the experience that participants receive.</p><p>If the organizer view and attendee view differ, record the event title, chosen session and displayed state before reporting it. Avoid repeatedly creating duplicate activities as a workaround.</p>",
+      "tags": [
+        "sessions",
+        "capacity",
+        "ticket configuration"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-edit-your-organizer-events",
+      "slug": "edit-your-organizer-events",
+      "title": "Which events can an organizer manage?",
+      "category": "help-category-organizers",
+      "content": "<p>Use the organizer’s own event-management area to edit activities associated with that creator. Public browsing and management access are different: being able to read another creator’s event does not grant permission to change it.</p><p>Before saving, verify the creator shown on the record and the account name in the header. If you are testing several organizations, use separate sessions so that changes are made under the intended account.</p><p>When a record is unavailable in your dashboard, contact the administrator with its title and expected creator. Do not copy another organization’s credentials or attempt to change an unrelated record through a guessed URL.</p>",
+      "tags": [
+        "ownership",
+        "organizer permissions",
+        "event editing"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-manage-group-memberships",
+      "slug": "manage-group-memberships",
+      "title": "How should an organizer review membership requests?",
+      "category": "help-category-organizers",
+      "content": "<p>Open the membership or group-management section associated with the organizer account. Review each requester and the state of the request before using the available approval or management action.</p><p>A useful demo test is to submit a request from an attendee account, then inspect it from the correct organizer account in a separate browser session. Return to the attendee view to confirm the resulting state.</p><p>The seeded memberships and officers are fictional. Changes here illustrate the application workflow and do not amend a real Deree organization’s membership records.</p>",
+      "tags": [
+        "membership review",
+        "organizer",
+        "approval"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-organizer-news-and-media",
+      "slug": "organizer-news-and-media",
+      "title": "How do organizers use campus news and media?",
+      "category": "help-category-organizers",
+      "content": "<p>News, Reels and Live sessions offer different ways to present community activity. Use a news article for a longer written update, a reel for a short media post, and a live-session record for streaming information.</p><p>Check the management controls available to your role and review the public result after saving. Use your own permitted sample material and clear descriptions so that another tester can understand the purpose of the post.</p><p>Demo media should be labelled as examples. A placeholder live session is not evidence that an actual College broadcast is currently taking place.</p>",
+      "tags": [
+        "news",
+        "reels",
+        "live",
+        "organizer media"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-organizer-check-in-testing",
+      "slug": "organizer-check-in-testing",
+      "title": "How can an organizer test attendee check-in?",
+      "category": "help-category-organizers",
+      "content": "<p>Create or choose a demo event with an available admission option. Complete a registration using an attendee test account and keep the resulting ticket available.</p><p>Return to the organizer account responsible for that activity and use the available ticket or scanning tools. Review any message shown by the application before assuming the ticket has been accepted. Repeat the inspection from the attendee’s dashboard when relevant.</p><p>Use fictional tickets and test accounts only. If a ticket belongs to a different activity or another organization, keep the result as a permissions test rather than trying to override it.</p>",
+      "tags": [
+        "organizer check in",
+        "QR",
+        "ticket testing"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-real-event-approval",
+      "slug": "real-event-approval",
+      "title": "Does a published demo event have College approval?",
+      "category": "help-category-organizers",
+      "content": "<p>Publishing an event here makes an example available inside UNIVERSE. It does not approve a real venue booking, spending request, guest visit or use of College facilities.</p><p>For a real club activity, discuss the proposal and required arrangements with the appropriate College contacts. ACG’s student-life guidance explains how Student Affairs supports groups and their activities.</p><p>You can use a draft demo description to think through the programme and audience. Submit official requests and confirmations through the College’s current process rather than treating a demo dashboard state as authorization.</p><p><strong>Official ACG information:</strong> <a href=\"https://www.acg.edu/about-acg/student-life/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG Student Life</a>.</p>",
+      "tags": [
+        "event approval",
+        "Student Affairs",
+        "real activities"
+      ],
+      "featured": false,
+      "sources": [
+        "student-life"
+      ]
+    },
+    {
+      "key": "help-article-book-an-athletics-demo",
+      "slug": "book-an-athletics-demo",
+      "title": "How do I explore or book an athletics activity in the demo?",
+      "category": "help-category-athletics",
+      "content": "<p>Open <a href=\"/athletics\">Athletics</a> and review the listed facilities and activities. Sign in when you want to try a personal booking action, and read the available date, time and participant requirements before confirming.</p><p>After saving, inspect the relevant dashboard entry to see the booking state. Check that the chosen facility and session match your selection. A calendar entry or a saved favourite alone is not proof of a completed booking.</p><p>This environment uses example availability. For real access and reservations, follow the Office of Athletics & Recreation’s current arrangements.</p><p><strong>Official ACG information:</strong> <a href=\"https://www.acg.edu/current-students/athletics/athletic-facilities/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG Athletic Facilities</a>.</p>",
+      "tags": [
+        "athletics",
+        "booking",
+        "facilities"
+      ],
+      "featured": true,
+      "sources": [
+        "athletics"
+      ]
+    },
+    {
+      "key": "help-article-campus-sports-facilities",
+      "slug": "campus-sports-facilities",
+      "title": "Which campus sports facilities can I learn about?",
+      "category": "help-category-athletics",
+      "content": "<p>The official ACG facilities information describes spaces including a swimming pool, track, tennis courts, indoor sports areas and a fitness center. The demo uses campus facility records to show how activities can be discovered.</p><p>Open a facility or venue to read the information available in the application. Compare its name and purpose with the activity you want to try, since a sports venue and a specific booking slot are different records.</p><p>Use the official facilities page for current access information and schedules. Do not infer real availability from a seeded demo calendar.</p><p><strong>Official ACG information:</strong> <a href=\"https://www.acg.edu/current-students/athletics/athletic-facilities/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG Athletic Facilities</a>.</p>",
+      "tags": [
+        "sports",
+        "pool",
+        "gym",
+        "tennis"
+      ],
+      "featured": false,
+      "sources": [
+        "athletics"
+      ]
+    },
+    {
+      "key": "help-article-facility-slot-unavailable",
+      "slug": "facility-slot-unavailable",
+      "title": "Why can I not choose a particular facility time?",
+      "category": "help-category-athletics",
+      "content": "<p>A time may not be offered because it is outside the available schedule, already occupied or unavailable for the selected activity. Review the date, duration and any participant limits shown by the form.</p><p>Try a different available demo slot instead of repeatedly submitting the same unavailable time. If the screen reports an error, note the facility, date and account role so the administrator can reproduce it.</p><p>A missing slot here does not establish whether a real ACG facility is open or closed. Confirm real reservations through the College’s published athletics contacts.</p>",
+      "tags": [
+        "availability",
+        "time slots",
+        "facility booking"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-view-athletics-bookings",
+      "slug": "view-athletics-bookings",
+      "title": "Where should I check a booking I have already made?",
+      "category": "help-category-athletics",
+      "content": "<p>Return to the relevant booking area in your signed-in dashboard and open the record associated with the activity. Check the facility, session time and status rather than relying only on an earlier success message.</p><p>If you cannot find it, confirm that you are using the same account and that you completed the submission. Different test accounts have separate personal records.</p><p>If an edit or cancellation control is offered, read its confirmation carefully. Otherwise send the demo administrator the booking details for investigation without submitting duplicate reservations.</p>",
+      "tags": [
+        "my bookings",
+        "booking status",
+        "athletics"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-participants-and-team-bookings",
+      "slug": "participants-and-team-bookings",
+      "title": "What should I check for a group or team activity?",
+      "category": "help-category-athletics",
+      "content": "<p>Read the facility or activity’s participant requirements and capacity before completing a group-related booking. A facility that suits an individual workout may not be suitable for a larger team session.</p><p>Use fictional participant information when testing. Confirm which account owns the record and whether the workflow represents one booking or several individual registrations.</p><p>For real team participation, coaching and facility arrangements, refer to the College’s athletics information. The demo does not register a team for an official competition or confirm a practice schedule.</p><p><strong>Official ACG information:</strong> <a href=\"https://www.acg.edu/current-students/athletics/intercollegiate-athletics/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG Intercollegiate Athletics</a>.</p>",
+      "tags": [
+        "teams",
+        "participants",
+        "capacity"
+      ],
+      "featured": false,
+      "sources": [
+        "teams"
+      ]
+    },
+    {
+      "key": "help-article-real-athletics-access",
+      "slug": "real-athletics-access",
+      "title": "Where do I find real athletics access rules and opening times?",
+      "category": "help-category-athletics",
+      "content": "<p>Use ACG’s official Athletic Facilities page and the relevant athletics contacts for current access arrangements. Requirements and schedules can vary by facility and period.</p><p>Check that information before planning an actual visit. Ask about the particular activity and date you intend to use rather than assuming every facility follows the same process.</p><p>The facilities and bookings inside UNIVERSE demonstrate discovery and reservation interfaces. They do not issue a College access credential or replace confirmation from the responsible office.</p><p><strong>Official ACG information:</strong> <a href=\"https://www.acg.edu/current-students/athletics/athletic-facilities/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG Athletic Facilities</a>.</p>",
+      "tags": [
+        "opening times",
+        "access rules",
+        "athletics contacts"
+      ],
+      "featured": false,
+      "sources": [
+        "athletics"
+      ]
+    },
+    {
+      "key": "help-article-find-an-event-location",
+      "slug": "find-an-event-location",
+      "title": "How do I find the right room or campus location?",
+      "category": "help-category-athletics",
+      "content": "<p>Open the event and read its venue description, then compare it with the <a href=\"/venues\">Venues</a> directory. Pay attention to the building and room information where it is supplied.</p><p>For an actual campus visit, confirm the location with the organizer. The Student Success Center’s official information can also help you locate campus resources. Leave enough time to find a room you have not visited before.</p><p>A demo venue record is an example of how location information is presented. It should not be your only source for a real appointment or a time-sensitive arrival.</p><p><strong>Official ACG information:</strong> <a href=\"https://www.acg.edu/current-students/student-services/student-success-center/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG Student Success Center</a>.</p>",
+      "tags": [
+        "rooms",
+        "campus map",
+        "directions"
+      ],
+      "featured": false,
+      "sources": [
+        "student-success"
+      ]
+    },
+    {
+      "key": "help-article-venue-access-arrangements",
+      "slug": "venue-access-arrangements",
+      "title": "How do I ask about access arrangements for a venue?",
+      "category": "help-category-athletics",
+      "content": "<p>Start with the organizer of the activity and identify the venue, date and the practical arrangement you need. Questions about step-free routes, seating or support during an event are best discussed for that specific visit.</p><p>Use the official College service contacts when the request relates to an actual campus activity. The Student Services directory helps you locate relevant support offices.</p><p>Avoid placing sensitive health information in a public event comment or demo chat. The application’s venue information can help you identify the location, while individual arrangements need direct confirmation.</p><p><strong>Official ACG information:</strong> <a href=\"https://www.acg.edu/current-students/student-services/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG Student Services</a>.</p>",
+      "tags": [
+        "venue access",
+        "inclusion",
+        "accessibility"
+      ],
+      "featured": false,
+      "sources": [
+        "student-services"
+      ]
+    },
+    {
+      "key": "help-article-apply-for-a-demo-listing",
+      "slug": "apply-for-a-demo-listing",
+      "title": "How do I apply for an opportunity listed in UNIVERSE?",
+      "category": "help-category-careers",
+      "content": "<p>Open <a href=\"/listings\">Listings</a>, choose an opportunity and read the complete description, creator and application instructions. Sign in with the appropriate attendee test account before using the available application action.</p><p>Provide the requested sample information and permitted fictional documents. Review the result in the related application or dashboard area so you can distinguish a submitted application from a page you only viewed.</p><p>These seeded opportunities are demonstration records. For real jobs, internships and career support, use ACG Career Services and the actual provider’s current application process.</p><p><strong>Official ACG information:</strong> <a href=\"https://www.acg.edu/current-students/student-services/career-services/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG Career Services</a>.</p>",
+      "tags": [
+        "listings",
+        "applications",
+        "internships"
+      ],
+      "featured": true,
+      "sources": [
+        "career-services"
+      ]
+    },
+    {
+      "key": "help-article-prepare-a-demo-cv",
+      "slug": "prepare-a-demo-cv",
+      "title": "What should a sample CV contain for testing?",
+      "category": "help-category-careers",
+      "content": "<p>Use an invented name, a fictional contact address and a few clearly labelled example education, project and skill entries. Save the document in a file format accepted by the upload field.</p><p>Keep the file small enough for the form’s stated limits and use a simple filename. After uploading, check the result from the same account before continuing to an application.</p><p>Do not reuse a real student’s CV or include identification numbers. For feedback on an actual CV or application, consult the College’s Career Services rather than treating example demo content as professional advice.</p><p><strong>Official ACG information:</strong> <a href=\"https://www.acg.edu/current-students/student-services/career-services/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG Career Services</a>.</p>",
+      "tags": [
+        "CV",
+        "resume",
+        "sample document"
+      ],
+      "featured": false,
+      "sources": [
+        "career-services"
+      ]
+    },
+    {
+      "key": "help-article-application-status-and-replies",
+      "slug": "application-status-and-replies",
+      "title": "Where can I check an application or organiser reply?",
+      "category": "help-category-careers",
+      "content": "<p>Use the relevant application area in the signed-in dashboard and inspect the record for that listing. Check the account used to submit it and read the state shown by the application.</p><p>A notification or message may refer to an opportunity, but it does not replace the application record. If you are testing the organizer side, review the application from the creator responsible for that listing.</p><p>The demo captures outgoing email, so an inbox message is not required for a test record to exist. Report a missing application with the listing title and demo username instead of submitting the same material repeatedly.</p>",
+      "tags": [
+        "application status",
+        "replies",
+        "notifications"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-volunteer-activities-and-jobs",
+      "slug": "volunteer-activities-and-jobs",
+      "title": "How do I distinguish volunteering from a job or internship?",
+      "category": "help-category-careers",
+      "content": "<p>Read the complete opportunity or event description. Look for the stated purpose, tasks, organizer, expected participation and application instructions rather than inferring the arrangement from a short title.</p><p>A volunteering activity can be associated with an event, while a listing can demonstrate a different opportunity workflow. Follow the specific action offered on the record you are viewing.</p><p>All seeded participation and opportunity examples are fictional. For a real role, confirm the terms and the application process with its actual provider before making a commitment.</p>",
+      "tags": [
+        "volunteering",
+        "jobs",
+        "internships",
+        "opportunities"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-publish-a-demo-opportunity",
+      "slug": "publish-a-demo-opportunity",
+      "title": "How can an organizer publish an opportunity?",
+      "category": "help-category-careers",
+      "content": "<p>Sign in with an organizer account and open its listings-management section. Review the fields offered for the opportunity and provide a clear description, category and relevant application information.</p><p>Use fictional example details and sample documents. After saving, inspect the public listing and test the application experience from a separate attendee account. Check that the record belongs to the intended creator.</p><p>A demo listing is not a real vacancy announcement or an endorsement of an employer. Keep current real opportunities and their terms within the actual provider’s published recruitment process.</p>",
+      "tags": [
+        "organizer listings",
+        "publish",
+        "opportunity management"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-opportunity-deadlines",
+      "slug": "opportunity-deadlines",
+      "title": "What should I check before applying to an opportunity?",
+      "category": "help-category-careers",
+      "content": "<p>Read the description and any displayed dates, requirements or attachments. Make sure you understand what the application asks for and which creator is responsible.</p><p>Check that a listing is still relevant before spending time preparing a document. A record may remain available for reference after the useful application period, and demo data does not represent a current recruitment commitment.</p><p>For a real job, internship or volunteer opportunity, verify the current deadline and submission method with the actual provider. Keep a record of the application confirmation rather than assuming a viewed page counts as a submission.</p>",
+      "tags": [
+        "deadlines",
+        "requirements",
+        "application checklist"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-real-career-support",
+      "slug": "real-career-support",
+      "title": "Where can I get real career or internship support at Deree?",
+      "category": "help-category-careers",
+      "content": "<p>ACG Career Services supports career exploration, applications and connections with employers. Use its official pages to find the service that fits your question and the current contact arrangements.</p><p>For example, you can ask about preparing an application or exploring internship opportunities. Keep the specific question and any relevant real documents within the service’s own appointment or submission process.</p><p>The Listings section here demonstrates how opportunities can be presented and managed. A seeded listing or fictional application is not a substitute for contact with Career Services or a real employer.</p><p><strong>Official ACG information:</strong> <a href=\"https://www.acg.edu/current-students/student-services/career-services/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG Career Services</a>, <a href=\"https://www.acg.edu/current-students/student-services/career-services/contact-career-services/\" target=\"_blank\" rel=\"noopener noreferrer\">Contact ACG Career Services</a>.</p>",
+      "tags": [
+        "Career Services",
+        "career guidance",
+        "internships"
+      ],
+      "featured": false,
+      "sources": [
+        "career-services",
+        "career-contact"
+      ]
+    },
+    {
+      "key": "help-article-share-application-information",
+      "slug": "share-application-information",
+      "title": "What information should I share in an application test?",
+      "category": "help-category-careers",
+      "content": "<p>Share only the fictional details necessary to exercise the form. A short example statement, an invented contact address and a sample CV are enough for most demonstration checks.</p><p>Review any document before uploading it, including its visible content and filename. Avoid real identity documents, financial details or private recommendations.</p><p>If a field is unclear or the submission fails, describe the problem to the demo administrator rather than filling it with additional personal information. For real applications, follow the actual provider’s instructions and privacy information.</p>",
+      "tags": [
+        "application privacy",
+        "test data",
+        "documents"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-choose-the-right-college-office",
+      "slug": "choose-the-right-college-office",
+      "title": "Which College office should I contact for help?",
+      "category": "help-category-campus",
+      "content": "<p>Start with the official <a href=\"https://www.acg.edu/current-students/student-services/\">ACG Student Services directory</a> when your question concerns a real College service. It brings together support areas such as Student Affairs, the Student Success Center and Career Services.</p><p>If you do not know which office handles the issue, the Student Success Center can help direct you. Explain the service you need and keep your question focused so that it can reach the right team.</p><p>The UNIVERSE contact form is for this demonstration. It does not replace the College’s academic, technology or student-support channels.</p><p><strong>Official ACG information:</strong> <a href=\"https://www.acg.edu/current-students/student-services/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG Student Services</a>, <a href=\"https://www.acg.edu/current-students/student-services/student-success-center/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG Student Success Center</a>.</p>",
+      "tags": [
+        "College offices",
+        "student services",
+        "contacts"
+      ],
+      "featured": true,
+      "sources": [
+        "student-services",
+        "student-success"
+      ]
+    },
+    {
+      "key": "help-article-student-success-center-help",
+      "slug": "student-success-center-help",
+      "title": "What can the Student Success Center help me find?",
+      "category": "help-category-campus",
+      "content": "<p>The Student Success Center is a starting point for navigating College services and finding the appropriate office. Its official page includes information about services such as student identification, academic calendars, forms and campus information.</p><p>Use that page to choose the right request and check the current contact details. Prepare a concise description of what you need rather than posting an official request in a demo conversation.</p><p>Your UNIVERSE profile and demo student ID fields are test records. Editing them does not request or replace an actual College identity card or official document.</p><p><strong>Official ACG information:</strong> <a href=\"https://www.acg.edu/current-students/student-services/student-success-center/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG Student Success Center</a>.</p>",
+      "tags": [
+        "Student Success Center",
+        "student ID",
+        "forms"
+      ],
+      "featured": false,
+      "sources": [
+        "student-success"
+      ]
+    },
+    {
+      "key": "help-article-college-it-and-account-help",
+      "slug": "college-it-and-account-help",
+      "title": "Who helps with College email, network or account access?",
+      "category": "help-category-campus",
+      "content": "<p>For actual College technology services, use the official ACG IT information and its help channels. The Student Success Center can also help you locate the appropriate account-support contact.</p><p>Describe the affected College service and the error you see. Keep your password and any recovery link private, and use the service’s official support process for account verification.</p><p>A password reset or account edit in UNIVERSE affects this demo only. It does not reset your College email, network account, MYACG or Blackboard credentials.</p><p><strong>Official ACG information:</strong> <a href=\"https://www.acg.edu/current-students/it-acg/it-services/at-a-glance/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG IT Services</a>.</p>",
+      "tags": [
+        "IT help",
+        "email",
+        "College accounts"
+      ],
+      "featured": false,
+      "sources": [
+        "it"
+      ]
+    },
+    {
+      "key": "help-article-library-and-study-resources",
+      "slug": "library-and-study-resources",
+      "title": "Where can I find the College library and study resources?",
+      "category": "help-category-campus",
+      "content": "<p>Use the library links provided by ACG’s official information resources pages to reach the library catalogue, electronic resources and service information. The College’s own library pages are the source for current access arrangements.</p><p>If your question is about using a College system or accessing a resource, follow the relevant library or IT support route. Describe the resource and what happens when you try to open it.</p><p>UNIVERSE’s News and event archive can help you explore community activity, but they do not provide your academic library account or replace library services.</p><p><strong>Official ACG information:</strong> <a href=\"https://www.acg.edu/current-students/it-acg/it-services/at-a-glance/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG IT Services</a>.</p>",
+      "tags": [
+        "library",
+        "study resources",
+        "IT"
+      ],
+      "featured": false,
+      "sources": [
+        "it"
+      ]
+    },
+    {
+      "key": "help-article-health-and-wellness-contacts",
+      "slug": "health-and-wellness-contacts",
+      "title": "Where do I find official Health & Wellness contacts?",
+      "category": "help-category-campus",
+      "content": "<p>Use ACG’s Health & Wellness contact page for the current service contacts and locations. Choose the appropriate official channel for the support you need.</p><p>UNIVERSE can display community activities related to wellbeing, but an event listing is different from requesting an individual health service. Do not use a demo chat or public comment to submit personal health details.</p><p>For an actual service request, follow the College’s instructions directly. The example student profiles and messages here are intended for software testing and are not reviewed as health or wellness appointments.</p><p><strong>Official ACG information:</strong> <a href=\"https://www.acg.edu/current-students/student-services/acg-health-wellness/contact-the-hw-center/\" target=\"_blank\" rel=\"noopener noreferrer\">Contact the ACG Health & Wellness Center</a>.</p>",
+      "tags": [
+        "Health and Wellness",
+        "support",
+        "contacts"
+      ],
+      "featured": false,
+      "sources": [
+        "wellness"
+      ]
+    },
+    {
+      "key": "help-article-counseling-and-learning-support",
+      "slug": "counseling-and-learning-support",
+      "title": "Where can I find counseling or learning-support information?",
+      "category": "help-category-campus",
+      "content": "<p>The official ACG Student Services directory includes counseling and learning-support information. Use it to locate the relevant service and follow that service’s current contact or appointment instructions.</p><p>If you are unsure where to begin, describe the kind of support you are looking for through the College’s official student-service channels. Share individual details only through the appropriate service’s process.</p><p>A UNIVERSE message, contact-form submission or example event registration does not create an appointment or a support request with a College office.</p><p><strong>Official ACG information:</strong> <a href=\"https://www.acg.edu/current-students/student-services/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG Student Services</a>.</p>",
+      "tags": [
+        "counseling",
+        "learning support",
+        "student services"
+      ],
+      "featured": false,
+      "sources": [
+        "student-services"
+      ]
+    },
+    {
+      "key": "help-article-orientation-campus-arrival-and-visitors",
+      "slug": "orientation-campus-arrival-and-visitors",
+      "title": "Where can I check orientation, campus arrival or visitor information?",
+      "category": "help-category-campus",
+      "content": "<p>For new-student arrangements, begin with ACG’s official orientation information and the instructions sent by the College. For campus maps and visitor guidance, consult the Student Success Center’s current information.</p><p>Confirm the date, location and any arrival requirements for the actual visit you plan. A demo event location is not a visitor authorization or an official orientation schedule.</p><p>Use UNIVERSE to explore student groups and example community activities alongside those official resources. If details differ, ask the responsible College office to clarify the real arrangement.</p><p><strong>Official ACG information:</strong> <a href=\"https://www.acg.edu/admissions/undergraduate-admissions/orientation-day/new-student-orientation/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG New Student Orientation</a>, <a href=\"https://www.acg.edu/current-students/student-services/student-success-center/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG Student Success Center</a>.</p>",
+      "tags": [
+        "orientation",
+        "visitors",
+        "campus arrival"
+      ],
+      "featured": false,
+      "sources": [
+        "orientation",
+        "student-success"
+      ]
+    },
+    {
+      "key": "help-article-student-affairs-and-student-life",
+      "slug": "student-affairs-and-student-life",
+      "title": "When should I contact Student Affairs?",
+      "category": "help-category-campus",
+      "content": "<p>Student Affairs is a useful official contact for student-life questions, including finding the appropriate channels for clubs and campus activities. ACG’s student-life pages explain how to get involved.</p><p>If you are approaching a group for the first time, explain the activity or interest you are asking about. For a real proposal or event, use the College’s current process and the contacts provided by the responsible office.</p><p>The fictional officers, memberships and approvals in this demonstration show how community software can work. They should not be presented as decisions made by Student Affairs.</p><p><strong>Official ACG information:</strong> <a href=\"https://www.acg.edu/about-acg/student-life/\" target=\"_blank\" rel=\"noopener noreferrer\">ACG Student Life</a>.</p>",
+      "tags": [
+        "Student Affairs",
+        "student life",
+        "clubs"
+      ],
+      "featured": false,
+      "sources": [
+        "student-life"
+      ]
+    },
+    {
+      "key": "help-article-report-a-website-problem",
+      "slug": "report-a-website-problem",
+      "title": "How do I report a website problem so it can be reproduced?",
+      "category": "help-category-technical",
+      "content": "<p>Use <a href=\"/contact\">Contact</a> and include the page address, approximate time, account role and the steps that led to the problem. Explain the result you expected and the result you saw.</p><p>For example: “On Events, using a student account on a phone, I opened a workshop and the ticket action did not finish.” A cropped screenshot can be useful if it excludes private account information.</p><p>Do not include passwords, session cookies, security tokens or personal documents. If an action may already have completed, check the dashboard before retrying it so that you do not create duplicate records.</p>",
+      "tags": [
+        "bug report",
+        "support",
+        "troubleshooting"
+      ],
+      "featured": true,
+      "sources": []
+    },
+    {
+      "key": "help-article-sign-in-troubleshooting",
+      "slug": "sign-in-troubleshooting",
+      "title": "What should I check if I cannot sign in?",
+      "category": "help-category-technical",
+      "content": "<p>Open <a href=\"/signin\">Sign in</a> and use the username and password supplied for the same demo account. Check accidental spaces and keyboard input before retrying. If you recently changed the password, use the new value.</p><p>Repeated failed attempts can temporarily limit sign-in. Give the page’s instructions time to take effect instead of repeatedly submitting the form. If you cannot recover access, ask the demo administrator for help.</p><p>A real College username and password are not automatically a UNIVERSE demo login. Do not enter College credentials here merely because the demonstration refers to Deree.</p>",
+      "tags": [
+        "cannot sign in",
+        "login",
+        "password"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-missing-dashboard-link",
+      "slug": "missing-dashboard-link",
+      "title": "Why is a dashboard link missing or access denied?",
+      "category": "help-category-technical",
+      "content": "<p>Check the account name and role in the header first. Attendee, organizer and administrator dashboards expose different actions, and a public link does not grant management access.</p><p>On a phone, open the account menu and choose Dashboard menu to reach the complete role-specific navigation. If you recently switched accounts, sign out fully and sign back in with the intended test account.</p><p>When reporting the issue, include the page and the role you expected to use. Avoid working around an access message by changing record IDs or opening another person’s management link.</p>",
+      "tags": [
+        "access denied",
+        "missing menu",
+        "roles",
+        "mobile"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-missing-images-or-stale-page",
+      "slug": "missing-images-or-stale-page",
+      "title": "What should I do if an image or page looks outdated?",
+      "category": "help-category-technical",
+      "content": "<p>Reload the page and allow its images to finish loading. If a recent update does not appear, try a hard refresh or a fresh browser window to distinguish a cached asset from a persistent problem.</p><p>Some seeded records intentionally use illustrative demo artwork. That is different from an image failing to load. Note the page, the record title and whether the image is blank, broken or simply the same sample artwork.</p><p>If the issue continues, send the administrator those details and your browser type. Avoid replacing a missing image with an unrelated external URL while testing.</p>",
+      "tags": [
+        "images",
+        "cache",
+        "refresh",
+        "browser"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-form-save-errors",
+      "slug": "form-save-errors",
+      "title": "Why does a form refuse to save my changes?",
+      "category": "help-category-technical",
+      "content": "<p>Read the messages next to the form fields and check required values, dates, file limits and the kind of link requested. Correct the highlighted field before submitting again.</p><p>If the form has been open for a long time or you signed out in another tab, reload it from the dashboard and sign in again if needed. Keep a private note of non-sensitive draft text before reloading.</p><p>After a successful save, reopen the record to confirm the result. If no validation message explains the failure, report the form page, account role and the exact action you tried.</p>",
+      "tags": [
+        "form validation",
+        "save",
+        "uploads"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-search-help-center",
+      "slug": "search-help-center",
+      "title": "How can I find a specific answer in the Help Center?",
+      "category": "help-category-technical",
+      "content": "<p>Use Search for answers on the <a href=\"/help-center\">Help Center</a> page. Try a concrete term such as password, membership, ticket, athletics or application. Search checks article titles, answers and tags.</p><p>If the result list is too broad, use a more specific phrase or browse a category. Open an article’s related answers for questions about the same area, and use its category breadcrumb to return to the full list.</p><p>The <a href=\"/contact\">FAQ</a> highlights common questions across categories. If no article explains your problem, contact the demo administrator with the affected page and role.</p>",
+      "tags": [
+        "Help Center search",
+        "FAQ",
+        "answers"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-chat-and-message-troubleshooting",
+      "slug": "chat-and-message-troubleshooting",
+      "title": "What should I check if a chat message does not appear?",
+      "category": "help-category-technical",
+      "content": "<p>Open the intended conversation and check that you are signed in as one of its participants. A different test account may not have access to the same room.</p><p>Send a short fictional message and wait for the conversation to update. If a send fails, read the displayed message before trying again. Refresh the room to check whether the message was saved before submitting a duplicate.</p><p>Report the conversation title, sender role and approximate time if the problem continues. Do not paste private conversations or account credentials into a public report.</p>",
+      "tags": [
+        "chat",
+        "messages",
+        "conversation troubleshooting"
+      ],
+      "featured": false,
+      "sources": []
+    },
+    {
+      "key": "help-article-reels-live-and-leaderboards",
+      "slug": "reels-live-and-leaderboards",
+      "title": "How should I interpret Reels, Live sessions and Leaderboards?",
+      "category": "help-category-technical",
+      "content": "<p>Reels present short community media, Live lists sessions with streaming information, and Leaderboards present participation-related rankings. Open the relevant section from the More menu.</p><p>The demonstration includes illustrative records and fictional participation. Check a media description before treating it as a real broadcast, and do not interpret demo points as an official College ranking.</p><p>If a media item fails to load or a stream is not available, note its title and the browser message. A live-session record can exist before a provider streaming link has been configured.</p>",
+      "tags": [
+        "reels",
+        "live",
+        "leaderboards",
+        "media"
+      ],
+      "featured": false,
+      "sources": []
+    }
+  ]
+}

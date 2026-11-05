@@ -11,6 +11,7 @@ use App\Service\AppServices;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -42,20 +43,19 @@ class HelpCenterArticleType extends AbstractType
                 },
             ])
             ->add('title', TextType::class, [
-                'required' => false,
+                'required' => true,
                 'label' => 'Title',
                 'purify_html' => true,
             ])
             ->add('content', TextareaType::class, [
-                'required' => false,
+                'required' => true,
                 'label' => 'Content',
+                'purify_html' => true,
                 'attr' => ['class' => 'wysiwyg'],
             ])
-//            ->add('tags', TextType::class, [
-//                'required' => false,
-//                'label' => 'Tags',
-//                'attr' => ['class' => 'tags-input'],
-//            ])
+            ->add('tags', TextType::class, ['required'=>false,'label'=>'Search tags','empty_data'=>'','purify_html'=>true,'help'=>'Separate keywords with commas.'])
+            ->add('featured', CheckboxType::class, ['required'=>false,'label'=>'Show in FAQ and category highlights'])
+            ->add('hidden', CheckboxType::class, ['required'=>false,'label'=>'Hide this article'])
             ->add('save', SubmitType::class, [
                 'label' => 'Save',
                 'attr' => ['class' => 'btn btn-primary'],

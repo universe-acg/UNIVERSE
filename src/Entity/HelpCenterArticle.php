@@ -23,20 +23,21 @@ class HelpCenterArticle
      * @EnglishOnly
      * @Profanity
      */
-    #[Gedmo\Slug(fields: ['title'], updatable: true)]
+    #[Gedmo\Slug(fields: ['title'], updatable: false)]
     #[ORM\Column(length: 255, unique: true)]
     protected $slug;
     /**
      * @EnglishOnly
      * @Profanity
      */
-    #[ORM\Column(length: 255, unique: true)]
-    protected $tags;
+    #[ORM\Column(length: 255)]
+    #[Assert\Length(max: 255)]
+    protected $tags = '';
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
-    #[Assert\Length(min: 2)]
+    #[Assert\Length(min: 2, max: 255)]
     private $title;
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'text')]
     #[Assert\NotBlank]
     #[Assert\Length(min: 2)]
     private $content;

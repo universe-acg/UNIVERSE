@@ -20,13 +20,8 @@
         
         public function sortFaqs($faqs)
         {
-            // Custom sorting logic here
-            usort($faqs, static function ($a, $b) {
-                $numberA = (int)strtok($a->getTitle(), '.');
-                $numberB = (int)strtok($b->getTitle(), '.');
-                return $numberA - $numberB;
-            });
-            
+            usort($faqs, static fn($a, $b) => strnatcasecmp($a->getTitle(), $b->getTitle()));
+
             return $faqs;
         }
     }
