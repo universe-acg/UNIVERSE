@@ -149,32 +149,34 @@ app_dashboard_attendee_join_leave:
   path: '/dashboard/attendee/management/leave/{attendeeid}/{organizerid}'
   controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::leave'
   methods:
-    - GET
+    - POST
   condition: request.isXmlHttpRequest()
 app_dashboard_attendee_join_leave_nonxml:
   path: '/dashboard/attendee/management/leavenonxml/{attendeeid}/{organizerid}'
   controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::leavenonxml'
   methods:
-    - GET
+    - POST
 app_dashboard_attendee_join_accept:
   path: '/dashboard/attendee/management/accept/{attendeeid}/{organizerid}'
   controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::accept'
   methods:
-    - GET
+    - POST
 app_dashboard_attendee_join_reject:
   path: '/dashboard/attendee/management/reject/{attendeeid}/{organizerid}'
   controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::reject'
   methods:
-    - GET
+    - POST
 app_dashboard_attendee_join_cancel:
   path: '/dashboard/attendee/management/cancel/{attendeeid}/{organizerid}'
   controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::cancelxml'
   condition: request.isXmlHttpRequest()
+  methods:
+    - POST
 app_dashboard_attendee_join_cancelnotxml:
   path: '/dashboard/attendee/management/cancelnotxml/{attendeeid}/{organizerid}'
   controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::cancelnotxml'
   methods:
-    - GET
+    - POST
 app_dashboard_attendee_join_add:
   path: '/dashboard/attendee/management/add/{attendeeid}/{organizerid}'
   controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::add'
@@ -188,44 +190,44 @@ app_dashboard_organizer_join_kick_xml:
   path: '/dashboard/organizer/management/kickxml/{organizerid}/{attendeeid}'
   controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::kickxml'
   methods:
-    - GET
+    - POST
   condition: request.isXmlHttpRequest()
 app_dashboard_organizer_join_kick:
   path: '/dashboard/organizer/management/kick/{organizerid}/{attendeeid}'
   controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::kick'
   methods:
-    - GET
+    - POST
 app_dashboard_organizer_join_accept:
   path: '/dashboard/organizer/management/accept/{organizerid}/{attendeeid}'
   controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::accept'
   methods:
-    - GET
+    - POST
 app_dashboard_organizer_join_accept_xml:
   path: '/dashboard/organizer/management/acceptxml/{organizerid}/{attendeeid}'
   controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::acceptxml'
   methods:
-    - GET
+    - POST
 app_dashboard_attendee_join_accept_xml:
   path: '/dashboard/attendee/management/acceptxml/{attendeeid}/{organizerid}'
   controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::acceptxml'
   methods:
-    - GET
+    - POST
 app_dashboard_organizer_join_reject:
   path: '/dashboard/organizer/management/reject/{organizerid}/{attendeeid}'
   controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::reject'
   methods:
-    - GET
+    - POST
 app_dashboard_organizer_join_cancel:
   path: '/dashboard/organizer/management/cancel/{organizerid}/{attendeeid}'
   controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::cancelxml'
   methods:
-    - GET
+    - POST
   condition: request.isXmlHttpRequest()
 app_dashboard_organizer_join_cancelnotxml:
   path: '/dashboard/organizer/management/cancelnotxml/{organizerid}/{attendeeid}'
   controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::cancelnotxml'
   methods:
-    - GET
+    - POST
 app_dashboard_organizer_join_add:
   path: '/dashboard/organizer/management/add/{organizerid}/{attendeeid}'
   controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::add'
@@ -351,6 +353,8 @@ dashboard_administrator_blog_post_edit:
 dashboard_organizer_event_delete_permanently_admin:
   path: '/administrator/my-events/{slug}/delete-permanently-admin'
   controller: 'App\Controller\Dashboard\Shared\EventController::deleteforadmin'
+  methods:
+    - POST
 dashboard_organizer_event_prefill:
   path: '/dashboard/organizer/my-events/{slug}/prefill'
   controller: 'App\Controller\Dashboard\Shared\EventController::prefillEvent'
@@ -508,7 +512,7 @@ twillio_route:
   path: /api/twillio
   controller: 'App\Controller\Api\TwillioController::captureSMS'
   methods:
-    - GET
+    - POST
 athletics:
   path: /athletics
   controller: 'App\Controller\Front\AthleticsController::index'

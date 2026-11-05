@@ -550,7 +550,7 @@ class SettingsController extends Controller
     /**
      *
      */
-#[Route("/settings/mail-server/test", name: "settings_mail_server_test", methods: ["GET","POST"])]
+#[Route("/settings/mail-server/test", name: "settings_mail_server_test", methods: ["POST"])]
     public function mailServerTest(Request $request, AppServices $services, Swift_Mailer $mailer, \Twig\Environment $templating)
     {
 

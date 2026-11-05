@@ -12,7 +12,7 @@ final class QrReaderController extends BaseController
         if(!$this->isGranted('ROLE_ORGANIZER')&&!$this->isGranted('ROLE_ADMINISTRATOR'))throw $this->createAccessDeniedException();
         return $this->render('Front/Page/qr_reader.html.twig');
     }
-    #[Route('/api/handle-post-request',name:'qr_check_in',methods:['POST'])]
+    #[Route('/api/handle-post-request',name:'qr_check_in', methods: ["POST"])]
     public function handlePostRequest(Request $request,EntityManagerInterface $em): Response {
         if(!$this->isGranted('ROLE_ORGANIZER')&&!$this->isGranted('ROLE_ADMINISTRATOR'))throw $this->createAccessDeniedException();
         if(!$this->isCsrfTokenValid('action',$request->headers->get('X-CSRF-Token')))throw $this->createAccessDeniedException();

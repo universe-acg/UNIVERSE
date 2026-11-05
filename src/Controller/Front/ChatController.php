@@ -36,16 +36,16 @@ final class ChatController extends BaseController
         if($request->isMethod('POST')){$this->checkToken($request);try{$message=$this->chat->send($room,$user,(string)$request->request->get('message'));}catch(\InvalidArgumentException $error){return $this->json(['error'=>$error->getMessage()],422);}return $this->json($this->chat->serialize($message,$user),201);}
         return $this->json(array_map(fn($message)=>$this->chat->serialize($message,$user),$this->chat->messages($room,max(0,$request->query->getInt('after')))));
     }
-    #[Route('/chat/{chatId}/add-user',name:'chat_add_user',methods:['POST'])]
+    #[Route('/chat/{chatId}/add-user',name:'chat_add_user', methods: ["POST"])]
     public function addUserToChat(int $chatId,Request $request): Response {
         $room=$this->chat->room($chatId,$this->getUser());$this->denyAccessUnlessGranted('ROLE_ADMINISTRATOR');$user=$this->em->find(User::class,$request->request->getInt('userId'));if(!$user)throw $this->createNotFoundException();$this->chat->add($room,$user);return $this->redirectToRoute('chat_show',['chatId'=>$chatId]);
     }
-    #[Route('/chat/{chatId}/remove-user/{userId}',name:'chat_remove_user',methods:['POST'])]
+    #[Route('/chat/{chatId}/remove-user/{userId}',name:'chat_remove_user', methods: ["POST"])]
     public function removeUserFromChat(int $chatId,int $userId): Response {
         $room=$this->chat->room($chatId,$this->getUser());if($userId!==$this->getUser()->getId())$this->denyAccessUnlessGranted('ROLE_ADMINISTRATOR');$user=$this->em->find(User::class,$userId);
         if($user){$room->getParticipants()->removeElement($user);$member=$this->em->find(UniverseChatUser::class,['universeChat'=>$room,'user'=>$user]);if($member)$this->em->remove($member);$this->em->flush();}return $this->redirectToRoute('chat_index');
     }
-    #[Route('/chat/{chatId}/mute-chat',name:'chat_mute',methods:['POST'])]
+    #[Route('/chat/{chatId}/mute-chat',name:'chat_mute', methods: ["POST"])]
     public function muteChat(int $chatId,Request $request): Response {$this->chat->room($chatId,$this->getUser());$request->getSession()->set('chat_muted_'.$chatId,true);return $this->redirectToRoute('chat_show',['chatId'=>$chatId]);}
     private function checkToken(Request $request): void {if(!$this->isCsrfTokenValid('action',$request->request->get('_action_token')??$request->headers->get('X-CSRF-Token')))throw $this->createAccessDeniedException();}
 }

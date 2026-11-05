@@ -11,9 +11,9 @@ final class MessageController extends BaseController
     public function __construct(private ChatService $chat,private EntityManagerInterface $em){}
     #[Route('/chat/{chatId}/message-list',name:'message_list',methods:['GET'])]
     public function listMessages(int $chatId): Response {$this->chat->room($chatId,$this->getUser());return $this->redirectToRoute('chat_show',['chatId'=>$chatId]);}
-    #[Route('/chat/{chatId}/send-message',name:'message_send',methods:['POST'])]
+    #[Route('/chat/{chatId}/send-message',name:'message_send', methods: ["POST"])]
     public function sendMessage(int $chatId,Request $request): Response {return $this->save($chatId,(string)$request->request->get('message'));}
-    #[Route('/api/message/save',name:'save_message',methods:['POST'])]
+    #[Route('/api/message/save',name:'save_message', methods: ["POST"])]
     public function saveMessage(Request $request): Response {
         try{$data=$request->toArray();}catch(\Throwable){return $this->json(['error'=>'Invalid message.'],400);}
         return $this->save((int)($data['chatId']??0),(string)($data['content']??''));
@@ -28,7 +28,7 @@ final class MessageController extends BaseController
         $message=$this->owned($chatId,$messageId);$text=trim((string)$request->request->get('message'));if($text===''||mb_strlen($text)>4000)return $this->json(['error'=>'Invalid message.'],422);
         $message->setContent($text);$this->em->flush();return $this->json($this->chat->serialize($message,$this->getUser()));
     }
-    #[Route('/chat/{chatId}/message/{messageId}/delete',name:'message_delete',methods:['POST'])]
+    #[Route('/chat/{chatId}/message/{messageId}/delete',name:'message_delete', methods: ["POST"])]
     public function deleteMessage(int $chatId,int $messageId): Response {$message=$this->owned($chatId,$messageId);$this->em->remove($message);$this->em->flush();return $this->json(['deleted'=>true]);}
     private function owned(int $chatId,int $messageId): UniverseMessage {
         $room=$this->chat->room($chatId,$this->getUser());$message=$this->em->getRepository(UniverseMessage::class)->findOneBy(['id'=>$messageId,'universeChat'=>$room]);if(!$message)throw $this->createNotFoundException();if($message->getSender()->getId()!==$this->getUser()->getId())throw $this->createAccessDeniedException();return $message;

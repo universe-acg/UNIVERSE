@@ -208,8 +208,8 @@ class UserController extends Controller
      *
      *
      */
-#[Route("/manage-users/{slug}/enable", name: "user_enable", methods: ["GET"])]
-#[Route("/manage-users/{slug}/disable", name: "user_disable", methods: ["GET"])]
+#[Route("/manage-users/{slug}/enable", name: "user_enable", methods: ["POST"])]
+#[Route("/manage-users/{slug}/disable", name: "user_disable", methods: ["POST"])]
     public function enabledisable(AppServices $services, $slug)
     {
 

@@ -568,7 +568,7 @@ class OrderController extends Controller
      *
      *
      */
-#[Route("/organizer/recent-orders/{reference}/resend-confirmation-email", name: "dashboard_organizer_order_resend_confirmation_email")]
+#[Route("/organizer/recent-orders/{reference}/resend-confirmation-email", name: "dashboard_organizer_order_resend_confirmation_email", methods: ["POST"])]
 #[Route("/administrator/manage-orders/{reference}/resend-confirmation-email", name: "dashboard_administrator_order_resend_confirmation_email", methods: ["POST"])]
     public function resendConfirmationEmail($reference, Request $request, AppServices $services)
     {

@@ -223,7 +223,7 @@ class CartController extends Controller
     /**
      *
      */
-#[Route("/attendee/cart/{id}/remove", name: "dashboard_attendee_cart_remove")]
+#[Route("/attendee/cart/{id}/remove", name: "dashboard_attendee_cart_remove", methods: ["POST"])]
     public function remove($id, AppServices $services)
     {
         $em = $this->getDoctrine()->getManager();

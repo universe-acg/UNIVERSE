@@ -5,7 +5,7 @@ use Symfony\Component\HttpFoundation\{Request,JsonResponse};
 use Symfony\Component\Routing\Attribute\Route;
 final class TwillioController extends BaseController
 {
-    #[Route('/twillio', name:'twillio_route', methods:['POST'])]
+    #[Route('/twillio', name:'twillio_route', methods: ["POST"])]
     public function captureSMS(Request $request, \App\Service\TwilioService $sms): JsonResponse {
         $this->denyAccessUnlessGranted('ROLE_ADMINISTRATOR');
         if(!$this->isCsrfTokenValid('action',$request->request->get('_action_token')))throw $this->createAccessDeniedException();

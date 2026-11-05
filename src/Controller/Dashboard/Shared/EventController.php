@@ -430,7 +430,7 @@ class EventController extends Controller
      *
      * @throws InvalidDatabaseException
      */
-#[Route("/administrator/my-events/{slug}/delete-permanently-repeating", name: "dashboard_organizer_event_delete_permanently_repeating_admin", methods: ["GET"])]
+#[Route("/administrator/my-events/{slug}/delete-permanently-repeating", name: "dashboard_organizer_event_delete_permanently_repeating_admin", methods: ["POST"])]
     public function deleteRepeatingeventadministrator(EventRepository $eventRepository, AppServices $services, $slug)
     {
         $em = $this->getDoctrine()->getManager();
@@ -464,7 +464,7 @@ class EventController extends Controller
      *
      * @throws InvalidDatabaseException
      */
-#[Route("/organizer/my-events/{slug}/delete-permanently-repeating", name: "dashboard_organizer_event_delete_permanently_repeating_organizer", methods: ["GET"])]
+#[Route("/organizer/my-events/{slug}/delete-permanently-repeating", name: "dashboard_organizer_event_delete_permanently_repeating_organizer", methods: ["POST"])]
     public function deleteRepeatingeventorganizer(EventRepository $eventRepository, AppServices $services, $slug)
     {
         $em = $this->getDoctrine()->getManager();
@@ -500,7 +500,7 @@ class EventController extends Controller
      *
      * @throws InvalidDatabaseException
      */
-#[Route("/organizer/my-events/{slug}/delete-permanently-repeating", name: "dashboard_organizer_event_delete_permanently_repeating", methods: ["GET"])]
+#[Route("/organizer/my-events/{slug}/delete-permanently-repeating", name: "dashboard_organizer_event_delete_permanently_repeating", methods: ["POST"])]
     public function deleteRepeatingevent(EventRepository $eventRepository, AppServices $services)
     {
         $event = $eventRepository->find($eventId);
@@ -530,7 +530,7 @@ class EventController extends Controller
      * @throws InvalidDatabaseException|Exception
      * @throws Exception
      */
-#[Route("/administrator/my-events/{slug}/delete-permanently-admin", name: "dashboard_organizer_event_delete_permanently_admin", methods: ["GET"])]
+#[Route("/administrator/my-events/{slug}/delete-permanently-admin", name: "dashboard_organizer_event_delete_permanently_admin", methods: ["POST"])]
     public function deleteforadmin(AppServices $services, $slug, AuthorizationCheckerInterface $authChecker)
     {
         $organizer = "all";

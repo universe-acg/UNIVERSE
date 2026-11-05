@@ -43,7 +43,7 @@ final class CommentController extends BaseController
         if(!$form->isSubmitted()||!$form->isValid())return $this->json(['error'=>'Invalid comment.'],422);
         $this->em->persist($comment);$this->em->flush();return $this->comments($id);
     }
-    #[Route('/delete-comment/{id}',name:'fos_comment_delete',methods:['POST'])]
+    #[Route('/delete-comment/{id}',name:'fos_comment_delete', methods: ["POST"])]
     public function deleteComment(int $id): JsonResponse {
         $comment=$this->em->find(Comment::class,$id);if(!$comment)throw $this->createNotFoundException();$this->owner($comment);
         if($comment->getState()!==1){$comment->setState(1);$comment->setBody('');$thread=$comment->getThread();$thread->setNumComments(max(0,$thread->getNumComments()-1));$this->em->persist($thread);$this->em->persist($comment);$this->em->flush();}

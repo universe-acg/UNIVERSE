@@ -96,7 +96,7 @@ class ManagementClubsSocietiesController extends Controller
     /**
      *
      */
-#[Route("/management/accept/{attendeeid}/{organizerid}", name: "app_dashboard_attendee_join_accept")]
+#[Route("/management/accept/{attendeeid}/{organizerid}", name: "app_dashboard_attendee_join_accept", methods: ["POST"])]
     public function accept(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $attendeeid, $organizerid)
     {
         $user = $userService->getUserById($attendeeid);
@@ -127,7 +127,7 @@ class ManagementClubsSocietiesController extends Controller
     /**
      *
      */
-#[Route("/management/reject/{attendeeid}/{organizerid}", name: "app_dashboard_attendee_join_reject")]
+#[Route("/management/reject/{attendeeid}/{organizerid}", name: "app_dashboard_attendee_join_reject", methods: ["POST"])]
     public function reject(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $attendeeid, $organizerid)
     {
         $user = $userService->getUserById($attendeeid);
@@ -158,7 +158,7 @@ class ManagementClubsSocietiesController extends Controller
     /**
      *
      */
-#[Route("/management/leave/{attendeeid}/{organizerid}", name: "app_dashboard_attendee_join_leave", condition: "request.isXmlHttpRequest()")]
+#[Route("/management/leave/{attendeeid}/{organizerid}", name: "app_dashboard_attendee_join_leave", condition: "request.isXmlHttpRequest()", methods: ["POST"])]
     public function leave(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $attendeeid, $organizerid)
     {
         $user = $userService->getUserById($attendeeid);
@@ -187,7 +187,7 @@ class ManagementClubsSocietiesController extends Controller
     /**
      *
      */
-#[Route("/management/leavenonxml/{attendeeid}/{organizerid}", name: "app_dashboard_attendee_join_leave_nonxml")]
+#[Route("/management/leavenonxml/{attendeeid}/{organizerid}", name: "app_dashboard_attendee_join_leave_nonxml", methods: ["POST"])]
     public function leavenonxml(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $attendeeid, $organizerid)
     {
         $user = $userService->getUserById($attendeeid);
@@ -217,7 +217,7 @@ class ManagementClubsSocietiesController extends Controller
     /**
      *
      */
-#[Route("/management/cancel/{attendeeid}/{organizerid}", name: "app_dashboard_attendee_join_cancel", condition: "request.isXmlHttpRequest()")]
+#[Route("/management/cancel/{attendeeid}/{organizerid}", name: "app_dashboard_attendee_join_cancel", condition: "request.isXmlHttpRequest()", methods: ["POST"])]
     public function cancelxml(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $attendeeid, $organizerid)
     {
         $user = $userService->getUserById($attendeeid);
@@ -247,7 +247,7 @@ class ManagementClubsSocietiesController extends Controller
     /**
      *
      */
-#[Route("/management/acceptxml/{attendeeid}/{organizerid}", name: "app_dashboard_attendee_join_accept_xml")]
+#[Route("/management/acceptxml/{attendeeid}/{organizerid}", name: "app_dashboard_attendee_join_accept_xml", methods: ["POST"])]
     public function acceptxml(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $organizerid, $attendeeid)
     {
         $user = $userService->getUserById($attendeeid);
@@ -282,7 +282,7 @@ class ManagementClubsSocietiesController extends Controller
     /**
      *
      */
-#[Route("/management/cancelnotxml/{attendeeid}/{organizerid}", name: "app_dashboard_attendee_join_cancelnotxml")]
+#[Route("/management/cancelnotxml/{attendeeid}/{organizerid}", name: "app_dashboard_attendee_join_cancelnotxml", methods: ["POST"])]
     public function cancelnotxml(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $attendeeid, $organizerid)
     {
         $user = $userService->getUserById($attendeeid);
