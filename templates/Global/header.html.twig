@@ -29,7 +29,7 @@
                             <a href="#" class="icontext" data-toggle="dropdown" aria-label="Notifications" aria-haspopup="true" aria-expanded="false">
                                 <i class="{{ services.hasUnreadNotifications() ? 'fas' : 'far' }} fa-bell" aria-hidden="true"></i>
                             </a>
-                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow header-notifications-dropdown-menu">
+                            <div class="dropdown-menu dropdown-menu-right header-notifications-dropdown-menu">
                                 {% for notification in notificationsData.lastFiveNotifications %}
                                     {% if not notification.read %}
                                         <span style="display: flex; justify-content: space-between; align-items: center; align-content: center">
@@ -70,7 +70,7 @@
                                 </div>
                             </a>
 
-                            <div class="dropdown-menu dropdown-menu-left dropdown-menu-arrow header-user-dropdown-menu">
+                            <div class="dropdown-menu dropdown-menu-left header-user-dropdown-menu">
 
                                 {% if is_granted('ROLE_ADMINISTRATOR') %}
                                     <a class="dropdown-item" href="{{ path('dashboard_index') }}">
@@ -119,7 +119,7 @@
                                 </div>
                                 <span class="d-none d-lg-inline">{{ "Sign up" }}</span>
                             </a>
-                            <div class="dropdown-menu {% if app.request.locale == "ar" %}registration-dropdown dropdown-menu-left{% else %}dropdown-menu-right{% endif %} dropdown-menu-arrow">
+                            <div class="dropdown-menu {% if app.request.locale == "ar" %}registration-dropdown dropdown-menu-left{% else %}dropdown-menu-right{% endif %}">
                                 <a href="{{ path('fos_user_registration_register_attendee') }}" class="dropdown-item"><i
                                             class="fas fa-user fa-fw"></i> {{ "Attendee" }}</a>
                                 <a href="{{ path('fos_user_registration_register_organizer') }}"
@@ -131,8 +131,9 @@
                     {% endif %}
 
                     <div class="widget-header d-lg-none">
-                        <button class="navbar-toggler collapsed" type="button" data-toggle="collapse"
-                                data-target="#main_nav" aria-controls="main_nav" aria-expanded="false" aria-label="Toggle navigation">
+                        <button class="navbar-toggler collapsed" type="button"
+                                aria-controls="main_nav" aria-expanded="false" aria-label="Toggle navigation"
+                                id="mobile-nav-toggler">
                             <span class="icon-bar top-bar"></span>
                             <span class="icon-bar middle-bar"></span>
                             <span class="icon-bar bottom-bar"></span>
@@ -144,10 +145,16 @@
         </div>
     </div>
 </section>
+<div class="mobile-nav-backdrop" id="mobile-nav-backdrop"></div>
 <header class="section-header">
     <nav aria-label="Main navigation" class="navbar navbar-expand-lg navbar-light bg-white {% if app.request.get("_route") == "homepage" and herosettings is defined and herosettings.content != "none" %}border-0{% endif %}">
         <div class="{{ services.getSetting("app_layout") }}">
             <div class="collapse navbar-collapse" id="main_nav">
+                <div class="mobile-nav-close d-lg-none">
+                    <button type="button" id="mobile-nav-close" aria-label="Close navigation">
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                    </button>
+                </div>
                 {% set headerMenu = navigation_menu('header-menu') %}
                 {% set primaryItems = headerMenu.items|filter(item => item.placement != 'more') %}
                 {% set moreItems = headerMenu.items|filter(item => item.placement == 'more') %}
@@ -156,7 +163,7 @@
                     {% if moreItems|length %}
                         <li class="nav-item dropdown dropdown-hover">
                             <a class="nav-link dropdown-toggle" href="#" id="header-more-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ 'More'|trans }}</a>
-                            <div class="dropdown-menu dropdown-menu-arrow" aria-labelledby="header-more-menu">
+                            <div class="dropdown-menu" aria-labelledby="header-more-menu">
                                 {% for item in moreItems %}
                                     {% if item.kind in ['categories_dropdown','footer_categories_section'] %}
                                         <h6 class="dropdown-header">{{ item.label }}</h6>
@@ -206,4 +213,55 @@
     }
     document.addEventListener('click', markHeaderNotification);
     document.addEventListener('keydown', markHeaderNotification);
+
+    // --- Scroll shadow ---
+    (function() {
+        var header = document.querySelector('.header-main');
+        if (!header) return;
+        var scrolled = false;
+        window.addEventListener('scroll', function() {
+            var shouldBeScrolled = window.scrollY > 10;
+            if (shouldBeScrolled !== scrolled) {
+                scrolled = shouldBeScrolled;
+                header.classList.toggle('header-scrolled', scrolled);
+            }
+        }, {passive: true});
+    })();
+
+    // --- Mobile slide-in nav ---
+    (function() {
+        var toggler = document.getElementById('mobile-nav-toggler');
+        var nav = document.getElementById('main_nav');
+        var backdrop = document.getElementById('mobile-nav-backdrop');
+        var closeBtn = document.getElementById('mobile-nav-close');
+        if (!toggler || !nav) return;
+
+        function openNav() {
+            nav.classList.add('show');
+            if (backdrop) backdrop.classList.add('show');
+            toggler.classList.remove('collapsed');
+            toggler.setAttribute('aria-expanded', 'true');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeNav() {
+            nav.classList.remove('show');
+            if (backdrop) backdrop.classList.remove('show');
+            toggler.classList.add('collapsed');
+            toggler.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+        }
+
+        toggler.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (nav.classList.contains('show')) {
+                closeNav();
+            } else {
+                openNav();
+            }
+        });
+
+        if (backdrop) backdrop.addEventListener('click', closeNav);
+        if (closeBtn) closeBtn.addEventListener('click', closeNav);
+    })();
 </script>

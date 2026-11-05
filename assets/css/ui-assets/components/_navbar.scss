@@ -2,10 +2,47 @@
     border-bottom: 1px solid $gray;
 }
 
+// --- Nav link base ---
+.navbar .navbar-nav .nav-link {
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+    border-bottom: 3px solid transparent;
+    position: relative;
+}
+
+// --- Active state: bottom accent border ---
+.navbar .navbar-nav .nav-item.active {
+    background: none;
+
+    > .nav-link {
+        color: $theme;
+        border-bottom-color: $theme;
+    }
+}
+
+// --- Hover: subtle tint + border hint ---
+.navbar .navbar-nav .nav-item:not(.active) > .nav-link:hover {
+    color: $theme;
+    background-color: rgba($theme, 0.06);
+    border-bottom-color: rgba($theme, 0.3);
+}
+
 @media (max-width: 990px) {
     .navbar .navbar-nav .show > .nav-link, .navbar .navbar-nav .active > .nav-link, .navbar .navbar-nav .nav-link.show, .navbar .navbar-nav .nav-link.active {
         padding: 1rem;
     }
+
+    .navbar .navbar-nav .nav-item.active > .nav-link {
+        border-bottom: none;
+        border-left: 3px solid $theme;
+    }
+
+    .navbar .navbar-nav .nav-item:not(.active) > .nav-link:hover {
+        border-bottom: none;
+        border-left: 3px solid rgba($theme, 0.3);
+    }
+
     #main_nav .navbar-nav.nav-fill .nav-item {
         text-align: left;
     }

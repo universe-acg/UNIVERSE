@@ -3,7 +3,7 @@
         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {% if item.icon %}<i class="{{ item.icon }} fa-fw" aria-hidden="true"></i>{% endif %} {{ item.label }}
         </a>
-        <div class="dropdown-menu dropdown-menu-arrow">
+        <div class="dropdown-menu">
             {% for category in services.getCategories({'featured':true,'limit':9}).getQuery().getResult() %}
                 <a class="dropdown-item" href="{{ path('events', {category:category.slug}) }}"><i class="{{ category.icon }} fa-fw" aria-hidden="true"></i> {{ category.name }}</a>
             {% endfor %}
@@ -12,7 +12,7 @@
 {% elseif item.url %}
     {% set active = app.request.pathinfo == item.url or (item.url != '/' and app.request.pathinfo starts with (item.url ~ '/')) %}
     <li class="nav-item{% if active %} active{% endif %}">
-        <a class="nav-link" href="{{ item.url }}"{% if active %} aria-current="page"{% endif %}>
+        <a class="nav-link{% if active %} active{% endif %}" href="{{ item.url }}"{% if active %} aria-current="page"{% endif %}>
             {% if item.icon %}<i class="{{ item.icon }} fa-fw" aria-hidden="true"></i>{% endif %} {{ item.label }}
         </a>
     </li>

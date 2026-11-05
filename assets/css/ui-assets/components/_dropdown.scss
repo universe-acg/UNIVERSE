@@ -1,12 +1,31 @@
-.dropdown-menu.show {
-    box-shadow: 0 3px 8px rgba(0, 0, 0, .15);
-    border: 1px solid rgba(0, 40, 100, 0.12);
-    border-radius: 0;
+// --- Dropdown polish: rounded, shadow, slide-in ---
+.dropdown-menu {
+    border-radius: 12px;
+    border: 1px solid rgba(0, 40, 100, 0.08);
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+
+    &.show {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
 }
 
 .dropdown-item {
-    padding: 0.5rem 1.5rem;
-    margin: 5px 0;
+    padding: 0.55rem 1.25rem;
+    margin: 2px 0;
+    border-radius: 6px;
+    transition: background-color 0.15s ease, color 0.15s ease;
+
+    &:hover, &:focus {
+        background-color: rgba($theme, 0.06);
+        color: $theme;
+    }
 }
 
 .dropdown-submenu {
@@ -19,30 +38,50 @@
     margin-top: -1px;
 }
 
-.dropdown-menu-arrow.dropdown-menu-right:before, .dropdown-menu-arrow.dropdown-menu-right:after {
-    left: auto;
-    right: 12px;
-}
-
-.dropdown-menu-arrow:before {
-    position: absolute;
-    top: -6px;
-    left: 12px;
-    display: inline-block;
-    border-right: 5px solid transparent;
-    border-bottom: 5px solid rgba(0, 40, 100, 0.12);
-    border-left: 5px solid transparent;
-    border-bottom-color: rgba(0, 0, 0, 0.2);
-    content: '';
-}
-
+// --- Remove arrow triangles ---
+.dropdown-menu-arrow:before,
 .dropdown-menu-arrow:after {
-    position: absolute;
-    top: -5px;
-    left: 12px;
-    display: inline-block;
-    border-right: 5px solid transparent;
-    border-bottom: 5px solid #fff;
-    border-left: 5px solid transparent;
-    content: '';
+    display: none;
+}
+
+// --- Notification dropdown ---
+.header-notifications-dropdown-menu {
+    min-width: 280px;
+    padding: 0.5rem;
+
+    .dropdown-item {
+        padding: 0.65rem 1rem;
+        font-size: 0.9rem;
+        white-space: normal;
+        line-height: 1.4;
+    }
+
+    .mark-as-read {
+        transition: all 0.2s ease;
+
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+}
+
+// --- User menu dropdown ---
+.header-user-dropdown-menu {
+    min-width: 200px;
+    padding: 0.5rem;
+
+    .dropdown-item {
+        padding: 0.6rem 1rem;
+
+        i {
+            width: 1.25rem;
+            text-align: center;
+            margin-right: 0.5rem;
+            opacity: 0.7;
+        }
+    }
+
+    .dropdown-divider {
+        margin: 0.35rem 0.5rem;
+    }
 }
