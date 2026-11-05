@@ -14,6 +14,7 @@ final class CommunityDemoData
     public function installAssets(): void
     {
         foreach (glob($this->projectDir.'/data/demo-media/*') as $source) {
+            if (is_dir($source)) continue;
             $target=$this->projectDir.'/public/uploads/'.(str_ends_with($source,'.webm')?'videos/':'reels/').basename($source);
             if (!is_dir(dirname($target))) mkdir(dirname($target),0755,true);
             if (!is_file($target) || hash_file('sha256',$source)!==hash_file('sha256',$target)) {
