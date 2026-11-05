@@ -95,15 +95,11 @@
                             <div class="filter-content collapse show" id="collapsePopular">
                                 <div class="card-body">
                                     {% set popularblogposts = services.getBlogPosts({"limit": 4, "order": "views", "otherthan": blogpost.slug}).getQuery().getResult() %}
-                                    {% set runtimeConfig = {"thumbnail": {"size": [79, 79] }} %}
                                     {% for popularblogpost in popularblogposts %}
                                         <article class="row align-items-center mb-3">
                                             <div class="col-4 pr-0">
                                                 <a href="{{ path('blog_article', { slug : popularblogpost.slug }) }}">
-                                                    <img src="{{ asset('assets/img/loader.svg') }}"
-                                                         data-src="{{ popularblogpost.imageName ? (popularblogpost.getImagePath|imagine_filter('thumbnail', runtimeConfig)) : popularblogpost.getImagePlaceholder }}"
-                                                         class="img-lazy-load img-fluid hover-effect-2"
-                                                         alt="{{ popularblogpost.name }}">
+                                                    {% include 'Global/public-image.html.twig' with {image: popularblogpost.imageName ? popularblogpost.getImagePath : null, alt: popularblogpost.name} only %}
                                                 </a>
                                             </div>
                                             <div class="col-8">
@@ -122,9 +118,7 @@
                 </aside>
                 <div class="col-lg-9 order-0 order-lg-1">
                     <div class="card box">
-                        <img class="card-img-top img-lazy-load" src="{{ asset('assets/img/loader.svg') }}"
-                             data-src="{{ blogpost.imageName ? asset(blogpost.getImagePath) : blogpost.getImagePlaceholder }}"
-                             alt="{{ blogpost.name }}">
+                        {% include 'Global/public-image.html.twig' with {image: blogpost.imageName ? blogpost.getImagePath : null, alt: blogpost.name, eager: true} only %}
                         <div class="card-body">
                             <header class="section-heading mb-1">
                                 <h2 class="title-section">{{ blogpost.name }}</h2>
