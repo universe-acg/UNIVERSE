@@ -71,6 +71,9 @@
 
         private $notificationRepository;
 
+        private ?AppLayoutSettings $appLayoutSettingsCache = null;
+        private ?array $notificationsWithUnreadCache = null;
+
         public function __construct(NotificationRepository $notificationRepository, NotificationService $notificationService, EntityManagerInterface $entityManager, AuthorizationCheckerInterface $authChecker, RequestStack $requestStack, KernelInterface $kernel, AdapterInterface $cache, UrlGeneratorInterface $router, Security $security, Swift_Mailer $mailer, ParameterBagInterface $params, \Twig\Environment $templating, UrlMatcherInterface $urlMatcherInterface, OrganizerRepository $organizerRepository)
         {
             $this->notificationRepository = $notificationRepository;
@@ -110,6 +113,10 @@
 
         public function getLastFiveNotificationsWithUnreadFlag()
         {
+            if ($this->notificationsWithUnreadCache !== null) {
+                return $this->notificationsWithUnreadCache;
+            }
+
             // Retrieve the last 5 notifications from the repository
             $lastFiveNotifications = $this->notificationRepository->findLastFiveNotificationsByUser($this->security->getUser()->getId());
 
@@ -122,7 +129,7 @@
                 }
             }
 
-            return [
+            return $this->notificationsWithUnreadCache = [
                 'lastFiveNotifications' => $lastFiveNotifications,
                 'hasUnreadNotifications' => $hasUnreadNotifications,
             ];
@@ -531,7 +538,10 @@
 
         public function getAppLayoutSettings()
         {
-            return $this->em->getRepository(AppLayoutSettings::class)->findOneBy([], ['id'=>'ASC']);
+            if ($this->appLayoutSettingsCache === null) {
+                $this->appLayoutSettingsCache = $this->em->getRepository(AppLayoutSettings::class)->findOneBy([], ['id'=>'ASC']);
+            }
+            return $this->appLayoutSettingsCache;
         }
 
         // Returns the help center articles after applying the specified search criterias

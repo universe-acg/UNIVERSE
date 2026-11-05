@@ -6,6 +6,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 /** One source of link normalization and audience rules for header and footer menus. */
 final class MenuNavigation
 {
+    private array $menuCache = [];
     public function __construct(private MenuRepository $menus,private Security $security) {}
     public static function isSafeLink(string $link): bool {
         if(preg_match('/[\x00-\x20\x7f\\\\]/',$link))return false;
@@ -41,12 +42,13 @@ final class MenuNavigation
         return true;
     }
     public function menu(string $slug): array {
+        if(isset($this->menuCache[$slug]))return $this->menuCache[$slug];
         $menu=$this->menus->findOneBy(['slug'=>$slug]);$items=[];
         foreach($menu?->getMenuElements()??[] as $element) {
             if(!$this->isVisible($element))continue;
             $raw=$element->getLink()?:$element->getCustomLink();
             $items[]=['label'=>$element->getLabel(),'icon'=>$element->getIcon(),'url'=>self::normalizeLink($raw),'kind'=>in_array($raw,['categories_dropdown','footer_categories_section'],true)?$raw:'link','placement'=>$element->getPlacement()];
         }
-        return ['name'=>$menu?->getName()??'','heading'=>$menu?->getHeader()?:$menu?->getName()??'','items'=>$items];
+        return $this->menuCache[$slug]=['name'=>$menu?->getName()??'','heading'=>$menu?->getHeader()?:$menu?->getName()??'','items'=>$items];
     }
 }

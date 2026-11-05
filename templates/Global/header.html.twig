@@ -22,12 +22,12 @@
                 <div class="widgets-wrap d-flex justify-content-end">
 
                     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                        {% set notificationsData = services.getLastFiveNotifications() %}
+                        {% set notificationsData = services.getLastFiveNotificationsWithUnreadFlag() %}
 
                         <div class="widget-header dropdown"
                              style="display: flex;justify-content: center;align-items: center;">
                             <a href="#" class="icontext" data-toggle="dropdown" aria-label="Notifications" aria-haspopup="true" aria-expanded="false">
-                                <i class="{{ services.hasUnreadNotifications() ? 'fas' : 'far' }} fa-bell" aria-hidden="true"></i>
+                                <i class="{{ notificationsData.hasUnreadNotifications ? 'fas' : 'far' }} fa-bell" aria-hidden="true"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right header-notifications-dropdown-menu">
                                 {% for notification in notificationsData.lastFiveNotifications %}
