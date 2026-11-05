@@ -19,6 +19,14 @@ final class EntityAccessSubscriber implements EventSubscriberInterface
             if(str_contains($class,'\\Organizer\\') && (!$user||$organizer!==$user->getOrganizer()?->getId()))throw new AccessDeniedHttpException();
         }
         $shared='App\\Controller\\Dashboard\\Shared\\';$slug=$r->attributes->get('slug');$entity=null;$owner=null;
+        if(str_ends_with($class,'\\BlogPostController') && $slug && str_contains($class,'\\Dashboard\\')) {
+            $post=$this->em->getRepository(E\BlogPost::class)->findOneBy(['slug'=>$slug]);
+            if($post&&$post->getUser()?->getId()!==$user?->getId())throw new AccessDeniedHttpException();
+        }
+        if($class==='App\\Controller\\Dashboard\\Organizer\\FilesController' && ($id=$r->attributes->get('id')??$r->attributes->get('fileId'))) {
+            $file=$this->em->find(E\File::class,$id);
+            if(!$file||!$user||$file->getUser()?->getId()!==$user->getId())throw new AccessDeniedHttpException();
+        }
         $types=['EventController'=>E\Event::class,'ListingController'=>E\Listing::class,'BlogPostController'=>E\BlogPost::class,'ReelsController'=>E\Reel::class];
         foreach($types as $name=>$type)if($class===$shared.$name&&$slug&&$method!=='apply'){
             $entity=$this->em->getRepository($type)->findOneBy(['slug'=>$slug]);$owner=$entity&&method_exists($entity,'getOrganizer')?$entity->getOrganizer()?->getUser():$entity?->getUser();

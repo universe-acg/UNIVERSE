@@ -8,7 +8,8 @@
 
 {% block content %}
 
-    {% set navigation = [{ "dashboard_index": ('Dashboard' ),  "dashboard_administrator_blog_post": ('Manage blog posts' ), "current":(pagetitle) }] %}
+    {% set postsRoute = is_granted('ROLE_ADMINISTRATOR') ? 'dashboard_administrator_blog_post' : (is_granted('ROLE_ORGANIZER') ? 'blog_post_organizer' : 'blog_post_attendee') %}
+    {% set navigation = [{ "dashboard_index": ('Dashboard'), (postsRoute): ('Manage blog posts'), "current": pagetitle }] %}
     {% include "Global/navigation.html.twig" with navigation %}
 
     <section class="section-content padding-y bg-white">
