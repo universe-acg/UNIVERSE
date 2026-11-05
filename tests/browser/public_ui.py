@@ -53,6 +53,8 @@ async def check(args):
                 await page.set_viewport_size({'width': width, 'height': 1000})
                 await page.wait_for_timeout(350)
                 assert not await page.evaluate('document.documentElement.scrollWidth > innerWidth + 1'), (link, width)
+                if width >= 1024 and await page.locator('.section-pagetop .title-page').count():
+                    assert await page.locator('.section-pagetop .title-page').evaluate('e => e.getBoundingClientRect().width >= Math.min(640, innerWidth * .65)'), (link, width, 'title column collapsed')
             if args.output:
                 await page.screenshot(path=str(Path(args.output) / (link.split('/')[-1] + '.png')), full_page=True)
             print('PASSED detail', link, flush=True)

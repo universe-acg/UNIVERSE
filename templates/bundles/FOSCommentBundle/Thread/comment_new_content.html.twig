@@ -20,11 +20,11 @@ with this source code in the file LICENSE.
     <div class="fos_comment_comment_form_holder mt-4 mb-4">
         {% block fos_comment_form_title %}
             {% if first %}
-                <h4 class="mb-4">{{ "Become the conversation starter ;) " }}</h4>
+                <h3 class="mb-3">Join the conversation</h3>
             {% elseif parent is not null %}
-                <h4 class="mb-4">{% trans with {"%name%": parent.authorName } from 'FOSCommentBundle' %}fos_comment_comment_reply_reply_to{% endtrans %}</h4>
+                <h3 class="mb-3">{% trans with {"%name%": parent.authorName } from 'FOSCommentBundle' %}fos_comment_comment_reply_reply_to{% endtrans %}</h3>
             {% else %}
-                <h4 class="mb-4">{% trans from 'FOSCommentBundle' %}fos_comment_comment_new_headline{% endtrans %}</h4>
+                <h3 class="mb-3">{% trans from 'FOSCommentBundle' %}fos_comment_comment_new_headline{% endtrans %}</h3>
             {% endif %}
         {% endblock %}
 
@@ -38,7 +38,8 @@ with this source code in the file LICENSE.
                         {{ form_errors(form) }}
                         {{ form_errors(form.body) }}
                     </div>
-                    {{ form_widget(form.body) }}
+                    {{ form_label(form.body, 'Your comment') }}
+                    {{ form_widget(form.body, {attr: {rows: 4, maxlength: 4000, placeholder: 'Share your thoughts…'}}) }}
 
                     {{ form_rest(form) }}
                 {% endblock %}
@@ -50,8 +51,7 @@ with this source code in the file LICENSE.
                                         class="far fa-window-close"></i> {% trans from 'FOSCommentBundle' %}fos_comment_comment_reply_cancel{% endtrans %}
                             </button>
                         {% endif %}
-                        <button type="submit" class="btn btn-sm btn-link mt-2"><i
-                                    class="far fa-comment-dots"></i> {% trans from 'FOSCommentBundle' %}Post{% endtrans %}
+                        <button type="submit" class="btn btn-primary"><i class="far fa-comment-dots" aria-hidden="true"></i> Post comment
                         </button>
                     {% endblock %}
                 </div>

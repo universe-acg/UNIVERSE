@@ -1,42 +1,24 @@
 {% trans_default_domain 'FOSCommentBundle' %}
-
-{#
-This file is part of the FOSCommentBundle package.
-
-(c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
-
-This source file is subject to the MIT license that is bundled
-with this source code in the file LICENSE.
-#}
-
 {% set depth = depth|default(0) %}
 {% set view = view|default('tree') %}
-
 {% if depth == 0 %}
+    <div class="comment-section-header">
+        <h2>{{ thread.numComments }} {{ thread.numComments == 1 ? 'comment' : 'comments' }}</h2>
+        {% if fos_comment_can_edit_thread(thread) %}
+            <button type="button" data-url="{{ url('fos_comment_edit_thread_commentable', {id: thread.id, value: not thread.commentable}) }}" class="fos_comment_thread_commentable_action btn btn-outline-primary">
+                <i class="fas {{ thread.commentable ? 'fa-lock' : 'fa-lock-open' }}" aria-hidden="true"></i> {{ (thread.commentable ? 'fos_comment_thread_close' : 'fos_comment_thread_open')|trans }}
+            </button>
+        {% endif %}
+    </div>
     {% if fos_comment_can_comment_thread(thread) %}
-        {{ render(url('fos_comment_new_thread_comments', {"id": thread.id})) }}
+        {{ render(url('fos_comment_new_thread_comments', {id: thread.id})) }}
+    {% elseif not thread.commentable %}
+        <p class="comment-empty" role="status">Comments are closed for this discussion.</p>
+    {% else %}
+        <p class="comment-empty"><a href="{{ path('fos_user_security_login', {_target_path: thread.permalink}) }}">Sign in to join the conversation</a>.</p>
     {% endif %}
-
-    {% if fos_comment_can_edit_thread(thread) %}
-        <div class="fos_comment_thread_commentable mt-4 mb-4 text-right">
-            {% if thread.commentable %}
-                <button data-url="{{ url('fos_comment_edit_thread_commentable', {'id': thread.id, 'value': not thread.commentable}) }}"
-                        class="fos_comment_thread_commentable_action btn btn-sm btn-danger">
-                    <i class="fas fa-lock"></i> {{ (thread.commentable ? 'fos_comment_thread_close' : 'fos_comment_thread_open') }}
-                </button>
-            {% else %}
-                <button data-url="{{ url('fos_comment_edit_thread_commentable', {'id': thread.id, 'value': not thread.commentable}) }}"
-                        class="fos_comment_thread_commentable_action btn btn-sm btn-success">
-                    <i class="fas fa-lock-open"></i> {{ (thread.commentable ? 'fos_comment_thread_close' : 'fos_comment_thread_open') }}
-                </button>
-            {% endif %}
-        </div>
-    {% endif %}
-
-    {% set count = thread.numComments %}
-    <h4>{{ count }} comments</h4>
+    {% if thread.numComments == 0 and thread.commentable %}<p class="small text-muted">No comments yet. Be the first to share your thoughts.</p>{% endif %}
 {% endif %}
-
 {% for commentinfo in comments %}
-    {% include '@FOSComment/Thread/comment.html.twig' with { 'children': commentinfo.children, 'comment': commentinfo.comment, 'depth': depth, 'view': view } %}
+    {% include '@FOSComment/Thread/comment.html.twig' with {children: commentinfo.children, comment: commentinfo.comment, depth: depth, view: view} %}
 {% endfor %}

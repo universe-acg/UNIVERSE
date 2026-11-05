@@ -267,3 +267,49 @@ body.universe-public {
   .navbar-toggler, .mobile-nav-close button { min-height: 44px; min-width: 44px; }
   #main-content:focus { outline: none; }
 }
+/* A long page title must never compete with the breadcrumb for inline space. */
+body.universe-public {
+  .section-pagetop > div { display: grid; grid-template-columns: minmax(0,1fr); align-items: start; gap: 12px; }
+  .section-pagetop .title-page { float: none !important; width: 100%; min-width: 0; max-width: 75ch; white-space: normal; overflow-wrap: break-word; }
+  .section-pagetop nav { float: none !important; width: 100%; min-width: 0; max-width: 100%; margin: 0 !important; }
+  .section-pagetop .breadcrumb { white-space: normal; flex-wrap: wrap; padding: 0; line-height: 1.5; }
+  .section-pagetop .breadcrumb-item { min-width: 0; overflow-wrap: anywhere; }
+  .event-notices { margin-top: 16px; margin-bottom: 16px; }
+  .event-notice { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 20px; background: #edf4f7; border: 1px solid var(--u-line); border-radius: 6px; }
+  .event-notice .btn { flex-shrink: 0; }
+  .event-hero { margin-top: 24px; }
+  .event-hero-image { display: block; width: 100%; height: auto; aspect-ratio: 16 / 5; max-height: 360px; object-fit: cover; border-radius: 6px; }
+  &.route-event .event-description { margin-top: 0 !important; }
+  &.route-event .p-5 > .mt-5 { margin-top: 24px !important; }
+  #fos_comment_thread { min-width: 0; }
+  .comment-section-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
+  .comment-section-header h2 { font-size: 1.375rem; margin: 0; }
+  .comment-section-header .btn { font-size: .875rem; }
+  .fos_comment_comment_form_holder { text-align: left; margin: 0 0 24px !important; padding: 20px; background: var(--u-surface); border: 1px solid var(--u-line); border-radius: 6px; }
+  .fos_comment_comment_form_holder h3 { font-size: 1.125rem; }
+  .fos_comment_comment_form_holder textarea { display: block; width: 100%; min-height: 120px; resize: vertical; }
+  .fos_comment_form_errors { color: #a82a2a; }
+  .fos_comment_submit { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .comment-empty { padding: 16px 0; color: var(--u-muted); }
+  .comment-card { display: block; padding: 20px 0; border-bottom: 1px solid var(--u-line); min-width: 0; }
+  .comment-card-header, .comment-author, .comment-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; }
+  .comment-card-header { justify-content: space-between; margin-bottom: 12px; }
+  .comment-author { min-width: 0; }
+  .comment-author strong { font-size: .9375rem; overflow-wrap: anywhere; }
+  .comment-author .avatar { margin: 0 !important; flex-shrink: 0; }
+  .comment-actions time { font-size: .8125rem; color: var(--u-muted); }
+  .comment-actions .btn { font-size: .875rem; padding: 6px; }
+  .comment-body { overflow-wrap: anywhere; }
+  .comment-body p { margin-bottom: 8px; }
+  .fos_comment_comment_replies { margin-left: 16px; }
+  .fos_comment_comment_replies .fos_comment_comment_replies .fos_comment_comment_replies { margin-left: 0; }
+  @media(max-width:639px) {
+    .event-notice { align-items: flex-start; flex-direction: column; padding: 16px; }
+    .event-hero-image { aspect-ratio: 16 / 9; }
+    .fos_comment_comment_form_holder { padding: 16px; }
+    .comment-card-header { display: block; }
+    .comment-actions { margin-top: 8px; }
+  }
+}
+.header-main .brand-wrap .logo { width: 166px; height: auto; max-height: 48px; object-fit: contain; }
+@media(max-width:991px) { .header-main .brand-wrap .logo { width: 140px; max-height: 40px; } }

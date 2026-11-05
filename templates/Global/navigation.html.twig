@@ -16,7 +16,7 @@
                         <li class="breadcrumb-item"><a href="{{ href }}" class="dark">{{ pagetitle }}</a></li>
                     {% endfor %}
                 {% endfor %}
-                <li class="breadcrumb-item active" aria-current="page">{{ navigation|last['current'] }}</li>
+                <li class="breadcrumb-item active" aria-current="page">{{ breadcrumbCurrent|default(navigation|last['current']) }}</li>
             </ol>
         </nav>
     </div>

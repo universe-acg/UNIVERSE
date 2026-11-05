@@ -18,6 +18,7 @@ php8.2 bin/console app:help-center:seed
 php8.2 bin/console app:community:seed
 php8.2 bin/console app:demo:repair-images
 php8.2 bin/console app:pages:sync
+php8.2 bin/console app:brand:install
 php8.2 bin/console cache:clear --no-warmup
 php8.2 bin/console cache:warmup
 php8.2 bin/console doctrine:schema:validate

@@ -88,5 +88,12 @@
       "decorative": true,
       "note": "Illustrative stock imagery; people and locations are not represented as named Deree students or the actual campus."
     }
-  ]
+  ],
+  "brand_wordmark": {
+    "source": "User-supplied Universe wordmark",
+    "local_path": "public/images/brand/universe-wordmark.png",
+    "sha256": "45a96ba908e8c22dea24c3c1ebacf4d4fe9390f651a53b9c33696a14b2b912b0",
+    "usage": "Header brand logo",
+    "note": "Original supplied PNG retained unchanged."
+  }
 }

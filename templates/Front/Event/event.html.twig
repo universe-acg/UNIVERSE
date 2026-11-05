@@ -9,39 +9,25 @@
 
 {% block content %}
 
+    {% set managementUrl = null %}
     {% if is_granted('ROLE_ADMINISTRATOR') %}
-        {% include "Global/message.html.twig" with { type: 'info', icon: 'fas fa-info-circle', message: ('<a href="'~ path('dashboard_administrator_event', {slug: event.slug}) ~'">' ~ 'Click here' ~ '</a> ' ~ 'to manage this event') } %}
+        {% set managementUrl = path('dashboard_administrator_event', {slug: event.slug}) %}
+    {% elseif is_granted('ROLE_ORGANIZER') and event.organizer == app.user.organizer %}
+        {% set managementUrl = path('dashboard_organizer_event', {slug: event.slug}) %}
     {% endif %}
-    {% if is_granted('ROLE_ORGANIZER') %}
-        {% if event.organizer == app.user.organizer %}
-            {% include "Global/message.html.twig" with { type: 'info', icon: 'fas fa-info-circle', message: ('<a href="'~ path('dashboard_organizer_event', {slug: event.slug}) ~'">' ~ 'Click here' ~ '</a> ' ~ 'to manage your event') } %}
-        {% endif %}
-    {% endif %}
-    {% if is_granted('ROLE_ATTENDEE') %}
-        {% if app.user.hasBoughtATicketForEvent(event) %}
-            {% include "Global/message.html.twig" with { type: 'info', icon: 'fas fa-ticket-alt', message: ('You are going to this event' ~ ' ' ~ '<a href="'~ path('dashboard_attendee_orders', {event: event.slug}) ~'">' ~ 'My tickets' ~ '</a>') } %}
-        {% endif %}
+    {% set attending = is_granted('ROLE_ATTENDEE') and app.user.hasBoughtATicketForEvent(event) %}
+    {% if managementUrl or attending %}
+    <div class="container event-notices">
+        {% if managementUrl %}<div class="event-notice"><span>You have access to manage this event.</span><a class="btn btn-outline-primary" href="{{ managementUrl }}">Manage event</a></div>{% endif %}
+        {% if attending %}<div class="event-notice"><span>You are going to this event.</span><a class="btn btn-outline-primary" href="{{ path('dashboard_attendee_orders', {event: event.slug}) }}">My tickets</a></div>{% endif %}
+    </div>
     {% endif %}
 
     {% set navigation = [{"events": "Events", "current" : (pagetitle)}] %}
-    {% include "Global/navigation.html.twig" with navigation %}
+    {% include "Global/navigation.html.twig" with {navigation: navigation, breadcrumbCurrent: 'Event details'} %}
 
-    <div class="row no-gutters">
-        <div class="col-12 p-0">
-            <section class="section-main">
-                <div class="owl-init slider-main owl-carousel" data-items="1" data-dots="false" data-nav="false"
-                     data-autoplay="false">
-                    <div class="item-slide d-flex">
-                        <img class="slider-img justify-content-center align-self-center img-lazy-load"
-                             src="{{ asset('assets/img/loader.gif') }}"
-                             data-src="{{ event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder }}"
-                             alt="{{ event.name }}"/>
-                        <div class="slider-blured-background"
-                             style="background-image: url('{{ event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder }}');"></div>
-                    </div>
-                </div>
-            </section>
-        </div>
+    <div class="container event-hero">
+        {% include 'Global/public-image.html.twig' with {image: event.imageName ? event.getImagePath : null, alt: '', eager: true, imageClass: 'event-hero-image'} only %}
     </div>
     <section class="section-content padding-y bg-white">
         <div class="{{ services.getSetting("app_layout") }}">
