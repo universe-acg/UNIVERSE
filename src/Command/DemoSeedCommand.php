@@ -275,6 +275,7 @@ final class DemoSeedCommand extends Command
             foreach(['imageSize','coverSize','avatarSize','customBackgroundSize'] as $field)if($meta->hasField($field))$meta->setFieldValue($object,$field,filesize($file));
         }
         (new \App\Service\CommunityDemoData($this->projectDir))->installAssets();
+        require $this->projectDir.'/scripts/install_badges.php';
         $imageData=['imageName'=>'campus-demo.jpg','imageSize'=>filesize($file),'imageMimeType'=>'image/jpeg','imageOriginalName'=>'Illustrative demo campus.jpg','imageDimensions'=>[1200,675],'position'=>0];
         foreach(array_slice($events,0,12) as $i=>$event)$this->make(E\EventImage::class,'event-image-'.$i,$imageData+['event'=>$event]);
         foreach(array_slice($venues,0,12) as $i=>$venue)$this->make(E\VenueImage::class,'venue-image-'.$i,$imageData+['venue'=>$venue]);
