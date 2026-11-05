@@ -13,7 +13,7 @@ matching database backup for a migration rollback. Do not run migration down on
 an unreviewed production schema.
 
 Scheduler, Forge user, every day at 08:00 Europe/Athens:
-`cd /home/forge/universe-deree-7734d2.on-forge.com && APP_ENV=prod APP_DEBUG=0 php8.2 bin/console app:send-reminders`
+`cd /home/forge/universe-deree-live-3b97bb.on-forge.com/current && APP_ENV=prod APP_DEBUG=0 php8.2 bin/console app:send-reminders`
 
 The chat UI uses authenticated HTTP polling. The optional `websocket:server`
 command runs only on 127.0.0.1:8302 and requires signed, expiring subscriptions.

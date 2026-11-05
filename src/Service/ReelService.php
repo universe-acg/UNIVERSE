@@ -59,9 +59,9 @@ class ReelService
 
     public function deleteReel($id)
     {
-        $facility = $this->getReelById($id);
+        $reel = $this->getReelById($id);
 
-        if ($facility) {
+        if ($reel) {
             $entityManager = $this->em;
             $entityManager->remove($reel);
             $entityManager->flush();

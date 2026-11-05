@@ -28,7 +28,9 @@ class ReelsController extends Controller
     {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
 
-        $reels = $paginator->paginate($reelService->getReels(array('keyword' => $keyword, 'hidden' => 'all')), $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
+        $records=$reelService->getReels(array('keyword' => $keyword, 'hidden' => 'all'));
+        if(!$this->isGranted('ROLE_ADMINISTRATOR'))$records=array_values(array_filter($records,fn($reel)=>$reel->getUser()?->getId()===$this->getUser()->getId()));
+        $reels = $paginator->paginate($records, $request->query->getInt('page', 1), 10, array('wrap-queries' => true));
 
         return $this->render('Dashboard/Shared/Reel/index.html.twig', [
             'reels' => $reels,
@@ -295,7 +297,7 @@ class ReelsController extends Controller
 #[Route("/attendee/manage-reels/{slug}/restore", name: "dashboard_organizer_reel_restore", methods: ["POST"])]
     public function restore($slug, Request $request, AppServices $appServices, ReelService $reelService)
     {
-        $reel = $reelService->getReels(array('organizer' => "all", 'hidden' => 'all', 'slug' => $slug, "organizerEnabled" => "all"))->getQuery()->getOneOrNullResult();
+        $reel = $reelService->getReelBySlug($slug);
         if (!$reel) {
             $this->addFlash('error', 'The reel can not be found');
             return $appServices->redirectToReferer('reel');

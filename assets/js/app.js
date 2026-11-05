@@ -71,7 +71,7 @@ const routes = require('../../public/bundles/fosjsrouting/js/fos_js_routes.json'
 
 Routing.setRoutingData(routes);
 
-require('moment-timezone/builds/moment-timezone-with-data-2012-2022.min.js');
+require('moment-timezone/builds/moment-timezone-with-data.min.js');
 
 require('jquery-parallax.js/parallax.min.js');
 

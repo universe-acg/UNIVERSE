@@ -13,6 +13,11 @@ final class EntityAccessSubscriber implements EventSubscriberInterface
     public function guard(RequestEvent $event): void {
         $r=$event->getRequest();$controller=$r->attributes->get('_controller');if(!is_string($controller)||!str_contains($controller,'::'))return;
         [$class,$method]=explode('::',$controller,2);$user=$this->security->getUser();$admin=$this->security->isGranted('ROLE_ADMINISTRATOR');if($admin)return;
+        if(str_contains($class,'ManagementClubsSocietiesController') && $method!=='index'){
+            $attendee=(int)$r->attributes->get('attendeeid');$organizer=(int)$r->attributes->get('organizerid');
+            if(str_contains($class,'\\Attendee\\') && (!$user||$attendee!==$user->getId()))throw new AccessDeniedHttpException();
+            if(str_contains($class,'\\Organizer\\') && (!$user||$organizer!==$user->getOrganizer()?->getId()))throw new AccessDeniedHttpException();
+        }
         $shared='App\\Controller\\Dashboard\\Shared\\';$slug=$r->attributes->get('slug');$entity=null;$owner=null;
         $types=['EventController'=>E\Event::class,'ListingController'=>E\Listing::class,'BlogPostController'=>E\BlogPost::class,'ReelsController'=>E\Reel::class];
         foreach($types as $name=>$type)if($class===$shared.$name&&$slug&&$method!=='apply'){

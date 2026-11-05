@@ -44,7 +44,7 @@ class ManagementClubsSocietiesController extends Controller
     /**
      *
      */
-#[Route("/management/add/{attendeeid}/{organizerid}", name: "app_dashboard_attendee_join_add", condition: "request.isXmlHttpRequest()")]
+#[Route("/management/add/{attendeeid}/{organizerid}", name: "app_dashboard_attendee_join_add", condition: "request.isXmlHttpRequest()", methods: ["POST"])]
     public function add(ManagementClubsSocietiesService $managementClubsSocietiesService, OrganizerService $organizerService, UserService $userService, AppServices $services, $attendeeid, $organizerid)
     {
         $user = $userService->getUserById($attendeeid);

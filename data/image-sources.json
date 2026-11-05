@@ -1,0 +1,21 @@
+{
+  "restored_project_assets": [
+    {
+      "source": "assets/img/illustrations/register-attendee.png",
+      "public_path": "/uploads/imgs/login.png"
+    },
+    {
+      "source": "assets/img/illustrations/register-organizer.png",
+      "public_path": "/uploads/imgs/register.png"
+    },
+    {
+      "source": "assets/img/placeholders/bgchat.png",
+      "public_path": "/uploads/imgs/bgchat.png"
+    },
+    {
+      "source": "public/uploads/homepage/hero/5d99d60e41207545475471.jpg",
+      "public_path": "/uploads/imgs/default.jpg"
+    }
+  ],
+  "note": "Legacy external image host is unavailable. Existing project artwork is served locally in the original layouts."
+}

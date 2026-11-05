@@ -181,7 +181,7 @@ app_dashboard_attendee_join_add:
   path: '/dashboard/attendee/management/add/{attendeeid}/{organizerid}'
   controller: 'App\Controller\Dashboard\Attendee\ManagementClubsSocietiesController::add'
   methods:
-    - GET
+    - POST
   condition: request.isXmlHttpRequest()
 dashboard_attendee_management:
   path: /dashboard/attendee/management
@@ -232,7 +232,7 @@ app_dashboard_organizer_join_add:
   path: '/dashboard/organizer/management/add/{organizerid}/{attendeeid}'
   controller: 'App\Controller\Dashboard\Organizer\ManagementClubsSocietiesController::add'
   methods:
-    - GET
+    - POST
   condition: request.isXmlHttpRequest()
 dashboard_organizer_management:
   path: /dashboard/organizer/management

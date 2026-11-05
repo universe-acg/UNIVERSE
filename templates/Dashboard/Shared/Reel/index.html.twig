@@ -55,7 +55,7 @@
                                                  {% for reel in reels %}
                                                      <tr>
                                                          <td>
-                                                             <a href="#">{{ reel.title }}</a>
+                                                             <a href="{{ path('reel', {slug: reel.slug}) }}">{{ reel.title }}</a>
                                                          </td>
                                                          <td>
                                                              {% if reel.type == 'image' %}

@@ -7,6 +7,7 @@ final class MutationRoutes
     public function __construct(private RouterInterface $router) {}
     public static function isMutation(?string $controller): bool {
         if(!$controller||!str_contains($controller,'::'))return false;
+        if(str_contains($controller,'ManagementClubsSocietiesController::add'))return true;
         return in_array(strtolower(explode('::',$controller,2)[1]),self::METHODS,true);
     }
     public function paths(): array {

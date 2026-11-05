@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "${FORGE_SITE_PATH:?FORGE_SITE_PATH must be set}"
-exec 9>var/deployment.lock
+mkdir -p var
+exec 9>"${FORGE_SITE_ROOT:-$FORGE_SITE_PATH}/deployment.lock"
 flock -n 9 || { echo 'Another UNIVERSE deployment is running.'; exit 1; }
-git pull --ff-only origin master
+if [ -z "${FORGE_RELEASE_DIRECTORY:-}" ]; then git pull --ff-only origin master; fi
 export APP_ENV=prod APP_DEBUG=0
 php8.2 /usr/local/bin/composer install --no-dev --no-interaction --prefer-dist --no-scripts --no-plugins --optimize-autoloader
 npm ci --include=dev
