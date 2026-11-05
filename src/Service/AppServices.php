@@ -546,8 +546,10 @@
         /**
          * @throws InvalidDatabaseException|Exception
          */
+        private ?array $menuLinkChoices=null;
         public function getLinks(): array
         {
+            if($this->menuLinkChoices!==null)return $this->menuLinkChoices;
             $linksArray = array();
 
             // Add static pages urls
@@ -572,7 +574,14 @@
             $dashboardPagesArray = array();
             $dashboardPagesArray['Attendee tickets'] = $this->router->generate('dashboard_attendee_orders');
             $dashboardPagesArray['Create event'] = $this->router->generate('dashboard_organizer_event_add');
+            $dashboardPagesArray['Dashboard']=$this->router->generate('dashboard_index');
+            $dashboardPagesArray['Notifications']=$this->router->generate('notification_list');
+            $dashboardPagesArray['Chat']=$this->router->generate('chat_index');
+            $dashboardPagesArray['Change password']=$this->router->generate('fos_user_change_password');
+            $dashboardPagesArray['Change email']=$this->router->generate('fos_user_change_email');
+            $dashboardPagesArray['Scan tickets']=$this->router->generate('qr_reader');
             $linksArray["Dashboard Pages"] = $dashboardPagesArray;
+            $linksArray['Campus sections']=array_combine(['Events','Creators','Venues','Athletics','Listings','News','Reels','Live','Leaderboards','Help center'],array_map(fn($route)=>$this->router->generate($route),['events','creators','venues','athletics','listings','blog','reels','lives','leaderboards','help_center']));
 
             // Add Category pages urls
             $categoryPagesArray = array();
@@ -597,7 +606,7 @@
             // Add event pages urls
             $eventPagesArray = array();
             $eventPagesArray['Events page'] = $this->router->generate('events');
-            $events = $this->getEvents(array());
+            $events = $this->getEvents(['limit'=>50]);
             foreach ($events as $event) {
                 $eventPagesArray['Event' . ' - ' . $event->getName()] = $this->router->generate('event', ['slug' => $event->getSlug()]);
             }
@@ -620,11 +629,11 @@
             $organizersPagesArray = array();
             $organizers = $this->getUsers(array("role" => "organizer"))->getQuery()->getResult();
             foreach ($organizers as $organizer) {
-                $organizersPagesArray['Organizer Profile' . ' - ' . $organizer->getOrganizer()->getName()] = $this->router->generate('organizer', ['slug' => $organizer->getOrganizer()->getSlug()]);
+                $organizersPagesArray['Organizer Profile' . ' - ' . $organizer->getOrganizer()->getName()] = $this->router->generate('organizer', ['slug' => $organizer->getUsername()]);
             }
             $linksArray["Organizers Pages"] = $organizersPagesArray;
 
-            return $linksArray;
+            return $this->menuLinkChoices=$linksArray;
         }
 
         // Returns the orders after applying the specified search criterias

@@ -28,14 +28,17 @@ class OrganizerController extends AbstractController
 #[Route("/organizer/{slug}", name: "organizer")]
     public function organizer(ManagementClubsSocietiesService $managementClubsSocietiesService, $slug, AppServices $services, UserRepository $userRepository): Response
     {
+        $em = $this->getDoctrine()->getManager();
         $user = $userRepository->getByUsername($slug);
+        if (!$user || !$user->getOrganizer()) {
+            $user = $em->getRepository(Organizer::class)->findOneBy(['slug' => $slug])?->getUser();
+        }
 
         if (!$user || !$user->getOrganizer()) {
             $this->addFlash('error', 'The creator could not be found');
             return $services->redirectToReferer("events");
         }
 
-        $em = $this->getDoctrine()->getManager();
         $user->getOrganizer()->viewed();
         $em->flush();
 

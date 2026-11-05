@@ -14,7 +14,7 @@
                     <div class="input-icon">
                         <i class="fa fa-search"></i>
                         <input name="keyword" class="form-control top-search" placeholder="{{ "Search for events" }}"
-                               type="text" id="search-input">
+                               type="search" id="search-input" aria-label="Search for events">
                     </div>
                 </form>
             </div>
@@ -26,13 +26,9 @@
 
                         <div class="widget-header dropdown"
                              style="display: flex;justify-content: center;align-items: center;">
-                            {#                            <a href="#" class="icontext" data-toggle="dropdown" onclick="openNotifications()"> #}
-                            {#                                {% if services.hasUnreadNotifications()|default(false) %} #}
-                            {#                                    <i class="fas fa-bell" style="font-size: 17px;"></i> #}
-                            {#                                {% else %} #}
-                            {#                                    <i class="far fa-bell" style="font-size: 17px;"></i> #}
-                            {#                                {% endif %} #}
-                            {#                            </a> #}
+                            <a href="#" class="icontext" data-toggle="dropdown" aria-label="Notifications" aria-haspopup="true" aria-expanded="false">
+                                <i class="{{ services.hasUnreadNotifications() ? 'fas' : 'far' }} fa-bell" aria-hidden="true"></i>
+                            </a>
                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow header-notifications-dropdown-menu">
                                 {% for notification in notificationsData.lastFiveNotifications %}
                                     {% if not notification.read %}
@@ -43,7 +39,7 @@
             </a>
             <span style="cursor: pointer; margin-right: 10px"
                   data-notification-id="{{ notification.id }}"
-                  class="badge badge-warning mark-as-read">
+                  class="badge badge-warning mark-as-read" data-read-url="{{ path('notification_mark_as_read_xhr', {id:notification.id}) }}" role="button" tabindex="0" aria-label="Mark notification as read">
                 <i class="fas fa-check"></i>
             </span>
         </span>
@@ -55,11 +51,13 @@
                                     {% endif %}
                                 {% endfor %}
 
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ path('notification_list') }}">{{ 'All notifications'|trans }}</a>
                             </div>
                         </div>
 
                         <div class="widget-header dropdown">
-                            <a href="#" class="ml-3 icontext" data-toggle="dropdown" onclick="openDashboardSideNav()">
+                            <a href="#" class="ml-3 icontext" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Account menu">
                                 {% if is_granted('ROLE_ADMINISTRATOR') %}
                                     <span class="avatar">
                                         <i class="far fa-user"></i>
@@ -80,7 +78,7 @@
                                     </a>
                                 {% elseif is_granted('ROLE_ORGANIZER') %}
                                     <a class="dropdown-item"
-                                       href="https://universe.alexandroskourtis.me/dashboard/organizer/my-events">
+                                       href="{{ path('dashboard_organizer_event') }}">
                                         <i class="fas fa-tachometer-alt fa-fw"></i> {{ 'Dashboard' }}
                                     </a>
                                 {% elseif is_granted('ROLE_ATTENDEE') %}
@@ -88,7 +86,14 @@
                                         <i class="fas fa-tachometer-alt fa-fw"></i> {{ 'Dashboard' }}
                                     </a>
                                 {% endif %}
-                                <hr class="dropdown-divider">
+                                <button type="button" class="dropdown-item d-lg-none" data-dashboard-menu-toggle aria-controls="dashboard-sidenav" aria-expanded="false" onclick="openDashboardSideNav()"><i class="fas fa-bars fa-fw" aria-hidden="true"></i> {{ 'Dashboard menu'|trans }}</button>
+                                <a class="dropdown-item" href="{{ path('chat_index') }}"><i class="far fa-comments fa-fw" aria-hidden="true"></i> {{ 'Chat'|trans }}</a>
+                                {% if is_granted('ROLE_ATTENDEE') %}
+                                    <a class="dropdown-item" href="{{ path('dashboard_attendee_account_settings') }}"><i class="fas fa-user-cog fa-fw" aria-hidden="true"></i> {{ 'Account settings'|trans }}</a>
+                                {% elseif is_granted('ROLE_ORGANIZER') %}
+                                    <a class="dropdown-item" href="{{ path('dashboard_organizer_account_settings') }}"><i class="fas fa-user-cog fa-fw" aria-hidden="true"></i> {{ 'Account settings'|trans }}</a>
+                                {% endif %}
+                                <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{{ path('fos_user_security_logout') }}"><i
                                             class="fas fa-sign-out-alt fa-fw"></i> {{ "Sign out" }}</a>
                             </div>
@@ -97,7 +102,7 @@
                     {% else %}
 
                         <div class="widget-header">
-                            <a href="{{ path('fos_user_security_login') }}">
+                            <a href="{{ path('fos_user_security_login') }}" aria-label="Sign in">
                                 <div class="icon-wrap icon-xs bg-primary round text-secondary d-lg-none d-xl-none">
                                     <i class="fas fa-sign-in-alt text-light fa-sm fa-fw"></i>
                                 </div>
@@ -106,8 +111,8 @@
                         </div>
 
 
-                        <div class="widget-header">
-                            <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"
+                        <div class="widget-header dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-label="Sign up"
                                aria-haspopup="true" aria-expanded="false">
                                 <div class="icon-wrap icon-xs bg-primary round text-secondary d-lg-none d-xl-none">
                                     <i class="fas fa-user-plus text-light fa-sm fa-fw"></i>
@@ -127,7 +132,7 @@
 
                     <div class="widget-header d-lg-none">
                         <button class="navbar-toggler collapsed" type="button" data-toggle="collapse"
-                                data-target="#main_nav" aria-expanded="false" aria-label="Toggle navigation">
+                                data-target="#main_nav" aria-controls="main_nav" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="icon-bar top-bar"></span>
                             <span class="icon-bar middle-bar"></span>
                             <span class="icon-bar bottom-bar"></span>
@@ -140,127 +145,32 @@
     </div>
 </section>
 <header class="section-header">
-    <nav class="navbar navbar-expand-lg navbar-light bg-white {% if app.request.get("_route") == "homepage" and herosettings is defined and herosettings.content != "none" %}border-0{% endif %}">
+    <nav aria-label="Main navigation" class="navbar navbar-expand-lg navbar-light bg-white {% if app.request.get("_route") == "homepage" and herosettings is defined and herosettings.content != "none" %}border-0{% endif %}">
         <div class="{{ services.getSetting("app_layout") }}">
             <div class="collapse navbar-collapse" id="main_nav">
-                <ul class="navbar-nav nav-fill ">
-                    {% for menuElement in services.getMenus({"slug" : "header-menu"}).getQuery().getOneOrNullResult().getMenuElements() %}
-                        {% set link = "#0" %}
-                        {% if menuElement.customLink %}
-                            {% set link = menuElement.customLink %}
-                        {% endif %}
-                        {% if menuElement.link %}
-                            {% set link =  menuElement.link %}
-                        {% endif %}
-                        {% if link == "categories_dropdown" %}
-                            <li class="nav-item dropdown dropdown-hover {% if app.request.get('_route') == "categories" %}active{% endif %}">
-                                <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown"
-                                   aria-haspopup="true" aria-expanded="false"><i
-                                            class="{{ menuElement.icon }} fa-fw"></i> {{ menuElement.label }}</a>
-                                <div class="dropdown-menu dropdown-menu-arrow">
-                                    {% for category in services.getCategories({ "featured": true, "limit": 9 }).getQuery().getResult() %}
-                                        <a href="{{ path('events', { category: category.slug }) }}"
-                                           class="dropdown-item"><i
-                                                    class="{{ category.icon }} fa-fw"></i> {{ category.name }}</a>
-                                    {% endfor %}
-                                </div>
-                            </li>
-                        {% else %}
-                            {% if link != "/events" and link != "/dashboard/attendee/my-tickets" and link != "/dashboard/organizer/my-events/add" and menuElement.customLink  != "https://universe.alexandroskourtis.me/scanqr" and menuElement.customLink  != "https://universe.alexandroskourtis.me/open-events" %}
-                                <li class="nav-item {% if app.request.pathinfo == link %}active{% endif %}">
-                                    <a class="nav-link" href="{{ link }}">
-                                        {% if menuElement.icon %}
-                                            <i class="{{ menuElement.icon }} fa-fw"></i>
-                                        {% endif %}
-                                        {% if menuElement.label %}
-                                            {{ menuElement.label }}
-                                        {% endif %}
-                                    </a>
-                                </li>
-                            {% else %}
-                                {% if link == "/dashboard/attendee/my-tickets" and is_granted('ROLE_ATTENDEE') %}
-                                    <li class="nav-item {% if app.request.pathinfo == link %}active{% endif %}">
-                                        <a class="nav-link" href="{{ link }}">
-                                            {% if menuElement.icon %}
-                                                <i class="{{ menuElement.icon }} fa-fw"></i>
-                                            {% endif %}
-                                            {% if menuElement.label %}
-                                                {{ menuElement.label }}
-                                            {% endif %}
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                {% if link == "/events"  and  app.user %}
-                                    <li class="nav-item {% if app.request.pathinfo == link %}active{% endif %}">
-                                        <a class="nav-link" href="{{ link }}">
-                                            {% if menuElement.icon %}
-                                                <i class="{{ menuElement.icon }} fa-fw"></i>
-                                            {% endif %}
-                                            {% if menuElement.label %}
-                                                {{ menuElement.label }}
-                                            {% endif %}
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                {% if menuElement.customLink == "https://universe.alexandroskourtis.me/open-events"  and  app.user is empty %}
-                                    <li class="nav-item {% if app.request.pathinfo == link %}active{% endif %}">
-                                        <a class="nav-link" href="{{ link }}">
-                                            {% if menuElement.icon %}
-                                                <i class="{{ menuElement.icon }} fa-fw"></i>
-                                            {% endif %}
-                                            {% if menuElement.label %}
-                                                {{ menuElement.label }}
-                                            {% endif %}
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                {% if link == "/dashboard/organizer/my-events/add" and is_granted('ROLE_ORGANIZER') %}
-                                    <li class="nav-item {% if app.request.pathinfo == link %}active{% endif %}">
-                                    <a class="nav-link" href="{{ link }}">
-                                        {% if menuElement.icon %}
-                                            <i class="{{ menuElement.icon }} fa-fw"></i>
-                                        {% endif %}
-                                        {% if menuElement.label %}
-                                            {{ menuElement.label }}
-                                        {% endif %}
-                                    </a>
-                                {% endif %}
-                                {% if menuElement.customLink == "https://universe.alexandroskourtis.me/scanqr" and is_granted('ROLE_ORGANIZER') %}
-                                    <li class="nav-item {% if app.request.pathinfo == link %}active{% endif %}">
-                                        <a class="nav-link" href="{{ link }}">
-                                            {% if menuElement.icon %}
-                                                <i class="{{ menuElement.icon }} fa-fw"></i>
-                                            {% endif %}
-                                            {% if menuElement.label %}
-                                                {{ menuElement.label }}
-                                            {% endif %}
-                                        </a>
-                                    </li>
-                                {% endif %}
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
-                    {#                    {% if is_granted('ROLE_ADMINISTRATOR') %} #}
-                    {#                        <li class="nav-item dropdown dropdown-hover"> #}
-                    {#                            <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown" #}
-                    {#                               aria-haspopup="true" aria-expanded="false"><i #}
-                    {#                                        class="fa-fw"></i>Alpha Stage Features</a> #}
-                    {#                            <div class="dropdown-menu dropdown-menu-arrow"> #}
-                    {#                                <a class="dropdown-item" href="https://universe.alexandroskourtis.me/leaderboards"><i #}
-                    {#                                            class="fa-fw"></i>Leaderboards</a> #}
-                    {#                                <a class="dropdown-item" href="https://universe.alexandroskourtis.me/venues"><i #}
-                    {#                                            class="fa-fw"></i>Venues</a> #}
-                    {#                                <a class="dropdown-item" href="https://universe.alexandroskourtis.me/athletics"><i #}
-                    {#                                            class="fa-fw"></i>Athletics</a> #}
-                    {#                                <a class="dropdown-item" href="https://universe.alexandroskourtis.me/listings"><i #}
-                    {#                                            class="fa-fw"></i>Listings</a> #}
-                    {#                                <a class="dropdown-item" href="https://universe.alexandroskourtis.me/reels"><i #}
-                    {#                                            class="fa-fw"></i>Reels</a> #}
-                    {#                                <a class="dropdown-item" href="https://universe.alexandroskourtis.me/chat"><i #}
-                    {#                                            class="fa-fw"></i>Chat</a> #}
-                    {#                            </div> #}
-                    {#                        </li> #}
-                    {#                    {% endif %} #}
+                {% set headerMenu = navigation_menu('header-menu') %}
+                {% set primaryItems = headerMenu.items|filter(item => item.placement != 'more') %}
+                {% set moreItems = headerMenu.items|filter(item => item.placement == 'more') %}
+                <ul class="navbar-nav nav-fill">
+                    {% for item in primaryItems %}{% include 'Global/header-menu-item.html.twig' with {item:item} %}{% endfor %}
+                    {% if moreItems|length %}
+                        <li class="nav-item dropdown dropdown-hover">
+                            <a class="nav-link dropdown-toggle" href="#" id="header-more-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ 'More'|trans }}</a>
+                            <div class="dropdown-menu dropdown-menu-arrow" aria-labelledby="header-more-menu">
+                                {% for item in moreItems %}
+                                    {% if item.kind in ['categories_dropdown','footer_categories_section'] %}
+                                        <h6 class="dropdown-header">{{ item.label }}</h6>
+                                        {% for category in services.getCategories({'featured':true,'limit':9}).getQuery().getResult() %}
+                                            <a class="dropdown-item" href="{{ path('events',{category:category.slug}) }}">{{ category.name }}</a>
+                                        {% endfor %}
+                                    {% elseif item.url %}
+                                        {% set active = app.request.pathinfo == item.url or (item.url != '/' and app.request.pathinfo starts with (item.url ~ '/')) %}
+                                        <a class="dropdown-item{% if active %} active{% endif %}" href="{{ item.url }}"{% if active %} aria-current="page"{% endif %}>{% if item.icon %}<i class="{{ item.icon }} fa-fw" aria-hidden="true"></i>{% endif %} {{ item.label }}</a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -284,52 +194,16 @@
         document.getElementById('search-input').value = keywordValue;
     }
 
-    function openNotifications() {
-        // Toggle the visibility of the dropdown menu
-        var dropdown = document.querySelector('.header-notifications-dropdown-menu');
-        dropdown.classList.toggle('show');
-
-        // Check if there are unread notifications and update the badge
-        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-        {% if services.hasUnreadNotifications()|default(false) %}
-        var hasUnreadNotifications = true;
-        {% else %}
-        var hasUnreadNotifications = false;
-        {% endif %}
-        {% endif %}
-
-        var badge = document.querySelector('.badge');
-        if (hasUnreadNotifications) {
-            badge.style.display = 'block';
-        } else {
-            badge.style.display = 'none';
-        }
+    function markHeaderNotification(event) {
+        var control = event.target.closest('[data-read-url]');
+        if (!control || (event.type === 'keydown' && event.key !== 'Enter' && event.key !== ' ')) return;
+        event.preventDefault();
+        var config = document.getElementById('universe-action-config');
+        if (!config) return;
+        fetch(control.dataset.readUrl, {method:'POST',headers:{'X-CSRF-Token':JSON.parse(config.textContent).token}}).then(function(response) {
+            if (response.ok) control.closest('span').remove();
+        });
     }
-
-    document.addEventListener("click", function (event) {
-        if (event.target && event.target.classList.contains("mark-as-read")) {
-            event.preventDefault();
-            const notificationId = event.target.getAttribute("data-notification-id");
-
-            if (notificationId) {
-                fetch(`/notifications/mark-as-readxhr/${notificationId}`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            event.target.parentElement.style.display = "none"; // Hide the notification element
-                        } else {
-                            // Handle errors or other responses
-                        }
-                    })
-                    .catch(error => {
-                        // Handle fetch errors
-                    });
-            }
-        }
-    });
-
+    document.addEventListener('click', markHeaderNotification);
+    document.addEventListener('keydown', markHeaderNotification);
 </script>

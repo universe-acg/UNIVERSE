@@ -50,7 +50,7 @@
             {% if user.isAdministratorUser %}
                 <b>Universe</b>
             {% elseif user.organizer.category == "Club" or user.organizer.category == "Society" %}
-                <a href="https://universe.alexandroskourtis.me/leaderboards?tag={{ organizer.user.stringifypointslevel }}"
+                <a href="{{ path('leaderboards',{tag:user.stringifypointslevel}) }}"
                 > <span class="text-dark">{{ user.stringifypointslevel }}</span></a>
 
                 <br>

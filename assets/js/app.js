@@ -1850,18 +1850,39 @@ $(document).ready(function () {
     }
 
     // Dashboard sidenav
+    var dashboardMenuReturnFocus = null;
     function openDashboardSideNav() {
-        document.getElementById("dashboard-sidenav").style.left = "0";
+        var menu = document.getElementById("dashboard-sidenav");
+        if (!menu) return;
+        dashboardMenuReturnFocus = document.activeElement;
+        var account = $('[aria-label="Account menu"]');
+        if (account.attr('aria-expanded') === 'true') account.dropdown('toggle');
+        menu.inert = false;
+        menu.setAttribute('aria-hidden', 'false');
+        menu.style.left = "0";
         document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+        $('[data-dashboard-menu-toggle]').attr('aria-expanded', 'true');
+        menu.querySelector('.dashboard-sidenav-close').focus();
     }
 
     function closeDashboardSideNav() {
-        document.getElementById("dashboard-sidenav").style.left = "-250px";
+        var menu = document.getElementById("dashboard-sidenav");
+        if (!menu) return;
+        menu.style.left = "-250px";
         document.body.style.backgroundColor = "white";
+        if (dashboardMenuReturnFocus && dashboardMenuReturnFocus.offsetParent !== null) dashboardMenuReturnFocus.focus();
+        else $('[aria-label="Account menu"]').trigger('focus');
+        menu.inert = true;
+        menu.setAttribute('aria-hidden', 'true');
+        $('[data-dashboard-menu-toggle]').attr('aria-expanded', 'false');
     }
 
     global.openDashboardSideNav = openDashboardSideNav;
     global.closeDashboardSideNav = closeDashboardSideNav;
+    document.addEventListener('keydown', function (event) {
+        var menu = document.getElementById('dashboard-sidenav');
+        if (event.key === 'Escape' && menu && menu.getAttribute('aria-hidden') === 'false') closeDashboardSideNav();
+    });
 
     // Back to top button
     if ($('.material-scrolltop').length) {
@@ -1872,7 +1893,9 @@ $(document).ready(function () {
     if ($('.menuelements-collection').length) {
         $('.menuelements-collection').each(function () {
             $(this).collection({
-                    min: 1,
+                    min: 0,
+                    // Remove immediately so a quick Save cannot submit a deleted row.
+                    fade_out: false,
                     prefix: 'menuelement',
                     add_at_the_end: true,
                     allow_add: true,

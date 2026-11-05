@@ -4,38 +4,157 @@
     "name": "Header",
     "elements": [
       {
-        "icon": "fas fa-calendar-alt",
-        "slug": "events",
+        "label": "Events",
+        "slug": "header-menu-events",
         "link": "/events",
         "customLink": null,
-        "label": "Events",
-        "position": 0
+        "icon": "fas fa-calendar-alt",
+        "position": 0,
+        "audience": "everyone",
+        "placement": "primary"
       },
       {
-        "icon": "fas fa-ticket-alt",
-        "slug": "my-tickets",
-        "link": null,
-        "customLink": "/dashboard/attendee/my-tickets",
-        "label": "My Tickets",
-        "position": 2
-      },
-      {
-        "icon": "fas fa-address-book",
-        "slug": "creators",
-        "link": null,
-        "customLink": "/creators",
         "label": "Creators",
-        "position": 1
+        "slug": "header-menu-creators",
+        "link": "/creators",
+        "customLink": null,
+        "icon": "fas fa-address-book",
+        "position": 1,
+        "audience": "everyone",
+        "placement": "primary"
       },
       {
-        "icon": "fas fa-calendar",
-        "slug": "add-event",
-        "link": null,
-        "customLink": "/dashboard/organizer/my-events/add",
+        "label": "Venues",
+        "slug": "header-menu-venues",
+        "link": "/venues",
+        "customLink": null,
+        "icon": "fas fa-map-marker-alt",
+        "position": 2,
+        "audience": "everyone",
+        "placement": "primary"
+      },
+      {
+        "label": "Athletics",
+        "slug": "header-menu-athletics",
+        "link": "/athletics",
+        "customLink": null,
+        "icon": "fas fa-running",
+        "position": 3,
+        "audience": "everyone",
+        "placement": "primary"
+      },
+      {
+        "label": "Listings",
+        "slug": "header-menu-listings",
+        "link": "/listings",
+        "customLink": null,
+        "icon": "fas fa-briefcase",
+        "position": 4,
+        "audience": "everyone",
+        "placement": "primary"
+      },
+      {
+        "label": "News",
+        "slug": "header-menu-news",
+        "link": "/blog",
+        "customLink": null,
+        "icon": "far fa-newspaper",
+        "position": 5,
+        "audience": "everyone",
+        "placement": "primary"
+      },
+      {
+        "label": "My Tickets",
+        "slug": "header-menu-my-tickets",
+        "link": "/dashboard/attendee/my-tickets",
+        "customLink": null,
+        "icon": "fas fa-ticket-alt",
+        "position": 6,
+        "audience": "attendees",
+        "placement": "primary"
+      },
+      {
         "label": "Add Event",
-        "position": 3
+        "slug": "header-menu-add-event",
+        "link": "/dashboard/organizer/my-events/add",
+        "customLink": null,
+        "icon": "fas fa-calendar-plus",
+        "position": 7,
+        "audience": "organizers",
+        "placement": "primary"
+      },
+      {
+        "label": "Reels",
+        "slug": "header-menu-reels",
+        "link": "/reels",
+        "customLink": null,
+        "icon": "fas fa-film",
+        "position": 8,
+        "audience": "everyone",
+        "placement": "more"
+      },
+      {
+        "label": "Live",
+        "slug": "header-menu-live",
+        "link": "/lives",
+        "customLink": null,
+        "icon": "fas fa-video",
+        "position": 9,
+        "audience": "everyone",
+        "placement": "more"
+      },
+      {
+        "label": "Leaderboards",
+        "slug": "header-menu-leaderboards",
+        "link": "/leaderboards",
+        "customLink": null,
+        "icon": "fas fa-trophy",
+        "position": 10,
+        "audience": "everyone",
+        "placement": "more"
+      },
+      {
+        "label": "Help center",
+        "slug": "header-menu-help-center",
+        "link": "/help-center",
+        "customLink": null,
+        "icon": "far fa-question-circle",
+        "position": 11,
+        "audience": "everyone",
+        "placement": "more"
+      },
+      {
+        "label": "About us",
+        "slug": "header-menu-about-us",
+        "link": "/page/about-us",
+        "customLink": null,
+        "icon": "fas fa-info-circle",
+        "position": 12,
+        "audience": "everyone",
+        "placement": "more"
+      },
+      {
+        "label": "Contact",
+        "slug": "header-menu-contact",
+        "link": "/contact",
+        "customLink": null,
+        "icon": "far fa-envelope",
+        "position": 13,
+        "audience": "everyone",
+        "placement": "more"
+      },
+      {
+        "label": "Scan tickets",
+        "slug": "header-menu-scan-tickets",
+        "link": "/scanqr",
+        "customLink": null,
+        "icon": "fas fa-qrcode",
+        "position": 14,
+        "audience": "organizers",
+        "placement": "more"
       }
-    ]
+    ],
+    "header": "Main navigation"
   },
   {
     "slug": "first-footer-section-menu",
@@ -43,45 +162,66 @@
     "elements": [
       {
         "icon": null,
-        "slug": "about-us",
+        "slug": "first-footer-section-menu-about-us",
         "link": "/page/about-us",
         "customLink": null,
         "label": "About us",
-        "position": 0
+        "position": 0,
+        "audience": "everyone",
+        "placement": "primary"
       },
       {
         "icon": null,
-        "slug": "help-center",
+        "slug": "first-footer-section-menu-help-center",
         "link": null,
         "customLink": "/help-center",
         "label": "Help center",
-        "position": 1
+        "position": 1,
+        "audience": "everyone",
+        "placement": "primary"
       },
       {
         "icon": null,
-        "slug": "privacy-policy",
+        "slug": "first-footer-section-menu-privacy-policy",
         "link": null,
         "customLink": "/page/privacy-policy",
         "label": "Privacy policy",
-        "position": 2
+        "position": 2,
+        "audience": "everyone",
+        "placement": "primary"
       },
       {
         "icon": null,
-        "slug": "cookie-policy",
+        "slug": "first-footer-section-menu-cookie-policy",
         "link": null,
         "customLink": "/page/cookie-policy",
         "label": "Cookie policy",
-        "position": 3
+        "position": 3,
+        "audience": "everyone",
+        "placement": "primary"
       },
       {
         "icon": null,
-        "slug": "terms-of-service",
+        "slug": "first-footer-section-menu-terms-of-service",
         "link": null,
-        "customLink": "/page/terms-of-service",
+        "customLink": "/page/legal-notice",
         "label": "Terms of service",
-        "position": 4
+        "position": 4,
+        "audience": "everyone",
+        "placement": "primary"
+      },
+      {
+        "label": "Contact",
+        "slug": "first-footer-section-menu-contact",
+        "link": "/contact",
+        "customLink": null,
+        "icon": null,
+        "position": 5,
+        "audience": "everyone",
+        "placement": "primary"
       }
-    ]
+    ],
+    "header": "About Universe"
   },
   {
     "slug": "second-footer-section-menu",
@@ -89,45 +229,86 @@
     "elements": [
       {
         "icon": null,
-        "slug": "register-as-attendee",
+        "slug": "second-footer-section-menu-register-as-attendee",
         "link": null,
         "customLink": "/signup/attendee",
         "label": "Register as attendee",
-        "position": 0
+        "position": 0,
+        "audience": "guests",
+        "placement": "primary"
       },
       {
         "icon": null,
-        "slug": "register-as-creator",
+        "slug": "second-footer-section-menu-register-as-creator",
         "link": null,
         "customLink": "/signup/organizer",
         "label": "Register as creator",
-        "position": 1
+        "position": 1,
+        "audience": "guests",
+        "placement": "primary"
       },
       {
         "icon": null,
-        "slug": "my-tickets-1",
+        "slug": "second-footer-section-menu-my-tickets-1",
         "link": null,
         "customLink": "/dashboard/attendee/my-tickets",
         "label": "My tickets",
-        "position": 2
+        "position": 2,
+        "audience": "attendees",
+        "placement": "primary"
       },
       {
         "icon": null,
-        "slug": "update-password",
+        "slug": "second-footer-section-menu-update-password",
         "link": null,
         "customLink": "/dashboard/change-password",
         "label": "Update password",
-        "position": 3
+        "position": 3,
+        "audience": "authenticated",
+        "placement": "primary"
       },
       {
         "icon": null,
-        "slug": "update-email",
+        "slug": "second-footer-section-menu-update-email",
         "link": null,
-        "customLink": "/api/profile/change-email",
+        "customLink": "/dashboard/change-email",
         "label": "Update email",
-        "position": 4
+        "position": 4,
+        "audience": "authenticated",
+        "placement": "primary"
+      },
+      {
+        "label": "Dashboard",
+        "slug": "second-footer-section-menu-dashboard",
+        "link": "/dashboard",
+        "customLink": null,
+        "icon": null,
+        "position": 5,
+        "audience": "authenticated",
+        "placement": "primary"
+      },
+      {
+        "label": "Notifications",
+        "slug": "second-footer-section-menu-notifications",
+        "link": "/dashboard/notifications",
+        "customLink": null,
+        "icon": null,
+        "position": 6,
+        "audience": "authenticated",
+        "placement": "primary"
+      },
+      {
+        "label": "Chat",
+        "slug": "second-footer-section-menu-chat",
+        "link": "/chat",
+        "customLink": null,
+        "icon": null,
+        "position": 7,
+        "audience": "authenticated",
+        "placement": "primary"
       }
-    ]
+    ],
+    "header": "Your account"
   },
   {
     "slug": "third-footer-section-menu",
@@ -135,44 +316,95 @@
     "elements": [
       {
         "icon": null,
-        "slug": "events-1",
+        "slug": "third-footer-section-menu-events-1",
         "link": null,
         "customLink": "/events",
         "label": "Events",
-        "position": 0
+        "position": 0,
+        "audience": "everyone",
+        "placement": "primary"
       },
       {
         "icon": null,
-        "slug": "leaderboards",
+        "slug": "third-footer-section-menu-leaderboards",
         "link": null,
         "customLink": "/leaderboards",
         "label": "Leaderboards",
-        "position": 1
+        "position": 1,
+        "audience": "everyone",
+        "placement": "primary"
       },
       {
         "icon": null,
-        "slug": "venues-1",
+        "slug": "third-footer-section-menu-venues-1",
         "link": null,
         "customLink": "/venues",
         "label": "Venues",
-        "position": 2
+        "position": 2,
+        "audience": "everyone",
+        "placement": "primary"
       },
       {
         "icon": null,
-        "slug": "athletics",
+        "slug": "third-footer-section-menu-athletics",
         "link": null,
         "customLink": "/athletics",
         "label": "Athletics",
-        "position": 3
+        "position": 3,
+        "audience": "everyone",
+        "placement": "primary"
       },
       {
         "icon": null,
-        "slug": "listings",
+        "slug": "third-footer-section-menu-listings",
         "link": null,
         "customLink": "/listings",
         "label": "Listings",
-        "position": 4
+        "position": 4,
+        "audience": "everyone",
+        "placement": "primary"
+      },
+      {
+        "label": "Creators",
+        "slug": "third-footer-section-menu-creators",
+        "link": "/creators",
+        "customLink": null,
+        "icon": null,
+        "position": 5,
+        "audience": "everyone",
+        "placement": "primary"
+      },
+      {
+        "label": "News",
+        "slug": "third-footer-section-menu-news",
+        "link": "/blog",
+        "customLink": null,
+        "icon": null,
+        "position": 6,
+        "audience": "everyone",
+        "placement": "primary"
+      },
+      {
+        "label": "Reels",
+        "slug": "third-footer-section-menu-reels",
+        "link": "/reels",
+        "customLink": null,
+        "icon": null,
+        "position": 7,
+        "audience": "everyone",
+        "placement": "primary"
+      },
+      {
+        "label": "Live",
+        "slug": "third-footer-section-menu-live",
+        "link": "/lives",
+        "customLink": null,
+        "icon": null,
+        "position": 8,
+        "audience": "everyone",
+        "placement": "primary"
       }
-    ]
+    ],
+    "header": "Explore campus"
   }
 ]

@@ -1,5 +1,5 @@
 {% set runtimeConfig = {"thumbnail": {"size": [500, 250] }} %}
-    {% set link = "https://universe.alexandroskourtis.me/blog-article/dfgdfsgfdsdfgfdsgsd" ~ new.slug %}
+    {% set link = url('blog_article',{slug:new.slug}) %}
 
 <div class="card mb-4 shadow-none blog-post-card">
     {% if (new.getImagePath|imagine_filter('thumbnail', runtimeConfig)) %}

@@ -11,6 +11,7 @@ npm ci --include=dev
 php8.2 bin/console assets:install public
 npm run build
 php8.2 bin/console doctrine:migrations:migrate --no-interaction
+php8.2 bin/console app:menus:sync
 php8.2 bin/console cache:clear --no-warmup
 php8.2 bin/console cache:warmup
 php8.2 bin/console doctrine:schema:validate

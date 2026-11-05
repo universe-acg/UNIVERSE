@@ -204,7 +204,7 @@ final class DemoSeedCommand extends Command
         $this->make(E\AppLayoutSettings::class,'layout',['logoName'=>'64901bc67a4fa291758359.png','logoSize'=>15871,'logoMimeType'=>'image/png','logoOriginalName'=>'Universe.png','logoDimensions'=>[500,152],'faviconName'=>'64901bc67ac2c306344789.png','faviconSize'=>15000,'faviconMimeType'=>'image/png','faviconOriginalName'=>'Universe icon.png','faviconDimensions'=>[500,500],'ogImageName'=>'64901bc67a4fa291758359.png']);$this->make(E\HomepageHeroSettings::class,'homepage-hero');
         $menuKeys=[];
         foreach(json_decode(file_get_contents($this->projectDir.'/data/ui-menus.json'),true,512,JSON_THROW_ON_ERROR) as $originalMenu) {
-            $menuSlug=$originalMenu['slug'];$menu=$this->make(E\Menu::class,'menu-'.$menuSlug,['name'=>$originalMenu['name'],'slug'=>$menuSlug]);
+            $menuSlug=$originalMenu['slug'];$menu=$this->make(E\Menu::class,'menu-'.$menuSlug,['name'=>$originalMenu['name'],'slug'=>$menuSlug,'header'=>$originalMenu['header']??null]);
             foreach($originalMenu['elements'] as $element){$key='menu-'.$menuSlug.'-'.md5($element['label']);$menuKeys[$key]=true;$this->make(E\MenuElement::class,$key,$element+['menu'=>$menu]);}
         }
         // Remove only navigation rows owned by an earlier demo seed, never user-created items.

@@ -1,33 +1,23 @@
-{% extends "Global/layout.html.twig" %}
-
- {% set pagetitle = "Live XYZ" %}
-
- {% block title %}{{ pagetitle }}{% endblock %}
-
- {% block meta_dynamic_seo %}
- {% endblock %}
-
- {% block content %}
-
-     {% set navigation = [{"current" : (pagetitle)}] %}
-     {% include "Global/navigation.html.twig" with navigation %}
-
-     <section class="section-content padding-y bg-white">
-         <div class="{{ services.getSetting("app_layout") }}">
-             <div class="col-lg-12 order-1 order-lg-2" style="padding: 0 !important;">
-                 <iframe
-                         src="https://player.twitch.tv/?channel=rappytastic&parent=universe.alexandroskourtis.me"
-                         height="720"
-                         width="1280"
-                         frameborder="0"
-                         scrolling="no"
-                         allowfullscreen="true">
-                 </iframe>
-             </div>
-         </div>
-     </section>
-
- {% endblock %}
-
- {% block javascripts %}
- {% endblock %}
+{% extends 'Global/layout.html.twig' %}
+{% set pagetitle = live.title %}
+{% block title %}{{ pagetitle }}{% endblock %}
+{% block content %}
+    {% set navigation = [{'lives':'Live sessions','current':pagetitle}] %}
+    {% include 'Global/navigation.html.twig' with navigation %}
+    <section class="section-content padding-y bg-white">
+        <div class="{{ services.getSetting('app_layout') }}">
+            <article class="card box">
+                <div class="card-body">
+                    <h1>{{ live.title }}</h1>
+                    <p>{{ live.description|striptags|nl2br }}</p>
+                    {% if streamUrl %}
+                        <a class="btn btn-primary" href="{{ streamUrl }}" target="_blank" rel="noopener noreferrer">Open live stream <i class="fas fa-external-link-alt" aria-hidden="true"></i></a>
+                    {% else %}
+                        {% include 'Global/message.html.twig' with {type:'info',message:'A streaming link has not been added to this session yet.',icon:'fas fa-info-circle'} %}
+                    {% endif %}
+                    <p class="mt-3"><a href="{{ path('lives') }}">All live sessions</a></p>
+                </div>
+            </article>
+        </div>
+    </section>
+{% endblock %}

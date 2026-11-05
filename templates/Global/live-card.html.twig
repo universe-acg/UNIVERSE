@@ -1,0 +1,9 @@
+<article class="card card-event pb-2 h-100">
+    <a href="{{ path('live', {slug:live.slug}) }}" class="text-dark">
+        <div class="img-wrap img-lazy-load" style="height:260px" data-src="{{ live.imagePath ? asset(live.imagePath) : live.imagePlaceholder }}"><div class="loader"></div></div>
+        <div class="info-wrap">
+            <h5>{{ live.title }}</h5>
+            <p>{{ live.description|striptags|slice(0,150) }}</p>
+        </div>
+    </a>
+</article>

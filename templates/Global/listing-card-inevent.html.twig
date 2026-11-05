@@ -1,5 +1,5 @@
 {% set runtimeConfig = {"thumbnail": {"size": [500, 250] }} %}
-{% set link = "https://universe.alexandroskourtis.me/listing" ~ listing.slug %}
+{% set link = url('listing',{slug:listing.slug}) %}
 <div class="col-12 m-0 p-0">
     <a href="{{ path('listing', { slug : listing.slug }) }}">
         <div class="card mb-4 border-0">

@@ -28,7 +28,7 @@
                                             <thead>
                                             <tr>
                                                 <th>{{ 'Name' }}</th>
-                                                <th>{{ 'Header' }}</th>
+                                                <th>{{ 'Heading' }}</th>
                                                 <th>{{ 'Elements' }}</th>
                                                 <th class="text-center"><i class="fas fa-cog"></i></th>
                                             </tr>
@@ -42,7 +42,7 @@
                                                         {{ menu.name }}
                                                     </td>
                                                     <td>
-                                                        {{ menu.header }}
+                                                        {{ menu.header ?: '—' }}
                                                     </td>
                                                     <td>
                                                         {{ menu.menuElements|length }}

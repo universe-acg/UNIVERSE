@@ -44,6 +44,7 @@ class MenuElement
      * @Profanity
      */
     #[Assert\NotBlank]
+    #[Assert\Length(max: 180)]
     #[ORM\Column(type: 'string', length: 180)]
     private $label;
     #[ORM\Id]
@@ -54,6 +55,28 @@ class MenuElement
     private $menu;
     #[ORM\Column(name: 'position', type: 'integer')]
     private $position;
+
+    public const AUDIENCES = ['everyone','guests','authenticated','attendees','organizers','administrators'];
+    #[ORM\Column(length: 20, options: ['default' => 'everyone'])]
+    #[Assert\Choice(choices: self::AUDIENCES)]
+    private string $audience = 'everyone';
+    #[ORM\Column(length: 16, options: ['default' => 'primary'])]
+    #[Assert\Choice(choices: ['primary','more'])]
+    private string $placement = 'primary';
+    public function getAudience(): string { return $this->audience; }
+    public function setAudience(string $value): void { $this->audience=$value; }
+    public function getPlacement(): string { return $this->placement; }
+    public function setPlacement(string $value): void { $this->placement=$value; }
+    #[Assert\Callback]
+    public function validateDestination(\Symfony\Component\Validator\Context\ExecutionContextInterface $context): void {
+        $link=trim((string)$this->link);$custom=trim((string)$this->customLink);
+        if($link==='' && $custom==='')$context->buildViolation('Choose a page or enter a custom link.')->atPath('link')->addViolation();
+        if($link!=='' && $custom!=='')$context->buildViolation('Use a page selection or a custom link, one at a time.')->atPath('customLink')->addViolation();
+        foreach(['link'=>$link,'customLink'=>$custom] as $field=>$value) {
+            if($value==='' || in_array($value,['categories_dropdown','footer_categories_section'],true))continue;
+            if(!\App\Service\MenuNavigation::isSafeLink($value))$context->buildViolation('Use a site path or an http, https, mailto or tel link.')->atPath($field)->addViolation();
+        }
+    }
 
     /**
      * @return mixed

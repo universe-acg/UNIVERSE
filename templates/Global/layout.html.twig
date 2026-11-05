@@ -270,7 +270,7 @@
 
 {% block content %}{% endblock %}
 
-{# {% include "Global/footer.html.twig" %} #}
+{% include "Global/footer.html.twig" %}
 
 {% block javascripts %}
 {% endblock %}
@@ -302,7 +302,7 @@
     <div class="cookies-popup-content">
         <p>This website uses cookies to ensure you get the best experience on our website. By using this site
             you agree to the
-            <a href="https://universe.alexandroskourtis.me/page/cookie-policy">Cookie Policy</a>.</p>
+            <a href="{{ path('page',{slug:'cookie-policy'}) }}">Cookie Policy</a>.</p>
         <button id="accept-cookies">Accept</button>
     </div>
 </div>

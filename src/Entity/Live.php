@@ -216,7 +216,7 @@ class Live
 
     public function getImagePath()
     {
-        return 'uploads/venues/' . $this->mainImage;
+        return $this->mainImage ? 'uploads/lives/' . $this->mainImage : null;
     }
 
     /**

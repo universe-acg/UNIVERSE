@@ -1,3 +1,4 @@
+{% set sidebarId = sidebarId|default('dashboard-menu') %}
 {% set routename = app.request.get('_route') %}
 {% set random = services.generateReference(5) %}
 
@@ -15,7 +16,7 @@
     {# Administrator role sidebar links #}
 
     <li class="nav-item">
-        <a href="#settings-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu"
+        <a href="#settings-submenu-{{ random }}" data-toggle="collapse" data-parent="#{{ sidebarId }}"
            class="nav-link dropdown-toggle">
             <i class="fas fa-sliders-h fa-fw"></i> {{ 'Settings' }}
         </a>
@@ -57,7 +58,7 @@
     </li>
 
     <li class="nav-item">
-        <a href="#events-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu"
+        <a href="#events-submenu-{{ random }}" data-toggle="collapse" data-parent="#{{ sidebarId }}"
            class="nav-link dropdown-toggle">
             <i class="fas fa-calendar-alt fa-fw"></i> {{ 'Events' }}
         </a>
@@ -89,7 +90,7 @@
     </li>
 
     {#    <li class="nav-item"> #}
-    {#        <a href="#venues-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu" #}
+    {#        <a href="#venues-submenu-{{ random }}" data-toggle="collapse" data-parent="#{{ sidebarId }}" #}
     {#           class="nav-link dropdown-toggle"> #}
     {#            <i class="fas fa-map-marker-alt fa-fw"></i> {{ 'Venues' }} #}
     {#        </a> #}
@@ -108,7 +109,7 @@
     {#    </li> #}
 
     {#    <li class="nav-item"> #}
-    {#        <a href="#athletics-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu" #}
+    {#        <a href="#athletics-submenu-{{ random }}" data-toggle="collapse" data-parent="#{{ sidebarId }}" #}
     {#           class="nav-link dropdown-toggle"> #}
     {#            <i class="fas fa-dumbbell fa-fw"></i> {{ 'Athletics' }} #}
     {#        </a> #}
@@ -129,7 +130,7 @@
     </li>
 
     <li class="nav-item">
-        <a href="#blog-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu"
+        <a href="#blog-submenu-{{ random }}" data-toggle="collapse" data-parent="#{{ sidebarId }}"
            class="nav-link dropdown-toggle">
             <i class="far fa-newspaper fa-fw"></i> {{ 'Blog' }}
         </a>
@@ -151,7 +152,7 @@
     </li>
 
     <li class="nav-item">
-        <a href="#helpcenter-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu"
+        <a href="#helpcenter-submenu-{{ random }}" data-toggle="collapse" data-parent="#{{ sidebarId }}"
            class="nav-link dropdown-toggle">
             <i class="far fa-life-ring fa-fw"></i> {{ 'Help center' }}
         </a>
@@ -173,7 +174,7 @@
     </li>
 
     <li class="nav-item">
-        <a href="#account-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu"
+        <a href="#account-submenu-{{ random }}" data-toggle="collapse" data-parent="#{{ sidebarId }}"
            class="nav-link dropdown-toggle">
             <i class="fas fa-user-cog fa-fw"></i> {{ 'Account' }}
         </a>
@@ -246,7 +247,7 @@
 
     {% if app.user.id == 110 %}
         <li class="nav-item">
-            <a href="#athletics-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu"
+            <a href="#athletics-submenu-{{ random }}" data-toggle="collapse" data-parent="#{{ sidebarId }}"
                class="nav-link dropdown-toggle">
                 <i class="fas fa-table-tennis fa-fw"></i> {{ 'Facilities' }}
             </a>
@@ -296,7 +297,7 @@
     {#    </li> #}
 
     <li class="nav-item">
-        <a href="#account-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu"
+        <a href="#account-submenu-{{ random }}" data-toggle="collapse" data-parent="#{{ sidebarId }}"
            class="nav-link dropdown-toggle">
             <i class="fas fa-user-cog fa-fw"></i> {{ 'Account' }}
         </a>
@@ -413,7 +414,7 @@
     {#    </li> #}
 
     <li class="nav-item">
-        <a href="#account-submenu-{{ random }}" data-toggle="collapse" data-parent="#dashboard-menu"
+        <a href="#account-submenu-{{ random }}" data-toggle="collapse" data-parent="#{{ sidebarId }}"
            class="nav-link dropdown-toggle">
             <i class="fas fa-user-cog fa-fw"></i> {{ 'Account' }}
         </a>

@@ -794,8 +794,11 @@ class SettingsController extends Controller
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                foreach ($menu->getMenuElements() as $menuElement) {
+                $elements=$menu->getMenuElements()->toArray();
+                usort($elements,static fn($a,$b)=>(int)$a->getPosition()<=>(int)$b->getPosition());
+                foreach ($elements as $position=>$menuElement) {
                     $menuElement->setMenu($menu);
+                    $menuElement->setPosition($position);
                 }
                 $em->persist($menu);
                 $em->flush();

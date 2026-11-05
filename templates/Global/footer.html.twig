@@ -1,270 +1,31 @@
-<style>
-
-    #contact {
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-    }
-
-    #contact #contact-title {
-        letter-spacing: 1.5px;
-        color: #202020;
-        font-size: 2rem;
-    }
-
-    #contact #contact-body {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        border: 2px solid white;
-        align-items: center;
-        width: 400px;
-        height: 100%;
-        background: #fff;
-        border-radius: 20px;
-        padding: 2vw;
-        gap: 20px;
-        box-shadow: 0px 0px 10px 5px #eeeeee;
-    }
-
-    #contact #contact-body #contact-name {
-        color: #202020;
-        font-size: 1.6rem;
-    }
-
-    #contact #contact-body #contact-desc {
-        color: #333533;
-        font-size: 1rem;
-        text-align: center;
-    }
-
-    #contact #contact-body #contact-background {
-        border-radius: 20px;
-        width: 100%;
-        height: 130px;
-        position: absolute;
-        top: 0;
-    }
-
-    #contact #contact-body #contact-pp {
-        z-index: 999;
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
-        border: 3px solid #fff;
-    }
-
-    #contact #contact-body #contact-social {
-        padding: 5%;
-        width: 100%;
-        height: 5vw;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-    }
-
-    #contact #contact-body #contact-social .socials {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: row;
-        gap: 25px;
-        flex-wrap: nowrap;
-    }
-
-    @media (max-width: 500px) {
-        #contact #contact-body {
-            width: 80vw;
-        }
-    }
-</style>
-
-{# <footer class="section-footer border-top-gray"> #}
-{#    <div class="{{ services.getSetting("app_layout") }}"> #}
-{#        <section class="footer-top padding-top"> #}
-{#            <div class="row"> #}
-                {#                <aside class="col-sm-6 col-lg-3"> #}
-                {#                    <h5 class="title text-dark">{{ services.getMenus({"slug" : "first-footer-section-menu"}).getQuery().getOneOrNullResult().getHeader() }}</h5> #}
-                {#                    <ul class="list-unstyled"> #}
-                {#                        {% for menuElement in services.getMenus({"slug" : "first-footer-section-menu"}).getQuery().getOneOrNullResult().getMenuElements() %} #}
-                {#                            <li class="mb-1"> #}
-                {#                                {% set link = "#0" %} #}
-                {#                                {% if menuElement.customLink %} #}
-                {#                                    {% set link = menuElement.customLink %} #}
-                {#                                {% endif %} #}
-                {#                                {% if menuElement.link %} #}
-                {#                                    {% set link =  menuElement.link %} #}
-                {#                                {% endif %} #}
-                {#                                <a href="{{ link }}"> #}
-                {#                                    {% if menuElement.icon %} #}
-                {#                                        <i class="{{ menuElement.icon }} fa-fw"></i> #}
-                {#                                    {% endif %} #}
-                {#                                    {% if menuElement.label %} #}
-                {#                                        {{ menuElement.label }} #}
-                {#                                    {% endif %} #}
-                {#                                </a> #}
-                {#                            </li> #}
-                {#                        {% endfor %} #}
-                {#                    </ul> #}
-                {#                </aside> #}
-                {#                <aside class="col-sm-6 col-lg-3"> #}
-                {#                    <h5 class="title text-dark">{{ services.getMenus({"slug" : "second-footer-section-menu"}).getQuery().getOneOrNullResult().getHeader() }}</h5> #}
-                {#                    <ul class="list-unstyled"> #}
-                {#                        {% for menuElement in services.getMenus({"slug" : "second-footer-section-menu"}).getQuery().getOneOrNullResult().getMenuElements() %} #}
-                {#                            <li class="mb-1"> #}
-                {#                                {% set link = "#0" %} #}
-                {#                                {% if menuElement.customLink %} #}
-                {#                                    {% set link = menuElement.customLink %} #}
-                {#                                {% endif %} #}
-                {#                                {% if menuElement.link %} #}
-                {#                                    {% set link =  menuElement.link %} #}
-                {#                                {% endif %} #}
-                {#                                <a href="{{ link }}"> #}
-                {#                                    {% if menuElement.icon %} #}
-                {#                                        <i class="{{ menuElement.icon }} fa-fw"></i> #}
-                {#                                    {% endif %} #}
-                {#                                    {% if menuElement.label %} #}
-                {#                                        {{ menuElement.label }} #}
-                {#                                    {% endif %} #}
-                {#                                </a> #}
-                {#                            </li> #}
-                {#                        {% endfor %} #}
-                {#                    </ul> #}
-                {#                </aside> #}
-                {#                <aside class="col-sm-6 col-lg-3"> #}
-                {#                    <h5 class="title text-dark">{{ services.getMenus({"slug" : "third-footer-section-menu"}).getQuery().getOneOrNullResult().getHeader() }}</h5> #}
-                {#                    <ul class="list-unstyled"> #}
-                {#                        {% for menuElement in services.getMenus({"slug" : "third-footer-section-menu"}).getQuery().getOneOrNullResult().getMenuElements() %} #}
-                {#                            {% set link = "#0" %} #}
-                {#                            {% if menuElement.customLink %} #}
-                {#                                {% set link = menuElement.customLink %} #}
-                {#                            {% endif %} #}
-                {#                            {% if menuElement.link %} #}
-                {#                                {% set link =  menuElement.link %} #}
-                {#                            {% endif %} #}
-                {#                            {% if link == "footer_categories_section" %} #}
-                {#                                {% for category in services.getCategories({ "featured": true, "limit": 4 }).getQuery().getResult() %} #}
-                {#                                    <li class="mb-1"><a #}
-                {#                                                href="{{ path('events', { category: category.slug }) }}">{{ category.name }}</a> #}
-                {#                                    </li> #}
-                {#                                {% endfor %} #}
-                {#                            {% else %} #}
-                {#                                <li class="mb-1"> #}
-                {#                                    <a href="{{ link }}"> #}
-                {#                                        {% if menuElement.icon %} #}
-                {#                                            <i class="{{ menuElement.icon }} fa-fw"></i> #}
-                {#                                        {% endif %} #}
-                {#                                        {% if menuElement.label %} #}
-                {#                                            {{ menuElement.label }} #}
-                {#                                        {% endif %} #}
-                {#                                    </a> #}
-                {#                                </li> #}
-                {#                            {% endif %} #}
-                {#                        {% endfor %} #}
-                {#                    </ul> #}
-                {#                </aside> #}
-                {#                <aside class="col-sm-6 col-lg-3"> #}
-                {#                    <article> #}
-                {#                        {% if services.getSetting("contact_phone") != "" or services.getSetting("contact_email") != "" or services.getSetting("facebook_url") != "" or services.getSetting("instagram_url") != "" or services.getSetting("youtube_url") != "" or services.getSetting("twitter_url") != "" %} #}
-                {#                            <h5 class="title text-dark">{{ "Contact Us" }}</h5> #}
-                {#                        {% endif %} #}
-
-                {#                        {% if services.getSetting("contact_phone") != "" or services.getSetting("contact_email") != "" %} #}
-                {#                            <p> #}
-
-                {#                                #}{#                                {% if services.getSetting("contact_phone") != "" %} #}
-                {#                                #}{#                                    <strong>{{ "Phone" }}: </strong> {{ services.getSetting("contact_phone") }} #}
-                {#                                #}{#                                {% endif %} #}
-
-                {#                                {% if services.getSetting("contact_email") != "" %} #}
-                {#                                    <strong>{{ "Email" }}:</strong> {{ services.getSetting("contact_email") }} #}
-                {#                                {% endif %} #}
-                {#                            </p> #}
-                {#                        {% endif %} #}
-
-                {#                        {% if services.getSetting("facebook_url") != "" or services.getSetting("instagram_url") != "" or services.getSetting("youtube_url") != "" or services.getSetting("twitter_url") != "" %} #}
-                {#                            <div class="btn-group white"> #}
-                {#                                {% if services.getSetting("facebook_url") != "" %} #}
-                {#                                    <a class="btn btn-facebook" title="{{ "Facebook" }}" target="_blank" #}
-                {#                                       href="{{ services.getSetting("facebook_url") }}"><i #}
-                {#                                                class="fab fa-facebook-f fa-fw"></i></a> #}
-                {#                                {% endif %} #}
-                {#                                {% if services.getSetting("instagram_url") != "" %} #}
-                {#                                    <a class="btn btn-instagram" title="{{ "Instagram" }}" target="_blank" #}
-                {#                                       href="{{ services.getSetting("instagram_url") }}"><i #}
-                {#                                                class="fab fa-instagram fa-fw"></i></a> #}
-                {#                                {% endif %} #}
-                {#                                {% if services.getSetting("youtube_url") != "" %} #}
-                {#                                    <a class="btn btn-youtube" title="{{ "Youtube" }}" target="_blank" #}
-                {#                                       href="{{ services.getSetting("youtube_url") }}"><i #}
-                {#                                                class="fab fa-youtube fa-fw"></i></a> #}
-                {#                                {% endif %} #}
-                {#                                {% if services.getSetting("twitter_url") != "" %} #}
-                {#                                    <a class="btn btn-twitter" title="{{ "Twitter" }}" target="_blank" #}
-                {#                                       href="{{ services.getSetting("twitter_url") }}"><i #}
-                {#                                                class="fab fa-twitter fa-fw"></i></a> #}
-                {#                                {% endif %} #}
-                {#                            </div> #}
-                {#                        {% endif %} #}
-                {#                        <div class="clearfix"></div> #}
-                {#                    </article> #}
-                {#                </aside> #}
-{#            </div> #}
-{#            <br> #}
-{#        </section> #}
-{#        <section class="footer-bottom row"> #}
-{#            <div class="col-sm-12"> #}
-{#                <p class="text-start text-dark pull-left" style="float:left !important;"> #}
-{#                    <a href="https://universe.alexandroskourtis.me/page/legal-notice" #}
-{#                       class="text-dark">{{ "Legal Notice" }}</a> #}
-{#                    <span class="text-gray">|</span> #}
-{#                    <a href="https://universe.alexandroskourtis.me/page/privacy-policy" #}
-{#                       class="text-dark">{{ "Privacy policy" }}</a> #}
-{#                    <span class="text-gray">|</span> #}
-{#                    <a href="https://universe.alexandroskourtis.me/page/cookie-policy" #}
-{#                       class="text-dark">{{ "Cookie policy" }}</a> #}
-{#                    <span class="text-gray">|</span> #}
-{#                    <a href="https://universe.alexandroskourtis.me/page/community-guidelines" #}
-{#                       class="text-dark">{{ "Community Guidelines" }}</a> #}
-{#                    <span class="text-gray">|</span> #}
-{#                    <a href="https://universe.alexandroskourtis.me/page/about-us" class="text-dark">{{ "About us" }}</a> #}
-{#                    <span class="text-gray">|</span> #}
-{#                </p> #}
-
-{#                <div id="contact-social" class="text-end text-dark pull-right" style="float: right !important;"> #}
-{#                    <div className="socials"> #}
-{#                        <div id="contact-social"> #}
-{#                            <div class="socials"> #}
-{#                                <a class="hvr-shrink" href="https://github.com/lalBi94" target="_blank"> #}
-{#                                    <i class="fab icon github fa-github" style="color: #202020; font-size: 2.5rem"></i> #}
-{#                                </a> #}
-{#                                <a class="hvr-shrink" href="https://www.linkedin.com/in/bilal-boudjemline-54365b228/" #}
-{#                                   target="_blank"> #}
-{#                                    <i class="fab icon linkedin fa-linkedin" #}
-{#                                       style="color: #00A0DC; font-size: 2.5rem"></i> #}
-{#                                </a> #}
-{#                                <a class="hvr-shrink" href="https://discord.gg/xpCc6XmUaX" target="_blank"> #}
-{#                                    <i class="fab icon fa-youtube" #}
-{#                                       style="font-size: 2.5rem"></i> #}
-{#                                </a> #}
-{#                            </div> #}
-{#                        </div> #}
-{#                    </div> #}
-{#                </div> #}
-{#            </div> #}
-{#            <div class="col-sm-12"> #}
-{#                <p class="text-dark-50 text-start"> #}
-{#                    The creators of this project are the <a href="https://www.instagram.com/dereeibsociety/">IB #}
-{#                        Society</a>, <a #}
-{#                            href="https://www.instagram.com/deree_cyber_club/">Cyber Club</a>, <a #}
-{#                            href="https://www.instagram.com/all.conditions.graphics/">ACG (All Conditions Graphics)</a>, #}
-{#                    <a href="https://www.instagram.com/alexandros.kourtis.98/?hl=en">Alexandros Kourtis</a> #}
-{#                    &copy; {{ "now"|date('Y') }} #}
-{#                </p> #}
-{#            </div> #}
-{#        </section> #}
-{#    </div> #}
-{# </footer> #}
+<footer class="section-footer border-top-gray mt-4">
+    <div class="{{ services.getSetting('app_layout') }}">
+        <section class="footer-top padding-top" aria-label="Footer navigation">
+            <div class="row">
+                {% for slug in ['first-footer-section-menu','second-footer-section-menu','third-footer-section-menu'] %}
+                    {% set menu = navigation_menu(slug) %}
+                    {% if menu.items|length %}
+                        <aside class="col-sm-6 col-lg-3">
+                            <h5 class="title text-dark">{{ menu.heading }}</h5>
+                            <ul class="list-unstyled">
+                                {% for item in menu.items %}
+                                    {% if item.kind in ['footer_categories_section','categories_dropdown'] %}
+                                        {% for category in services.getCategories({'featured':true,'limit':4}).getQuery().getResult() %}<li class="mb-1"><a href="{{ path('events',{category:category.slug}) }}">{{ category.name }}</a></li>{% endfor %}
+                                    {% elseif item.url %}
+                                        <li class="mb-1"><a href="{{ item.url }}">{% if item.icon %}<i class="{{ item.icon }} fa-fw" aria-hidden="true"></i>{% endif %} {{ item.label }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </aside>
+                    {% endif %}
+                {% endfor %}
+                <aside class="col-sm-6 col-lg-3">
+                    <h5 class="title text-dark">{{ 'Contact us'|trans }}</h5>
+                    <p><a href="{{ path('contact') }}">{{ 'Contact'|trans }}</a></p>
+                    <p><a href="{{ path('help_center') }}">{{ 'Help center'|trans }}</a></p>
+                </aside>
+            </div>
+        </section>
+        <section class="footer-bottom row"><div class="col-12"><p class="text-muted">{{ services.getSetting('website_name') }} &copy; {{ 'now'|date('Y') }}</p></div></section>
+    </div>
+</footer>

@@ -26,9 +26,11 @@ class MenuType extends AbstractType
                 'attr' => ['placeholder' => 'Enter menu name'],
                 'help' => 'Enter the name for the menu.'
             ])
+            ->add('header', TextType::class, ['required'=>false,'label'=>'Heading','help'=>'Heading displayed above this menu in the footer.'])
             ->add('menuElements', CollectionType::class, array(
                 'label' => 'Menu Elements',
                 'entry_type' => MenuElementType::class,
+                'entry_options' => ['in_header'=>(($options['data']??null) instanceof Menu && $options['data']->getSlug()==='header-menu')],
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype' => true,
