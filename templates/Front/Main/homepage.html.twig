@@ -1,281 +1,531 @@
 {% extends "Global/layout.html.twig" %}
 
- {% block title %}{{ services.getSetting("website_description_" ~ "en") }}{% endblock %}
+{% block title %}{{ services.getSetting("website_description_" ~ "en") }}{% endblock %}
 
- {% block content %}
-     <style>
-         .mycontainer {
-             max-width: 75vw !important;
-         }
-     </style>
+{% block stylesheets %}
+<style>
+/* ── Landing page scoped styles ── */
 
-     <div class="mainblock">
-         {% if herosettings.content == "events" and herosettings.events|length %}
-             <section class="section-main">
-                 <div class="owl-init slider-main homepage-slider owl-carousel" data-items="1" data-dots="true"
-                      data-nav="true" data-autoplay="true" data-rtl="true">
-                     {% for event in events %}
-                         <div class="item-slide img-lazy-load"
-                              data-src="{{ event.imageName ? asset(event.getImagePath) : event.getImagePlaceholder }}">
-                             <div class="loader"></div>
-                             <div class="content-container">
-                                 <div class="{{ services.getSetting("app_layout") }} mycontainer">
-                                     <div class="row-sm">
-                                         <div class="col-md-12">
-                                             <h2 class="text-light mb-4">{{ event.name }}</h2>
-                                             {% if event.getFirstOnSaleEventDate %}
-                                                 {% if event.getFirstOnSaleEventDate.startdate %}
-                                                     <h5 class="text-light mb-4"><i class="fas fa-clock fa-fw"></i>
-                                                         {{ event.getFirstOnSaleEventDate.startdate|localizeddate('none', 'none', app.request.locale, date_timezone, date_format ~ ' a') }}
-                                                     </h5>
-                                                 {% endif %}
-                                             {% endif %}
-                                             <a href="{{ path('event', { slug : event.slug }) }}"
-                                                class="btn btn-light btn-lg"><i
-                                                         class="fas fa-ticket-alt fa-fw"></i> {{ "Book event" }}</a>
-                                         </div>
-                                     </div>
-                                 </div>
-                             </div>
-                         </div>
-                     {% endfor %}
-                 </div>
-             </section>
-         {% endif %}
+.landing-hero {
+    position: relative;
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0d1b2a 0%, #1b3a4b 40%, #2A769B 100%);
+    overflow: hidden;
+    padding: 100px 0 80px;
+}
+.landing-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 80%;
+    height: 200%;
+    background: radial-gradient(ellipse at center, rgba(42,118,155,0.25) 0%, transparent 70%);
+    pointer-events: none;
+}
+.landing-hero .hero-artwork {
+    max-width: 380px;
+    animation: heroFloat 6s ease-in-out infinite;
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3));
+}
+.landing-hero h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 3rem;
+    line-height: 1.15;
+    color: #fff;
+}
+.landing-hero h1 .text-accent {
+    color: #5ec4e8;
+}
+.landing-hero .hero-subtitle {
+    font-size: 1.15rem;
+    color: rgba(255,255,255,0.8);
+    max-width: 480px;
+}
+.landing-hero .btn-hero-primary {
+    background: #fff;
+    color: #1b3a4b;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 50px;
+    border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.landing-hero .btn-hero-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    color: #1b3a4b;
+    text-decoration: none;
+}
+.landing-hero .btn-hero-outline {
+    border: 2px solid rgba(255,255,255,0.5);
+    color: #fff;
+    font-weight: 600;
+    padding: 11px 30px;
+    border-radius: 50px;
+    background: transparent;
+    transition: border-color 0.2s, background 0.2s;
+}
+.landing-hero .btn-hero-outline:hover {
+    border-color: #fff;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    text-decoration: none;
+}
 
-         {% if herosettings.content == "organizers" and herosettings.organizers|length %}
-             <section class="section-main">
-                 <div class="owl-init slider-main homepage-slider owl-carousel" data-items="1" data-dots="true"
-                      data-nav="true" data-autoplay="true">
-                     {% for user in herosettings.organizers %}
-                         {% if user.organizer.coverName %}
-                             <div class="item-slide img-lazy-load" data-src="{{ asset(user.organizer.getCoverPath) }}">
-                                 <div class="loader"></div>
-                                 <div class="content-container">
-                                     <div class="{{ services.getSetting("app_layout") }}">
-                                         <div class="row-sm">
-                                             <div class="col-md-12">
+@keyframes heroFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+}
 
-                                                 <h2 class="text-light mb-4">{{ user.organizer.name }}</h2>
-                                                 {% if user.organizer.description %}
-                                                     <p class="text-light mb-4">{{ user.organizer.description|striptags }}</p>
-                                                 {% endif %}
-                                                 <a href="{{ path('events', { organizer : user.organizer.slug }) }}"
-                                                    class="btn btn-light btn-lg"><i
-                                                             class="fas fa-ticket-alt fa-fw"></i> {{ "Book event" }}
-                                                 </a>
-                                             </div>
-                                         </div>
-                                     </div>
-                                 </div>
-                             </div>
-                         {% endif %}
-                     {% endfor %}
-                 </div>
-             </section>
-         {% endif %}
+/* ── Trusted by strip ── */
+.landing-trusted {
+    padding: 40px 0;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+}
+.landing-trusted .section-label {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #999;
+}
+.club-logo {
+    height: 50px;
+    max-width: 120px;
+    object-fit: contain;
+    filter: grayscale(100%);
+    opacity: 0.5;
+    transition: filter 0.3s, opacity 0.3s;
+}
+.club-logo:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+}
 
-         {% if herosettings.content == "custom" %}
-             <section class="section-intro bg-dark text-white text-center">
-                 <div class="homepage-custom-hero-background d-flex flex-column img-lazy-load"
-                      {% if herosettings.customBackgroundName %}data-src="{{ herosettings.getCustomBackgroundPath }}"{% endif %}>
-                     <div class="{{ services.getSetting("app_layout") }} my-auto">
+/* ── Section basics ── */
+.landing-section {
+    padding: 80px 0;
+}
+.landing-section.bg-alt {
+    background: #f8f9fa;
+}
+.landing-section .section-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 2rem;
+    color: #1b3a4b;
+}
+.landing-section .section-subtitle {
+    color: #6c757d;
+    font-size: 1.1rem;
+    max-width: 600px;
+}
 
-                         <div class="row">
-                             <div class="col-lg-8 col-sm-12 text-center mx-auto">
-                                 {% if herosettings.title %}
-                                     <h2 class="display-4 mt-3 mb-3">{{ herosettings.title }}</h2>
-                                 {% endif %}
-                                 {% if herosettings.paragraph %}
-                                     <h3 class="mb-5 font-weight-lighter">{{ herosettings.paragraph }}</h3>
-                                 {% endif %}
-                             </div>
-                         </div>
+/* ── Feature cards ── */
+.feature-card {
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 28px 24px;
+    background: #fff;
+    transition: transform 0.25s, box-shadow 0.25s;
+    height: 100%;
+}
+.feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+}
+.feature-card .feature-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: #fff;
+    background: linear-gradient(135deg, #2A769B, #1b3a4b);
+    margin-bottom: 16px;
+}
+.feature-card h5 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #1b3a4b;
+}
+.feature-card p {
+    color: #6c757d;
+    font-size: 0.92rem;
+    margin: 0;
+}
 
-                         {% if herosettings.showSearchBox %}
-                             <div class="row">
-                                 <div class="col-lg-9 col-md-8 col-sm-12 mx-auto">
-                                     <div class="card">
-                                         <div class="card-body p30">
-                                             <form action="{{ path('events') }}">
-                                                 <div class="form-row text-left">
-                                                     <div class="col-lg-3 col-sm-12">
-                                                         <label for="hero-search-category"
-                                                                class="form-label text-dark">{{ "Looking for" }}</label>
-                                                         <select id="hero-search-category" class="select2"
-                                                                 name="category"
-                                                                 data-sort-options="1">
-                                                             <option value>{{ "Anything" }}</option>
-                                                             {% for category in services.getCategories({}).getQuery().getResult() %}
-                                                                 <option value="{{ category.slug }}">{{ category.name }}</option>
-                                                             {% endfor %}
-                                                         </select>
-                                                     </div>
-                                                     <div class="col-lg-3 col-sm-12">
-                                                         <label for="hero-search-stardate"
-                                                                class="form-label text-dark">{{ "When" }}</label>
-                                                         <select id="hero-search-stardate" class="select2"
-                                                                 name="startdate">
-                                                             <option value>{{ "Anytime" }}</option>
-                                                             <option value="today">{{ "Today" }}</option>
-                                                             <option value="tomorrow">{{ "Tomorrow" }}</option>
-                                                             <option value="thisweekend">{{ "This weekend" }}</option>
-                                                             <option value="thisweek">{{ "This week" }}</option>
-                                                             <option value="nextweek">{{ "Next week" }}</option>
-                                                             <option value="thismonth">{{ "This month" }}</option>
-                                                             <option value="nextmonth">{{ "Next month" }}</option>
-                                                         </select>
-                                                     </div>
+/* ── About section photo grid ── */
+.about-photo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+.about-photo-grid img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+.about-photo-grid img:first-child {
+    grid-column: 1 / -1;
+    height: 220px;
+}
 
-                                                     <div class="col-lg-3 col-sm-12 my-auto">
-                                                         <button class="btn btn-light btn-block" type="submit"><i
-                                                                     class="fas fa-search"></i> {{ "Search" }}</button>
-                                                     </div>
-                                                 </div>
-                                             </form>
-                                         </div>
-                                     </div>
-                                 </div>
-                             </div>
-                         {% endif %}
-                     </div>
-                 </div>
-             </section>
-         {% endif %}
+/* ── Stats strip ── */
+.landing-stats {
+    background: linear-gradient(135deg, #1b3a4b 0%, #2A769B 100%);
+    padding: 60px 0;
+}
+.stat-item {
+    text-align: center;
+    color: #fff;
+}
+.stat-item .stat-number {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 2.5rem;
+    line-height: 1;
+}
+.stat-item .stat-label {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.7);
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
 
-         {% if services.getSetting('homepage_show_search_box') == "yes" %}
-             <section>
-                 <form action="{{ path('events') }}">
-                     <div class="row bg-gray m-0">
-                         <div class="col-md-4 p30 border-right-white">
-                             <div class="form-group">
-                                 <label for="search-category" class="form-label text-dark">{{ "Looking for" }}</label>
-                                 <select id="search-category" class="select2 bg-white" name="category"
-                                         data-sort-options="1">
-                                     <option value>{{ "Anything" }}</option>
-                                     {% for category in services.getCategories({}).getQuery().getResult() %}
-                                         <option value="{{ category.slug }}">{{ category.name }}</option>
-                                     {% endfor %}
-                                 </select>
-                             </div>
-                         </div>
-                         <div class="col-md-4 p30 border-right-white">
-                             <div class="form-group">
-                                 <label for="search-country" class="form-label text-dark">{{ "In" }}</label>
-                                 <select id="search-country" class="select2 bg-white" name="country"
-                                         data-sort-options="1">
-                                     <option value>{{ "Anywhere" }}</option>
-                                     {% for country in services.getCountries({}).getQuery().getResult() %}
-                                         <option value="{{ country.slug }}">{{ country.name }}</option>
-                                     {% endfor %}
-                                 </select>
-                             </div>
-                         </div>
-                         <div class="col-md-4 p30">
-                             <div class="form-group">
-                                 <label for="search-startdate" class="form-label text-dark">{{ "When" }}</label>
-                                 <select id="search-startdate" class="select2 bg-white" name="startdate">
-                                     <option value>{{ "Anytime" }}</option>
-                                     <option value="today">{{ "Today" }}</option>
-                                     <option value="tomorrow">{{ "Tomorrow" }}</option>
-                                     <option value="thisweekend">{{ "This weekend" }}</option>
-                                     <option value="thisweek">{{ "This week" }}</option>
-                                     <option value="nextweek">{{ "Next week" }}</option>
-                                     <option value="thismonth">{{ "This month" }}</option>
-                                     <option value="nextmonth">{{ "Next month" }}</option>
-                                 </select>
-                             </div>
-                         </div>
-                         <div class="col-12 text-center mb-5">
-                             <button class="btn btn-light" type="submit"><i class="fas fa-search"></i> {{ "Search" }}
-                             </button>
-                         </div>
-                     </div>
-                 </form>
-             </section>
-         {% endif %}
+/* ── CTA section ── */
+.landing-cta {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #2A769B 0%, #1b3a4b 100%);
+    text-align: center;
+}
+.landing-cta h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 2.2rem;
+    color: #fff;
+}
+.landing-cta p {
+    color: rgba(255,255,255,0.8);
+    font-size: 1.1rem;
+    max-width: 500px;
+    margin: 0 auto;
+}
+.landing-cta .btn-cta {
+    background: #fff;
+    color: #1b3a4b;
+    font-weight: 700;
+    padding: 14px 40px;
+    border-radius: 50px;
+    font-size: 1.05rem;
+    border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.landing-cta .btn-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    color: #1b3a4b;
+    text-decoration: none;
+}
 
-         {% if services.getSetting('homepage_events_number') %}
-             {% set homepageEvents = events %}
-             {% if homepageEvents|length > 0 %}
+/* ── Scroll reveal ── */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
 
-                 <section class="section-content padding-y-lg bg-white">
-                     <div class="{{ services.getSetting("app_layout") }}">
-                         <header class="section-headin mb-5">
-                             <h4 class="title-section text-center text-muted text-uppercase">{{ 'Happening now' }}</h4>
-                         </header>
-                         <div class="row-sm mycontainer mx-auto">
-                             {% for event in homepageEvents %}
-                                 <div class="col-12 col-sm-6 col-lg-3">
-                                     {% include "Global/event-card.html.twig" with {event: event} %}
-                                 </div>
-                             {% endfor %}
-                         </div>
-                     </div>
-                 </section>
-             {% endif %}
-         {% endif %}
+/* ── Responsive ── */
+@media (max-width: 991.98px) {
+    .landing-hero { min-height: auto; padding: 80px 0 60px; }
+    .landing-hero h1 { font-size: 2.2rem; }
+    .landing-hero .hero-artwork { max-width: 260px; }
+    .landing-section { padding: 60px 0; }
+    .stat-item .stat-number { font-size: 2rem; }
+}
+@media (max-width: 575.98px) {
+    .landing-hero h1 { font-size: 1.75rem; }
+    .landing-hero .hero-artwork { max-width: 200px; }
+    .landing-hero .hero-subtitle { font-size: 1rem; }
+    .landing-section .section-title { font-size: 1.6rem; }
+    .about-photo-grid img { height: 140px; }
+    .about-photo-grid img:first-child { height: 180px; }
+    .landing-cta h2 { font-size: 1.7rem; }
+}
+</style>
+{% endblock %}
 
-         {% if services.getSetting('homepage_categories_number') > 0 %}
-             <section class="section-content padding-y-lg" style="min-height: 42vh">
-                 <div class="{{ services.getSetting("app_layout") }}">
-                     <header class="section-headin mb-5">
-                         <h4 class="title-section text-center text-muted text-uppercase">{{ 'Featured categories' }}</h4>
-                     </header>
-                     <div class="row-sm mycontainer mx-auto"
-                          style="display: flex; justify-content: center; align-content: center; align-items: center;">
-                         {% for category in services.getCategories({ "featured": true, "limit": services.getSetting('homepage_categories_number') }).getQuery().getResult() %}
-                             <div class="col-md-4 col-sm-2">
-                                 {% include "Global/category-card.html.twig" %}
-                             </div>
-                         {% endfor %}
-                     </div>
-                 </div>
-             </section>
-         {% endif %}
+{% block content %}
 
-         {% if services.getSetting('homepage_blogposts_number') > 0 %}
-             {% set latestblogposts = services.getBlogPosts({"limit": services.getSetting('homepage_blogposts_number')}).getQuery().getResult() %}
-             {% if latestblogposts|length %}
-                 <section class="section-content padding-y-lg bg-white">
-                     <div class="{{ services.getSetting("app_layout") }}">
-                         <header class="section-headin mb-5">
-                             <h4 class="title-section text-center text-muted text-uppercase">{{ 'Lastest news from our community' }}</h4>
-                         </header>
-                         <div class="row mycontainer mx-auto">
-                             <div class="col-12">
-                                 <div class="owl-init owl-carousel" data-margin="15" data-items="5" data-dots="true"
-                                      data-nav="false" data-autoplay="false">
-                                     {% for blogpost in latestblogposts %}
-                                         {% include "Global/blog-card.html.twig" with {blogpost: blogpost, thumbnailsize: [241, 241]} %}
-                                     {% endfor %}
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
-                 </section>
-             {% endif %}
-         {% endif %}
+{# ═══════ HERO ═══════ #}
+<section class="landing-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 text-center text-lg-left mb-5 mb-lg-0">
+                <h1 class="mb-4">
+                    With <span class="text-accent">UniVerse</span>,<br>
+                    you'll never miss a beat.
+                </h1>
+                <p class="hero-subtitle mb-4">
+                    The student-built platform connecting you to campus events, clubs, and the community at Deree, The American College of Greece.
+                </p>
+                <div class="d-flex flex-wrap justify-content-center justify-content-lg-start" style="gap: 12px;">
+                    <a href="{{ path('fos_user_registration_register_attendee') }}" class="btn btn-hero-primary">Get Started</a>
+                    <a href="#features" class="btn btn-hero-outline">Learn More</a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <img src="{{ asset('uploads/landing/UniVerse.png') }}" alt="UniVerse" class="hero-artwork">
+            </div>
+        </div>
+    </div>
+</section>
 
-         {% if services.getSetting('homepage_show_call_to_action') == "yes" %}
-             <section class="section-intro padding-y-lg">
-                 <div class="{{ services.getSetting("app_layout") }}">
-                     <div class="row">
-                         <div class="col-md-10 text-center">
-                             <article class="text-dark  mb-3">
-                                 <h3>{{ "Are you ready to take your" }} <b
-                                             class="rotate-words">{% for category in services.getCategories({ "featured": true, "limit": 9 }).getQuery().getResult() %}{{ category.name|lower }}{% if not loop.last %}|{% endif %}{% endfor %}</b> {{ "event to the next level ?" }}
-                                 </h3>
-                             </article>
-                         </div>
-                         <div class="col-md-2 ">
-                             <a href="{{ path('dashboard_organizer_event_add') }}" class="btn btn-light"><i
-                                         class="fas fa-calendar-plus"></i> {{ "Create my event" }}</a>
-                         </div>
-                     </div>
-                 </div>
-             </section>
-         {% endif %}
-     </div>
+{# ═══════ TRUSTED BY ═══════ #}
+<section class="landing-trusted">
+    <div class="container">
+        <div class="text-center mb-3">
+            <span class="section-label">Trusted by clubs &amp; societies</span>
+        </div>
+        <div class="d-flex flex-wrap justify-content-center align-items-center" style="gap: 40px;">
+            <img src="{{ asset('uploads/landing/cyberclub.png') }}" alt="Cyber Club" class="club-logo">
+            <img src="{{ asset('uploads/landing/ibsoc.jpg') }}" alt="IB Society" class="club-logo">
+            <img src="{{ asset('uploads/landing/cyberclub.png') }}" alt="Tech Society" class="club-logo" style="filter: grayscale(100%) hue-rotate(180deg); opacity: 0.5;">
+            <img src="{{ asset('uploads/landing/ibsoc.jpg') }}" alt="Student Council" class="club-logo" style="filter: grayscale(100%) hue-rotate(90deg); opacity: 0.5;">
+        </div>
+    </div>
+</section>
 
- {% endblock %}
+{# ═══════ FEATURES ═══════ #}
+<section class="landing-section" id="features">
+    <div class="container">
+        <div class="text-center mb-5 reveal">
+            <h2 class="section-title">What's in it for you?</h2>
+            <p class="section-subtitle mx-auto">Everything you need to stay connected with campus life, all in one place.</p>
+        </div>
+        <div class="row g-4 mb-5">
+            <div class="col-md-6 col-lg-4 reveal">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-calendar-alt"></i></div>
+                    <h5>Discover Events</h5>
+                    <p>Browse upcoming events, workshops, and socials happening across campus. Never miss out again.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 reveal">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-users"></i></div>
+                    <h5>Join Clubs</h5>
+                    <p>Find and follow clubs and societies that match your interests. Connect with like-minded students.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 reveal">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-newspaper"></i></div>
+                    <h5>Stay Updated</h5>
+                    <p>Get the latest news, announcements, and stories from across the student community.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 reveal">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                    <h5>Volunteer</h5>
+                    <p>Discover volunteering opportunities and contribute to causes that matter to you.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 reveal">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-comments"></i></div>
+                    <h5>Discuss &amp; Share</h5>
+                    <p>Start conversations, share experiences, and build your student network through community forums.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 reveal">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-trophy"></i></div>
+                    <h5>Earn Recognition</h5>
+                    <p>Climb the leaderboards, earn badges, and showcase your involvement across campus life.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-5 mb-4 reveal">
+            <h2 class="section-title">For Creators</h2>
+            <p class="section-subtitle mx-auto">Tools that help clubs and organizers reach students and build real engagement.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3 reveal">
+                <div class="feature-card text-center">
+                    <div class="feature-icon mx-auto"><i class="fas fa-bullhorn"></i></div>
+                    <h5>Inform Students</h5>
+                    <p>Publish events and updates that reach your audience instantly.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 reveal">
+                <div class="feature-card text-center">
+                    <div class="feature-icon mx-auto"><i class="fas fa-magic"></i></div>
+                    <h5>Create Experiences</h5>
+                    <p>Build event pages with rich media, ticketing, and RSVPs.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 reveal">
+                <div class="feature-card text-center">
+                    <div class="feature-icon mx-auto"><i class="fas fa-chart-bar"></i></div>
+                    <h5>Get Feedback</h5>
+                    <p>Track attendance, engagement, and see what resonates.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 reveal">
+                <div class="feature-card text-center">
+                    <div class="feature-icon mx-auto"><i class="fas fa-rocket"></i></div>
+                    <h5>Empower Your Club</h5>
+                    <p>Grow your community and make your club stand out on campus.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# ═══════ ABOUT / STORY ═══════ #}
+<section class="landing-section bg-alt">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0 reveal">
+                <h2 class="section-title mb-3">Built by students,<br>for students.</h2>
+                <p class="text-muted mb-3">
+                    UniVerse started as a student project at Deree, The American College of Greece, born from a simple idea: campus life should be easy to navigate and impossible to miss.
+                </p>
+                <p class="text-muted mb-3">
+                    What began as a group assignment grew into a full platform, connecting students with the events, clubs, and communities that define their college experience.
+                </p>
+                <p class="text-muted">
+                    Today, UniVerse brings together event discovery, club management, community forums, and real-time chat, all in one place built with students' needs at the center.
+                </p>
+            </div>
+            <div class="col-lg-6 reveal">
+                <div class="about-photo-grid">
+                    <img src="{{ asset('uploads/landing/Deree-44.jpg') }}" alt="Deree campus">
+                    <img src="{{ asset('uploads/imgs/login.jpg') }}" alt="Students studying">
+                    <img src="{{ asset('uploads/imgs/register.jpg') }}" alt="Students collaborating">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# ═══════ STATS ═══════ #}
+<section class="landing-stats">
+    <div class="container">
+        <div class="row reveal">
+            <div class="col-6 col-md-3 mb-4 mb-md-0">
+                <div class="stat-item">
+                    <div class="stat-number" data-count="120">0</div>
+                    <div class="stat-label">Events</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3 mb-4 mb-md-0">
+                <div class="stat-item">
+                    <div class="stat-number" data-count="25">0</div>
+                    <div class="stat-label">Clubs</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number" data-count="800">0</div>
+                    <div class="stat-label">Students</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number" data-count="50">0</div>
+                    <div class="stat-label">Creators</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# ═══════ CTA ═══════ #}
+<section class="landing-cta">
+    <div class="container reveal">
+        <h2 class="mb-3">Ready to join the community?</h2>
+        <p class="mb-4">Sign up today and never miss what's happening on campus.</p>
+        <a href="{{ path('fos_user_registration_register_attendee') }}" class="btn btn-cta">Create Your Account</a>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+(function() {
+    /* ── Scroll reveal ── */
+    var reveals = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+        reveals.forEach(function(el) { observer.observe(el); });
+    } else {
+        reveals.forEach(function(el) { el.classList.add('revealed'); });
+    }
+
+    /* ── Stat counter animation ── */
+    var statNumbers = document.querySelectorAll('.stat-number[data-count]');
+    if ('IntersectionObserver' in window && statNumbers.length) {
+        var statObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    var el = entry.target;
+                    var target = parseInt(el.getAttribute('data-count'), 10);
+                    var duration = 1600;
+                    var start = 0;
+                    var startTime = null;
+                    function step(timestamp) {
+                        if (!startTime) startTime = timestamp;
+                        var progress = Math.min((timestamp - startTime) / duration, 1);
+                        var eased = 1 - Math.pow(1 - progress, 3);
+                        el.textContent = Math.floor(eased * target) + (target >= 100 ? '+' : '+');
+                        if (progress < 1) requestAnimationFrame(step);
+                    }
+                    requestAnimationFrame(step);
+                    statObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0.5 });
+        statNumbers.forEach(function(el) { statObserver.observe(el); });
+    }
+
+    /* ── Smooth scroll for Learn More ── */
+    document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+        a.addEventListener('click', function(e) {
+            var target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+})();
+</script>
+{% endblock %}
