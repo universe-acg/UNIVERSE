@@ -3,7 +3,8 @@
 .env.local
 .env.local.php
 .env.*.local
-/var/
+/var/*
+!/var/.gitignore
 /vendor/
 ###< symfony/framework-bundle ###
 

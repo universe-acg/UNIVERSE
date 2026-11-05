@@ -219,9 +219,10 @@
     {#        {% endif %} #}
     <script src="https://unpkg.com/darkmode-js@1.3.4/lib/darkmode-js.js"></script>
 
+    {% if equalweb_site_key %}
     <script>
         window.interdeal = {
-            "sitekey": "cd8dac2398fd91cdd3fc6aa25da262d3",
+            "sitekey": {{ equalweb_site_key|json_encode|raw }},
             "Position": "Left",
             "Menulang": "EN",
             "domains": {
@@ -254,6 +255,7 @@
             body ? body.appendChild(coreCall) : head.appendChild(coreCall);
         })(document, document.head, document.body);
     </script>
+    {% endif %}
 </head>
 <body>
 

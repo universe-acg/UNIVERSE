@@ -26,7 +26,7 @@ for role in ['anonymous','student','organizer','administrator']:
    for a in soup.select('a[href]'):
     target=urlsplit(urljoin(r.url,a['href']));p=target.path
     if target.netloc!=urlsplit(args.base).netloc or not p.startswith('/') or target.query or p in seen or p in queue:continue
-    if re.search(r'\.(png|jpg|jpeg|gif|webp|svg|pdf|zip|xlsx|docx|js|css|ico|woff2?)$',p,re.I) or p.startswith(('/assets/','/uploads/','/media/','/logout','/_','/switch')):continue
+    if re.search(r'\.(png|jpg|jpeg|gif|webp|svg|pdf|zip|xlsx|docx|js|css|ico|woff2?)$',p,re.I) or p.startswith(('/assets/','/uploads/','/media/','/logout','/_','/switch','/cdn-cgi/')):continue
     if any(pattern.match(p) for pattern in mutations):continue
     signature=re.sub(r'/(archive-[^/]+|demo-[^/]+|organizer-[^/]+|student-[^/]+|venue-[^/]+|facility-[^/]+|[0-9]+)(?=/|$)','/{record}',p)
     if signatures[signature]>=2:continue

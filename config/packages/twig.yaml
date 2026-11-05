@@ -6,6 +6,7 @@ twig:
   form_themes: ['Global/bootstrap-4-forms-layout.html.twig']
   date: { format: '%date_format%', timezone: '%date_timezone%' }
   globals:
+    equalweb_site_key: '%env(EQUALWEB_SITE_KEY)%'
     services: '@App\Service\AppServices'
     google_maps_api_key: '%google_maps_api_key%'
     date_format: '%date_format%'

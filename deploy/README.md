@@ -18,3 +18,6 @@ Scheduler, Forge user, every day at 08:00 Europe/Athens:
 The chat UI uses authenticated HTTP polling. The optional `websocket:server`
 command runs only on 127.0.0.1:8302 and requires signed, expiring subscriptions.
 Do not expose that port directly.
+
+The optional EqualWeb widget loads only when EQUALWEB_SITE_KEY is configured
+for the production domain. An obsolete key is not shipped in the application.

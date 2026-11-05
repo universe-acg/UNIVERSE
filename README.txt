@@ -1,8 +1,7 @@
 UNIVERSE, Deree demonstration
 
-Preserve the original interface. UI templates, orange theme, form styling,
-navigation and branding are not redesign targets. See IMPLEMENTATION.md for
-verified results, outstanding defects and staging details.
+Original interface, orange theme, form styling, navigation and branding are
+preserved. See IMPLEMENTATION.md for verified results and remaining test scope.
 
 Runtime: PHP 8.2, MySQL 8, Composer 2, Node 22.18 or later within Node 22.
 Install the PHP extensions required by composer.json, including GD and intl.

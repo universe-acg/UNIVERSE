@@ -13,6 +13,7 @@ require('@fullcalendar/timegrid/main.min.css');
 import {Calendar} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
 import 'marker-clusterer/marker-clusterer.js';
 
 // require('@fullcalendar/core/locales-all.min.js');
@@ -23,7 +24,7 @@ $(document).ready(function () {
         var calendarEl = document.getElementById('events-calendar');
 
         var calendar = new Calendar(calendarEl, {
-            plugins: ['interaction', dayGridPlugin, timeGridPlugin],
+            plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
             defaultView: 'dayGridMonth',
             defaultDate: $('#events-calendar').data('default-date'),
             height: "auto",
