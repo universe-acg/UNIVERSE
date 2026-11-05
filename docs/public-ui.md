@@ -19,7 +19,7 @@ Universe retains its original blue-and-white identity and typefaces. The public 
 
 `app:pages:sync` replaces only registered demo placeholder content or previously installed versions. It preserves administrator content/title changes. Terms remains at `/page/legal-notice`; title changes cannot rename established page slugs.
 
-`app:brand:install` installs the user-supplied Universe PNG through the existing logo setting, with an immutable content-based filename. Repeated deployments preserve later administrator logo changes. The header renders the wordmark at its original aspect ratio on desktop and mobile.
+`app:brand:install` installs the user-supplied Universe PNG through the existing logo setting, with an immutable content-based filename. Repeated deployments preserve later administrator logo changes. The header renders the wordmark at its original aspect ratio on desktop and mobile, clipping the supplied PNG’s one-pixel dark capture edge.
 
 Community fixture versioning now separates data changes from asset-maintenance code. A recognized legacy version is advanced without reapplying user-editable community records.
 

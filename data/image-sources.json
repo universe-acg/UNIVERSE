@@ -94,6 +94,6 @@
     "local_path": "public/images/brand/universe-wordmark.png",
     "sha256": "45a96ba908e8c22dea24c3c1ebacf4d4fe9390f651a53b9c33696a14b2b912b0",
     "usage": "Header brand logo",
-    "note": "Original supplied PNG retained unchanged."
+    "note": "Original supplied PNG retained unchanged. Header display clips the final two source pixels to exclude the one-pixel dark capture edge; lettering is untouched."
   }
 }
