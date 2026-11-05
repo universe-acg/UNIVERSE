@@ -20,6 +20,7 @@ final class DemoSeedCommand extends Command
     private \DateTime $reference;
     private int $seed=20261105;
     private string $passwordHash;
+    private string $demoPassword;
     public function __construct(private EntityManagerInterface $em, #[Autowire('%kernel.project_dir%')] private string $projectDir, #[Autowire('%env(bool:APP_DEMO)%')] private bool $demo) { parent::__construct(); }
     protected function configure(): void {
         $this->addOption('seed', null, InputOption::VALUE_REQUIRED, 'Deterministic seed', '20261105')
@@ -68,7 +69,8 @@ final class DemoSeedCommand extends Command
         $this->seed=(int)$input->getOption('seed');
         $credentialPath=$this->projectDir.'/var/demo-credentials.json';
         $credentials=is_file($credentialPath) ? json_decode(file_get_contents($credentialPath),true,512,JSON_THROW_ON_ERROR) : ['password'=>bin2hex(random_bytes(14))];
-        $this->passwordHash=password_hash($credentials['password'],PASSWORD_BCRYPT,['cost'=>10]);
+        $this->demoPassword=$credentials['password'];
+        $this->passwordHash=password_hash($this->demoPassword,PASSWORD_BCRYPT,['cost'=>10]);
         foreach ($this->em->getRepository(E\DemoRecord::class)->findAll() as $record) $this->records[$record->recordKey]=$record;
         $this->em->getConnection()->beginTransaction();
         try {
@@ -153,12 +155,12 @@ final class DemoSeedCommand extends Command
         $archiveOrg=$this->make(E\Organizer::class,'archive-organizer',['name'=>'ACG College Events archive','slug'=>'acg-events-archive','category'=>'organization','description'=>'Archive caretaker in this demo; event-specific organizers are identified by the linked official sources.','user'=>$archiveUser,'website'=>'https://www.acg.edu/news-events/department-of-college-events-office-of-the-president/past-events/']);
         $archiveUser->setOrganizer($archiveOrg);
         $history=json_decode(file_get_contents($this->projectDir.'/data/deree/event_facts.json'),true,512,JSON_THROW_ON_ERROR);
-        $activeArchiveKeys=[];
+        $activeArchiveKeys=[]; $archiveSessions=[];
         foreach($history as $i=>$row) {
             $key='archive-'.substr(hash('sha256',$row['source_id']??$row['title'].'|'.($row['start']??'undated')),0,20);
             $activeArchiveKeys[$key]=true;
             $event=$this->make(E\Event::class,$key,['name'=>mb_substr($row['title'],0,255),'slug'=>$key,'description'=>'<p>Documented ACG event. Original details: <a href="'.htmlspecialchars($row['source_url']).'">official event source</a>. Demonstration registrations are fictional.</p>','organizer'=>$archiveOrg,'venue'=>null,'category'=>$categories[0],'published'=>!empty($row['start']),'open'=>true],$row);
-            if(!empty($row['start']))$this->eventSession($event,$key,new \DateTime($row['start'],new \DateTimeZone('Europe/Athens')),empty($row['end'])?null:new \DateTime($row['end'],new \DateTimeZone('Europe/Athens')),true);
+            if(!empty($row['start'])) { $sessionKey=isset($archiveSessions[$key])?$key.'-session-'.substr(hash('sha256',$row['start']),0,8):$key; $archiveSessions[$key]=true; $this->eventSession($event,$sessionKey,new \DateTime($row['start'],new \DateTimeZone('Europe/Athens')),empty($row['end'])?null:new \DateTime($row['end'],new \DateTimeZone('Europe/Athens')),true); }
         }
         // Retire only duplicated archive fixtures owned by previous demo imports.
         foreach($this->records as $key=>$record) {
@@ -269,7 +271,9 @@ final class DemoSeedCommand extends Command
         foreach(array_slice($this->pool[E\Listing::class],0,12) as $i=>$listing)$this->make(E\ListingImage::class,'listing-image-'.$i,$imageData+['listing'=>$listing]);
     }
     private function user(string $username,string $first,string $last,array $roles): E\User {
-        return $this->make(E\User::class,'user-'.$username,['username'=>$username,'usernameCanonical'=>$username,'email'=>$username.'@example.test','emailCanonical'=>$username.'@example.test','password'=>$this->passwordHash,'roles'=>$roles,'enabled'=>true,'firstname'=>$first,'lastname'=>$last,'slug'=>$username,'studentid'=>'DEMO-'.substr(hash('sha256',$username),0,10),'points'=>0]);
+        $existingUser=$this->em->getRepository(E\User::class)->findOneBy(['username'=>$username]);
+        $password=$existingUser && password_verify($this->demoPassword,$existingUser->getPassword())?$existingUser->getPassword():$this->passwordHash;
+        return $this->make(E\User::class,'user-'.$username,['username'=>$username,'usernameCanonical'=>$username,'email'=>$username.'@example.test','emailCanonical'=>$username.'@example.test','password'=>$password,'roles'=>$roles,'enabled'=>true,'firstname'=>$first,'lastname'=>$last,'slug'=>$username,'studentid'=>'DEMO-'.substr(hash('sha256',$username),0,10),'points'=>0]);
     }
     private function eventSession(E\Event $event,string $key,\DateTime $when,?\DateTime $end=null,bool $documented=false): array {
         $date=$this->make(E\EventDate::class,$key.'-date',['event'=>$event,'reference'=>$key.'-date','title'=>$event->getName(),'description'=>'Demo activity session','startdate'=>$when,'enddate'=>$documented?$end:(clone $when)->modify('+90 minutes'),'active'=>true]);

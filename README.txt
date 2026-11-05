@@ -1,4 +1,4 @@
-UNIVERSE restoration, work in progress
+UNIVERSE, Deree demonstration
 
 Preserve the original interface. UI templates, orange theme, form styling,
 navigation and branding are not redesign targets. See IMPLEMENTATION.md for
@@ -34,5 +34,6 @@ Verification:
 
 For production use APP_ENV=prod and APP_DEBUG=0, serve only public/, and keep
 var/private, logs, sessions and environment files outside the web root.
-Public deployment remains gated on the remaining acceptance checks and Forge
-account access. A passing template/route check is not a full workflow audit.
+Production: https://universe-deree-live-3b97bb.on-forge.com
+Forge: helppoint-production, site 3483627.
+A passing template/route check is not an exhaustive workflow audit.
