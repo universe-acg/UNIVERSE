@@ -1,3 +1,35 @@
+# Public UI release, verified 2026-11-05 21:42 UTC
+
+This section supersedes the historical release status below. The existing Universe identity is preserved; the requested public-page polish is implemented, pushed and live.
+
+- Active application commit: **`82cf095`**, Forge deployment **`82244592`**, finished successfully. Main implementation: `9e384e7`; final News thumbnail repair: `82cf095`.
+- The active production symlink points to `82cf095`; `/health` passes. Existing index work through `bb03821` was retained. This UI change adds no migration.
+- Polished landing, Events/Creators/Venues/Athletics/Listings/News catalogues and details, creator activity/member tabs, Contact, Help Center, About/Privacy/Cookies/Terms, registration, confirmation and sign-in. Shared responsive grids, bounded media, accessible controls, header/footer spacing and image fallbacks are in place.
+- Removed duplicate News rendering and twenty-fold Listings duplication. Venue/facility/opportunity filters, sorting, Clear links, pagination and creator panels work. Calendar formatting uses ICU correctly. Booking choices reflect schedules and refresh when duration changes.
+- Landing totals are server-rendered counts. Four information pages now have distinct factual demo content. Terms retains `/page/legal-notice`. Existing Help Center answers and URLs remain intact.
+- Deployment ran `app:demo:repair-images` and `app:pages:sync`, upgrading 1,373 demo placeholder references and four information pages. Repeated production runs report **zero** reference/content updates. No full production reseed occurred.
+- Media repair preserves custom uploads. Page synchronization preserves administrator content/title edits and avoids title-driven slug renaming. Community data versioning recognizes both prior asset-only revisions without reapplying edited fixtures.
+- Scoped production backup: `/home/forge/universe-public-ui-backup-20261105/`, outside the web root. Contains affected media/page metadata and original placeholder images, no public artifact.
+
+Verification:
+
+- **22 PHPUnit tests / 493 assertions** pass. Container, all **225 Twig templates**, relevant YAML, JSON data and standalone JS checks pass. Production asset build succeeds with existing legacy Sass deprecation warnings.
+- Final production browser crawl: **17 public pages plus five representative detail pages**, each at **375/768/1024/1440/1920px**. No horizontal overflow, JavaScript errors, or failed image/script/style/media requests. One H1 per page/detail.
+- QA: keyword/category/sort/Clear behavior, unique News/Listings pagination, correct creator panels/hash/keyboard controls, mobile menu focus/Escape, filter toggle, attendee/creator validation and successful registration, successful booking and overlap rejection all pass.
+- All **83 Help Center/contact/category/article pages**, search and no-results pass on QA. Existing Reels/Live/Leaderboards and three-role Chat regression checks pass on QA and production, with no runtime warnings or failed resources on final runs.
+- Final News article image-cache failure was resolved by using local native thumbnails. Do not restore its old `imagine_filter` runtime URLs.
+- Temporary deployment tokens were revoked and raw token/session/page captures removed. Demo account passwords remain private. No live messages, registrations or reservations were created by production testing.
+
+Maintenance:
+
+- Design context: `.impeccable.md`. Behavior/commands: `docs/public-ui.md`.
+- Reproducible read-only browser smoke: `tests/browser/public_ui.py --base-url URL --output /var/tmp/OUTPUT`, with `UNIVERSE_BROWSER` pointing to Chromium.
+- Temporary QA interaction scripts/reports: `/var/tmp/universe-polish-flows*`, `/var/tmp/universe-polish-account-flows*`, `/var/tmp/universe-polish-final-qa*`. Production report/screenshots: `/var/tmp/universe-polish-production/`; community regression: `/var/tmp/universe-polish-production-community.log`.
+- Browser checks use Chromium viewport emulation. Physical-device/Safari testing was not performed.
+- The following documentation commit does not require another application deployment. Both working copies and Git metadata are synchronized at handoff.
+
+---
+
 # UNIVERSE handoff, 2026-11-05
 
 This is the continuation record for Claude. The user requested **UC** so today's work, current deployment and next steps are explicit. Do not restart modernization or redesign the UI.

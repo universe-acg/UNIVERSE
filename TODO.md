@@ -1,3 +1,19 @@
+# Public UI polish, completed 2026-11-05
+
+- [x] Preserve and integrate the previously deployed header, landing, imagery and index work.
+- [x] Unify all requested public layouts, cards, media, forms, navigation and footer presentation.
+- [x] Repair duplication, filter destinations/behavior, pagination, ICU labels, creator tabs and booking controls.
+- [x] Complete distinct About/Privacy/Cookies/Terms content with safe scoped updates.
+- [x] Verify registration and reservation success/error behavior on isolated QA.
+- [x] Deploy final application `82cf095` through Forge deployment `82244592`.
+- [x] Verify live public pages/details at five widths and existing community/three-role Chat behavior.
+- [x] Confirm media/content repair idempotence, retain production activity and revoke temporary tokens.
+- [x] Record verification and synchronize the shared workspace and Git metadata.
+
+No remaining blocker in the requested polish scope. Legacy Sass deprecations and physical-device/Safari checks remain separate maintenance work.
+
+---
+
 # UNIVERSE continuation checklist
 
 ## Release and handoff, completed 2026-11-05

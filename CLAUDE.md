@@ -58,3 +58,12 @@ Also check changed standalone JavaScript with `node --check`. Run Doctrine schem
 - Temporary Forge API tokens used for deployment must be revoked after work; delete local cookie/token page captures. See `CONTEXT.md` for access-helper locations, never put their contents in chat or Git.
 
 Further implementation notes: `docs/navigation.md`, `docs/help-center.md`, `docs/community.md`, `deploy/README.md`.
+
+## Public UI continuation, 2026-11-05
+
+- Latest public-page repair is deployed as application `82cf095`, Forge `82244592`; read the newest section of `CONTEXT.md` first.
+- Preserve the public design context in `.impeccable.md` and shared styles in `assets/css/public.scss`. Keep dashboard-only styling separate.
+- Do not restore fixed filter sidebars, column offset hacks, artificial Listings/News duplication, Maps-dependent profile tabs or legacy runtime thumbnail URLs.
+- Scoped deployment commands `app:demo:repair-images` and `app:pages:sync` are intentional and repeat-safe. Do not replace them with a full production seed.
+- Community fixture versioning deliberately excludes asset-only code changes, preserving edited demo activity.
+- The read-only public smoke test is `tests/browser/public_ui.py`; `docs/public-ui.md` documents the repaired behaviors and QA checks.
