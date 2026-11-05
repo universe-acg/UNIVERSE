@@ -61,9 +61,10 @@ Further implementation notes: `docs/navigation.md`, `docs/help-center.md`, `docs
 
 ## Public UI continuation, 2026-11-05
 
-- Latest public-page repair is deployed as application `82cf095`, Forge `82244592`; read the newest section of `CONTEXT.md` first.
+- Latest public-page repair is deployed as application `52ab54c`, Forge `82246870`; read the newest section of `CONTEXT.md` first.
 - Preserve the public design context in `.impeccable.md` and shared styles in `assets/css/public.scss`. Keep dashboard-only styling separate.
 - Do not restore fixed filter sidebars, column offset hacks, artificial Listings/News duplication, Maps-dependent profile tabs or legacy runtime thumbnail URLs.
+- The header wordmark uses `app:brand:install`; retain its CSS capture-edge clipping and preserve later administrator logo changes.
 - Scoped deployment commands `app:demo:repair-images` and `app:pages:sync` are intentional and repeat-safe. Do not replace them with a full production seed.
 - Community fixture versioning deliberately excludes asset-only code changes, preserving edited demo activity.
 - The read-only public smoke test is `tests/browser/public_ui.py`; `docs/public-ui.md` documents the repaired behaviors and QA checks.

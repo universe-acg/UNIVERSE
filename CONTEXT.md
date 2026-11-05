@@ -1,3 +1,19 @@
+# Logo and event follow-up, verified 2026-11-05 22:16 UTC
+
+This section supersedes the release status below.
+
+- Active application: **`52ab54c`**, Forge deployment **`82246870`**, finished 22:15:12 UTC. Event/brand implementation `c2afd1c` was deployed as `82246527`; this final release clips the supplied PNG’s one-pixel dark right edge. Production `current` and `/health` verified.
+- Header uses the exact user-supplied Universe wordmark through the existing layout logo setting, with proportional desktop/mobile sizing. `app:brand:install` installs a content-addressed shared upload and preserves subsequent administrator logo changes. The original source PNG is unchanged; the header clips only its capture edge. Repeated production installation reports no change.
+- Long event titles now occupy their own row above compact breadcrumbs. Management notices are contained, event images use bounded native rendering, and comment forms, author metadata, reply/edit controls and moderation labels are readable. Ownership, role and CSRF checks remain intact.
+- Distinct local Pexels photographs now serve sign-in, attendee registration and creator registration. Auth release `6019b7e` / Forge `82245473` was verified live. Source/license/credit/hash records are in `data/image-sources.json`; the supplied wordmark provenance is also recorded there.
+- Verification: 22 PHPUnit tests / 493 assertions, container lint, all 225 Twig templates, translation YAML, 13 data inputs and production build passed. Existing legacy Sass deprecations remain. Production schema validation passed on `c2afd1c`; these changes add no migration.
+- Public browser crawl passed 17 pages plus five representative details at 375/768/1024/1440/1920px, with no JavaScript errors, overflow or failed media/script/style requests. Both reported event URLs passed under guest, administrator and student accounts at six widths (also 1676px), with loaded wordmarks and full-width titles. Final `52ab54c` pixel checks confirm no dark right edge at 375/768/1440/1920px. Tests use Chromium viewport emulation, not physical-device testing.
+- Isolated QA also verified comment close/reopen (restored), reply/cancel and edit/cancel without posting comments. No production comments, messages, registrations or reservations were created. No full production reseed occurred.
+- Private reports: `/var/tmp/universe-event-public-production.log`, `/var/tmp/universe-event-logo-production.log`, `/var/tmp/universe-logo-edge-production.log`, `/var/tmp/universe-auth-production.log`. Preview screenshots remain under matching `/var/tmp/` directories.
+- The temporary deployment token was revoked; raw token/session/page captures were removed. The following handoff commit requires no further application deployment.
+
+---
+
 # Public UI release, verified 2026-11-05 21:42 UTC
 
 This section supersedes the historical release status below. The existing Universe identity is preserved; the requested public-page polish is implemented, pushed and live.

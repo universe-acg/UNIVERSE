@@ -1,3 +1,14 @@
+# Logo and event follow-up, completed 2026-11-05
+
+- [x] Replace repeated authentication imagery with three licensed local stock photos and document provenance.
+- [x] Repair long event titles/breadcrumbs, contained management notices, hero images and comment presentation.
+- [x] Install the supplied Universe header wordmark through the existing logo setting; preserve later administrator changes.
+- [x] Remove the PNG’s dark capture edge from header rendering and verify actual rendered pixels at four widths.
+- [x] Deploy final application `52ab54c` / Forge `82246870`; verify live public pages and guest/admin/student event layouts.
+- [x] Verify QA comment controls without posting, revoke the temporary deployment token and synchronize both working copies.
+
+---
+
 # Public UI polish, completed 2026-11-05
 
 - [x] Preserve and integrate the previously deployed header, landing, imagery and index work.
