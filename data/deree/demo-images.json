@@ -1,0 +1,218 @@
+{
+  "_note": "Image mapping for demo entities. Used by DownloadDemoImagesCommand and DemoImageInstaller.",
+  "venues": {
+    "Pierce Theater": {
+      "file": "venues/pierce-theater.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/10/Pierce-Theater-02-scaled.jpg"
+    },
+    "Pierce Theater Atrium": {
+      "file": "venues/pierce-theater-atrium.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/11/Pierce-Theater-Atrium-02-scaled.jpg"
+    },
+    "Pierce Theater Lobby": {
+      "file": "venues/pierce-theater-lobby.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/10/Pierce-Theater-Lobby-02-scaled.jpg"
+    },
+    "Pierce Amphitheater": {
+      "file": "venues/pierce-amphitheater.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/11/Pierce-Amphitheater-02-scaled.jpg"
+    },
+    "Pierce Gym": {
+      "file": "venues/pierce-gym.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/11/Pierce-Gym-02-scaled.jpg"
+    },
+    "Pierce Faculty Lounge": {
+      "file": "venues/pierce-faculty-lounge.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/11/Pierce-Faculty-Lounge-02-scaled.jpg"
+    },
+    "Pierce Cafeteria": {
+      "file": "venues/pierce-cafeteria.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/11/Pierce-Cafeteria-02-scaled.jpg"
+    },
+    "Deree Gym Basketball Level": {
+      "file": "venues/deree-gym-basketball.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/11/Deree-Gym-Basketball-02-scaled.jpg"
+    },
+    "Chapel": {
+      "file": "venues/chapel.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/11/Chapel-05.jpg"
+    },
+    "Chapel Patio": {
+      "file": "venues/chapel-patio.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/11/Chapel-Patio-02-scaled.jpg"
+    },
+    "Swimming Pool": {
+      "file": "venues/swimming-pool.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/11/Swimming-Pool-02-scaled.jpg"
+    },
+    "Tennis Courts": {
+      "file": "venues/tennis-courts.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/11/TennisCourts-02-scaled.jpg"
+    },
+    "ACG Soccer and Track Complex": {
+      "file": "venues/soccer-track-complex.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/11/Track-and-Field-05.jpg"
+    },
+    "Irene Bailey Theater": {
+      "file": "venues/irene-bailey-theater.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/09/Irene-Bailey-Theater-05.jpg"
+    },
+    "Irene Bailey Theater Plaza": {
+      "file": "venues/irene-bailey-theater-plaza.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/09/Irene-Bailey-Theater-Plaza-03.jpg"
+    },
+    "Center for the Arts Gallery": {
+      "file": "venues/center-arts-gallery.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/11/Center-for-the-Arts-Gallery-02-scaled.jpg"
+    },
+    "Center for the Arts Auditorium": {
+      "file": "venues/center-arts-auditorium.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/09/7th-Level-Auditorium-03.jpg"
+    },
+    "ACG Art Gallery": {
+      "file": "venues/acg-art-gallery.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/10/ACG-Art-Gallery-02-scaled.jpg"
+    },
+    "Conference Room": {
+      "file": "venues/conference-room.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/09/Conference-Room-02-scaled.jpg"
+    },
+    "Deree Faculty Lounge": {
+      "file": "venues/deree-faculty-lounge.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/09/Deree-Faculty-Lounge-02-scaled.jpg"
+    },
+    "Deree Student Lounge": {
+      "file": "venues/deree-student-lounge.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/09/Deree-Student-Lounge-04.jpg"
+    },
+    "6th Level Auditorium": {
+      "file": "venues/6th-level-auditorium.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/09/6th-Level-Auditorium-01.jpg"
+    },
+    "7th Level Auditorium": {
+      "file": "venues/7th-level-auditorium.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/09/7th-Level-Auditorium-03.jpg"
+    },
+    "Black Box Theater": {
+      "file": "venues/black-box-theater.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/10/Black-Box-Theater-02-scaled.jpg"
+    },
+    "200 Level Patio": {
+      "file": "venues/200-level-patio.jpg",
+      "source": "pexels",
+      "query": "campus outdoor patio university"
+    },
+    "Alba Amphitheater": {
+      "file": "venues/alba-amphitheater.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/11/Alba-Amphitheater-02-scaled.jpg"
+    },
+    "ACG Plaka Building": {
+      "file": "venues/acg-plaka-building.jpg",
+      "source": "acg",
+      "url": "https://www.acg.edu/wp-content/uploads/2020/11/Institute-of-Public-Health-Events-Hall-02-scaled.jpg"
+    },
+    "ACG Events Hall": {
+      "file": "venues/acg-events-hall.jpg",
+      "source": "pexels",
+      "query": "university event hall auditorium"
+    }
+  },
+  "facilities": {
+    "David G. Horner Gym": {
+      "file": "facilities/horner-gym.jpg",
+      "reuse": "venues/pierce-gym.jpg"
+    },
+    "Swimming Pool": {
+      "file": "facilities/swimming-pool.jpg",
+      "reuse": "venues/swimming-pool.jpg"
+    },
+    "Tennis Courts": {
+      "file": "facilities/tennis-courts.jpg",
+      "reuse": "venues/tennis-courts.jpg"
+    },
+    "Track and Field": {
+      "file": "facilities/track-field.jpg",
+      "reuse": "venues/soccer-track-complex.jpg"
+    },
+    "Soccer Field": {
+      "file": "facilities/soccer-field.jpg",
+      "reuse": "venues/soccer-track-complex.jpg"
+    },
+    "Outdoor Climbing Wall": {
+      "file": "facilities/climbing-wall.jpg",
+      "source": "pexels",
+      "query": "outdoor climbing wall campus"
+    }
+  },
+  "event_categories": {
+    "Sports": [
+      {"file": "events/sports-1.jpg", "source": "pexels", "query": "university sports athletics"},
+      {"file": "events/sports-2.jpg", "source": "pexels", "query": "college basketball game"}
+    ],
+    "Arts & Culture": [
+      {"file": "events/arts-1.jpg", "source": "pexels", "query": "art exhibition gallery"},
+      {"file": "events/arts-2.jpg", "source": "pexels", "query": "theater performance stage"}
+    ],
+    "Academic": [
+      {"file": "events/academic-1.jpg", "source": "pexels", "query": "university lecture hall"},
+      {"file": "events/academic-2.jpg", "source": "pexels", "query": "graduation ceremony"}
+    ],
+    "Community": [
+      {"file": "events/community-1.jpg", "source": "pexels", "query": "campus community students gathering"},
+      {"file": "events/community-2.jpg", "source": "pexels", "query": "student volunteer event"}
+    ],
+    "Career": [
+      {"file": "events/career-1.jpg", "source": "pexels", "query": "career fair university"},
+      {"file": "events/career-2.jpg", "source": "pexels", "query": "job interview professional"}
+    ],
+    "Technology": [
+      {"file": "events/technology-1.jpg", "source": "pexels", "query": "hackathon coding event"},
+      {"file": "events/technology-2.jpg", "source": "pexels", "query": "computer lab students"}
+    ],
+    "Sustainability": [
+      {"file": "events/sustainability-1.jpg", "source": "pexels", "query": "campus garden sustainability"},
+      {"file": "events/sustainability-2.jpg", "source": "pexels", "query": "eco green environment"}
+    ]
+  },
+  "club_colors": {
+    "club": {
+      "default": "#1B3B6F",
+      "categories": {
+        "Academic": "#1B3B6F",
+        "Arts & Culture": "#6B3FA0",
+        "Sports": "#2D6A4F",
+        "Technology": "#2563EB",
+        "Community": "#C0392B",
+        "Career": "#D97706",
+        "Sustainability": "#059669"
+      }
+    },
+    "society": "#1B3B6F",
+    "organization": "#4A5568"
+  }
+}

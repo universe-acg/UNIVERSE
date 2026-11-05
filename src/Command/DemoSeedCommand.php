@@ -263,24 +263,89 @@ final class DemoSeedCommand extends Command
         $this->makeDemoImages($events,$venues,$facilities);
     }
     private function makeDemoImages(array $events,array $venues,array $facilities): void {
+        $images=new \App\Service\DemoImageInstaller($this->projectDir);
+        // Generate fallback campus-demo.jpg for unmapped entities (blog, listings, layout, avatars, etc.)
         $image=imagecreatetruecolor(1200,675);$navy=imagecolorallocate($image,21,59,112);$light=imagecolorallocate($image,241,244,249);$gold=imagecolorallocate($image,230,168,61);
         imagefill($image,0,0,$navy);imagefilledrectangle($image,80,540,1120,548,$gold);imagestring($image,5,80,90,'UNIVERSE | DEREE CAMPUS DEMO',$light);imagestring($image,4,80,125,'Illustrative demonstration artwork',$light);
         for($i=0;$i<7;$i++)imagefilledrectangle($image,100+$i*145,260,170+$i*145,510,$light);
-        $private=$this->projectDir.'/var/private/demo';$file=$private.'/campus-demo.jpg';imagejpeg($image,$file,88);imagedestroy($image);
-        foreach(['events','venues','facilities','listings','reels','lives','blog','categories','layout','organizers','organizers/covers','users/avatars','homepage/hero'] as $folder){$dir=$this->projectDir.'/public/uploads/'.$folder;if(!is_dir($dir))mkdir($dir,0755,true);copy($file,$dir.'/campus-demo.jpg');}
+        $private=$this->projectDir.'/var/private/demo';$fallback=$private.'/campus-demo.jpg';imagejpeg($image,$fallback,88);imagedestroy($image);
+        foreach(['events','venues','facilities','listings','reels','lives','blog','categories','layout','organizers','organizers/covers','users/avatars','homepage/hero'] as $folder){$dir=$this->projectDir.'/public/uploads/'.$folder;if(!is_dir($dir))mkdir($dir,0755,true);copy($fallback,$dir.'/campus-demo.jpg');}
+        // Install per-entity images from data/demo-media/ into public/uploads/
+        $images->installAllAssets();
+        // Build lookup of per-entity image filenames: venue title => filename
+        $venueImages=[];
+        foreach($venues as $venue) {
+            $source=$images->resolveVenue($venue->getTitle());
+            if($source){$name=basename($source);copy($source,$this->projectDir.'/public/uploads/venues/'.$name);$venueImages[spl_object_id($venue)]=$name;}
+        }
+        $facilityImages=[];
+        foreach($facilities as $facility) {
+            $source=$images->resolveFacility($facility->getName());
+            if($source){$name=basename($source);copy($source,$this->projectDir.'/public/uploads/facilities/'.$name);$facilityImages[spl_object_id($facility)]=$name;}
+        }
+        // Map organizers (clubs/societies/organizations) to their logo PNGs
+        $orgImages=[];
+        foreach($this->pool[E\Organizer::class]??[] as $org) {
+            $source=$images->resolveClub($org->getName());
+            if($source){$name=basename($source);copy($source,$this->projectDir.'/public/uploads/organizers/'.$name);$orgImages[spl_object_id($org)]=$name;}
+        }
+        // Map events to category-based stock images
+        $eventImages=[];$eventCategoryCounters=[];
+        foreach($events as $event) {
+            $catName=$event->getCategory()?->getName();
+            if(!$catName)continue;
+            $idx=$eventCategoryCounters[$catName]??0;$eventCategoryCounters[$catName]=$idx+1;
+            $source=$images->resolveEventCategory($catName,$idx);
+            if($source){$name=basename($source);copy($source,$this->projectDir.'/public/uploads/events/'.$name);$eventImages[spl_object_id($event)]=$name;}
+        }
+        // Apply per-entity images where resolved, fallback to campus-demo.jpg
         foreach($this->objects as [$object,$class]) {
             $meta=$this->em->getClassMetadata($class);
             if($object instanceof E\Reel || $object instanceof E\Live)continue;
-            foreach(['imageName','mainImage','coverName','avatarName','customBackgroundName'] as $field)if($meta->hasField($field))$meta->setFieldValue($object,$field,'campus-demo.jpg');
-            foreach(['imageSize','coverSize','avatarSize','customBackgroundSize'] as $field)if($meta->hasField($field))$meta->setFieldValue($object,$field,filesize($file));
+            $oid=spl_object_id($object);
+            // Determine the best image filename for this entity
+            $resolved=null;$resolvedSize=null;
+            if($object instanceof E\Venue && isset($venueImages[$oid])){$resolved=$venueImages[$oid];$info=$images->imageInfo($images->resolveVenue($object->getTitle()));$resolvedSize=$info['size']??null;}
+            elseif($object instanceof E\FacilityEntity && isset($facilityImages[$oid])){$resolved=$facilityImages[$oid];$info=$images->imageInfo($images->resolveFacility($object->getName()));$resolvedSize=$info['size']??null;}
+            elseif($object instanceof E\Event && isset($eventImages[$oid])){$resolved=$eventImages[$oid];$resolvedSize=filesize($this->projectDir.'/public/uploads/events/'.$resolved);}
+            elseif($object instanceof E\Organizer && isset($orgImages[$oid])){
+                // Organizer uses logoName, not imageName/mainImage
+                $meta->setFieldValue($object,'logoName',$orgImages[$oid]);
+                $info=$images->imageInfo($images->resolveClub($object->getName()));
+                if($info){if($meta->hasField('logoSize'))$meta->setFieldValue($object,'logoSize',$info['size']);if($meta->hasField('logoMimeType'))$meta->setFieldValue($object,'logoMimeType',$info['mime']);if($meta->hasField('logoOriginalName'))$meta->setFieldValue($object,'logoOriginalName',$object->getName().' logo.png');if($meta->hasField('logoDimensions'))$meta->setFieldValue($object,'logoDimensions',[$info['width'],$info['height']]);}
+                // Still set cover to campus-demo.jpg
+                if($meta->hasField('coverName'))$meta->setFieldValue($object,'coverName','campus-demo.jpg');
+                if($meta->hasField('coverSize'))$meta->setFieldValue($object,'coverSize',filesize($fallback));
+                continue;
+            }
+            $fileName=$resolved??'campus-demo.jpg';$fileSize=$resolvedSize??filesize($fallback);
+            foreach(['imageName','mainImage'] as $field)if($meta->hasField($field))$meta->setFieldValue($object,$field,$fileName);
+            foreach(['coverName','avatarName','customBackgroundName'] as $field)if($meta->hasField($field))$meta->setFieldValue($object,$field,'campus-demo.jpg');
+            foreach(['imageSize','coverSize','avatarSize','customBackgroundSize'] as $field)if($meta->hasField($field))$meta->setFieldValue($object,$field,$field==='imageSize'||$field==='mainImageSize'?$fileSize:filesize($fallback));
         }
         (new \App\Service\CommunityDemoData($this->projectDir))->installAssets();
         require $this->projectDir.'/scripts/install_badges.php';
-        $imageData=['imageName'=>'campus-demo.jpg','imageSize'=>filesize($file),'imageMimeType'=>'image/jpeg','imageOriginalName'=>'Illustrative demo campus.jpg','imageDimensions'=>[1200,675],'position'=>0];
-        foreach(array_slice($events,0,12) as $i=>$event)$this->make(E\EventImage::class,'event-image-'.$i,$imageData+['event'=>$event]);
-        foreach(array_slice($venues,0,12) as $i=>$venue)$this->make(E\VenueImage::class,'venue-image-'.$i,$imageData+['venue'=>$venue]);
-        foreach($facilities as $i=>$facility)$this->make(E\FacilityEntityImage::class,'facility-image-'.$i,$imageData+['facility'=>$facility]);
-        foreach(array_slice($this->pool[E\Listing::class],0,12) as $i=>$listing)$this->make(E\ListingImage::class,'listing-image-'.$i,$imageData+['listing'=>$listing]);
+        // Create image entity records (VenueImage, EventImage, etc.) with per-entity data
+        $fallbackData=['imageName'=>'campus-demo.jpg','imageSize'=>filesize($fallback),'imageMimeType'=>'image/jpeg','imageOriginalName'=>'Illustrative demo campus.jpg','imageDimensions'=>[1200,675],'position'=>0];
+        foreach(array_slice($events,0,12) as $i=>$event){
+            $oid=spl_object_id($event);
+            if(isset($eventImages[$oid])){$source=$this->projectDir.'/public/uploads/events/'.$eventImages[$oid];$info=@getimagesize($source);$data=['imageName'=>$eventImages[$oid],'imageSize'=>filesize($source),'imageMimeType'=>$info['mime']??'image/jpeg','imageOriginalName'=>$event->getName().' photo.jpg','imageDimensions'=>$info?[$info[0],$info[1]]:[1200,675],'position'=>0];}
+            else{$data=$fallbackData;}
+            $this->make(E\EventImage::class,'event-image-'.$i,$data+['event'=>$event]);
+        }
+        foreach(array_slice($venues,0,12) as $i=>$venue){
+            $oid=spl_object_id($venue);
+            if(isset($venueImages[$oid])){$source=$this->projectDir.'/public/uploads/venues/'.$venueImages[$oid];$info=@getimagesize($source);$data=['imageName'=>$venueImages[$oid],'imageSize'=>filesize($source),'imageMimeType'=>$info['mime']??'image/jpeg','imageOriginalName'=>$venue->getTitle().' photo.jpg','imageDimensions'=>$info?[$info[0],$info[1]]:[1200,675],'position'=>0];}
+            else{$data=$fallbackData;}
+            $this->make(E\VenueImage::class,'venue-image-'.$i,$data+['venue'=>$venue]);
+        }
+        foreach($facilities as $i=>$facility){
+            $oid=spl_object_id($facility);
+            if(isset($facilityImages[$oid])){$source=$this->projectDir.'/public/uploads/facilities/'.$facilityImages[$oid];$info=@getimagesize($source);$data=['imageName'=>$facilityImages[$oid],'imageSize'=>filesize($source),'imageMimeType'=>$info['mime']??'image/jpeg','imageOriginalName'=>$facility->getName().' photo.jpg','imageDimensions'=>$info?[$info[0],$info[1]]:[1200,675],'position'=>0];}
+            else{$data=$fallbackData;}
+            $this->make(E\FacilityEntityImage::class,'facility-image-'.$i,$data+['facility'=>$facility]);
+        }
+        foreach(array_slice($this->pool[E\Listing::class],0,12) as $i=>$listing)$this->make(E\ListingImage::class,'listing-image-'.$i,$fallbackData+['listing'=>$listing]);
     }
     private function user(string $username,string $first,string $last,array $roles): E\User {
         $existingUser=$this->em->getRepository(E\User::class)->findOneBy(['username'=>$username]);

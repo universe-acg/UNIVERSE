@@ -1,7 +1,7 @@
 <?php
 namespace App\Command;
 use App\Entity\{DemoRecord,Settings,Reel,Live,User,UniverseChatEntity,UniverseChatUser,UniverseMessage};
-use App\Service\CommunityDemoData;
+use App\Service\{CommunityDemoData,DemoImageInstaller};
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -11,12 +11,12 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 #[AsCommand(name:'app:community:seed',description:'Enrich demo media, rankings and conversations without recreating accounts.')]
 final class CommunitySeedCommand extends Command
 {
-    public function __construct(private EntityManagerInterface $em,private CommunityDemoData $data,#[Autowire('%env(bool:APP_DEMO)%')] private bool $demo) { parent::__construct(); }
+    public function __construct(private EntityManagerInterface $em,private CommunityDemoData $data,private DemoImageInstaller $imageInstaller,#[Autowire('%env(bool:APP_DEMO)%')] private bool $demo) { parent::__construct(); }
     protected function configure(): void { $this->addOption('force',null,InputOption::VALUE_NONE,'Reapply demo-owned community examples.'); }
     protected function execute(InputInterface $input,OutputInterface $output): int
     {
         if (!$this->demo) { $output->writeln('Community seed skipped: APP_DEMO is disabled.'); return self::SUCCESS; }
-        $this->data->installAssets(); require dirname(__DIR__,2).'/scripts/install_badges.php'; $data=$this->data->load(); $version=$this->data->version(); $state=$this->em->getRepository(Settings::class)->findOneBy(['key'=>'community_demo_version']);
+        $this->data->installAssets(); $this->imageInstaller->installAllAssets(); require dirname(__DIR__,2).'/scripts/install_badges.php'; $data=$this->data->load(); $version=$this->data->version(); $state=$this->em->getRepository(Settings::class)->findOneBy(['key'=>'community_demo_version']);
         if ($state?->getValue()===$version && !$input->getOption('force')) { $output->writeln('Community examples already installed; user changes preserved.'); return self::SUCCESS; }
         $pending=[];
         $owned=function(string $class,string $key) use (&$pending): object {
