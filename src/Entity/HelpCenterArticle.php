@@ -13,6 +13,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Table(name: 'universe_help_center_article')]
+#[ORM\Index(name: 'idx_helpart_hidden_cat', columns: ['hidden', 'category_id'])]
 #[ORM\Entity(repositoryClass: \App\Repository\HelpCenterArticleRepository::class)]
 #[Assert\Callback(['App\Validation\Validator', 'validate'])]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]

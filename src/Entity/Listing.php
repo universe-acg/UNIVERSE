@@ -18,6 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Table(name: 'universe_listing')]
+#[ORM\Index(name: 'idx_listing_published', columns: ['published'])]
 #[ORM\Entity(repositoryClass: \App\Repository\ListingRepository::class)]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
 #[Vich\Uploadable]

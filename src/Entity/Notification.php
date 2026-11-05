@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Table(name: 'universe_notification')]
+#[ORM\Index(name: 'idx_notif_user_read', columns: ['userid', 'isread'])]
 #[ORM\Entity(repositoryClass: \App\Repository\NotificationRepository::class)]
 class Notification
 {

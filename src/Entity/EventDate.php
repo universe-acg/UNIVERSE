@@ -13,6 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Table(name: 'universe_event_date')]
+#[ORM\Index(name: 'idx_evdate_start', columns: ['startdate'])]
+#[ORM\Index(name: 'idx_evdate_event_start', columns: ['event_id', 'startdate'])]
 #[ORM\Entity(repositoryClass: \App\Repository\EventDateRepository::class)]
 class EventDate
 {

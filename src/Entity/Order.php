@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Table(name: 'universe_order')]
+#[ORM\Index(name: 'idx_order_status', columns: ['status'])]
 #[ORM\Entity(repositoryClass: \App\Repository\OrderRepository::class)]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
 class Order

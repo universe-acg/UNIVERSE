@@ -8,6 +8,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'universe_settings')]
+#[ORM\Index(name: 'idx_settings_key', columns: ['`key`'])]
 #[ORM\Entity(repositoryClass: \App\Repository\SettingsRepository::class)]
 class Settings
 {

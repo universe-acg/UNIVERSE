@@ -17,6 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Table(name: 'universe_category')]
+#[ORM\Index(name: 'idx_cat_featured_order', columns: ['featured', 'featuredorder'])]
 #[ORM\Entity(repositoryClass: \App\Repository\CategoryRepository::class)]
 #[Assert\Callback(['App\Validation\Validator', 'validate'])]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]

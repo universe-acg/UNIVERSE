@@ -18,6 +18,7 @@
     use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
     #[ORM\Table(name: 'universe_blog_post')]
+    #[ORM\Index(name: 'idx_blog_hidden', columns: ['hidden'])]
     #[ORM\Entity(repositoryClass: \App\Repository\BlogPostRepository::class)]
     #[Assert\Callback(['App\Validation\Validator', 'validate'])]
     #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]

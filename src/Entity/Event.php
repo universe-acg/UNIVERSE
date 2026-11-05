@@ -21,6 +21,7 @@
     use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
     #[ORM\Table(name: 'universe_event')]
+    #[ORM\Index(name: 'idx_event_published', columns: ['published'])]
     #[ORM\Entity(repositoryClass: \App\Repository\EventRepository::class)]
     #[Assert\Callback(['App\Validation\Validator', 'validateEvent'])]
     #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]

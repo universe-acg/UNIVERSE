@@ -16,6 +16,7 @@
     use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
     #[ORM\Table(name: 'universe_reels')]
+    #[ORM\Index(name: 'idx_reels_hidden', columns: ['hidden'])]
     #[ORM\Entity(repositoryClass: \App\Repository\ReelRepository::class)]
     #[Assert\Callback(['App\Validation\Validator', 'validate'])]
     #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]

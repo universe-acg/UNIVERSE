@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Table(name: 'universe_athletic_booking')]
+#[ORM\Index(name: 'idx_booking_facility_date', columns: ['facility_id', 'booking_date'])]
 #[ORM\Entity(repositoryClass: \App\Repository\AthleticBookingRepository::class)]
 #[Assert\Callback(['App\Validation\Validator', 'validate'])]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
