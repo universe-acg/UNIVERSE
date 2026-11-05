@@ -34,20 +34,21 @@
          */
 #[Route("/listings", name: "listings")]
         public function listings(Request            $request, ListingService $listingService, ListingRepository $listingRepository,
-                                 PaginatorInterface $paginator, AppServices $services): Response
+                                 PaginatorInterface $paginator, AppServices $services, \App\Service\PublicCatalogue $catalogue): Response
         {
 
             $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
             $originalListings = $listingService->getListings(array('keyword' => $keyword));
 
-            $duplicatedListings = array_fill(0, 20, $originalListings);
-
-            $resultListings = array_merge(...$duplicatedListings);
-
-            $listings = $paginator->paginate($resultListings, $request->query->getInt('page', 1), 42);
+            $filterCategories = [];
+            foreach ($originalListings as $listing) {
+                if ($listing->isPublished() && $listing->getCategory()) $filterCategories[$listing->getCategory()->getSlug()] = $listing->getCategory();
+            }
+            $records = $catalogue->filter($originalListings, $request->query->getString('keyword'), $request->query->getString('sortedby', 'created_desc'), $request->query->getString('category'));
+            $listings = $paginator->paginate($records, max(1, $request->query->getInt('page', 1)), 24);
 
             return $this->render('Front/Listing/listings.html.twig', [
-                'listings' => $listings
+                'listings' => $listings, 'filterCategories' => $filterCategories
             ]);
         }
 
@@ -148,7 +149,7 @@
             $this->denyAccessUnlessGranted('ROLE_ATTENDEE');
             if ((int)$userid !== $this->getUser()->getId()) throw $this->createAccessDeniedException();
             $listing = $listingService->getListingBySlug($slug);
-            if (!$listing || !$listing->getPublished()) throw $this->createNotFoundException();
+            if (!$listing || !$listing->isPublished()) throw $this->createNotFoundException();
             $em = $this->getDoctrine()->getManager();
             if ($em->getRepository(ListingSubmission::class)->findOneBy(['listing'=>$listing,'user'=>$this->getUser()])) return $this->json(['error'=>'You already applied.'],409);
             $submission = new ListingSubmission();$submission->setListing($listing);$submission->setUser($this->getUser());$submission->setContent(trim((string)$request->request->get('content','I would like to take part in this opportunity.')));

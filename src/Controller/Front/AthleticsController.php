@@ -31,9 +31,9 @@ class AthleticsController extends AbstractController
      *
      */
 #[Route("/athletics", name: "athletics")]
-    public function index(Request $request, PaginatorInterface $paginator, AppServices $services, AthleticService $athleticService): Response
+    public function index(Request $request, PaginatorInterface $paginator, AppServices $services, AthleticService $athleticService, \App\Service\PublicCatalogue $catalogue): Response
     {
-        $athleticfacilities = $paginator->paginate($athleticService->getAthletics([]), $request->query->getInt('page', 1), 25);
+        $athleticfacilities = $paginator->paginate($catalogue->filter($athleticService->getAthletics([]), $request->query->getString('keyword'), $request->query->getString('sortedby', 'created_desc')), max(1, $request->query->getInt('page', 1)), 24);
         return $this->render('Front/Athletics/athletics.html.twig', [
             'athletics' => $athleticfacilities
         ]);
@@ -156,7 +156,7 @@ class AthleticsController extends AbstractController
                 if (!$slug) {
                     $this->addFlash('success', 'The athletic facility has been successfully created');
                 } else {
-                    $this->addFlash('success', 'The athletic facility has been successfully updated');
+                    $this->addFlash('success', 'Your reservation has been saved in the demo portal');
                 }
 
                 return $this->redirectToRoute("athletic_details", ['slug' => $slug], Response::HTTP_FOUND);

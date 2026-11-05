@@ -1,150 +1,26 @@
-{% extends "Global/layout.html.twig" %}
-
-
-
-{% trans_default_domain 'FOSUserBundle' %}
-
-{% set pagetitle = 'Take your events to the next level' %}
-
-{% block title %}{{ pagetitle }}{% endblock %}
-
+{% extends 'Global/layout.html.twig' %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+{% block title %}Register as creator{% endblock %}
 {% block content %}
-    <style>
-        .bg-image {
-            background-image: url('/uploads/imgs/register.jpg');
-            background-size: cover;
-            background-position: center center;
-        }
-    </style>
-
-    <div class="container-fluid" style="height: 100vh">
-        <div class="row no-gutter" style="height: 100vh">
-            <!-- The image half -->
-            <div class="col-md-8 d-none d-md-flex bg-image"></div>
-            <div class="col-md-4 bg-light">
-                <div class="login d-flex align-items-center align-content-center justify-content-center">
-                    <div class="container">
-                        <div class="container d-flex align-items-center justify-content-center vh-100">
-                            <div class="row col">
-                                <div class="col-lg-12 col-xl-12 mx-auto">
-                                    <h3><b>Register as Creator</b></h3>
-                                    <br>
-                                    {{ form_start(form, {'method': 'post', 'attr': {'novalidate': 'novalidate'}}) }}
-                                    {{ form_errors(form) }}
-
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                            <span class="input-group-text border-0"> <i
-                                                        class="far fa-id-card"></i> </span>
-                                            </div>
-                                            {{ form_widget(form.organizer.name) }}
-                                            {{ form_errors(form.organizer.name) }}
-                                        </div>
-                                        <small class="form-text text-muted">{{ 'Enter the creator\'s name.' }}</small>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                            <span class="input-group-text border-0"> <i
-                                                        class="fas fa-users"></i> </span>
-                                            </div>
-                                            {{ form_widget(form.organizer.category) }}
-                                            {{ form_errors(form.organizer.category) }}
-                                        </div>
-                                        <small class="form-text text-muted">{{ 'Enter creator\'s category.' }}</small>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text border-0"> <i
-                                                            class="fas fa-user"></i> </span>
-                                            </div>
-                                            {{ form_widget(form.firstname) }}
-                                            {{ form_errors(form.firstname) }}
-                                        </div>
-                                        <small class="form-text text-muted">{{ 'Enter your official first name.' }}</small>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text border-0"> <i
-                                                            class="fas fa-user"></i> </span>
-                                            </div>
-                                            {{ form_widget(form.lastname) }}
-                                            {{ form_errors(form.lastname) }}
-                                        </div>
-                                        <small class="form-text text-muted">{{ 'Enter your official last name.' }}</small>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                            <span class="input-group-text border-0"> <i
-                                                        class="fas fa-user-tag"></i> </span>
-                                            </div>
-                                            {{ form_widget(form.username) }}
-                                            {{ form_errors(form.username) }}
-                                        </div>
-                                        <small class="form-text text-muted">{{ 'Choose a username. Usernames are unique.' }}</small>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                            <span class="input-group-text border-0"> <i
-                                                        class="fas fa-envelope"></i> </span>
-                                            </div>
-                                            {{ form_widget(form.email) }}
-                                            {{ form_errors(form.email) }}
-                                        </div>
-                                        <small class="form-text text-muted">{{ 'Enter your email address issued by the IRM.' }}</small>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text border-0"> <i
-                                                            class="fas fa-user-lock"></i> </span>
-                                            </div>
-                                            {{ form_widget(form.plainPassword.first) }}
-                                            {{ form_errors(form.plainPassword.first) }}
-                                        </div>
-                                        <small class="form-text text-muted">{{ 'Choose your password.' }}</small>
-                                    </div>
-
-                                    {% if services.getSetting('google_recaptcha_enabled') == "yes" %}
-                                        <div class="form-group">
-                                            {{ form_widget(form.recaptcha) }}
-                                            {{ form_errors(form.recaptcha) }}
-                                        </div>
-                                    {% endif %}
-
-                                    <div class="mb-3 text-sm text-center">
-                                        <span class="text-muted">{{ "By clicking the Sign Up button, I agree to" }}</span>
-                                        <a href="{{ path('page', { slug : services.getSetting('terms_of_service_page_slug') }) }}">{{ "Terms of service" }}</a>
-                                        <span class="text-muted">{{ "and" }}</span>
-                                        <a href="{{ path('page', { slug : services.getSetting('privacy_policy_page_slug') }) }}">{{ "Privacy policy" }}</a>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <button type="submit"
-                                                class="btn btn-primary btn-block">{{ "Create Account" }}</button>
-                                    </div>
-
-                                    <p class="text-center">{{ "Already have an account?" }} <a
-                                                href="{{ path('fos_user_security_login') }}">{{ "Sign in" }}</a></p>
-                                    {{ form_widget(form._token) }}
-                                    {{ form_end(form, {'render_rest': false}) }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="auth-layout">
+    <div class="auth-art" style="background-image: url('{{ public_image('uploads/imgs/register.jpg') }}')" aria-hidden="true"></div>
+    <section class="auth-panel">
+        <h1>Register as creator</h1>
+        <p class="text-muted">Create a profile for your club or organization and share opportunities with the campus community.</p>
+        {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+        {{ form_errors(form) }}
+        {% for field in form %}
+            {% if field.vars.name not in ['_token', 'recaptcha'] %}
+                {{ form_row(field, {label: {'firstname': 'First name', 'lastname': 'Last name', 'studentid': 'Student ID', 'username': 'Username', 'email': 'Email address', 'plainPassword': 'Password', 'organizer': 'Creator profile'}[field.vars.name]|default(field.vars.label)}) }}
+            {% endif %}
+        {% endfor %}
+        {% if services.getSetting('google_recaptcha_enabled') == 'yes' and form.recaptcha is defined %}{{ form_row(form.recaptcha) }}{% endif %}
+        <p class="small">By creating an account, you agree to the <a href="{{ path('page', {slug: services.getSetting('terms_of_service_page_slug')}) }}">Terms of service</a> and <a href="{{ path('page', {slug: services.getSetting('privacy_policy_page_slug')}) }}">Privacy policy</a>.</p>
+        <button class="btn btn-primary btn-block" type="submit">Create account</button>
+        {{ form_widget(form._token) }}
+        {{ form_end(form, {render_rest: false}) }}
+        <p class="mt-4 mb-2">Already have an account? <a href="{{ path('fos_user_security_login') }}">Sign in</a></p>
+        <p class="small mb-0">Joining activities as a student? <a href="{{ path('fos_user_registration_register_attendee') }}">Register as attendee</a></p>
+    </section>
+</div>
 {% endblock %}

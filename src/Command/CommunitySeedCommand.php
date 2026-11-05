@@ -17,6 +17,7 @@ final class CommunitySeedCommand extends Command
     {
         if (!$this->demo) { $output->writeln('Community seed skipped: APP_DEMO is disabled.'); return self::SUCCESS; }
         $this->data->installAssets(); $this->imageInstaller->installAllAssets(); require dirname(__DIR__,2).'/scripts/install_badges.php'; $data=$this->data->load(); $version=$this->data->version(); $state=$this->em->getRepository(Settings::class)->findOneBy(['key'=>'community_demo_version']);
+        if ($state && $this->data->isCompatibleLegacyVersion($state->getValue()) && !$input->getOption('force')) { $state->setValue($version); $this->em->flush(); }
         if ($state?->getValue()===$version && !$input->getOption('force')) { $output->writeln('Community examples already installed; user changes preserved.'); return self::SUCCESS; }
         $pending=[];
         $owned=function(string $class,string $key) use (&$pending): object {

@@ -1,18 +1,4 @@
-<div class="col-12 col-lg-3">
-    <div class="card mb-4 border-0">
-        <a href="{{ path('profile_attendee', { slug : gbmember.attendee.slug }) }}">
-            <img class="card-img-top"
-                 style="object-fit: contain; height: 100%"
-                 src="{{ gbmember.attendee.logoName ? asset(gbmember.attendee.getLogoPath) : gbmember.attendee.getLogoPlaceholder }}"
-            >
-        </a>
-        {#        <a href="{{ path('profile_attendee', { slug : gbmember.attendee.slug }) }}"> #}
-        <div class="organizer-profile-logo"
-        ></div>
-        {#        </a> #}
-        <div class="card-body">
-            <h5 class="card-text">{{ gbmember.attendee.getCrossRoleName }}</h5>
-            <h6 class="card-text">{{ gbmember.title }}</h6>
-        </div>
-    </div>
-</div>
+<div><article class="card public-card">
+    <a href="{{ path('profile_attendee', {slug: gbmember.attendee.slug}) }}">{% include 'Global/public-image.html.twig' with {image: gbmember.attendee.logoName ? gbmember.attendee.getLogoPath : null, alt: gbmember.attendee.getCrossRoleName, imageClass: 'member-photo'} only %}</a>
+    <div class="card-body"><h2 class="card-title">{{ gbmember.attendee.getCrossRoleName }}</h2><p class="mb-0">{{ gbmember.title }}</p></div>
+</article></div>

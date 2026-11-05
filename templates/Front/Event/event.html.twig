@@ -49,7 +49,7 @@
                 <div class="row">
                     <div class="col-12 col-lg-8 order-1 order-lg-0">
                         <div class="card-body">
-                            <h1 class="card-title b d-none d-lg-block">{{ event.name }}</h1>
+
                             {% if event.description %}
                                 <dl class="mt-5 event-description">
                                     <dt class="text-muted">{{ "Description" }}</dt>
@@ -150,9 +150,9 @@
                                     <div class="row">
                                         <div class="col-12">
                                             <h3 class="mt-5 mb-4 text-start">{{ "Similar events" }}</h3>
-                                            <div class="owl-init owl-carousel" data-margin="5" data-items="4"
+                                            <div class="owl-init owl-carousel" data-margin="5" data-items="2"
                                                  data-dots="false"
-                                                 data-nav="true" data-autoplay="true" data-loop="false">
+                                                 data-nav="true" data-autoplay="false" data-loop="false">
                                                 {% for event in similarevents %}
                                                     {% include "Global/similar-event-card.html.twig" with {event: event} %}
                                                 {% endfor %}
@@ -165,7 +165,7 @@
                     </div>
                     <div class="col-12 col-lg-4 order-0 order-lg-1 ">
                         <div class="card-body">
-                            <h1 class="card-title b d-lg-none text-center">{{ event.name }}</h1>
+
                             {#                            {% if event.hasAnEventDateOnSale %} #}
                             {# Event Dates calendar used on multi date events #}
                             {% if event.hasTwoOrMoreEventDatesOnSale %}
@@ -204,7 +204,7 @@
                                                                 </div>
                                                                 <div class="display-inline-block mr-3">
                                                                     <div>
-                                                                        <span class="font-size-1rem">{{ eventDate.startdate|localizeddate('none', 'none', app.request.locale, null, "MMMM")|capitalize|slice(0, 3) }}</span>
+                                                                        <span class="font-size-1rem">{{ eventDate.startdate|format_datetime(pattern='MMMM', locale=app.request.locale, timezone='Europe/Athens')|capitalize|slice(0, 3) }}</span>
                                                                     </div>
                                                                     <div>
                                                                         <span>{{ eventDate.startdate|date('Y') }}</span>
@@ -231,7 +231,7 @@
                                                                     </div>
                                                                     <div class="display-inline-block">
                                                                         <div>
-                                                                            <span class="font-size-1rem">{{ eventDate.enddate|localizeddate('none', 'none', app.request.locale, null, "MMMM")|capitalize|slice(0, 3) }}</span>
+                                                                            <span class="font-size-1rem">{{ eventDate.enddate|format_datetime(pattern='MMMM', locale=app.request.locale, timezone='Europe/Athens')|capitalize|slice(0, 3) }}</span>
                                                                         </div>
                                                                         <div>
                                                                             <span>{{ eventDate.enddate|date('Y') }}</span>
@@ -452,7 +452,6 @@ height: 100%; display: grid; justify-content: center; align-items: center; align
                         </div>
                     </div>
                 </div>
-
 
             </div>
         </div>

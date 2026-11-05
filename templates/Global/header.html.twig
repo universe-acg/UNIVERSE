@@ -110,7 +110,6 @@
                             </a>
                         </div>
 
-
                         <div class="widget-header dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-label="Sign up"
                                aria-haspopup="true" aria-expanded="false">
@@ -242,6 +241,8 @@
             toggler.classList.remove('collapsed');
             toggler.setAttribute('aria-expanded', 'true');
             document.body.style.overflow = 'hidden';
+            nav.inert = false; nav.setAttribute('aria-hidden', 'false');
+            (closeBtn || nav.querySelector('a')).focus();
         }
 
         function closeNav() {
@@ -250,6 +251,8 @@
             toggler.classList.add('collapsed');
             toggler.setAttribute('aria-expanded', 'false');
             document.body.style.overflow = '';
+            nav.inert = window.innerWidth < 992;
+            nav.setAttribute('aria-hidden', window.innerWidth < 992 ? 'true' : 'false');
         }
 
         toggler.addEventListener('click', function(e) {
@@ -262,6 +265,19 @@
         });
 
         if (backdrop) backdrop.addEventListener('click', closeNav);
-        if (closeBtn) closeBtn.addEventListener('click', closeNav);
+        if (closeBtn) closeBtn.addEventListener('click', function () { closeNav(); toggler.focus(); });
+        nav.inert = window.innerWidth < 992;
+        nav.setAttribute('aria-hidden', window.innerWidth < 992 ? 'true' : 'false');
+        document.addEventListener('keydown', function (event) {
+            if (!nav.classList.contains('show') || window.innerWidth >= 992) return;
+            if (event.key === 'Escape') { closeNav(); toggler.focus(); }
+            if (event.key === 'Tab') {
+                var items = Array.from(nav.querySelectorAll('a[href], button')).filter(function (item) { return item.getClientRects().length && !item.disabled; });
+                if (!items.length) return;
+                if (event.shiftKey && document.activeElement === items[0]) { event.preventDefault(); items[items.length - 1].focus(); }
+                else if (!event.shiftKey && document.activeElement === items[items.length - 1]) { event.preventDefault(); items[0].focus(); }
+            }
+        });
+        window.addEventListener('resize', closeNav);
     })();
 </script>

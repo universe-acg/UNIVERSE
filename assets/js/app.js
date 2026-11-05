@@ -5,6 +5,7 @@
 // css & scss
 
 require('../css/app.scss');
+require('../css/public.scss');
 require('pace-progressbar/themes/orange/pace-theme-minimal.css');
 require('fontawesome-iconpicker/dist/css/fontawesome-iconpicker.min.css');
 require('@fortawesome/fontawesome-free/css/all.min.css');
@@ -1195,6 +1196,10 @@ $(document).ready(function () {
         },
         error: function (ele, msg) {
             $(ele).find('.loader').remove();
+            if (document.body.classList.contains('universe-public')) {
+                if (ele.tagName === 'IMG') ele.src = '/images/universe-placeholder.svg';
+                else ele.style.backgroundImage = 'url(/images/universe-placeholder.svg)';
+            }
         }
     });
 

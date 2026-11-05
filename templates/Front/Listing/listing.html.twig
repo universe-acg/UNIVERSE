@@ -9,11 +9,8 @@
 {% endblock %}
 
 {% block content %}
-    <style>
-        .mycontainer {
-            max-width: 75vw !important;
-        }
-    </style>
+{% include "Global/navigation.html.twig" with {navigation: [{listings: "Listings", current: listing.name}]} %}
+
     {% if is_granted('ROLE_ORGANIZER') %}
         {% if listing.organizer == app.user.organizer %}
             {% include "Global/message.html.twig" with { type: 'info', icon: 'fas fa-info-circle', message: ('<a href="'~ path('dashboard_organizer_listing', {slug: listing.slug}) ~'">' ~ 'Click here' ~ '</a> ' ~ 'to manage your listing') } %}
@@ -45,7 +42,7 @@
                     </div>
                     <div class="col-12 col-lg-6 order-0 order-lg-1 ">
                         <div class="card-body">
-                            <h1 class="card-title b d-lg-none text-center">{{ listing.name }}</h1>
+                            <h2 class="card-title">Apply for this opportunity</h2>
                             {# listing Dates calendar used on multi date listings #}
                             {{ form_start(form) }}
                             {{ form_widget(form) }}
@@ -86,7 +83,7 @@
 
                 </div>
                 <div class="px-4">
-                    <h1 class="card-title b d-lg-none text-center">Details</h1>
+                    <h2 class="card-title">Details</h2>
                     {% if listing.description %}
                         <dl class="mt-5 listing-description">
                             <dd class="line-height-2 readmore" data-collapsed-height="500"

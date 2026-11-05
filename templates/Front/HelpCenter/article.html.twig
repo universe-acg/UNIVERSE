@@ -22,7 +22,7 @@
                                 </a>
                             </header>
                             <div class="filter-content collapse show" id="filter-event-type">
-                                <div class="card-body">
+                                <div class="card-body prose">
                                     <ul class="list list-unstyled">
                                         {% set helpcentercategories = services.getHelpCenterCategories({}).getQuery().getResult() %}
                                         {% for helpcentercategory in helpcentercategories %}
@@ -54,7 +54,7 @@
                                 </a>
                             </header>
                             <div class="filter-content collapse show" id="collapsePopular">
-                                <div class="card-body">
+                                <div class="card-body prose">
                                     {% set populararticles = services.getHelpCenterArticles({"limit": 5, "order": "views", "category":article.category.slug, "otherthan": article.slug}).getQuery().getResult() %}
                                     {% for article in populararticles %}
                                         <article class="row align-items-center mb-3">
@@ -75,9 +75,9 @@
                 </aside>
                 <div class="col-lg-9 order-0 order-lg-1">
                     <div class="card box">
-                        <div class="card-body">
+                        <div class="card-body prose">
                             <header class="section-heading mb-5">
-                                <h1 class="title-section">{{ article.title }}</h1>
+                                <h2 class="title-section">{{ article.title }}</h2>
                             </header>
                             <article>
                                 {{ article.content|raw }}

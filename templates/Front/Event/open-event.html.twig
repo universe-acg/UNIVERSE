@@ -150,7 +150,7 @@
                                                                 </div>
                                                                 <div class="display-inline-block mr-3">
                                                                     <div>
-                                                                        <span class="font-size-1rem">{{ eventDate.startdate|localizeddate('none', 'none', app.request.locale, null, "MMMM")|capitalize|slice(0, 3) }}</span>
+                                                                        <span class="font-size-1rem">{{ eventDate.startdate|format_datetime(pattern='MMMM', locale=app.request.locale, timezone='Europe/Athens')|capitalize|slice(0, 3) }}</span>
                                                                     </div>
                                                                     <div>
                                                                         <span>{{ eventDate.startdate|date('Y') }}</span>
@@ -177,7 +177,7 @@
                                                                     </div>
                                                                     <div class="display-inline-block">
                                                                         <div>
-                                                                            <span class="font-size-1rem">{{ eventDate.enddate|localizeddate('none', 'none', app.request.locale, null, "MMMM")|capitalize|slice(0, 3) }}</span>
+                                                                            <span class="font-size-1rem">{{ eventDate.enddate|format_datetime(pattern='MMMM', locale=app.request.locale, timezone='Europe/Athens')|capitalize|slice(0, 3) }}</span>
                                                                         </div>
                                                                         <div>
                                                                             <span>{{ eventDate.enddate|date('Y') }}</span>

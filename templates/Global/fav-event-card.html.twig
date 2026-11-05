@@ -81,8 +81,8 @@
     {% if displayedEventDate %}
         {% if displayedEventDate.startdate %}
             <div class="event-date text-center">
-                <div class="event-month bg-primary text-light">{{ displayedEventDate.startdate|localizeddate('none', 'none', app.request.locale, null, "MMM")|upper }}</div>
-                <div class="event-day bg-white">{{ displayedEventDate.startdate|localizeddate('none', 'none', app.request.locale, null, "d") }}</div>
+                <div class="event-month bg-primary text-light">{{ displayedEventDate.startdate|format_datetime(pattern='MMM', locale=app.request.locale, timezone='Europe/Athens')|upper }}</div>
+                <div class="event-day bg-white">{{ displayedEventDate.startdate|format_datetime(pattern='d', locale=app.request.locale, timezone='Europe/Athens') }}</div>
             </div>
         {% endif %}
     {% endif %}

@@ -29,10 +29,10 @@ class VenueController extends AbstractController
      *
      */
 #[Route("/venues", name: "venues")]
-    public function venues(Request $request, PaginatorInterface $paginator, AppServices $services): Response
+    public function venues(Request $request, PaginatorInterface $paginator, AppServices $services, \App\Service\PublicCatalogue $catalogue): Response
     {
         $keyword = ($request->query->get('keyword')) == "" ? "all" : $request->query->get('keyword');
-        $venues = $paginator->paginate($services->getVenues(array('keyword' => $keyword)), $request->query->getInt('page', 1), 28);
+        $venues = $paginator->paginate($catalogue->filter($services->getVenues([]), $request->query->getString('keyword'), $request->query->getString('sortedby', 'created_desc')), max(1, $request->query->getInt('page', 1)), 24);
         return $this->render('Front/Venue/venues.html.twig', [
             'venues' => $venues
         ]);

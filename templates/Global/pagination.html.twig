@@ -1,12 +1,12 @@
 {% if pageCount > 1 %}
-    <nav class="pt-3">
+    <nav class="pt-3" aria-label="Pagination">
         {% set classAlign = (align is not defined) ? '' : align=='center' ? ' justify-content-center' : (align=='right' ? ' justify-content-end' : '') %}
         {% set classSize = (size is not defined) ? '' : size=='large' ? ' pagination-lg' : (size=='small' ? ' pagination-sm' : '') %}
         <ul class="pagination{{ classAlign }}{{ classSize }}">
 
             {% if previous is defined %}
                 <li class="page-item">
-                    <a class="page-link" rel="prev" href="{{ path(route, query|merge({(pageParameterName): previous})) }}">
+                    <a class="page-link" aria-label="Previous page" rel="prev" href="{{ path(route, query|merge({(pageParameterName): previous})) }}">
                         {% if app.request.locale == 'ar' %}
                             <i class="fas fa-angle-right"></i>
                         {% else %}
@@ -48,7 +48,7 @@
                     </li>
                 {% else %}
                     <li class="page-item active">
-                        <span class="page-link">{{ page }}</span>
+                        <span class="page-link" aria-current="page">{{ page }}</span>
                     </li>
                 {% endif %}
 
@@ -73,7 +73,7 @@
 
             {% if next is defined %}
                 <li class="page-item">
-                    <a class="page-link" rel="next" href="{{ path(route, query|merge({(pageParameterName): next})) }}">
+                    <a class="page-link" aria-label="Next page" rel="next" href="{{ path(route, query|merge({(pageParameterName): next})) }}">
                         {% if app.request.locale == 'ar' %}
                             <i class="fas fa-angle-left"></i>
                         {% else %}

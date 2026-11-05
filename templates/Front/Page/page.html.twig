@@ -9,13 +9,13 @@
     {% set navigation = [{"current": (pagetitle)}] %}
     {% include "Global/navigation.html.twig" with navigation %}
 
-    <section class="section-content padding-y bg-white">
+    <section class="section-content info-page bg-white">
         <div class="{{ services.getSetting("app_layout") }}">
             <div class="row">
                 <div class="col-sm-12">
                     <div class="card box">
-                        <div class="card-body">
-                            {{ page.content|raw|nl2br }}
+                        <div class="card-body prose">
+                            {{ page.content|raw }}
                         </div>
                     </div>
                 </div>

@@ -1,33 +1,15 @@
-{% set runtimeConfig = {"thumbnail": {"size": [500, 250] }} %}
-{% set link = url('listing',{slug:listing.slug}) %}
-
-<div class="card mb-4 border-0 h-100">
-    <a href="{{ path('listing', { slug : listing.slug }) }}" style="height: 300px">
-        <img class="card-img-top img-lazy-load" src="{{ asset('assets/img/loader.svg') }}"
-             style="object-fit: cover; height: 100%"
-             data-src="{{ listing.imageName ? asset(listing.getImagePath) : listing.getImagePlaceholder }}"
-             alt="{{ listing.name }}">
-    </a>
+<article class="card public-card">
+    <a href="{{ path('listing', {slug: listing.slug}) }}" tabindex="-1" aria-hidden="true">{% include 'Global/public-image.html.twig' with {image: listing.imageName ? listing.getImagePath : null, alt: ''} only %}</a>
     <div class="card-body">
-        <h5 class="card-title">{{ listing.name }}</h5>
-        <p class="card-text"><a href="{{ path('listing', { slug : listing.slug }) }}"
-                                class="text-dark">{{ listing.shortdescription }}</a></p>
+        <h2 class="card-title"><a class="text-dark" href="{{ path('listing', {slug: listing.slug}) }}">{{ listing.name }}</a></h2>
+        {% if listing.shortdescription %}<p class="mb-0">{{ listing.shortdescription }}</p>{% endif %}
     </div>
-
-    <div class="card-footer d-flex justify-content-between">
-        <div>
-            <div>
-                <small class="text-muted"><i class="far fa-clock"></i> {{ listing.createdAt|ago }}</small>
-            </div>
-            <div>
-                <small class="text-muted"><i
-                            class="fas fa-stream"></i> {{ listing.category.name }}
-                </small>
-            </div>
-            <small class="text-muted w-100 text-wrap"><i class="far fa-user"></i> By: <a
-                        href="{{ path('organizer', { slug : listing.organizer.user.username }) }}">{{ listing.organizer.name|length > 15 ? listing.organizer.name|slice(0, 15) ~ '...' : listing.organizer.name }}
-                </a></small>
+    <div class="card-footer d-flex">
+        <div class="public-card-meta">
+            {% if listing.category %}<span>{{ listing.category.name }}</span>{% endif %}
+            <a href="{{ path('organizer', {slug: listing.organizer.user.username}) }}">{{ listing.organizer.name }}</a>
+            <time datetime="{{ listing.createdAt|date('c') }}">{{ listing.createdAt|ago }}</time>
         </div>
-        <button type="submit" class="btn btn-primary" style="border-radius: 0.25em">Quick apply</button>
+        <a class="btn btn-primary" href="{{ path('listing', {slug: listing.slug}) }}">View opportunity</a>
     </div>
-</div>
+</article>

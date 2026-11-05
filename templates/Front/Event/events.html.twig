@@ -13,6 +13,7 @@
 {% endblock %}
 
 {% block content %}
+{% include "Global/navigation.html.twig" with {navigation: [{current: "Events"}]} %}
 
     {% if category != "all" %}
         {% set navigation = [{"events": ("Events"), "current" : (pagetitle)}] %}
@@ -20,61 +21,6 @@
         {% set navigation = [{"current" : (pagetitle)}] %}
     {% endif %}
 
-    <style>
-        /* Add this CSS to your stylesheet */
-        @media (max-width: 767px) {
-            .order-1,
-            .order-2 {
-                order: initial; /* Reset the order for smaller screens */
-            }
-
-            .col-lg-3,
-            .col-lg-9 {
-                width: 100%; /* Full width on smaller screens */
-            }
-        }
-
-        @media (max-width: 767px) {
-            .filters-section {
-                display: flex;
-                flex-direction: column;
-            }
-
-            .filter-item {
-                margin-bottom: 10px; /* Add spacing between filter items */
-            }
-        }
-
-        .fixed-sidebar {
-            position: fixed;
-            top: 140px;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            height: 800px !important;
-        }
-
-        .col-lg-9 {
-            margin-left: 25%; /* Ensure proper spacing between the fixed sidebar and main content */
-        }
-
-        /* Responsive styles for mobile */
-        @media (max-width: 1000px) {
-            .fixed-sidebar {
-                position: relative;
-                top: initial;
-                left: initial;
-                width: 100%;
-                margin-bottom: 20px;
-            }
-
-            .col-lg-9 {
-                margin-left: 0; /* Reset margin-left */
-            }
-        }
-    </style>
-
-    {#    {% include "Global/navigation.html.twig" with navigation %} #}
     <section class="section-content bg-white padding-y">
         <div class="{{ services.getSetting("app_layout") }}">
 
@@ -96,7 +42,6 @@
                 {% endfor %}
             {% endfor %}
 
-            {# Add holidays to the eventsoncalendar array #}
             {% for holiday in holidays %}
                 {% set eventsoncalendar = eventsoncalendar|merge([{
                     "title": holiday.name,
@@ -109,15 +54,14 @@
             <div id="events-calendar" data-default-date="{{ "now"|date('Y-m-d') }}"
                  data-events="{{ eventsoncalendar|json_encode() }}" class="mb-4 collapse"></div>
 
+            <div class="catalog-layout">
 
-            <div class="row" style="">
-
-                <aside class="col-lg-3 order-1 order-lg-1 fixed-sidebar">
+                <aside class="catalog-filters" id="catalog-filters">
                     <div class="card card-filter filters-section">
                         <form method="get">
                             <article class="card-group-item filter-item">
                                 <header class="card-header">
-                                    <a href="#" data-toggle="collapse" data-target="#filter-keyword">
+                                    <a href="#" data-toggle="collapse" data-target="#filter-venue">
                                         <i class="icon-action fa fa-chevron-down"></i>
                                         <h6 class="title">{{ "Keyword" }}</h6>
                                     </a>
@@ -186,7 +130,7 @@
                                             <div class="form-check">
                                                 <div class="float-left custom-control custom-radio form-check-input">
                                                     <input type="radio" class="custom-control-input" id="date-today"
-                                                           name="startdate" value="today">
+                                                           name="startdate" value="today" {{ app.request.query.get('startdate') == 'today' ? 'checked' : '' }}>
                                                     <label class="custom-control-label"
                                                            for="date-today">{{ "Today" }}</label>
                                                 </div>
@@ -198,7 +142,7 @@
                                             <div class="form-check">
                                                 <div class="float-left custom-control custom-radio form-check-input">
                                                     <input type="radio" class="custom-control-input" id="date-tomorrow"
-                                                           name="startdate" value="tomorrow">
+                                                           name="startdate" value="tomorrow" {{ app.request.query.get('startdate') == 'tomorrow' ? 'checked' : '' }}>
                                                     <label class="custom-control-label"
                                                            for="date-tomorrow">{{ "Tomorrow" }}</label>
                                                 </div>
@@ -210,7 +154,7 @@
                                             <div class="form-check">
                                                 <div class="float-left custom-control custom-radio form-check-input">
                                                     <input type="radio" class="custom-control-input" id="date-thisweek"
-                                                           name="startdate" value="thisweek">
+                                                           name="startdate" value="thisweek" {{ app.request.query.get('startdate') == 'thisweek' ? 'checked' : '' }}>
                                                     <label class="custom-control-label"
                                                            for="date-thisweek">{{ "This week" }}</label>
                                                 </div>
@@ -222,7 +166,7 @@
                                             <div class="form-check">
                                                 <div class="float-left custom-control custom-radio form-check-input">
                                                     <input type="radio" class="custom-control-input" id="date-nextweek"
-                                                           name="startdate" value="nextweek">
+                                                           name="startdate" value="nextweek" {{ app.request.query.get('startdate') == 'nextweek' ? 'checked' : '' }}>
                                                     <label class="custom-control-label"
                                                            for="date-nextweek">{{ "Next week" }}</label>
                                                 </div>
@@ -234,7 +178,7 @@
                                             <div class="form-check">
                                                 <div class="float-left custom-control custom-radio form-check-input">
                                                     <input type="radio" class="custom-control-input" id="date-thismonth"
-                                                           name="startdate" value="thismonth">
+                                                           name="startdate" value="thismonth" {{ app.request.query.get('startdate') == 'thismonth' ? 'checked' : '' }}>
                                                     <label class="custom-control-label"
                                                            for="date-thismonth">{{ "This month" }}</label>
                                                 </div>
@@ -246,7 +190,7 @@
                                             <div class="form-check">
                                                 <div class="float-left custom-control custom-radio form-check-input">
                                                     <input type="radio" class="custom-control-input" id="date-nextmonth"
-                                                           name="startdate" value="nextmonth">
+                                                           name="startdate" value="nextmonth" {{ app.request.query.get('startdate') == 'nextmonth' ? 'checked' : '' }}>
                                                     <label class="custom-control-label"
                                                            for="date-nextmonth">{{ "Next month" }}</label>
                                                 </div>
@@ -261,7 +205,7 @@
                             {% endif %}
                             <article class="card-group-item filter-item">
                                 <div class="card-body">
-                                    <div class="custom-control custom-checkbox form-check-input ml-0 mb-4">
+                                    <div class="custom-control custom-checkbox form-check-input ml-0 mb-0">
                                         <input {% if hide_repeating %}checked{% endif %} type="checkbox"
                                                class="custom-control-input" id="hide-repeating"
                                                name="hide-repeating" value="1">
@@ -273,7 +217,7 @@
                             </article>
                             <article class="card-group-item filter-item">
                                 <div class="card-body">
-                                    <div class="custom-control custom-checkbox form-check-input ml-0 mb-4">
+                                    <div class="custom-control custom-checkbox form-check-input ml-0 mb-0">
                                         <input {% if open_events_only %}checked{% endif %} type="checkbox"
                                                class="custom-control-input" id="open-events-only"
                                                name="open-events-only" value="1">
@@ -285,7 +229,7 @@
                             </article>
                             <article class="card-group-item filter-item">
                                 <div class="card-body">
-                                    <div class="custom-control custom-checkbox form-check-input ml-0 mb-4">
+                                    <div class="custom-control custom-checkbox form-check-input ml-0 mb-0">
                                         <input {% if out_of_campus %}checked{% endif %} type="checkbox"
                                                class="custom-control-input" id="out-of-campus"
                                                name="out-of-campus" value="1">
@@ -297,7 +241,7 @@
                             </article>
                             <article class="card-group-item filter-item">
                                 <div class="card-body">
-                                    <div class="custom-control custom-checkbox form-check-input ml-0 mb-4">
+                                    <div class="custom-control custom-checkbox form-check-input ml-0 mb-0">
                                         <input {% if help_events_only %}checked{% endif %} type="checkbox"
                                                class="custom-control-input" id="help-events-only"
                                                name="help-events-only" value="1">
@@ -374,7 +318,7 @@
                                     </article>
                                 </div>
                             </div>
-                            <article class="card-group-item filter-item" id="tagsart">
+                            {% if tags|length %}<article class="card-group-item filter-item" id="tagsart">
                                 <header class="card-header">
                                     <a href="#" data-toggle="collapse" data-target="#collapseTags">
                                         <i class="icon-action fa fa-chevron-down"></i>
@@ -384,22 +328,22 @@
                                 <div class="filter-content collapse show" id="collapseTags">
                                     <div class="card-body">
                                         {% for tag in tags %}
-                                            <a href="https://universe.alexandroskourtis.me/events?keyword={{ tag }}"
+                                            <a href="{{ path('events', {keyword: tag}) }}"
                                                class="btn btn-sm btn-default mr-2 mb-2 mt-2">{{ tag }}</a>
                                         {% endfor %}
                                     </div>
                                 </div>
-                            </article>
+                            </article>{% endif %}
                         </form>
                     </div>
                 </aside>
-                <div class="col-lg-9 order-1 order-lg-2 mt-4 mt-md-0 ">
+                <div class="catalog-results"><p class="small text-muted">Images illustrate demo activities; participation does not confirm attendance at real events.</p>
                     {% if events.getTotalItemCount > 0 %}
-                        <div class="row" style="overflow-y: scroll">
+                        <div class="catalog-grid">
                             {% for event in events %}
-                                {#                            <div class="col-12 col-sm-6 col-lg-6 mb-3"> #}
+
                                 <div class="col-12 col-sm-3 col-lg-3 mb-3">
-                                    {#                                    {% include "Global/event-card.html.twig" with {event: event, past: event.isPassed, attendeed: event.isAttnded} %} #}
+
                                     {% include "Global/event-card.html.twig" with {event: event, past: event.isPassed} %}
                                 </div>
                             {% endfor %}
@@ -407,7 +351,7 @@
                     {% else %}
                         {% include "Global/message.html.twig" with { type: "info", message: ('No events found'), icon: "fas fa-exclamation-circle" } %}
                     {% endif %}
-                    {{ knp_pagination_render(events, null, {}, {'align': 'center'}) }}
+                    {{ knp_pagination_render(events, 'Global/pagination.html.twig', {}, {'align': 'center'}) }}
                 </div>
             </div>
         </div>
@@ -416,53 +360,5 @@
 
 {% block javascripts %}
     {{ encore_entry_script_tags('events') }}
-    {#    {% if services.getSetting("show_map_button") == "yes" and google_maps_api_key != "" %} #}
-    {#        <script async defer #}
-    {#                src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap"> #}
-    {#        </script> #}
-    {#        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> #}
-    {#        {% include "Global/event-info-box.html.twig" %} #}
-    {#    {% endif %} #}
-
-    <script>
-        $(document).ready(function () {
-            toggleFiltersVisibility();
-        });
-        // Check screen size on window resize
-        $(window).on('resize', function () {
-            toggleFiltersVisibility();
-        });
-
-        function toggleFiltersVisibility() {
-            var screenWidth = $(window).width();
-
-            if (screenWidth <= 767) {
-                $('#tagsart').css('display', 'none');
-            } else {
-                $('#tagsart').css('display', 'block');
-            }
-        }
-
-        // Function to parse URL parameters
-        function getURLParameter(name) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(name);
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            const radioButtons = document.querySelectorAll(".custom-control-input");
-
-            radioButtons.forEach(function (radioButton) {
-                // Get the value attribute of each radio button
-                const value = radioButton.getAttribute("value");
-
-                // Check if the URL contains the parameter with the same value
-                if (getURLParameter("startdate") === value) {
-                    radioButton.checked = true;
-                }
-            });
-        });
-
-    </script>
 
 {% endblock %}

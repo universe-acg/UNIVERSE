@@ -1,54 +1,7 @@
-{% set runtimeConfig = {"thumbnail": {"size": [400, 250] }} %}
-
-{# <style> #}
-{#    .image-container[data-src] { #}
-{#        object-fit: contain !important; #}
-{#    } #}
-{# </style> #}
-{# <a href="{{ path('athletic_details', { slug : athletic.slug }) }}" class="text-dark"> #}
-{#    <div class="card card-event pb-2"> #}
-{#        <div class="img-wrap img-lazy-load image-container" #}
-{#             style="height: 260px;" #}
-{#             data-src="{{ athletic.getImagePath ? asset(athletic.getImagePath) : athletic.getImagePlaceholder }}"> #}
-{#            <div class="loader"></div> #}
-{#        </div> #}
-{#        <div class="info-wrap" style="min-height: initial !important;"> #}
-{#            <div class="event-info"> #}
-{#                <h5> #}
-{#                    <a href="{{ path('athletic_details', { slug : athletic.slug }) }}" #}
-{#                       class="text-dark">{{ athletic.name }}</a> #}
-{#                </h5> #}
-{#            </div> #}
-{#            <div class="clearfix"></div> #}
-{#            {{ athletic.description|striptags|slice(0, 150) ~ (athletic.description|striptags|length > 150 ? '...' : '') }} #}
-{#        </div> #}
-{#    </div> #}
-{# </a> #}
-
-{% set runtimeConfig = {"thumbnail": {"size": [500, 250] }} %}
-
-<style>
-    .image-container[data-src] {
-        object-fit: contain !important;
-    }
-</style>
-<a href="{{ path('athletic_details', { slug : athletic.slug }) }}" class="text-dark">
-
-    <div class="card card-event pb-2">
-        <div class="img-wrap img-lazy-load image-container"
-             style="height: 260px;"
-             data-src="{{ athletic.getImagePath ? asset(athletic.getImagePath) : athletic.getImagePlaceholder }}">
-            <div class="loader"></div>
-        </div>
-        <div class="info-wrap" style="min-height: initial !important;">
-            <div class="event-info">
-                <h5>
-                    <a href="{{ path('athletic_details', { slug : athletic.slug }) }}"
-                       class="text-dark">{{ athletic.name }}</a>
-                </h5>
-            </div>
-            <div class="clearfix"></div>
-            {{ athletic.description|striptags|slice(0, 150) ~ (athletic.description|striptags|length > 150 ? '...' : '') }}
-        </div>
+<article class="card public-card">
+    <a href="{{ path('athletic_details', {slug: athletic.slug}) }}" tabindex="-1" aria-hidden="true">{% include 'Global/public-image.html.twig' with {image: athletic.imageName ? athletic.getImagePath : null, alt: ''} only %}</a>
+    <div class="card-body">
+        <h2 class="card-title"><a class="text-dark" href="{{ path('athletic_details', {slug: athletic.slug}) }}">{{ athletic.name }}</a></h2>
+        {% if athletic.description %}<p class="mb-0">{{ athletic.description|striptags|slice(0, 140) }}{{ athletic.description|striptags|length > 140 ? '…' : '' }}</p>{% endif %}
     </div>
-</a>
+</article>

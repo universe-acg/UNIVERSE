@@ -1,0 +1,24 @@
+<div class="box bg-gray">{{ total }} {{ noun }} found</div>
+<form method="get" action="{{ path(route) }}" class="card card-filter">
+    <div class="card-body">
+        <div class="form-group">
+            <label for="catalog-keyword">Keyword</label>
+            <input id="catalog-keyword" type="search" class="form-control" name="keyword" value="{{ app.request.query.get('keyword') }}" placeholder="Search {{ noun }}">
+        </div>
+        {% if filterCategories is defined %}
+        <div class="form-group"><label for="catalog-category">Category</label>
+            <select class="form-control" id="catalog-category" name="category"><option value="">All categories</option>
+            {% for category in filterCategories %}<option value="{{ category.slug }}" {{ app.request.query.get('category') == category.slug ? 'selected' : '' }}>{{ category.name }}</option>{% endfor %}
+            </select>
+        </div>
+        {% endif %}
+        <div class="form-group mb-0"><label for="catalog-sort">Sort by</label>
+            <select class="form-control" id="catalog-sort" name="sortedby">
+            {% for value, label in {'created_desc': 'Newest first', 'created_asc': 'Oldest first', 'title_asc': 'Name: A to Z', 'title_desc': 'Name: Z to A'} %}
+                <option value="{{ value }}" {{ app.request.query.get('sortedby', 'created_desc') == value ? 'selected' : '' }}>{{ label }}</option>
+            {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="filter-actions"><button type="submit" class="btn btn-primary">Search</button><a href="{{ path(route) }}" class="btn btn-outline-primary">Clear</a></div>
+</form>

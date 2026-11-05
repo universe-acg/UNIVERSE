@@ -95,7 +95,7 @@ final class DemoImageInstaller
             if (!is_dir($targetBase)) mkdir($targetBase, 0755, true);
             foreach (glob($sourceBase.'/*') as $source) {
                 $target = $targetBase.'/'.basename($source);
-                if (!is_file($target) || hash_file('sha256', $source) !== hash_file('sha256', $target)) {
+                if (!is_file($target)) {
                     if (!copy($source, $target)) {
                         throw new \RuntimeException('Could not install demo image: '.$source);
                     }

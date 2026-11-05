@@ -4,22 +4,15 @@
 {% block title %}{{ pagetitle }}{% endblock %}
 
 {% block content %}
-
-    <style>
-        .card-event .info-wrap {
-            padding-bottom: 4px !important;
-        }
-    </style>
-
+{% include "Global/navigation.html.twig" with {navigation: [{current: "Creators"}]} %}
 
     {% set navigation = [{"current" : (pagetitle)}] %}
-    {#    {% include "Global/navigation.html.twig" with navigation %} #}
 
     <section class="section-content bg-white padding-y">
         <div class="{{ services.getSetting("app_layout") }}">
 
-            <div class="row" style="">
-                <aside class="col-lg-3 order-2 order-lg-1">
+            <div class="catalog-layout">
+                <aside class="catalog-filters" id="catalog-filters">
 
                     <div class="box shadow-none bg-gray mb-4">
                         <div class="row flex-wrap flex-md-nowrap">
@@ -117,78 +110,17 @@
                                     <button type="submit" class="btn btn-primary d-inline-block"><i
                                                 class="fas fa-search"></i> Search
                                     </button>
-                                    <button type="reset" class="btn btn-primary d-inline-block" onclick="clearForm()"><i
-                                                class="fas fa-eraser"></i> Clear
-                                    </button>
+                                    <a href="{{ path('creators') }}" class="btn btn-outline-primary">Clear</a>
                                 </div>
                             </article>
                         </form>
-                        {#                        <form method="get"> #}
-                        {#                            <article class="card-group-item filter-item"> #}
-                        {#                                <header class="card-header"> #}
-                        {#                                    <a href="#" data-toggle="collapse" data-target="#filter-keyword"> #}
-                        {#                                        <i class="icon-action fa fa-chevron-down"></i> #}
-                        {#                                        <h6 class="title">{{ "Keyword" }}</h6> #}
-                        {#                                    </a> #}
-                        {#                                </header> #}
-                        {#                                <div class="filter-content collapse show" id="filter-keyword"> #}
-                        {#                                    <div class="card-body"> #}
-                        {#                                        <input id="keyword" name="keyword" type="text" class="form-control" #}
-                        {#                                               value="{{ app.request.get('keyword') }}"> #}
-                        {#                                    </div> #}
-                        {#                                </div> #}
-                        {#                            </article> #}
-                        {#                            {% if services.getSetting("show_category_filter") == "yes" %} #}
-                        {#                                <article class="card-group-item filter-item"> #}
-                        {#                                    <header class="card-header"> #}
-                        {#                                        <a href="#" data-toggle="collapse" data-target="#filter-category"> #}
-                        {#                                            <i class="icon-action fa fa-chevron-down"></i> #}
-                        {#                                            <h6 class="title">{{ "Category" }}</h6> #}
-                        {#                                        </a> #}
-                        {#                                    </header> #}
-                        {#                                    <div class="filter-content collapse show" id="filter-category"> #}
-                        {#                                        <div class="card-body"> #}
-                        {#                                            <select id="category" name="category" class="select2 col" #}
-                        {#                                                    data-sort-options="1"> #}
-                        {#                                                <option value="">&nbsp;</option> #}
-                        {#                                                <option value="all">All</option> #}
-                        {#                                                {% for category in services.getCategories({}).getQuery().getResult() %} #}
-                        {#                                                    {% set isSelected = (category.slug == app.request.get('category')) ? 'selected' : '' %} #}
-                        {#                                                    <option value="{{ category.slug }}" {{ isSelected }}>{{ category.name }}</option> #}
-                        {#                                                {% endfor %} #}
-                        {#                                            </select> #}
-                        {#                                        </div> #}
-                        {#                                    </div> #}
-                        {#                                </article> #}
-                        {#                            {% endif %} #}
-                        {#                            <article class="card-group-item filter-item"> #}
-                        {#                                <header class="card-header"> #}
-                        {#                                    <a href="#" data-toggle="collapse" data-target="#filter-category"> #}
-                        {#                                        <i class="icon-action fa fa-chevron-down"></i> #}
-                        {#                                        <h6 class="title">{{ "Venue" }}</h6> #}
-                        {#                                    </a> #}
-                        {#                                </header> #}
-                        {#                                <div class="filter-content collapse show" id="filter-venue"> #}
-                        {#                                    <div class="card-body"> #}
-                        {#                                        <select id="venue" name="venue" class="select2 col" #}
-                        {#                                                data-sort-options="1"> #}
-                        {#                                            <option value="">&nbsp;</option> #}
-                        {#                                            <option value="all">All</option> #}
-                        {#                                            {% for venue in services.getVenues({}) %} #}
-                        {#                                                {% set isSelected = (venue.slug == app.request.get('venue')) ? 'selected' : '' %} #}
-                        {#                                                <option value="{{ venue.slug }}" {{ isSelected }}>{{ venue.title }}</option> #}
-                        {#                                            {% endfor %} #}
-                        {#                                        </select> #}
-                        {#                                    </div> #}
-                        {#                                </div> #}
-                        {#                            </article> #}
-                        {#                        </form> #}
+
                     </div>
                 </aside>
 
-                <div class="col-lg-9 order-1 order-lg-2 mt-4 mt-md-0 ">
+                <div class="catalog-results">
                     {% if creators.getTotalItemCount > 0 %}
-                        <div class="row">
+                        <div class="catalog-grid">
                             {% for creator in creators %}
                                 <div class="col-12 col-sm-4 col-lg-3 mb-3">
                                     {% include "Global/creator-card.html.twig" with {user: creator.user, organizer: creator} %}
@@ -198,7 +130,7 @@
                     {% else %}
                         {% include "Global/message.html.twig" with { type: "info", message: ('No creators found'), icon: "fas fa-exclamation-circle" } %}
                     {% endif %}
-                    {{ knp_pagination_render(creators, null, {}, {'align': 'center'}) }}
+                    {{ knp_pagination_render(creators, 'Global/pagination.html.twig', {}, {'align': 'center'}) }}
                 </div>
             </div>
         </div>
@@ -206,15 +138,10 @@
 {% endblock %}
 
 {% block javascripts %}
-    {#    {% if services.getSetting("show_map_button") == "yes" and google_maps_api_key != "" %} #}
-    {#        <script async defer #}
-    {#                src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap"> #}
-    {#        </script> #}
-    {#        {% include "Global/event-info-box.html.twig" %} #}
-    {#    {% endif %} #}
+
     <script>
         function clearForm() {
-            window.location.href = "https://universe.alexandroskourtis.me/creators";
+            window.location.href = "{{ path('creators') }}";
         }
     </script>
 {% endblock %}
