@@ -11,6 +11,7 @@ php8.2 /usr/local/bin/composer install --no-dev --no-interaction --prefer-dist -
 npm ci --include=dev
 php8.2 bin/console assets:install public
 npm run build
+php8.2 bin/console lint:twig templates
 php8.2 bin/console doctrine:migrations:migrate --no-interaction
 php8.2 bin/console app:menus:sync
 php8.2 bin/console app:help-center:seed

@@ -348,7 +348,7 @@
         #reel-modal .outerbox{max-height:90vh;overflow:auto;position:relative;z-index:100002;padding:20px;width:85vw}
         #reel-modal-image{max-width:100%;max-height:65vh;object-fit:contain} #reel-modal-video{max-height:65vh}
         .carousel-images a.card_medium{display:block;color:inherit} .carousel-images .img_card{width:100%;object-fit:cover}
-        @media(max-width:767px){#reel-modal .outerbox{width:82vw} #reel-modal h2{font-size:1.25rem}}
+        @media(max-width:767px){ #reel-modal .outerbox{width:82vw} #reel-modal h2{font-size:1.25rem}}
     </style>
     <script id="reels-config" type="application/json">{{ {url:path('load_more_reels'),page:reels.getCurrentPageNumber(),hasMore:hasMore,keyword:app.request.query.get('keyword','')}|json_encode(15)|raw }}</script>
     <script src="{{ asset('js/reels.js') }}" defer></script>
